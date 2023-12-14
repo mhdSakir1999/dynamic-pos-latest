@@ -1,0 +1,2406 @@
+/*
+ * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
+ * Author: Shalika Ashan
+ * Created At: 4/23/21, 11:50 AM
+ */
+
+import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:checkout/bloc/cart_bloc.dart';
+import 'package:checkout/bloc/customer_bloc.dart';
+import 'package:checkout/bloc/lock_screen_bloc.dart';
+import 'package:checkout/bloc/price_mode_bloc.dart';
+import 'package:checkout/bloc/salesRep_bloc.dart';
+import 'package:checkout/components/components.dart';
+import 'package:checkout/components/mypos_screen_utils.dart';
+import 'package:checkout/components/widgets/commonUse.dart';
+import 'package:checkout/components/widgets/poskeyboard.dart';
+import 'package:checkout/controllers/cart_dynamic_button_controller.dart';
+import 'package:checkout/controllers/cart_dynamic_button_function.dart';
+import 'package:checkout/controllers/customer_controller.dart';
+import 'package:checkout/controllers/dual_screen_controller.dart';
+import 'package:checkout/controllers/gift_voucher_controller.dart';
+import 'package:checkout/controllers/invoice_controller.dart';
+import 'package:checkout/controllers/loyalty_controller.dart';
+import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
+import 'package:checkout/controllers/pos_logger_controller.dart';
+import 'package:checkout/controllers/pos_price_calculator.dart';
+import 'package:checkout/controllers/print_controller.dart';
+import 'package:checkout/controllers/product_controller.dart';
+import 'package:checkout/controllers/promotion_controller.dart';
+import 'package:checkout/models/last_invoice_details.dart';
+import 'package:checkout/models/loyalty/loyalty_summary.dart';
+import 'package:checkout/models/pos/cart_model.dart';
+import 'package:checkout/models/pos/cart_summary_model.dart';
+import 'package:checkout/models/pos/gift_voucher_result.dart';
+import 'package:checkout/models/pos/paid_model.dart';
+import 'package:checkout/models/pos/price_mode_result.dart';
+import 'package:checkout/models/pos/product_result.dart';
+import 'package:checkout/models/pos/variant_result.dart';
+import 'package:checkout/models/pos_config.dart';
+import 'package:checkout/models/pos_logger.dart';
+import 'package:checkout/views/customer/customer_helper.dart';
+import 'package:checkout/views/customer/customer_profile.dart';
+import 'package:checkout/views/invoice/invoice_app_bar.dart';
+import 'package:checkout/views/invoice/payment_view.dart';
+import 'package:checkout/views/invoice/product_search_view.dart';
+import 'package:checkout/views/invoice/variant_detail_view.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:responsive_grid/responsive_grid.dart';
+import 'package:supercharged/supercharged.dart';
+import 'package:checkout/extension/extensions.dart';
+
+import '../../bloc/user_bloc.dart';
+import '../../controllers/activation/activation_controller.dart';
+import '../../controllers/keyboard_controller.dart';
+import '../../controllers/special_permission_handler.dart';
+import '../../models/pos/permission_code.dart';
+
+class Cart extends StatefulWidget {
+  static const routeName = "cart";
+  final Widget? replaceCart;
+  final Widget? replacePayButton;
+  final TextEditingController? replaceController;
+  final VoidCallback? replaceOnEnter;
+
+  const Cart(
+      {Key? key,
+      this.replaceCart,
+      this.replacePayButton,
+      this.replaceController,
+      this.replaceOnEnter})
+      : super(key: key);
+
+  @override
+  _CartState createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
+  final itemCodeEditingController = TextEditingController();
+  final productController = ProductController();
+  final POSPriceCalculator calculator = POSPriceCalculator();
+  final itemCodeFocus = FocusNode();
+  final focusNode = FocusNode();
+  final customerNode = FocusNode();
+  ScrollController scrollController = ScrollController();
+  CartModel? selectedCartItem;
+  bool focus = true;
+  bool active = false;
+  bool gvMode = false;
+  TextEditingController _remarkEditingController = TextEditingController();
+  ScrollController _controller = ScrollController();
+  //this index is used to identify the key up down
+  int _tempIndex = 0;
+  bool activeDynamicButton = true;
+  @override
+  void initState() {
+    super.initState();
+    focusNode.requestFocus();
+    if ((cartBloc.currentCart?.length ?? 0) > 0) {
+      DualScreenController().setView('invoice');
+    }
+    lockScreenBloc.lockScreenStream.listen((event) {
+      if (!event && mounted) {
+        itemCodeFocus.requestFocus();
+        focusNode.requestFocus();
+      }
+    });
+    if (widget.replaceCart == null)
+      Future.delayed(Duration(seconds: 2)).then((value) {
+        scrollToBottom();
+        if (mounted)
+          setState(() {
+            active = true;
+          });
+      });
+
+    /// new chage -- not allowing customer pick in local mode
+    if (!POSConfig().localMode && customerBloc.currentCustomer == null)
+      Future.delayed(Duration.zero)
+          .then((value) => CustomerController().showCustomerPicker(context));
+
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   // Perform hit tests or interactions here.
+    //   _controller.addListener(_scroll);
+    // });
+    // _scroll();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    itemCodeEditingController.dispose();
+    _remarkEditingController.dispose();
+    customerNode.dispose();
+    scrollController.dispose();
+    itemCodeFocus.dispose();
+    focusNode.dispose();
+    customerNode.dispose();
+    super.dispose();
+  }
+
+  // void _scroll() {
+  //   if (mounted) {
+  //     setState(() {});
+  //   }
+  //   // Only call animateTo() if the scroll controller has clients.
+  //   if (_controller.hasClients) {
+  //     _controller.animateTo(
+  //       _controller.position.maxScrollExtent,
+  //       duration: Duration(milliseconds: 100),
+  //       curve: Curves.easeInOut,
+  //     );
+  //   }
+
+  //   // Schedule the _scroll() function to run again in one second.
+  //   Future.delayed(Duration(seconds: 2), () {
+  //     // if (mounted) {
+  //     //   setState(() {});
+  //     // }
+  //     if (_controller.hasClients) {
+  //       if (_controller.position.pixels ==
+  //           _controller.position.maxScrollExtent) {
+  //         _controller.jumpTo(0);
+  //       }
+  //       _scroll();
+  //     }
+  //   });
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    posConnectivity.setContext(context);
+    return GestureDetector(
+      onTap: () {
+        itemCodeFocus.requestFocus();
+      },
+      child: StreamBuilder(
+        stream: lockScreenBloc.lockScreenStream,
+        initialData: false,
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          final child = POSBackground(
+              child: Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildBody(),
+            ),
+          ));
+          if (snapshot.data == true) {
+            return child;
+          }
+          return RawKeyboardListener(
+              autofocus: true,
+              focusNode: focusNode,
+              onKey: (value) async {
+                if (value is RawKeyDownEvent) {
+                  if (!value.isShiftPressed &&
+                      value.physicalKey == PhysicalKeyboardKey.numpadAdd) {
+                    billClose();
+                  }
+                  if (!value.isShiftPressed &&
+                      value.logicalKey == LogicalKeyboardKey.f12 &&
+                      !POSConfig().localMode) {
+                    if (customerBloc.currentCustomer == null) {
+                      CustomerController().showCustomerPicker(context);
+                    } else {
+                      currentCustomerChange(context);
+                      focusNode.requestFocus();
+                    }
+                  }
+                  if (!value.isShiftPressed &&
+                      value.physicalKey == PhysicalKeyboardKey.delete) {
+                    await voidItem();
+                  }
+                  if (value.isControlPressed &&
+                      value.physicalKey == PhysicalKeyboardKey.keyA) {
+                    final selectedRep;
+                    if (cartBloc.currentCart != null &&
+                        cartBloc.currentCart!.length > 0) {
+                      selectedRep = await selecetSalesRep(context);
+                      cartBloc.currentCart?.values.forEach((element) {
+                        if (element.saleman == null || element.saleman == '') {
+                          element.saleman = selectedRep?.sACODE ?? '';
+                        }
+                      });
+                    } else {
+                      EasyLoading.showError(
+                          'general_dialog.sales_assist_no_products'.tr());
+                    }
+                  }
+                  if (!itemCodeFocus.hasFocus) {
+                    itemCodeFocus.requestFocus();
+                  }
+                  _handleKeyEvent(
+                    value,
+                  );
+                }
+              },
+              child: child);
+        },
+      ),
+    );
+  }
+
+  /// new change by [TM.Sakir] at 2023-11-14 4:33PM
+  /// using keyboard keys to trigger functions
+
+  void _handleKeyEvent(RawKeyDownEvent event) async {
+    /// new change by [TM.Sakir]
+    /// if cartBloc.cartSummary has items disabling 'special_function' button
+    if (cartBloc.cartSummary?.items != 0 &&
+        (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f1)) {
+      EasyLoading.showError('special_functions.cant_open'.tr());
+      return;
+    }
+    //"cartBloc.cartSummary" to check whether cart is not editable. this is used when backoffice txn is recalled.
+    if (cartBloc.cartSummary?.editable != true &&
+        !(!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f4)) {
+      EasyLoading.showError('backend_invoice_view.item_add_error'.tr());
+      return;
+    }
+
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f7) {
+      //check whether the client has the GV module license
+      if (POSConfig().clientLicense?.lCMYVOUCHERS != true ||
+          POSConfig().expired) {
+        ActivationController().showModuleBuy(context, "myVouchers");
+        return;
+      }
+
+      if (POSConfig().localMode) {
+        EasyLoading.showError('local_mode_func_disable'.tr());
+        return;
+      }
+      if (mounted) {
+        setState(() {
+          //Switch On or Off the GV mode
+          gvMode = !gvMode;
+        });
+      }
+      itemCodeFocus.requestFocus();
+      return;
+    }
+    //if gv mode is enabled lets disable others
+    if (gvMode) {
+      return;
+    }
+    CartModel? lastItem;
+    if (((cartBloc.currentCart?.values ?? []).length) > 0) {
+      lastItem = cartBloc.currentCart?.values.last;
+    }
+
+    final selectedModel = getSelectedItem();
+
+    if (!event.isShiftPressed &&
+        event.physicalKey == PhysicalKeyboardKey.insert) {
+      doWhenClicked(
+          func_name: 'net_disc', cart: selectedModel, lastItem: lastItem);
+    }
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f1) {
+      doWhenClicked(
+          func_name: 'special_function',
+          cart: selectedModel,
+          lastItem: lastItem);
+    }
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f2) {
+      doWhenClicked(
+          func_name: 'search', cart: selectedModel, lastItem: lastItem);
+    }
+    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f2) {
+      doWhenClicked(
+          func_name: 'categories', cart: selectedModel, lastItem: lastItem);
+    }
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f3) {
+      doWhenClicked(
+          func_name: 'line_disc_per', cart: selectedModel, lastItem: lastItem);
+    }
+    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f3) {
+      doWhenClicked(
+          func_name: 'line_disc_amt', cart: selectedModel, lastItem: lastItem);
+    }
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f4) {
+      doWhenClicked(
+          func_name: 'clear', cart: selectedModel, lastItem: lastItem);
+    }
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f5) {
+      doWhenClicked(
+          func_name: 'repeat_plu', cart: selectedModel, lastItem: lastItem);
+    }
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f6) {
+      doWhenClicked(func_name: 'hold', cart: selectedModel, lastItem: lastItem);
+    }
+    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f6) {
+      doWhenClicked(
+          func_name: 'recall', cart: selectedModel, lastItem: lastItem);
+    }
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f8) {
+      doWhenClicked(
+          func_name: 'cash_in', cart: selectedModel, lastItem: lastItem);
+    }
+    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f8) {
+      doWhenClicked(
+          func_name: 'cash_out', cart: selectedModel, lastItem: lastItem);
+    }
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f9) {
+      doWhenClicked(
+          func_name: 'bill_cancel', cart: selectedModel, lastItem: lastItem);
+    }
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f10) {
+      doWhenClicked(
+          func_name: 'drawer_open', cart: selectedModel, lastItem: lastItem);
+    }
+
+    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f11) {
+      doWhenClicked(
+          func_name: 're-print', cart: selectedModel, lastItem: lastItem);
+    }
+  }
+
+  void doWhenClicked(
+      {String func_name = '', CartModel? cart, CartModel? lastItem}) async {
+    if (activeDynamicButton) {
+      if (mounted)
+        setState(() {
+          activeDynamicButton = false;
+        });
+      await (CartDynamicButtonFunction(func_name, itemCodeEditingController)
+            ..context = context)
+          .handleFunction(cart: cart, lastItem: lastItem);
+      scrollToBottom();
+      clearSelection();
+      focusNode.requestFocus();
+    }
+  }
+
+  Widget buildBody() {
+    return Column(
+      children: [
+        POSInvoiceAppBar(
+          onPriceClick: _getPriceModes,
+        ),
+        Expanded(child: buildContent())
+      ],
+    );
+  }
+
+  Widget buildContent() {
+    if (POSConfig().defaultCheckoutLSH)
+      return Row(
+        children: [
+          Expanded(child: buildDefaultLHS()),
+          Expanded(child: buildDefaultRHS()),
+        ],
+      );
+    else
+      return Row(
+        children: [
+          Expanded(child: buildDefaultRHS()),
+          Expanded(child: buildDefaultLHS()),
+        ],
+      );
+  }
+
+  // this is the default lhs in the app
+  Widget buildDefaultLHS() {
+    return Column(
+      children: [
+        Expanded(
+          child: widget.replaceCart ??
+              Column(
+                children: [
+                  Expanded(
+                      child: Scrollbar(
+                          //  thumbVisibility: true,
+                          controller: scrollController,
+                          thickness: 20,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: SingleChildScrollView(
+                                controller: scrollController,
+                                child: buildCartList()),
+                          ))),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.425,
+                        // margin: EdgeInsets.only(right: 16),
+                        child: TextField(
+                          onTap: () {
+                            itemCodeEditingController.clear();
+                            KeyBoardController().dismiss();
+                            KeyBoardController().init(context);
+                            KeyBoardController().showBottomDPKeyBoard(
+                                itemCodeEditingController, onEnter: () {
+                              _handleScan();
+                              KeyBoardController().dismiss();
+                            });
+                          },
+                          readOnly: isMobile,
+                          textAlign: TextAlign.center,
+                          autofocus: true,
+                          focusNode: itemCodeFocus,
+                          // showCursor: false,
+                          controller: itemCodeEditingController,
+                          textInputAction: TextInputAction.done,
+                          onEditingComplete: () {
+                            _handleScan();
+                          },
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.search),
+                              filled: true,
+                              hintText: "invoice.search".tr()),
+                        ),
+                      ),
+                      Container(
+                        // margin: EdgeInsets.all(5),
+                        // width: MediaQuery.of(context).size.width * 0.03,
+                        child: Tooltip(
+                          message: 'general_dialog.sales_assistant'.tr(),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.width * 0.01),
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              icon: Icon(
+                                Icons.man_3_rounded,
+                                color: Colors.white,
+                                size: MediaQuery.of(context).size.height * 0.05,
+                              ),
+                              onPressed: () async {
+                                final selectedRep;
+                                if (cartBloc.currentCart != null &&
+                                    cartBloc.currentCart!.length > 0) {
+                                  if (salesRepBloc.currentSalesRep == null ||
+                                      salesRepBloc.currentSalesRep?.length ==
+                                          0) {
+                                    EasyLoading.showError(
+                                        'No sales assistants found');
+                                    return;
+                                  }
+                                  selectedRep = await selecetSalesRep(context);
+                                  cartBloc.currentCart?.values
+                                      .forEach((element) {
+                                    if (element.saleman == null ||
+                                        element.saleman == '') {
+                                      element.saleman =
+                                          selectedRep?.sACODE ?? '';
+                                    }
+                                  });
+                                } else {
+                                  EasyLoading.showError(
+                                      'general_dialog.sales_assist_no_products'
+                                          .tr());
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+        ),
+        Container(
+            margin: EdgeInsets.only(top: 8, right: 16),
+            child: buildBottomCard()),
+      ],
+    );
+  }
+
+  DateTime lastVoid = DateTime.now();
+
+  //this method used to void an item
+  Future voidItem() async {
+    if (!mounted) {
+      return;
+    }
+    if (cartBloc.cartSummary?.editable != true) {
+      EasyLoading.showError('backend_invoice_view.item_add_error'.tr());
+      return;
+    }
+    final selected = getSelectedItem();
+
+    if (selected != null && selected.itemVoid == false) {
+      final dateTime = DateTime.now();
+      final afterLastVoid = lastVoid.add(Duration(seconds: 3));
+      if (dateTime.isAfter(afterLastVoid)) {
+        calculator.voidItem(selected, context);
+        selectedCartItem = null;
+      }
+      scrollToBottom();
+      itemCodeFocus.requestFocus();
+      if (mounted) setState(() {});
+    }
+  }
+
+  CartModel? getSelectedItem() {
+    CartModel? lastItem;
+    if (((cartBloc.currentCart?.values ?? []).length) > 0) {
+      lastItem = cartBloc.currentCart?.values.last;
+    }
+    final selectedModel = selectedCartItem ?? lastItem;
+    return selectedModel;
+  }
+
+  void clearSelection() {
+    selectedCartItem = null;
+    activeDynamicButton = true;
+    if (mounted) setState(() {});
+  }
+
+  /// new change - invoicing empty bottles as considering them as new product when buying liquor items or any other
+  /// Author - [TM.Sakir] at 2023-11-01 11:10 AM
+  /// -------------------------------------------------------------------------------------------------
+  Future _handleProductSearch() async {
+    double qty = 1;
+    String temp = itemCodeEditingController.text;
+    String code = temp;
+    final symbol = "*";
+    bool isScaleBarcode = false;
+    var size = MediaQuery.of(context).size;
+    TextEditingController qtyController =
+        TextEditingController(text: qty.toString());
+    double newqty = 1;
+
+    if (code.contains(symbol)) {
+      //  split it lhs is qty
+      final split = code.split(symbol);
+      code = split.last;
+      qty = double.tryParse(split.first) ?? 1;
+      qtyController.text = qty.toString();
+    } else if (POSConfig().setup?.setuPSCALESYMBOL != null) {
+      // check if the . is available or not (scale barcode separator)
+      String scaleSymbol = POSConfig().setup!.setuPSCALESYMBOL!;
+      if (code.contains(scaleSymbol)) {
+        final split = code.split(scaleSymbol);
+        code = split.first;
+        isScaleBarcode = true;
+
+        double? quantity;
+
+        if (POSConfig().setup?.setuPSCALEDIGIT != null) {
+          int digit = POSConfig().setup!.setuPSCALEDIGIT!;
+          //quantity = split.last.substring(0, (split.last).length - digit).toDouble();
+          split.last = split.last.substring(0, (split.last).length - digit);
+          split.last = split.last.substring(0, (split.last).length - 3) +
+              '.' +
+              split.last.substring(
+                  split.last.substring(0, (split.last).length - 3).length);
+          quantity = split.last.toDouble();
+        } else {
+          quantity = split.last.toDouble();
+        }
+        qty = (quantity != null) ? quantity : 0;
+        qtyController.text = qty.toString();
+      }
+    }
+
+    DateTime before = DateTime.now();
+    //  check if the * available or not
+    final resList =
+        await calculator.searchProduct(itemCodeEditingController.text);
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    double fontSize = 20.sp;
+    itemCodeEditingController.clear();
+    Product? res;
+    if (resList != null &&
+        resList.product != null &&
+        resList.product!.length != 0) {
+      if (resList.product!.length > 1) {
+        res = await selecetedVarient(context, width, height, fontSize, resList);
+      } else {
+        res = resList.product!.first;
+      }
+
+      //  add to cart
+      if (res != null) {
+        await calculator.addItemToCart(res, qty, context, resList.prices,
+            resList.proPrices, resList.proTax,
+            secondApiCall: true, scaleBarcode: isScaleBarcode);
+        if (res.returnBottleCode != null && res.returnBottleCode!.isNotEmpty) {
+          var returnProRes =
+              await calculator.searchProduct(res.returnBottleCode!);
+          if (returnProRes != null && returnProRes.product != null) {
+            await showGeneralDialog(
+                context: context,
+                transitionDuration: const Duration(milliseconds: 200),
+                barrierDismissible: false,
+                barrierLabel: '',
+                transitionBuilder: (context, a, b, _) => Transform.scale(
+                    scale: a.value,
+                    child: AlertDialog(
+                      title: Center(
+                          child: Text('general_dialog.empty_bottle_hed'.tr())),
+                      content: Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 10.0, bottom: 30),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 100.r,
+                                    child: CachedNetworkImage(
+                                      httpHeaders: {
+                                        'Access-Control-Allow-Origin': '*'
+                                      },
+                                      imageUrl: (POSConfig().posImageServer +
+                                          "images/products/" +
+                                          returnProRes.product!.first.pLUCODE! +
+                                          '.png'),
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                              'assets/images/empty_bottle.png'),
+                                      imageBuilder: (context, image) {
+                                        return Card(
+                                          elevation: 5,
+                                          color: CurrentTheme.primaryColor,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(
+                                                  POSConfig()
+                                                      .rounderBorderRadiusBottomLeft),
+                                              bottomRight: Radius.circular(
+                                                  POSConfig()
+                                                      .rounderBorderRadiusBottomRight),
+                                              topLeft: Radius.circular(POSConfig()
+                                                  .rounderBorderRadiusTopLeft),
+                                              topRight: Radius.circular(POSConfig()
+                                                  .rounderBorderRadiusTopRight),
+                                            ),
+                                            child: Image(
+                                              image: image,
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                        "${returnProRes.product!.first.pLUCODE} \n${returnProRes.product!.first.pLUPOSDESC}"),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(child: Text('Quantity:')),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.2,
+                                  child: TextField(
+                                    controller: qtyController,
+                                    keyboardType: TextInputType.number,
+                                    onTap: () {
+                                      qtyController.clear();
+                                      KeyBoardController().init(context);
+                                      KeyBoardController().showBottomDPKeyBoard(
+                                          qtyController, onEnter: () async {
+                                        newqty =
+                                            double.parse(qtyController.text);
+                                        KeyBoardController().dismiss();
+                                        Navigator.pop(context);
+                                        //  add to cart
+                                        await calculator.addItemToCart(
+                                            returnProRes.product!.first,
+                                            newqty,
+                                            context,
+                                            returnProRes.prices,
+                                            returnProRes.proPrices,
+                                            returnProRes.proTax,
+                                            secondApiCall: false,
+                                            scaleBarcode: isScaleBarcode);
+                                      });
+                                    },
+                                    onEditingComplete: () {
+                                      newqty = double.parse(qtyController.text);
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          //  add to cart
+                                          await calculator.addItemToCart(
+                                              returnProRes.product!.first,
+                                              newqty,
+                                              context,
+                                              returnProRes.prices,
+                                              returnProRes.proPrices,
+                                              returnProRes.proTax,
+                                              secondApiCall: false,
+                                              scaleBarcode: isScaleBarcode);
+                                        },
+                                        child: Text('Add')),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                            'general_dialog.empty_bottle_cancel'
+                                                .tr())),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )),
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return SizedBox();
+                });
+          }
+        }
+      }
+// ---------------------------------------------------------------------------------------------------------------------------------------------
+      DateTime after = DateTime.now();
+
+      print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+      print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+      print(
+          '${res?.sCANCODE} Product added within ${after.millisecondsSinceEpoch - before.millisecondsSinceEpoch}');
+      print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+      print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+      return true;
+    } else {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return ProductSearchView(keyword: temp);
+        },
+      );
+      // Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductSearchView(keyword: temp)));
+    }
+  }
+
+  //handle gv
+  Future _handleGiftVoucher() async {
+    //  check if the * available or not
+    double qty = 1;
+    String code = itemCodeEditingController.text;
+    final symbol = "*";
+    if (code.contains(symbol)) {
+      //  split it lhs is qty
+      final split = code.split(symbol);
+      code = split.last;
+      qty = double.tryParse(split.first) ?? 1;
+    }
+
+    qty = qty > 0 ? 1 : -1;
+
+    //check the code contains in list
+    if ((cartBloc.currentCart?.values.toList().indexWhere((element) =>
+                element.isVoucher == true && element.proCode == code) ??
+            -1) !=
+        -1) {
+      itemCodeEditingController.clear();
+      _gvError('gv_error.already_added'.tr());
+      return;
+    }
+
+    if (code.isEmpty) {
+      _gvError('gv_error.empty'.tr());
+    } else {
+      final GiftVoucherResult? voucherRes =
+          await GiftVoucherController().getGiftVoucherById(code);
+      //  if this is invalid one lets show message
+      if (voucherRes == null ||
+          voucherRes.success != true && voucherRes.giftVoucher != null) {
+        // return gv validation
+        final bool sold = voucherRes?.giftVoucher?.soldInv?.isNotEmpty ?? false;
+        final bool redeem =
+            voucherRes?.giftVoucher?.redeemInv?.isNotEmpty ?? false;
+        final bool cancel =
+            voucherRes?.giftVoucher?.cancelInv?.isNotEmpty ?? false;
+        final bool returnInv =
+            voucherRes?.giftVoucher?.returnInv?.isNotEmpty ?? false;
+        print('*************************************');
+        print('*************$sold************************');
+        print('*************************************');
+        if (sold &&
+            (!redeem && !cancel && !returnInv) &&
+            voucherRes?.giftVoucher != null) {
+          if (qty > 0) {
+            _gvError(voucherRes?.message ?? 'gv_error.sold'.tr());
+          } else {
+            calculator.addGv(voucherRes!.giftVoucher!, qty, context);
+            itemCodeEditingController.clear();
+          }
+        } else {
+          _gvError(voucherRes?.message ?? 'gv_error.not_found'.tr());
+          itemCodeEditingController.clear();
+        }
+        return;
+      } else {
+        // oh this is a valid gv
+        calculator.addGv(voucherRes.giftVoucher!, qty, context);
+        itemCodeEditingController.clear();
+      }
+    }
+  }
+
+  void _gvError(String error) {
+    showDialog(
+      context: context,
+      builder: (context) => POSErrorAlert(
+          title: 'gv_error.title'.tr(),
+          subtitle: error,
+          actions: <Widget>[
+            AlertDialogButton(
+              onPressed: () => Navigator.pop(context),
+              text: 'gv_error.okay'.tr(),
+            )
+          ]),
+    );
+  }
+
+  Future _handleScan() async {
+    if (cartBloc.cartSummary?.editable != true) {
+      EasyLoading.showError('backend_invoice_view.item_add_error'.tr());
+      return;
+    }
+    if ((cartBloc.currentCart?.length ?? 0) == 0) {
+      DualScreenController().setView('invoice');
+    }
+    if (gvMode) {
+      await _handleGiftVoucher();
+    } else {
+      await _handleProductSearch();
+    }
+    scrollToBottom();
+  }
+
+  // this will handle which card to show on lhs bottom
+  Widget buildBottomCard() {
+    return StreamBuilder(
+      stream: cartBloc.currentCartSnapshot,
+      builder: (BuildContext context,
+          AsyncSnapshot<Map<String, CartModel>> snapshot) {
+        if (snapshot.data != null && (snapshot.data?.length ?? 0) > 0)
+          return buildPriceCard();
+        return buildLastInvoiceInfo();
+      },
+    );
+  }
+
+  // this will return the lhs bottom price card
+  Widget buildPriceCard() {
+    final style1 =
+        CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
+    final style1Bold = style1.copyWith(
+        fontWeight: FontWeight.bold, fontSize: style1.fontSize! * 1.5);
+    final style2 =
+        CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
+    final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
+    return StreamBuilder<CartSummaryModel>(
+        stream: cartBloc.cartSummarySnapshot,
+        builder: (context, AsyncSnapshot<CartSummaryModel> snapshot) {
+          final data = snapshot.data;
+          String items = "${data?.items ?? 0}";
+          String qty = data?.qty.qtyFormatter() ?? "0.0";
+          String subtotal = "${(data?.subTotal ?? 0).thousandsSeparator()}";
+          String lines = "";
+
+          return Card(
+              color: CurrentTheme.primaryColor,
+              margin: EdgeInsets.zero,
+              child: Container(
+                padding: EdgeInsets.all(8.r),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Spacer(),
+                    Text(
+                      'invoice.item'.tr() + ':',
+                      style: style1,
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text(
+                      items,
+                      style: style1Bold,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'invoice.quantity'.tr() + ':',
+                      style: style1,
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text(
+                      qty,
+                      style: style1Bold,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'invoice.sub_total'.tr() + ':',
+                      style: style1,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      subtotal,
+                      style: style1Bold,
+                    ),
+                    Spacer(),
+                  ],
+                ),
+              ));
+        });
+  }
+
+  // this will return the lhs bottom previous invoice card
+  Widget buildLastInvoiceInfo() {
+    final style1 =
+        CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
+    final style1Bold = style1.copyWith(
+        fontWeight: FontWeight.bold, fontSize: style1.fontSize! * 1.5);
+    final style2 =
+        CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
+    final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
+    return StreamBuilder<LastInvoiceDetails>(
+        stream: cartBloc.lastInvoiceDetails,
+        builder: (context, AsyncSnapshot<LastInvoiceDetails> snapshot) {
+          final data = snapshot.data;
+          if (data == null) return buildPriceCard();
+          return Card(
+              color: CurrentTheme.primaryColor,
+              margin: EdgeInsets.zero,
+              child: Container(
+                padding: EdgeInsets.all(8.r),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Spacer(),
+                    HideWidgetOnScreenSize(
+                      md: true,
+                      child: Text(
+                        'invoice.invoice_no'.tr() + ':',
+                        style: style1,
+                      ),
+                    ),
+                    HideWidgetOnScreenSize(
+                      md: true,
+                      child: SizedBox(
+                        width: 3,
+                      ),
+                    ),
+                    HideWidgetOnScreenSize(
+                      md: true,
+                      child: Text(
+                        data.invoiceNo,
+                        style: style1Bold,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'invoice.sub_total'.tr() + ':',
+                      style: style1,
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text(
+                      data.billAmount.parseDouble().thousandsSeparator(),
+                      style: style1Bold,
+                    ),
+                    Spacer(),
+                    Text(
+                      'invoice.paid_amount'.tr() + ':',
+                      style: style1,
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text(
+                      data.paidAmount.parseDouble().thousandsSeparator(),
+                      style: style1Bold,
+                    ),
+                    Spacer(),
+                    Text(
+                      'invoice.balance'.tr() + ':',
+                      style: style1,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      data.dueAmount.parseDouble().thousandsSeparator(),
+                      style: style1Bold,
+                    ),
+                    Spacer(),
+                  ],
+                ),
+              ));
+          // return Card(
+          //     color: CurrentTheme.primaryColor,
+          //     margin: EdgeInsets.zero,
+          //     child: SingleChildScrollView(
+          //       scrollDirection: Axis.horizontal,
+          //       controller: _controller,
+          //       child: AnimatedBuilder(
+          //           animation: _controller,
+          //           builder: (context, child) {
+          //             return Container(
+          //               height: MediaQuery.of(context).size.height * 0.05,
+          //               width: MediaQuery.of(context).size.width,
+          //               padding: EdgeInsets.all(8.r),
+          //               child: Row(
+          //                 mainAxisAlignment: MainAxisAlignment.center,
+          //                 crossAxisAlignment: CrossAxisAlignment.center,
+          //                 children: [
+          //                   Spacer(),
+          //                   HideWidgetOnScreenSize(
+          //                     md: true,
+          //                     child: Text(
+          //                       'invoice.invoice_no'.tr(),
+          //                       style: style1,
+          //                     ),
+          //                   ),
+          //                   HideWidgetOnScreenSize(
+          //                     md: true,
+          //                     child: SizedBox(
+          //                       width: 3,
+          //                     ),
+          //                   ),
+          //                   HideWidgetOnScreenSize(
+          //                     md: true,
+          //                     child: Text(
+          //                       data.invoiceNo,
+          //                       style: style1Bold,
+          //                     ),
+          //                   ),
+          //                   // SizedBox(
+          //                   //   width: 10,
+          //                   // ),
+          //                   Text(
+          //                     'invoice.sub_total'.tr(),
+          //                     style: style1,
+          //                   ),
+          //                   SizedBox(
+          //                     width: 3,
+          //                   ),
+          //                   Text(
+          //                     data.billAmount
+          //                         .parseDouble()
+          //                         .thousandsSeparator(),
+          //                     style: style1Bold,
+          //                   ),
+          //                   // Spacer(),
+          //                   Text(
+          //                     'invoice.paid_amount'.tr(),
+          //                     style: style1,
+          //                   ),
+          //                   SizedBox(
+          //                     width: 3,
+          //                   ),
+          //                   Text(
+          //                     data.paidAmount
+          //                         .parseDouble()
+          //                         .thousandsSeparator(),
+          //                     style: style1Bold,
+          //                   ),
+          //                   //Spacer(),
+          //                   Text(
+          //                     'invoice.balance'.tr(),
+          //                     style: style2,
+          //                   ),
+          //                   SizedBox(
+          //                     width: 5,
+          //                   ),
+          //                   Text(
+          //                     data.dueAmount.parseDouble().thousandsSeparator(),
+          //                     style: style2Bold,
+          //                   ),
+          //                   // Spacer(),
+          //                 ],
+          //               ),
+          //             );
+          //           }),
+          //     ));
+        });
+  }
+
+  // this method return the cart list
+  Widget buildCartList() {
+    final headingStyle = TextStyle(
+        fontSize: POSConfig().cartDynamicButtonFontSize.sp,
+        fontWeight: FontWeight.bold,
+        color: CurrentTheme.primaryLightColor);
+    final dataStyle = TextStyle(
+        fontSize: POSConfig().cartDynamicButtonFontSize.sp,
+        color: CurrentTheme.primaryLightColor);
+
+    return StreamBuilder<Map<String, CartModel>>(
+        stream: cartBloc.currentCartSnapshot,
+        builder: (context, AsyncSnapshot<Map<String, CartModel>> snapshot) {
+          scrollToBottom();
+          final map = snapshot.data;
+          int length = 0;
+          if (map != null) {
+            length = map.values.length;
+          }
+          // if (POSConfig().checkoutTableView) {
+          //   return DataTable(
+          //       dataTextStyle: dataStyle,
+          //       headingTextStyle: headingStyle,
+          //       // sortAscending: true,
+          //       // sortColumnIndex: 1,
+          //       headingRowColor: MaterialStateColor.resolveWith(
+          //         (states) {
+          //           return CurrentTheme.primaryColor!;
+          //         },
+          //       ),
+          //       columns: [
+          //         DataColumn(
+          //             label: Text(
+          //           "invoice.plu".tr(),
+          //         )),
+          //         DataColumn(label: Text("invoice.description".tr())),
+          //         DataColumn(
+          //           label: Text("invoice.price".tr()),
+          //           numeric: true,
+          //         ),
+          //         DataColumn(label: Text("invoice.disc".tr()), numeric: true),
+          //         DataColumn(
+          //             label: Text("invoice.disc_amt".tr()), numeric: true),
+          //         DataColumn(label: Text("invoice.qty".tr()), numeric: true),
+          //         DataColumn(label: Text("invoice.amount".tr()), numeric: true),
+          //       ],
+          //       rows: map?.values
+          //               .map((e) => buildTableRow(e.lineNo ?? 1, e))
+          //               .toList() ??
+          //           []);
+          // }
+          return ListView.builder(
+            itemCount: length,
+            shrinkWrap: true,
+            reverse: false,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) =>
+                buildCartCard(map!.values.toList()[index]),
+          );
+        });
+  }
+
+  // This is the single row of the data table
+  DataRow buildTableRow(int index, CartModel cart) {
+    bool selected = cart.key == (selectedCartItem?.key ?? "null:D");
+    bool voided = cart.itemVoid ?? false;
+    return DataRow(
+        selected: selected,
+        color: MaterialStateColor.resolveWith(
+          (states) {
+            if (voided)
+              return Colors.redAccent;
+            else if (selected) return CurrentTheme.primaryColor!;
+            return CurrentTheme.backgroundColor!;
+          },
+        ),
+        onSelectChanged: (value) {
+          if (voided) return;
+          if (mounted)
+            setState(() {
+              selectedCartItem = selected ? null : cart;
+            });
+        },
+        cells: [
+          DataCell(Text(
+            "${cart.proCode}",
+          )),
+          DataCell(Text(
+            "${cart.noDisc ? "*" : ""}${cart.posDesc}",
+          )),
+          DataCell(Text("${cart.proSelling}", textAlign: TextAlign.center)),
+          DataCell(Container(
+              width: POSConfig().cartDynamicButtonFontSize.sp * 3,
+              child: Text("${cart.discPer?.toStringAsFixed(2) ?? 0}",
+                  textAlign: TextAlign.center))),
+          DataCell(Container(
+              width: POSConfig().cartDynamicButtonFontSize.sp * 3.5,
+              child: Text(
+                "${((cart.discAmt ?? 0) * -1).toStringAsFixed(2)}",
+              ))),
+          DataCell(
+              Text(
+                cart.unitQty.qtyFormatter(),
+                textAlign: TextAlign.center,
+              ), onTap: () {
+            POSLoggerController.addNewLog(
+                POSLogger(POSLoggerLevel.info, "qty editing field pressed"));
+          }),
+          DataCell(Text(
+            "${cart.amount.thousandsSeparator()}",
+          )),
+        ]);
+  }
+
+  /// left side background of dismissible widget
+  Widget _slideLeftBackground() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.only(
+          bottomLeft:
+              Radius.circular(POSConfig().rounderBorderRadiusBottomLeft),
+          bottomRight:
+              Radius.circular(POSConfig().rounderBorderRadiusBottomRight),
+          topLeft: Radius.circular(POSConfig().rounderBorderRadiusTopLeft),
+          topRight: Radius.circular(POSConfig().rounderBorderRadiusTopRight),
+        ),
+      ),
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            Text(
+              " ${"invoice.void".tr()}",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.right,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerRight,
+      ),
+    );
+  }
+
+  /// right side background of dismissible widget
+  Widget _slideRightBackground() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.lightBlue,
+        borderRadius: BorderRadius.only(
+          bottomLeft:
+              Radius.circular(POSConfig().rounderBorderRadiusBottomLeft),
+          bottomRight:
+              Radius.circular(POSConfig().rounderBorderRadiusBottomRight),
+          topLeft: Radius.circular(POSConfig().rounderBorderRadiusTopLeft),
+          topRight: Radius.circular(POSConfig().rounderBorderRadiusTopRight),
+        ),
+      ),
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+            Text(
+              " ${"invoice.remark".tr()}",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerLeft,
+      ),
+    );
+  }
+
+  _handleCartItemDoubleTap(CartModel cartModel) async {
+    //EasyLoading.show(status: 'please_wait'.tr());
+    final List<ProVariant> res = await ProductController()
+        .getLocationWiseVariantStock(cartModel.proCode);
+    //EasyLoading.dismiss();
+    showModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) {
+        return VariantDetails(
+          cartItem: cartModel,
+          variantDet: res,
+        );
+      },
+    );
+    setState(() {
+      focus = true;
+    });
+  }
+
+  // this method build the card based cart item list
+  Widget buildCartCard(CartModel cartModel) {
+    bool selected = cartModel.key == (selectedCartItem?.key ?? "null:D");
+
+    bool voided = (cartModel.itemVoid ?? false);
+    final style = CurrentTheme.bodyText1!.copyWith(
+        color: CurrentTheme.primaryLightColor,
+        fontSize: (POSConfig().cardFontSize).sp);
+
+    String? discountText;
+
+    final zero = 0;
+    if ((cartModel.discPer ?? zero) > zero) {
+      discountText = "${cartModel.discPer?.toStringAsFixed(2)}%";
+    } else if ((cartModel.discAmt ?? zero) > zero) {
+      discountText = "Rs. ${cartModel.discAmt?.toStringAsFixed(2)}";
+    } else if ((cartModel.billDiscPer ?? zero) > zero) {
+      discountText = "${cartModel.billDiscPer?.toStringAsFixed(2)}%";
+    }
+    String code = cartModel.stockCode;
+    if (code.isEmpty) {
+      code = cartModel.proCode;
+    }
+    return Dismissible(
+      key: Key(cartModel.key),
+      background: _slideLeftBackground(),
+      secondaryBackground: _slideRightBackground(),
+      onDismissed: (direction) {},
+      confirmDismiss: (direction) async {
+        if (!voided) {
+          if (direction == DismissDirection.endToStart) {
+            _remarkPopUp(cartModel);
+          } else {
+            selectedCartItem = cartModel;
+            if (mounted) {
+              setState(() {});
+            }
+            voidItem();
+          }
+        }
+        return false;
+      },
+      child: InkWell(
+        onDoubleTap: () {
+          _handleCartItemDoubleTap(cartModel);
+        },
+        onTap: () {
+          if (voided) return;
+          if (selected)
+            selectedCartItem = null;
+          else
+            selectedCartItem = cartModel;
+          if (mounted) {
+            setState(() {
+              focusNode.requestFocus();
+            });
+          }
+        },
+        child: Card(
+            color: selected
+                ? CurrentTheme.backgroundColor
+                : voided
+                    ? Colors.redAccent
+                    : CurrentTheme.primaryColor,
+            child: Padding(
+              padding: EdgeInsets.all(5.r),
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                        width: POSConfig().cardIdLength.w,
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            "$code",
+                                            style: style,
+                                          ),
+                                        )),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                          width: POSConfig().cardNameLength == 0
+                                              ? double.infinity
+                                              : POSConfig().cardNameLength.w,
+                                          child: Text(
+                                            "${cartModel.noDisc ? "* " : ""}${cartModel.posDesc}",
+                                            style: style,
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Spacer(),
+                                    // SizedBox(width: POSConfig().cardIdLength.w,
+                                    //     ),
+                                    Container(
+                                        width: POSConfig().cardPriceLength.w,
+                                        child: Text(
+                                          "${(cartModel.selling).thousandsSeparator()}",
+                                          style: style,
+                                          textAlign: TextAlign.end,
+                                        )),
+                                    Container(
+                                        width: POSConfig().cardQtyLength.w,
+                                        child: Text(
+                                          cartModel.unitQty.qtyFormatter(),
+                                          style: style,
+                                          textAlign: TextAlign.end,
+                                        )),
+                                    Container(
+                                        width: POSConfig().cardTotalLength.w,
+                                        child: Text(
+                                          "${(cartModel.amount).thousandsSeparator()}",
+                                          style: style,
+                                          textAlign: TextAlign.end,
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            discountText == null
+                                ? SizedBox.shrink()
+                                : Positioned(
+                                    right: 0,
+                                    child: Card(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 5),
+                                        child: Text(discountText),
+                                      ),
+                                      color: Colors.deepOrange,
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 80.r,
+                        child: CachedNetworkImage(
+                          httpHeaders: {'Access-Control-Allow-Origin': '*'},
+                          imageUrl: (cartModel.image ??
+                              "images/products/" + cartModel.proCode + '.png'),
+                          errorWidget: (context, url, error) =>
+                              SizedBox.shrink(),
+                          imageBuilder: (context, image) {
+                            return Card(
+                              elevation: 5,
+                              color: CurrentTheme.primaryColor,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(POSConfig()
+                                      .rounderBorderRadiusBottomLeft),
+                                  bottomRight: Radius.circular(POSConfig()
+                                      .rounderBorderRadiusBottomRight),
+                                  topLeft: Radius.circular(
+                                      POSConfig().rounderBorderRadiusTopLeft),
+                                  topRight: Radius.circular(
+                                      POSConfig().rounderBorderRadiusTopRight),
+                                ),
+                                child: Image(
+                                  image: image,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )),
+      ),
+    );
+  }
+
+  ///remark pop up
+  Future<void> _remarkPopUp(CartModel cartModel) async {
+    _remarkEditingController.clear();
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('invoice.remark'.tr()),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: SizedBox(
+                      width: ScreenUtil().screenWidth * 0.5,
+                      child: ListView.builder(
+                        itemCount: cartModel.lineRemark.length,
+                        itemBuilder: (context, index) => Dismissible(
+                          confirmDismiss: (_) =>
+                              _removeRemark(cartModel, index),
+                          key: Key(index.toString()),
+                          child: SizedBox(
+                              child: Text(
+                                  '${index + 1}.${cartModel.lineRemark[index]}')),
+                        ),
+                      )),
+                ),
+                SizedBox(
+                  width: 600.w,
+                  child: TextField(
+                    onTap: () {
+                      KeyBoardController().dismiss();
+                      KeyBoardController().showBottomDPKeyBoard(
+                          _remarkEditingController, onEnter: () {
+                        KeyBoardController().dismiss();
+                        _updateRemark(cartModel);
+                      });
+                    },
+                    controller: _remarkEditingController,
+                    maxLength: 60,
+                    decoration:
+                        InputDecoration(hintText: 'invoice.enter_remark'.tr()),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              AlertDialogButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  text: 'invoice.cancel'.tr()),
+              AlertDialogButton(
+                  onPressed: () {
+                    _updateRemark(cartModel);
+                  },
+                  text: 'invoice.add_remark'.tr())
+            ],
+          );
+        });
+  }
+
+  void _updateRemark(CartModel cartModel) {
+    final String remark = _remarkEditingController.text;
+    cartModel.lineRemark.add(remark);
+    cartBloc.updateCartItem(cartModel);
+    Navigator.pop(context);
+  }
+
+  Future<bool> _removeRemark(CartModel cartModel, int index) async {
+    cartModel.lineRemark.removeAt(index);
+    cartBloc.updateCartItem(cartModel);
+    Navigator.pop(context);
+    return true;
+  }
+
+// this is the default rhs in the app
+  Widget buildDefaultRHS() {
+    return Container(
+      child: Column(
+        children: [
+          Expanded(
+              child: AbsorbPointer(
+                  absorbing: widget.replaceCart != null,
+                  child: buildButtonSet())),
+          Expanded(child: buildRHSBottom())
+        ],
+      ),
+    );
+  }
+
+  // This is the dynamic button set
+  Widget buildButtonSet() {
+    final dynamicButtonList = CartDynamicButtonController().getButtonList();
+    final config = POSConfig();
+    return Container(
+      child: ResponsiveGridList(
+        scroll: false,
+        desiredItemWidth: config.cartDynamicButtonWidth.w,
+        children: dynamicButtonList.map((posButton) {
+          Color? textColor =
+              posButton.textColor?.toColor() ?? CurrentTheme.primaryDarkColor;
+          if (gvMode && posButton.functionName != 'gv') {
+            textColor = Colors.blueGrey;
+          }
+
+          return Container(
+            margin: EdgeInsets.all(POSConfig().cartDynamicButtonPadding),
+            height: config.cartDynamicButtonHeight.h,
+            child: MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                bottomLeft:
+                    Radius.circular(config.rounderBorderRadiusBottomLeft),
+                bottomRight:
+                    Radius.circular(config.rounderBorderRadiusBottomRight),
+                topRight: Radius.circular(config.rounderBorderRadiusTopRight),
+                topLeft: Radius.circular(config.rounderBorderRadiusTopLeft),
+              )),
+              color: posButton.buttonNormalColor.toColor(),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                  "functions.${posButton.functionName}".tr(),
+                  style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                      color: textColor),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              // style: ElevatedButton.styleFrom(
+              //     primary: posButton.buttonNormalColor.toColor()),
+              onPressed: () async {
+                /// new change by [TM.Sakir]
+                /// if cartBloc.cartSummary has items disabling 'special_function' button
+                if (cartBloc.cartSummary?.items != 0 &&
+                    posButton.functionName == 'special_function') {
+                  EasyLoading.showError('special_functions.cant_open'.tr());
+                  return;
+                }
+                //"cartBloc.cartSummary" to check whether cart is not editable. this is used when backoffice txn is recalled.
+                if (cartBloc.cartSummary?.editable != true &&
+                    posButton.functionName != 'clear') {
+                  EasyLoading.showError(
+                      'backend_invoice_view.item_add_error'.tr());
+                  return;
+                }
+                //this is gv mode button
+                if (posButton.functionName == 'gv') {
+                  //check whether the client has the GV module license
+                  if (POSConfig().clientLicense?.lCMYVOUCHERS != true ||
+                      POSConfig().expired) {
+                    ActivationController().showModuleBuy(context, "myVouchers");
+                    return;
+                  }
+
+                  if (config.localMode) {
+                    EasyLoading.showError('local_mode_func_disable'.tr());
+                    return;
+                  }
+                  if (mounted) {
+                    setState(() {
+                      //Switch On or Off the GV mode
+                      gvMode = !gvMode;
+                    });
+                  }
+                  itemCodeFocus.requestFocus();
+                  return;
+                }
+
+                //if gv mode is enabled lets disable others
+                if (gvMode) {
+                  return;
+                }
+
+                CartModel? lastItem;
+                if (((cartBloc.currentCart?.values ?? []).length) > 0) {
+                  lastItem = cartBloc.currentCart?.values.last;
+                }
+
+                final selectedModel = getSelectedItem();
+                POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
+                    "${posButton.buttonName}(${posButton.functionName}) button pressed"));
+                final func = CartDynamicButtonFunction(
+                    posButton.functionName, itemCodeEditingController)
+                  ..context = context;
+                if (activeDynamicButton) {
+                  if (mounted)
+                    setState(() {
+                      activeDynamicButton = false;
+                    });
+                  await func.handleFunction(
+                      cart: selectedModel, lastItem: lastItem);
+                  scrollToBottom();
+                  clearSelection();
+                  focusNode.requestFocus();
+                }
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  void scrollToBottom() async {
+    // scrollController.animateTo(0,
+    //     duration: Duration(milliseconds: 100), curve: Curves.linear);
+    // await Future.delayed(Duration(milliseconds: 100));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      } else {
+        if (mounted) setState(() => null);
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    scrollToBottom();
+  } // This is the bottom screen of rhs
+
+  Widget buildRHSBottom() {
+    return Column(
+      children: [
+        Expanded(
+          child: Container(
+            child: POSKeyBoard(
+                onPressed: () async {
+                  if (widget.replaceController == null) {
+                    await voidItem();
+                  }
+                },
+                onEnter: widget.replaceOnEnter ??
+                    () async {
+                      if (mounted) {
+                        setState(() {
+                          active = false;
+                        });
+                        await _handleScan();
+                        setState(() {
+                          active = true;
+                        });
+                      }
+                    },
+                isInvoiceScreen: false,
+                controller:
+                    widget.replaceController ?? itemCodeEditingController),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+            width: double.infinity,
+            child: widget.replacePayButton ??
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            POSConfig().primaryDarkGrayColor.toColor()),
+                    onPressed: () {
+                      billClose();
+                    },
+                    child: Text("invoice.bill_close".tr())))
+      ],
+    );
+  }
+
+  void billClose() async {
+    POSLoggerController.addNewLog(
+        POSLogger(POSLoggerLevel.info, "pay & complete button pressed"));
+    final route = PaymentView.routeName;
+
+    if (mounted)
+      setState(() {
+        active = false;
+      });
+
+    //check void
+    final cartList = cartBloc.currentCart?.values.toList() ?? [];
+    final voidCount =
+        cartList.where((element) => element.itemVoid == true).length;
+
+    final zero = 0;
+    bool zeroLineAmountError = false;
+    double totalAmount = 0;
+
+    for (int i = 0; i < cartList.length; i++) {
+      final element = cartList[i];
+      final voidItem = element.itemVoid ?? false;
+      final discPer = element.discPer ?? 0;
+      final discAmt = element.discAmt ?? 0;
+      final billDisc = element.billDiscPer ?? 0;
+      final billAmt = element.billDiscAmt ?? 0;
+      final lineAmt = element.amount;
+
+      if (!voidItem) {
+        totalAmount += lineAmt;
+      }
+
+      if (!voidItem &&
+          discPer <= zero &&
+          discAmt <= zero &&
+          lineAmt == zero &&
+          billAmt == zero &&
+          billDisc == zero) {
+        final item = await ProductController()
+            .searchProductByBarcode(element.proCode, 1);
+
+        final open = item?.product?.first.pluOpen ?? false;
+        if (!open) {
+          zeroLineAmountError = true;
+          break;
+        }
+      }
+    }
+
+    if (zeroLineAmountError) {
+      await showAlert("line_amount_zero");
+      return;
+    }
+
+    if (cartList.length == voidCount) {
+      await showAlert("nothing_to_save");
+      return;
+    }
+    //validate the system end date
+    if (!POSConfig().bypassEodValidation) {
+      DateTime eodDate = POSConfig().setup?.setupEndDate ?? DateTime.now();
+      int validationDuration = POSConfig().setup?.eodValidationDuration ?? -1;
+      if (validationDuration <= 0) {
+        POSConfig().bypassEodValidation = true;
+      } else {
+        if (DateTime.now()
+            .isAfter(eodDate.add(Duration(hours: validationDuration)))) {
+          final bool? canByPassEod = await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  'invoice.eod_exceed_title'.tr(),
+                  textAlign: TextAlign.center,
+                ),
+                content: Text('invoice.eod_exceed_content'.tr()),
+                actions: [
+                  AlertDialogButton(
+                      onPressed: () async {
+                        String user =
+                            userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+                        String refCode =
+                            '${POSConfig().locCode}-${POSConfig().terminalId}-@$user';
+                        bool hasPermission = false;
+                        hasPermission =
+                            SpecialPermissionHandler(context: context)
+                                .hasPermission(
+                                    permissionCode:
+                                        PermissionCode.byPassEodTimeframe,
+                                    accessType: "A",
+                                    refCode: refCode);
+
+                        //if user doesnt have the permission
+                        if (!hasPermission) {
+                          final res =
+                              await SpecialPermissionHandler(context: context)
+                                  .askForPermission(
+                                      permissionCode:
+                                          PermissionCode.byPassEodTimeframe,
+                                      accessType: "A",
+                                      refCode: refCode);
+                          hasPermission = res.success;
+                          user = res.user;
+                        }
+                        if (hasPermission) {
+                          POSConfig().bypassEodValidation = true;
+                          Navigator.pop(context, true);
+                        } else {
+                          Navigator.pop(context, false);
+                        }
+                      },
+                      text: 'invoice.eod_exceed_yes'.tr()),
+                  AlertDialogButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      text: 'invoice.eod_exceed_no'.tr()),
+                ],
+              );
+            },
+          );
+          if (canByPassEod != true) {
+            return;
+          }
+        }
+      }
+    }
+
+    EasyLoading.show(status: 'please_wait'.tr());
+
+    if (totalAmount <= zero) {
+      EasyLoading.dismiss();
+      _exchangeVoucher(totalAmount);
+      return;
+    }
+
+    POSLoggerController.addNewLog(
+        POSLogger(POSLoggerLevel.info, "Navigate to the $route"));
+    // Navigator.pushNamed(context, route);
+    focus = false;
+    clearSelection();
+
+    //load promotions
+    EasyLoading.dismiss();
+    await PromotionController(context).applyPromotion();
+
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: false,
+      context: context,
+      builder: (context) {
+        return PaymentView();
+      },
+    );
+    setState(() {
+      focus = true;
+    });
+  }
+
+  Future _exchangeVoucher(double totalAmount) async {
+    totalAmount = totalAmount * -1;
+    double zero = 0;
+    bool isZero = totalAmount == 0;
+
+    final double? res = await showDialog<double?>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('exchange_voucher.title'.tr()),
+          content: Text('exchange_voucher.subtitle'.tr()),
+          actions: [
+            if (isZero)
+              AlertDialogButton(
+                  onPressed: () => Navigator.pop(context, zero),
+                  text: 'exchange_voucher.okay'.tr())
+            else
+              Row(
+                children: [
+                  AlertDialogButton(
+                      onPressed: () => Navigator.pop(context, totalAmount * -1),
+                      text: 'exchange_voucher.cash'.tr(namedArgs: {
+                        'value': totalAmount.toStringAsFixed(2)
+                      })),
+                  const SizedBox(
+                    width: 25,
+                  ),
+                  AlertDialogButton(
+                      onPressed: () async {
+                        Navigator.pop(context, zero);
+                      },
+                      text: 'exchange_voucher.exchange'.tr(namedArgs: {
+                        'value': totalAmount.toStringAsFixed(2)
+                      })),
+                ],
+              )
+          ],
+        );
+      },
+    );
+    if (res != null) {
+      if (!isZero && res == zero) {
+        final voucher = GiftVoucher(
+            vCDESC: 'Exchange Voucher',
+            vCNO: 'exchange_999999_voucher',
+            vCVAlUE: totalAmount);
+        totalAmount = 0;
+        String user = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+        String invoiceNo = cartBloc.cartSummary?.invoiceNo ?? '';
+
+        String refCode = '$invoiceNo@${user}Ex$totalAmount';
+        bool hasPermission = false;
+        hasPermission = SpecialPermissionHandler(context: context)
+            .hasPermission(
+                permissionCode: PermissionCode.generateExchangeVoucher,
+                accessType: "A",
+                refCode: refCode);
+
+        //if user doesnt have the permission
+        if (!hasPermission) {
+          final res = await SpecialPermissionHandler(context: context)
+              .askForPermission(
+                  permissionCode: PermissionCode.generateExchangeVoucher,
+                  accessType: "A",
+                  refCode: refCode);
+          hasPermission = res.success;
+          user = res.user;
+        }
+        if (hasPermission) {
+          await calculator.addGv(voucher, 1, context, permission: false);
+        } else {
+          return;
+        }
+      } else if (!isZero && res < zero) {
+        totalAmount = res;
+        String user = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+        String invoiceNo = cartBloc.cartSummary?.invoiceNo ?? '';
+
+        String refCode = '$invoiceNo@${user}Ex$totalAmount';
+        bool hasPermission = false;
+        hasPermission = SpecialPermissionHandler(context: context)
+            .hasPermission(
+                permissionCode: PermissionCode.cashRefund,
+                accessType: "A",
+                refCode: refCode);
+
+        //if user doesnt have the permission
+        if (!hasPermission) {
+          final res = await SpecialPermissionHandler(context: context)
+              .askForPermission(
+                  permissionCode: PermissionCode.generateExchangeVoucher,
+                  accessType: "A",
+                  refCode: refCode);
+          hasPermission = res.success;
+          user = res.user;
+        }
+        if (!hasPermission) {
+          return;
+        }
+      }
+      //save payment
+      cartBloc.addPayment(PaidModel(
+          // temp < 0 ? balanceDueTemp : entered,
+          res,
+          totalAmount,
+          false,
+          'CSH',
+          'CSH',
+          '',
+          null,
+          zero,
+          'Cash',
+          'Cash'));
+      final invRes =
+          await InvoiceController().billClose(invoiced: true, context: context);
+      if (invRes.success) {
+        String invoice = cartBloc.cartSummary?.invoiceNo ?? "";
+
+        //added to update the latest saved invoice number to the local storage
+        InvoiceController().setInvoiceNo(invoice);
+
+        LastInvoiceDetails lastInvoice = LastInvoiceDetails(
+            invoiceNo: invoice,
+            billAmount: totalAmount.toStringAsFixed(2),
+            dueAmount: totalAmount.toStringAsFixed(2),
+            paidAmount: '0');
+        cartBloc.updateLastInvoice(lastInvoice);
+        await cartBloc.resetCart();
+
+        //print invoice
+        await PrintController().printHandler(
+            invoice,
+            PrintController()
+                .printInvoice(invoice, invRes.earnedPoints, 0, false, null),
+            context);
+
+        // await PrintController().printHandler(
+        //     invoice, PrintController().printExchangeVoucher(invoice), context);
+      }
+    }
+  }
+
+  Future showAlert(String key) async {
+    EasyLoading.dismiss();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return POSErrorAlert(
+            title: "$key.title".tr(),
+            subtitle: "$key.subtitle".tr(),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("$key.okay".tr()),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        POSConfig().primaryDarkGrayColor.toColor()),
+              )
+            ]);
+      },
+    ).then((value) {
+      setState(() {
+        active = true;
+      });
+    });
+  }
+
+  /// get price modes
+  Future<void> _getPriceModes() async {
+    if (mounted) {
+      setState(() {
+        _tempIndex = 0;
+      });
+    }
+    if ((cartBloc.currentCart?.length ?? -1) != 0) {
+      focusNode.requestFocus();
+      return;
+    }
+    final List<PriceModes> priceModeList = priceModeBloc.priceModes;
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: Text(
+              'price_modes.price_modes'.tr(),
+              textAlign: TextAlign.center,
+            ),
+            content: SizedBox(
+              height: ScreenUtil().screenHeight * 0.65,
+              width: ScreenUtil().screenWidth * 0.35,
+              child: RawKeyboardListener(
+                autofocus: true,
+                onKey: (RawKeyEvent value) {
+                  if (value.logicalKey == LogicalKeyboardKey.arrowDown) {
+                    _tempIndex++;
+                    if (_tempIndex >= priceModeList.length) {
+                      _tempIndex = 0;
+                    }
+                  } else if (value.logicalKey == LogicalKeyboardKey.arrowUp) {
+                    _tempIndex--;
+                    if (_tempIndex < 0) {
+                      _tempIndex = priceModeList.length - 1;
+                    }
+                  }
+                  if (mounted) {
+                    setState(() {});
+                  }
+                },
+                focusNode: FocusNode(),
+                child: ListView.builder(
+                  itemCount: priceModeList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      selected: index == _tempIndex,
+                      onTap: () => _selectPriceMode(priceModeList[index]),
+                      title: Row(
+                        children: <Widget>[
+                          Text(
+                            priceModeList[index].prMDESC ?? '',
+                            style: CurrentTheme.headline6,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+        });
+      },
+    );
+    focusNode.requestFocus();
+  }
+
+  ///select a price mode
+  Future<void> _selectPriceMode(PriceModes priceMode) async {
+    final summary = cartBloc.cartSummary ?? cartBloc.defaultSummary;
+    summary.priceMode = priceMode.prMCODE;
+    summary.priceModeDesc = priceMode.prMDESC;
+    cartBloc.updateCartSummary(summary);
+    await InvoiceController().updateTempCartSummary(summary);
+    focusNode.requestFocus();
+    Navigator.pop(context, priceMode);
+  }
+
+  /// added by [TM.Sakir] -- to trigger the f12 customer change function
+  Future<bool> hasPermission(String code) async {
+    final res = await CustomerHelper(context).hasCustomerMasterPermission(code);
+    return res;
+  }
+
+  Future<Object?> currentCustomerChange(BuildContext context) {
+    customerNode.requestFocus();
+    return showGeneralDialog(
+        context: context,
+        transitionDuration: const Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        transitionBuilder: (context, a, b, _) => RawKeyboardListener(
+              focusNode: customerNode,
+              onKey: (value) async {
+                if (value is RawKeyDownEvent) {
+                  if (value.physicalKey == PhysicalKeyboardKey.keyV) {
+                    LoyaltySummary? res;
+                    bool permission = await hasPermission("A");
+                    //ask
+
+                    if (permission) {
+                      EasyLoading.show(status: 'please_wait'.tr());
+                      res = await LoyaltyController().getLoyaltySummary(
+                          customerBloc.currentCustomer?.cMCODE ?? "");
+                      EasyLoading.dismiss();
+
+                      await showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) {
+                          return CustomerProfile(
+                            customerBloc.currentCustomer,
+                            loyaltySummary: res,
+                          );
+                        },
+                      );
+                      Navigator.pop(
+                          context); //closing the showdialog box at the end
+                    }
+                  }
+                  if (value.physicalKey == PhysicalKeyboardKey.keyN) {
+                    Navigator.pop(context);
+                  }
+                  if (value.physicalKey == PhysicalKeyboardKey.keyY) {
+                    Navigator.pop(context);
+                    var cartSum = cartBloc.cartSummary;
+                    if (cartSum != null) {
+                      cartSum.customerCode = '';
+                      cartBloc.updateCartSummary(cartSum);
+                    }
+                    customerBloc.changeCurrentCustomer(null);
+                    CustomerController().showCustomerPicker(context);
+                  }
+                }
+              },
+              child: Transform.scale(
+                scale: a.value,
+                child: AlertDialog(
+                    title: Text('general_dialog.handle_cust'.tr()),
+                    content: Text('general_dialog.handle_cust_desc'.tr()),
+                    actions: [
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  POSConfig().primaryDarkGrayColor.toColor()),
+                          onPressed: () async {
+                            LoyaltySummary? res;
+                            bool permission = await hasPermission("A");
+                            //ask
+
+                            if (permission) {
+                              EasyLoading.show(status: 'please_wait'.tr());
+                              res = await LoyaltyController().getLoyaltySummary(
+                                  customerBloc.currentCustomer?.cMCODE ?? "");
+                              EasyLoading.dismiss();
+
+                              await showModalBottomSheet(
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (context) {
+                                  return CustomerProfile(
+                                    customerBloc.currentCustomer,
+                                    loyaltySummary: res,
+                                  );
+                                },
+                              );
+                              Navigator.pop(
+                                  context); //closing the showdialog box at the end
+                            }
+                          },
+                          child: RichText(
+                              text: TextSpan(text: '', children: [
+                            TextSpan(
+                                text: 'general_dialog.view_profile'
+                                    .tr()
+                                    .substring(0, 1),
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline)),
+                            TextSpan(
+                                text: 'general_dialog.view_profile'
+                                    .tr()
+                                    .substring(1))
+                          ]))),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  POSConfig().primaryDarkGrayColor.toColor()),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: RichText(
+                              text: TextSpan(text: '', children: [
+                            TextSpan(
+                                text: 'general_dialog.no'.tr().substring(0, 1),
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline)),
+                            TextSpan(
+                                text: 'general_dialog.no'.tr().substring(1))
+                          ]))),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  POSConfig().primaryDarkGrayColor.toColor()),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            var cartSum = cartBloc.cartSummary;
+                            if (cartSum != null) {
+                              cartSum.customerCode = '';
+                              cartBloc.updateCartSummary(cartSum);
+                            }
+                            customerBloc.changeCurrentCustomer(null);
+                            CustomerController().showCustomerPicker(context);
+                          },
+                          child: RichText(
+                              text: TextSpan(text: '', children: [
+                            TextSpan(
+                                text: 'general_dialog.yes'.tr().substring(0, 1),
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline)),
+                            TextSpan(
+                                text: 'general_dialog.yes'.tr().substring(1))
+                          ])))
+                    ]),
+              ),
+            ),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return SizedBox();
+        });
+  }
+}

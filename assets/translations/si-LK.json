@@ -1,0 +1,336 @@
+{
+  "please_wait": "කරුණාකර රැඳී සිටින්න....",
+  "last_access": "ඔබගේ අවසන් පිවිසුම {date} @ {time}",
+  "login_shift": "ඇතුල් වීම @ {date} {time} වැඩ මුර #{shift}",
+  "welcome": "ආයුබෝවන්,",
+  "login_view": {
+    "user_name_field": "ඔබගේ පරිශීලක හැඳුනුම්පත ඇතුළත් කරන්න",
+    "password_field": "ඔබගේ මුරපදය ඇතුළත් කරන්න"
+  },
+  "landing_view": {
+    "welcome": "ආයුබෝවන්, ",
+    "last_access": "ඔබගේ අවසන් පිවිසුම {date} @ {time} මත විය",
+    "sign_on": "පුරනය වන්න",
+    "sign_off": "ඉවත් වන්න",
+    "invoice": "ඉන්වොයිසිය",
+    "day_end": "දින අවසානය",
+    "manager_sign_off": "කළමනාකරු සයින් ඕෆ්",
+    "turn_off": "පිටවීම"
+  },
+  "app_bar": {
+    "settings": "සැකසුම්",
+    "home": "මුල් පිටුව",
+    "notification": "දැනුම්දීම්",
+    "lock": "අගුලු දමන්න",
+    "select_customer": "පාරිභෝගිකයා තෝරන්න"
+  },
+  "open_float_view": {
+    "opening_float": "කරුණාකර ඔබේ ආරම්භක ශේෂය ඇතුළත් කරන්න",
+    "clear_button": "ඉවත් කර නැවත උත්සාහ කරන්න",
+    "confirm_button": "ඇතුළත් කළ අගය මම තහවුරු කරමි"
+  },
+  "notifications": {
+    "get_my_offers": "කිසිදු ක්\u200Dරියාකාරී ප්\u200Dරවර්ධනයක් දැකිය නොහැකිද? MyOffers මොඩියුලය ලබා ගන්න",
+    "done_button": "මම සියල්ල දැක ඇත්තෙමි",
+    "notification_title": "දැනුම්දීම්",
+    "active_promotion_title": "ක්\u200Dරියාකාරී ප්\u200Dරවර්ධන"
+  },
+  "invoice": {
+    "search": "අයිතම කේතය හෝ තීරු කේතය",
+    "item": "අයිතම",
+    "quantity": "ප්\u200Dරමාණය",
+    "sub_total": "මුළු එකතුව",
+    "bill_close": "ගෙවා සම්පූර්ණ කරන්න",
+    "plu": "PLU",
+    "description": "විස්තර",
+    "price": "මිල",
+    "qty": "Qty",
+    "amount": "මුදල",
+    "disc": "Disc %",
+    "disc_amt": "Disc Amt"
+  },
+  "special_functions": {
+    "select_special_function": "විශේෂ කාර්යය තෝරන්න",
+    "util_bill_payments": "උපයෝගිතා බිල්පත් ගෙවීම්",
+    "gift_voucher_mode": "තෑගි වවුචර් ප්‍රකාරය",
+    "weight_item_mode": "බර කිරිමේ අයිතම ප්‍රකාරය"
+  },
+  "approval_screen": {
+    "reason": "හේතුව",
+    "enter_password": "මුරපදය ඇතුළත් කරන්න හෝ ඔබගේ හැඳුනුම්පත පරිලෝකනය කරන්න",
+    "approve_this_remotely": "මෙය දුරස්ථව අනුමත කරන්නද? my n මගේ රෙමෝට් මොඩියුලය ලබා ගන්න",
+    "approve_this_action": "මෙම ක්\u200Dරියාව අනුමත කරන්න",
+    "approve_title": "අනුමැතිය අවශ්\u200Dයයි!",
+    "approve_description": "ක්\u200Dරිරියාව සඳහා ඉදිරියට යාමට වලංගු හේතුවක් සහිතව myPOS හට ඉහළ මට්ටමේ අනුමැතියක් අවශ්\u200Dය වේ: \"{desc}\".කරුණාකර මුරපදය ඇතුළත් කරන්න හෝ ඉදිරියට යාමට හැඳුනුම්පත පරිලෝකනය කරන්න. myRemote සක්\u200Dරිය නම්\nකරුණාකර අනුමැතිය ලැබෙන තෙක් රැඳී සිටින්න "
+  },
+  "payment_view": {
+    "select_payment_mode": "ගෙවීම් ක්ෂේත්රය තෝරන්න",
+    "selected_payment_mode": "තෝරාගත් ගෙවීම් ප්\u200Dරකාරය {pay_mode}",
+    "sub_total": "මුළු එකතුව",
+    "paid": "ගෙවා ඇත",
+    "balance_due": "ශේෂය",
+    "go_back": "ආපසු යන්න",
+    "bill_close": "බිල් වසන්න"
+  },
+  "product_view": {
+    "search_text": "සෙවුම් පෙළ ඇතුළත් කරන්න (විස්තරයෙන් සෙවීම)",
+    "code": "කේතය",
+    "description": "විස්තරය",
+    "unit": "ඒකකය",
+    "ps": "PS",
+    "selling": "විකුණුම් මිල",
+    "department": "දෙපාර්තමේන්තුව",
+    "sub_department": "උප\nදෙපාර්තමේන්තුව",
+    "selling_price": "විකුණුම් මිල: {price}",
+    "sih": "ඉතිරි තොගය : {sih}",
+    "add_to_lost_sale": "නැතිවූ විකිණීමට එකතු කරන්න",
+    "add_to_re_order": "නැවත ඇණවුම් කිරීමට එක් කරන්න",
+    "qty": "බිල්පතට ප්\u200Dරමාණය එකතු කරන්න"
+  },
+  "customer_search_view": {
+    "search_text": "සෙවුම් පෙළ ඇතුළත් කරන්න (නම අනුව සෙවීම)",
+    "code": "කේතය",
+    "name": "නම",
+    "nic": "ජාතික හැඳුනුම්පත",
+    "group": "සමූහය",
+    "mobile": "ජංගම දුරකථන",
+    "active": "සක්\u200Dරීයයි",
+    "inactive": "අක්\u200Dරීයයි",
+    "reset_button": "යළි පිහිටුවන්න සහ නැවත සොයන්න",
+    "select": "මෙම පාරිභෝගිකයා තෝරන්න",
+    "create": "නව ගනුදෙනුකරුවෙකු සාදන්න",
+    "view": "මෙම පාරිභෝගිකයා බලන්න"
+  },
+  "net_bill_discount_entry_view": {
+    "sub_total": "මුළු එකතුව",
+    "discount": "වට්ටම්",
+    "net_amount": "ශුද්ධ මුදල",
+    "title": "ශුද්ධ බිල් වට්ටම් ඇතුළත් කිරීම"
+  },
+  "line_discount_entry_view": {
+    "line_total": "මුළු එකතුව",
+    "discount": "වට්ටම්",
+    "line_amount": "LINE AMOUNT",
+    "discount_for": "රේඛීය අයිතම වට්ටම් සඳහා : ",
+    "mrp": "MRP : {mrp}",
+    "quantity": "ප්\u200Dරමාණය : {qty}"
+  },
+  "shift_reconciliation_view": {
+    "title": "Shift Reconciliation",
+    "shift": "Shift {shift}",
+    "total_cash": "TOTAL CASH",
+    "total_none_cash": "TOTAL NON CASH",
+    "total_collection": "TOTAL COLLECTION",
+    "clear": "Clear & Re-do",
+    "update": "Update & Finalize"
+  },
+  "exit_screen": {
+    "system_message": "System message",
+    "exit": "Do you wish to exit?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "settings": {
+    "reset_to_default": "Reset to Default",
+    "save": "Save",
+    "cancel": "Cancel",
+    "rounded_square_button": "Rounded Square Button",
+    "top_left": "Top Left",
+    "top_right": "Top Right",
+    "bottom_left": "Bottom Left",
+    "bottom_right": "Bottom Right",
+    "rounded_border_radius": "Rounded Border Radius",
+    "border_radius_all": "All Border Radius",
+    "components": "Components",
+    "toolbar_size": "Tool Bar Height",
+    "container_size": "Container Width",
+    "pos_colors": "POS Colors",
+    "primary_color": "Primary Color",
+    "background_color": "Background Color",
+    "primary_dark_color": "Dark Color",
+    "primary_light_color": "Light Color",
+    "primary_grey_color": "Grey Color",
+    "touch_keyboard": "Touch KeyBoard",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "cart": "Cart Settings",
+    "cart_dynamic_button_settings": "Cart Button Settings",
+    "cart_table_view": "Cart Button Settings",
+    "card_id": "Id Length",
+    "card_name": "Product Name Length",
+    "card_price": "Product Price Length",
+    "card_qty": "Qty Length",
+    "card_total_price":"Total Price",
+    "button_width": "Button Width",
+    "button_height": "Button Height",
+    "space_between_buttons": "Space between Buttons",
+    "font_size": "Font Size",
+    "checkout_data_table_font_size": "Checkout Table Font Size",
+    "cart_display_mode": "Cart Display mode",
+    "lhs": "LHS",
+    "rhs": "RHS",
+    "table_view": "Table View",
+    "list_view": "List View",
+    "payment_settings": "Payment Settings",
+    "cart_batch": "View Cart as Batch",
+    "terminal_id": "Terminal ID",
+    "local_server": "Local POS Server",
+    "server": "POS Server",
+    "loyalty_server": "Loyalty Server",
+    "loyalty_image_server": "Loyalty Image Server",
+    "loyalty_local_server": "Loyalty Local Server",
+    "pos_image_server": "POS Image Server",
+    "are_you_sure": "Are you sure?",
+    "yes": "I accept the risk",
+    "no": "I change my mind",
+    "warning": "Changing these advanced settings harmful to the stability, security, and performance of this system. You should only continue if you are sure of what you are doing. Please enter the system super admin password to continue",
+    "pos_settings": "POS Settings",
+    "loc_code": "Location Code",
+    "com_code": "COM Code",
+    "com_name": "Company Name",
+    "setup_location": "Setup Location",
+    "location": "Location"
+  },
+  "inactive_user_alert": {
+    "title": "You dont have access to use this system",
+    "subtitle": "Please contact your system administrator",
+    "okay": "Okay"
+  },
+  "already_sign_in": {
+    "title": "You already signed on to this terminal",
+    "subtitle": "Please proceed to other functions",
+    "okay": "Okay"
+  },
+  "not_sign_in": {
+    "title": "You are not signed on to the system.",
+    "subtitle": "Please signed on to the access system.",
+    "okay": "Okay"
+  },
+  "already_sign_in_backoffice": {
+    "title": "You already signed on to the back office",
+    "subtitle": "Please sign off from back office and try again. You may need to restart the this system",
+    "okay": "Okay"
+  },
+  "already_sign_in_another_terminal": {
+    "title": "You already signed on to another terminal",
+    "subtitle": "Please sign off from {terminalId} terminal and try again. You may need to restart the this system",
+    "okay": "Okay"
+  },
+  "day_end_error": {
+    "title": "You already day ended for {date}",
+    "subtitle": "You already day ended for {date}, Therefore you cannot signed in for {today}.",
+    "okay": "Okay"
+  },
+  "not_signed_off": {
+    "title": "You already signed on",
+    "subtitle": "You have to do the sign off of the current session prior to sign on.",
+    "okay": "Okay"
+  },
+  "permission_error": {
+    "title": "You dont have permission to perform this action",
+    "subtitle": "",
+    "okay": "Okay"
+  },
+  "temp_sign_on_alert": {
+    "title": "{user} is already sign on the system",
+    "subtitle": "Do you wish to start a temporary session?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "customer_profile": {
+    "customer_profile": "Customer Profile",
+    "customer_registration": "Customer Registration",
+    "code": "Code",
+    "active": "Active",
+    "inactive": "Inactive",
+    "loyalty_status": "Loyalty Status",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "address": "Address",
+    "area": "Area",
+    "mobile": "Mobile",
+    "verify": "Verify",
+    "nic": "NIC/Passport/ID",
+    "dob": "DOB",
+    "gender": "Gender",
+    "email": "Email",
+    "edit": "Edit",
+    "create": "Create Customer",
+    "update": "Update Customer",
+    "customer_code_error": "Please enter a valid customer code",
+    "first_name_error": "Please enter a valid first name",
+    "last_name_error": "Please enter a valid last name",
+    "address1_error": "Please enter a valid address",
+    "address2_error": "Please enter a valid address",
+    "mobile_error": "Please enter a valid mobile number",
+    "birthday_error": "Please enter a birth day",
+    "gender_error": "Please enter the gender",
+    "area_error": "Please enter a valid area",
+    "nic_error": "Please enter valid nic number",
+    "email_error": "Please enter valid email address",
+    "number_not_verify": "Please verify the customer mobile number",
+    "verify_error": "Invalid OTP Number",
+    "very_error_okay":"Okay",
+    "male": "Male",
+    "female": "Female"
+  },
+  "payment_mode_empty": {
+    "title": "Payment Mode Error",
+    "subtitle": "You need to select a payment mode to perform this action",
+    "okay": "Okay"
+  },
+  "due_amount_error": {
+    "title": "Payment Error",
+    "subtitle": "The due amount should be zero",
+    "okay": "Okay"
+  },
+  "over_pay_error": {
+    "title": "Payment Error",
+    "subtitle": "The selected payment type doesn't allow over pay",
+    "okay": "Okay"
+  },
+  "loyalty_server_error": {
+    "title": "Connection Failed",
+    "subtitle": "Cannot connect to the loyalty server",
+    "okay": "Okay"
+  },
+  "server_error": {
+    "title": "Connection Failed",
+    "subtitle": "Cannot connect to the server, Initialize the local mode",
+    "okay": "Okay"
+  },
+  "discount_type_empty_error": {
+    "title": "Discount Type is Empty",
+    "subtitle": "Please select discount type",
+    "okay": "Okay"
+  },
+  "invalid_password_error": {
+    "title": "Action Denied",
+    "subtitle": "Invalid Password",
+    "okay": "Okay"
+  },
+  "hold_cart_empty": {
+    "title": "Action Denied",
+    "subtitle": "You cannot hold this invoice",
+    "okay": "Okay"
+  },
+  "hold_cart_call_error": {
+    "title": "Action Denied",
+    "subtitle": "You need to close the ongoing invoice",
+    "okay": "Okay"
+  },
+  "recall_view": {
+    "invoice_no": "Invoice No",
+    "cashier": "Cashier",
+    "net_amount": "Net Amount",
+    "time": "Time",
+    "select": "Select",
+    "inv_mode": "Inv Mode",
+    "scan_barcode": "Scan Barcode or Search"
+  },
+  "discount_above_100": {
+    "title": "Invalid Discount Percentage",
+    "subtitle": "You cannot add the percentage greater than 100",
+    "okay": "Okay"
+  }
+}
