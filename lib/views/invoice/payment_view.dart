@@ -29,6 +29,7 @@ import 'package:checkout/controllers/loyalty_controller.dart';
 import 'package:checkout/controllers/otp_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/models/enum/keyboard_type.dart';
@@ -1265,11 +1266,13 @@ class _PaymentViewState extends State<PaymentView> {
 
   Future printInvoice(String invoiceNo, double earnedPoints, double totalPoints,
       bool taxbill, String? resReturn) async {
-    await PrintController().printHandler(
-        invoiceNo,
-        PrintController().printInvoice(
-            invoiceNo, earnedPoints, totalPoints, taxbill, resReturn),
-        context);
+    // await PrintController().printHandler(
+    //     invoiceNo,
+    //     PrintController().printInvoice(
+    //         invoiceNo, earnedPoints, totalPoints, taxbill, resReturn),
+    //     context);
+    await POSManualPrint().printInvoice(data: resReturn);
+
     // var result = await PrintController().printInvoice(invoiceNo);
     // var tempRes = PrintStatus(true, true, "");
     // while (!result.goBack) {

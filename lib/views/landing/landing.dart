@@ -23,6 +23,7 @@ import 'package:checkout/controllers/local_storage_controller.dart';
 import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/promotion_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/extension/extensions.dart';
@@ -307,6 +308,11 @@ class _LandingViewState extends State<LandingView> {
                     },
                     text: 'Re-Open Crystal Plugin'),
                 SizedBox(height: 25.h),
+                AlertDialogButton(
+                    onPressed: () async {
+                      await POSManualPrint().printInvoice();
+                    },
+                    text: 'testPrint'),
               ],
             ),
           ),

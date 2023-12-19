@@ -68,7 +68,7 @@ dependencies:
   http: ^0.13.5
   # cargills_loyalty:
   #   path: ../cargills_loyalty
-  fl_chart: ^0.64.0
+  fl_chart: ^0.65.0
   overlay_tutorial: ^3.0.0
   lottie: ^2.6.0
   path_provider: ^2.0.11
@@ -79,7 +79,9 @@ dependencies:
   package_info_plus: ^3.1.2
   marquee: ^2.2.3
   loading_indicator: ^3.1.1
-
+  esc_pos_utils_plus: ^2.0.3
+  usb_esc_printer_windows: ^0.0.2
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
