@@ -124,8 +124,11 @@ class _ServiceStatusViewState extends State<ServiceStatusView> {
         SizedBox(width: 10.w),
         Tooltip(
             message: server.url,
-            child: Text(server.name,
-                style: CurrentTheme.bodyText2!.copyWith(fontSize: 18.sp))),
+            child: SizedBox(
+              width: 200.w,
+              child: Text(server.name,
+                  style: CurrentTheme.bodyText2!.copyWith(fontSize: 18.sp)),
+            )),
         SizedBox(width: 10.w),
         SizedBox(
           width: 125.w,
@@ -160,6 +163,63 @@ class _ServiceStatusViewState extends State<ServiceStatusView> {
       ],
     );
   }
+  // Widget _buildServerItem(_ServerList server) {
+  //   return Table(
+  //     border: TableBorder.all(), // Add grid lines around the table
+  //     children: [
+  //       TableRow(
+  //         children: [
+  //           _buildIcon(server.serverStatus),
+  //           // SizedBox(width: 10.w),
+  //           Tooltip(
+  //             message: server.url,
+  //             child: SizedBox(
+  //               width: 200.w,
+  //               child: Text(
+  //                 server.name,
+  //                 style: CurrentTheme.bodyText2!.copyWith(fontSize: 18.sp),
+  //               ),
+  //             ),
+  //           ),
+  //           // SizedBox(width: 10.w),
+  //           SizedBox(
+  //             width: 125.w,
+  //             child: Text(
+  //               ' ${server.ping} ms',
+  //               style: CurrentTheme.bodyText1!.copyWith(
+  //                 color: _getLatencyColor(server.ping),
+  //               ),
+  //             ),
+  //           ),
+  //           SizedBox(
+  //             width: 200.w,
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //               children: [
+  //                 Text(
+  //                   'serverSql',
+  //                   style: CurrentTheme.bodyText1!.copyWith(
+  //                     color: server.serverDatabaseWorking == true
+  //                         ? Colors.greenAccent
+  //                         : Colors.red,
+  //                   ),
+  //                 ),
+  //                 Text(
+  //                   'defaultSql',
+  //                   style: CurrentTheme.bodyText1!.copyWith(
+  //                     color: server.defaultDatabaseWorking == true
+  //                         ? Colors.greenAccent
+  //                         : Colors.red,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Color _getLatencyColor(int latency) {
     if (latency == -1) {

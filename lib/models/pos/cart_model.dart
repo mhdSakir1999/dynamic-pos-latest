@@ -19,6 +19,7 @@ class CartModel {
   final String locCode = POSConfig().locCode;
   final String comCode = POSConfig().comCode;
   int? lineNo;
+  bool? allowMinus;
   String? saleman;
   bool? itemVoid;
   String proCode;
@@ -61,6 +62,13 @@ class CartModel {
   double? promoFreeQty;
   String? promoOriginalItem;
   String? priceMode;
+
+  bool? varientEnabled;
+  bool? batchEnabled;
+
+  bool? userAllowedMinus;
+
+  bool? isTaxCalculated;
 
   /// this is used for fixed price items
   bool? allowDiscount;
@@ -117,6 +125,8 @@ class CartModel {
           map['maxdisC_PER']?.toString().parseDouble() ?? 0, //maxdisC_AMT
     )
       ..key = map["temP_KEY"].toString()
+      ..dateTime =
+          map["datE_TIME"]?.toString().replaceAll(' ', 'T').parseDateTime()
       ..image =
           POSConfig().posImageServer + "images/products/${map['prO_CODE']}.png"
       ..promoBillDiscPre =
@@ -206,45 +216,50 @@ class CartModel {
       ..promoDesc = map["PROMO_DESC"]?.toString() ?? '';
   }
 
-  CartModel({
-    required this.setUpLocation,
-    this.lineNo,
-    this.saleman,
-    this.itemVoid,
-    required this.proCode,
-    required this.stockCode,
-    required this.posDesc,
-    this.proUnit,
-    required this.lineRemark,
-    this.proCaseSize,
-    this.proCost,
-    required this.proSelling,
-    this.proAvgCost,
-    required this.selling,
-    this.discPer,
-    this.discAmt,
-    this.billDiscPer,
-    this.billDiscAmt,
-    this.caseQty,
-    required this.unitQty,
-    this.caseFreeQty,
-    this.unitFreeQty,
-    required this.amount,
-    this.freeQty,
-    required this.noDisc,
-    required this.scanBarcode,
-    this.discountReason,
-    this.isVoucher,
-    required this.maxDiscPer,
-    required this.maxDiscAmt,
-    this.maxVolumeGroup,
-    this.maxVolumeGroupLvl,
-    this.volume,
-    this.maxVolume,
-    this.allowDiscount,
-    this.priceMode,
-    this.allowLoyalty,
-  });
+  CartModel(
+      {required this.setUpLocation,
+      this.lineNo,
+      this.saleman,
+      this.itemVoid,
+      required this.proCode,
+      required this.stockCode,
+      required this.posDesc,
+      this.proUnit,
+      required this.lineRemark,
+      this.proCaseSize,
+      this.proCost,
+      required this.proSelling,
+      this.proAvgCost,
+      required this.selling,
+      this.discPer,
+      this.discAmt,
+      this.billDiscPer,
+      this.billDiscAmt,
+      this.caseQty,
+      required this.unitQty,
+      this.caseFreeQty,
+      this.unitFreeQty,
+      required this.amount,
+      this.freeQty,
+      required this.noDisc,
+      required this.scanBarcode,
+      this.discountReason,
+      this.isVoucher,
+      required this.maxDiscPer,
+      required this.maxDiscAmt,
+      this.maxVolumeGroup,
+      this.maxVolumeGroupLvl,
+      this.volume,
+      this.maxVolume,
+      this.allowDiscount,
+      this.priceMode,
+      this.allowLoyalty,
+      this.isTaxCalculated = false,
+      this.batchEnabled,
+      this.varientEnabled,
+      this.userAllowedMinus,
+      this.allowMinus,
+      this.dateTime});
 
   Map<String, dynamic> toMap() {
     return {
@@ -283,7 +298,8 @@ class CartModel {
       'MAXDISC_AMT': maxDiscAmt?.toDouble() ?? 0,
       'PLU_VOLUME': volume?.toDouble() ?? 0,
       'PLU_MAXVOLUME': maxVolume?.toDouble() ?? 0,
-      'LINE_REMARK': lineRemark,
+      'LINE_REMARK': lineRemark, // wrong --
+      // 'LINE_REMARK': lineRemark.map((e) => e.toString()).toList().first,
       'PLU_MAXVOLUME_GRP': maxVolumeGroup,
       'PLU_MAXVOLUME_GRPLV': maxVolumeGroupLvl,
       'PROMO_CODE': promoCode,
@@ -296,7 +312,7 @@ class CartModel {
       'PRICE_MODE': priceMode,
       'ALLOW_DISCOUNT': allowDiscount,
       'ALLOW_LOYALTY': allowLoyalty,
-      'LINE_REMARK': '' //not use in system
+      // 'LINE_REMARK': '' //not use in system
     };
   }
 }

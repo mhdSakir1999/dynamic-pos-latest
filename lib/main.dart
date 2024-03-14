@@ -1,15 +1,18 @@
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan, TM.Sakir & Pubudu Wijethunga
  * Created At: 4/21/21, 10:47 AM
- * Editted/Migrated by: TM.Sakir
+ * Editted,Migrated & Further developments by: TM.Sakir
  */
 
 import 'dart:async';
 
+import 'package:checkout/components/recurringApiCalls.dart';
 import 'package:checkout/controllers/config/shared_preference_controller.dart';
 import 'package:checkout/controllers/keyboard_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
+import 'package:checkout/controllers/usb_serial_controller.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
 import 'package:checkout/views/authentication/login_view.dart';
@@ -30,16 +33,21 @@ void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
 
   runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await EasyLocalization.ensureInitialized();
-    await SharedPreferenceController.init();
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
+      await EasyLocalization.ensureInitialized();
+      await SharedPreferenceController.init();
+    } catch (e) {
+      LogWriter().saveLogsToFile("ERROR_LOG_", [e.toString()]);
+    }
     await SharedPreferenceController()
         .openAPI(); // opening the local api && printer plugin
     await SharedPreferenceController().getConfig(false);
     await SharedPreferenceController().getConfigLocal();
     await SharedPreferenceController().getConfig(false);
     posConnectivity.startListen();
-
+    usbSerial.initSerialPort();
+    recurringApiCalls.listenPhysicalCash();
     // this section is moved (websocket initialization) to the login screen. because there is a delay in initializing api/s
 
     //get unique id for dual display set up
@@ -108,7 +116,6 @@ void main() async {
             DesktopWindow.setFullScreen(true);
           }
         }
-
         // appWindow.alignment = Alignment.center;
 
         appWindow.show();
@@ -125,7 +132,7 @@ void main() async {
 
 void configLoading() {
   EasyLoading.instance
-    ..displayDuration = const Duration(milliseconds: 1500)
+    // ..displayDuration = const Duration(milliseconds: 1000)
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
     ..loadingStyle = EasyLoadingStyle.dark
     ..indicatorSize = 45.0
@@ -136,7 +143,7 @@ void configLoading() {
     ..textColor = Colors.yellow
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = false
-    ..displayDuration = Duration(seconds: 2)
+    ..displayDuration = Duration(milliseconds: 1100)
     ..dismissOnTap = false;
 }
 

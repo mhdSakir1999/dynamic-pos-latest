@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 7/10/21, 10:40 AM
  */
 import 'package:checkout/extension/extensions.dart';
@@ -35,18 +35,21 @@ class CashInOutResult {
 class CashInOutType {
   String? rWCODE;
   String? rWDESC;
+  int? rWADVANCE;
 
-  CashInOutType({this.rWCODE, this.rWDESC});
+  CashInOutType({this.rWCODE, this.rWDESC, this.rWADVANCE});
 
   CashInOutType.fromJson(Map<String, dynamic> json) {
     rWCODE = json['rW_CODE'];
     rWDESC = json['rW_DESC'];
+    rWADVANCE = json['rW_ADVANCE'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['rW_CODE'] = this.rWCODE;
     data['rW_DESC'] = this.rWDESC;
+    data['rW_ADVANCE'] = this.rWADVANCE ?? 0;
     return data;
   }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/28/21, 4:59 PM
  * Edit/correction/new functions: TM.Sakir
  */
@@ -86,7 +86,7 @@ class ExitScreen extends StatelessWidget {
           'cmd.exe', ['/c', 'taskkill /F /IM Dynamic_POS_REST_API.exe']);
       LogWriter().saveLogsToFile('ERROR_Log_', ['Closing previous api...']);
     } catch (e) {
-      LogWriter().saveLogsToFile(
+      await LogWriter().saveLogsToFile(
           'ERROR_Log_', ['Error Closing previous api: ${e.toString()}']);
       print('Error: $e');
     }
@@ -95,7 +95,7 @@ class ExitScreen extends StatelessWidget {
           'cmd.exe', ['/c', 'taskkill /F /IM CrystalReport.exe']);
       LogWriter().saveLogsToFile('ERROR_Log_', ['Closing previous api...']);
     } catch (e) {
-      LogWriter().saveLogsToFile(
+     await LogWriter().saveLogsToFile(
           'ERROR_Log_', ['Error Closing previous api: ${e.toString()}']);
       print('Error: $e');
     }

@@ -1,9 +1,10 @@
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/22/21, 1:15 PM
  */
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:checkout/bloc/discount_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:checkout/bloc/salesRep_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/mypos_screen_utils.dart';
+import 'package:checkout/components/recurringApiCalls.dart';
 import 'package:checkout/controllers/auth_controller.dart';
 import 'package:checkout/controllers/backup_controller.dart';
 import 'package:checkout/controllers/config/shared_preference_controller.dart';
@@ -26,9 +28,11 @@ import 'package:checkout/controllers/pos_logger_controller.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/promotion_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
+import 'package:checkout/controllers/usb_serial_controller.dart';
 import 'package:checkout/extension/extensions.dart';
 import 'package:checkout/models/enum/pos_connectivity_status.dart';
 import 'package:checkout/models/enum/signon_status.dart';
+import 'package:checkout/models/pos/pos_denomination_model.dart';
 import 'package:checkout/models/pos/user_hed.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
@@ -43,6 +47,7 @@ import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:checkout/views/dashboard/dashboard_view.dart';
+import 'package:serial_port_win32/serial_port_win32.dart';
 import 'package:supercharged/supercharged.dart';
 import '../../controllers/invoice_controller.dart';
 import '../../controllers/pos_alerts/pos_warning_alert.dart';
@@ -80,6 +85,14 @@ class _LandingViewState extends State<LandingView> {
     notificationBloc.getNotifications();
     saveConfig();
     _focusNode.requestFocus();
+    if (POSConfig().enablePollDisplay == 'true') {
+      try {
+        usbSerial.sendToSerialDisplay('     HELLO !!!      ');
+        usbSerial.sendToSerialDisplay('  WELCOME TO SPAR   ');
+      } catch (e) {
+        LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
+      }
+    }
   }
 
   @override
@@ -103,7 +116,7 @@ class _LandingViewState extends State<LandingView> {
   /* By dinuka 2022/08/03 */
   initFunctions() async {
     await getPromotions();
-    await uploadBillData();
+    if (POSConfig().allowLocalMode) await uploadBillData();
   }
 
   final authController = AuthController();
@@ -118,6 +131,7 @@ class _LandingViewState extends State<LandingView> {
 
     alertController.init(context);
     posConnectivity.setContext(context);
+    recurringApiCalls.setContext(context);
     return POSBackground(
         showConnection: false,
         child: Stack(
@@ -273,7 +287,7 @@ class _LandingViewState extends State<LandingView> {
                         print('Stdout:\n${result.stdout}');
                         print('Stderr:\n${result.stderr}');
                       } catch (e) {
-                        LogWriter().saveLogsToFile('ERROR_Log_',
+                        await LogWriter().saveLogsToFile('ERROR_Log_',
                             ['Error Closing CrystalReport: ${e.toString()}']);
                         print('Error: $e');
                       }
@@ -310,7 +324,21 @@ class _LandingViewState extends State<LandingView> {
                 SizedBox(height: 25.h),
                 AlertDialogButton(
                     onPressed: () async {
-                      await POSManualPrint().printInvoice();
+                      String data = POSConfig.localPrintData;
+                      // List<POSDenominationModel> denominations =
+                      //     POSConfig.denominations;
+                      // List<POSDenominationDetail> denominationDet =
+                      //     POSConfig.denominationDet;
+                      await POSManualPrint()
+                          .printInvoice(data: data, points: 0.0);
+                      // await POSManualPrint().printSignSlip(
+                      //     data: '', slipType: 'signoff', float: 100);
+                      // await POSManualPrint().printManagerSlip(
+                      //     data: data,
+                      //     denominations: denominations,
+                      //     denominationDet: denominationDet);
+
+                      // recurringApiCalls.listenPhysicalCash();
                     },
                     text: 'testPrint'),
               ],
@@ -386,8 +414,8 @@ class _LandingViewState extends State<LandingView> {
         DateFormat.yMMMMEEEEd().format(format.parse(date ?? now));
     String loggedTime =
         DateFormat("hh:mm:ss aa").format(format.parse(time ?? now));
-
-    if (userBloc.signOnStatus == SignOnStatus.SignOn) {
+    if (userBloc.signOnStatus == SignOnStatus.SignOn &&
+        POSConfig().dualScreenWebsite != "") {
       DualScreenController().setLandingScreen();
     }
 
@@ -438,11 +466,13 @@ class _LandingViewState extends State<LandingView> {
             focusNode: _focusNode,
             onKey: (value) {
               if (value is RawKeyDownEvent) {
-                if (value.logicalKey == LogicalKeyboardKey.f1) {
+                if (POSConfig().localMode != true &&
+                    value.logicalKey == LogicalKeyboardKey.f1) {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => DashboardView()));
                 }
-                if (value.logicalKey == LogicalKeyboardKey.f2) {
+                if (POSConfig().localMode != true &&
+                    value.logicalKey == LogicalKeyboardKey.f2) {
                   if (isEOD_Pending == true) {
                     alertController.showErrorAlert(
                         "landing_eod_not_done_for_yersterday",
@@ -453,19 +483,23 @@ class _LandingViewState extends State<LandingView> {
                   } else
                     landingHelper.validateSignOn();
                 }
-                if (value.logicalKey == LogicalKeyboardKey.f3) {
+                if (POSConfig().localMode != true &&
+                    value.logicalKey == LogicalKeyboardKey.f3) {
                   landingHelper.userSignOff();
                 }
                 if (value.logicalKey == LogicalKeyboardKey.f4) {
                   _goToInvoice();
                 }
-                if (value.logicalKey == LogicalKeyboardKey.f5) {
+                if (POSConfig().localMode != true &&
+                    value.logicalKey == LogicalKeyboardKey.f5) {
                   dayEnd();
                 }
-                if (value.logicalKey == LogicalKeyboardKey.f6) {
+                if (POSConfig().localMode != true &&
+                    value.logicalKey == LogicalKeyboardKey.f6) {
                   landingHelper.managerSignOff(context, activeManagerSignOff);
                 }
-                if (value.logicalKey == LogicalKeyboardKey.f7) {
+                if (POSConfig().localMode != true &&
+                    value.logicalKey == LogicalKeyboardKey.f7) {
                   landingHelper.spotCheck();
                 }
                 if (value.logicalKey == LogicalKeyboardKey.escape) {
@@ -546,10 +580,12 @@ class _LandingViewState extends State<LandingView> {
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                         ),
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DashboardView())),
+                        onPressed: POSConfig().localMode == true
+                            ? null
+                            : () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DashboardView())),
                       )),
                       landingButton(
                           child: ElevatedButton(
@@ -560,17 +596,21 @@ class _LandingViewState extends State<LandingView> {
                           "landing_view.sign_on".tr(),
                           textAlign: TextAlign.center,
                         ),
-                        onPressed: () {
-                          if (isEOD_Pending == true) {
-                            alertController.showErrorAlert(
-                                "landing_eod_not_done_for_yersterday",
-                                namedArgs: {
-                                  "date": strEodDate.parseDateTime().toString()
-                                });
-                            return;
-                          } else
-                            landingHelper.validateSignOn();
-                        },
+                        onPressed: POSConfig().localMode == true
+                            ? null
+                            : () {
+                                if (isEOD_Pending == true) {
+                                  alertController.showErrorAlert(
+                                      "landing_eod_not_done_for_yersterday",
+                                      namedArgs: {
+                                        "date": strEodDate
+                                            .parseDateTime()
+                                            .toString()
+                                      });
+                                  return;
+                                } else
+                                  landingHelper.validateSignOn();
+                              },
                       )),
                       landingButton(
                         child: ElevatedButton(
@@ -581,9 +621,11 @@ class _LandingViewState extends State<LandingView> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   activeSignOff ? activeColor : deActiveColor),
-                          onPressed: () {
-                            landingHelper.userSignOff();
-                          },
+                          onPressed: POSConfig().localMode == true
+                              ? null
+                              : () {
+                                  landingHelper.userSignOff();
+                                },
                         ),
                       ),
                       landingButton(
@@ -620,7 +662,8 @@ class _LandingViewState extends State<LandingView> {
                               "landing_view.day_end".tr(),
                               textAlign: TextAlign.center,
                             ),
-                            onPressed: dayEnd),
+                            onPressed:
+                                POSConfig().localMode == true ? null : dayEnd),
                       ),
                       landingButton(
                         child: ElevatedButton(
@@ -632,10 +675,12 @@ class _LandingViewState extends State<LandingView> {
                             "landing_view.manager_sign_off".tr(),
                             textAlign: TextAlign.center,
                           ),
-                          onPressed: () {
-                            landingHelper.managerSignOff(
-                                context, activeManagerSignOff);
-                          },
+                          onPressed: POSConfig().localMode == true
+                              ? null
+                              : () {
+                                  landingHelper.managerSignOff(
+                                      context, activeManagerSignOff);
+                                },
                         ),
                       ),
                       landingButton(
@@ -648,9 +693,11 @@ class _LandingViewState extends State<LandingView> {
                             "landing_view.spot_check".tr(),
                             textAlign: TextAlign.center,
                           ),
-                          onPressed: () {
-                            landingHelper.spotCheck();
-                          },
+                          onPressed: POSConfig().localMode == true
+                              ? null
+                              : () {
+                                  landingHelper.spotCheck();
+                                },
                         ),
                       ),
                       landingButton(

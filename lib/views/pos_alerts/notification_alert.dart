@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/23/21, 10:31 AM
  */
 import 'package:checkout/bloc/notification_bloc.dart';
@@ -9,6 +9,7 @@ import 'package:checkout/models/pos/notification_results.dart';
 import 'package:checkout/views/pos_alerts/pos_alert_template.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../components/current_theme.dart';
 import '../../models/pos_config.dart';
@@ -59,11 +60,11 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 child: Dismissible(
                   background: _slideBackground(false),
                   secondaryBackground: _slideBackground(true),
-                  confirmDismiss:(dir)async{
-                    await _readNotification(e.notIID?.toString()??"-1");
+                  confirmDismiss: (dir) async {
+                    await _readNotification(e.notIID?.toString() ?? "-1");
                     return true;
                   },
-                  key: Key(e.notIID?.toString()??"-1"),
+                  key: Key(e.notIID?.toString() ?? "-1"),
                   child: Card(
                     color: CurrentTheme.primaryColor,
                     child: Padding(
@@ -78,8 +79,8 @@ class _NotificationAlertState extends State<NotificationAlert> {
                                 if (e.cRBY != null)
                                   TextSpan(
                                       text: "By ",
-                                      style:
-                                          TextStyle(fontWeight: FontWeight.bold)),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
                                 TextSpan(
                                     text: e.cRBY,
                                     style:
@@ -94,7 +95,18 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 ));
           }).toList(),
           icon: Icons.notifications_active_outlined,
-          rightButtonPressed: () => _readNotification("-1"),
+
+          /// change by [TM.Sakir]
+          rightButtonPressed: () {
+            // since, the id passed, is not a correct id of the actual notifications
+            // _readNotification("-1");
+
+            // So, this approach can clear all messages by iteratively passing notification ids
+            notifications.forEach((element) async =>
+                await _readNotification(element.notIID.toString()));
+            EasyLoading.showSuccess('app_bar.notification_clear'.tr());
+            Navigator.pop(context);
+          },
           rightButtonText: "notifications.done_button".tr(),
           title: "notifications.notification_title".tr(),
           expNotification: false,
@@ -102,22 +114,24 @@ class _NotificationAlertState extends State<NotificationAlert> {
       },
     );
   }
+
   /// right side background of dismissible widget
   Widget _slideBackground(bool secondary) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           bottomLeft:
-          Radius.circular(POSConfig().rounderBorderRadiusBottomLeft),
+              Radius.circular(POSConfig().rounderBorderRadiusBottomLeft),
           bottomRight:
-          Radius.circular(POSConfig().rounderBorderRadiusBottomRight),
+              Radius.circular(POSConfig().rounderBorderRadiusBottomRight),
           topLeft: Radius.circular(POSConfig().rounderBorderRadiusTopLeft),
           topRight: Radius.circular(POSConfig().rounderBorderRadiusTopRight),
         ),
       ),
       child: Align(
         child: Row(
-          mainAxisAlignment: secondary?MainAxisAlignment.end:MainAxisAlignment.start,
+          mainAxisAlignment:
+              secondary ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(
               width: 20,

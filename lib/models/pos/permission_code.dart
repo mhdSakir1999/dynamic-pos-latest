@@ -38,4 +38,5 @@ class PermissionCode {
   static const disconnectedMode = 'P00011';
   static const skipOrgInvInTReturns = 'P00150';
   static const skipOtpForRegistration = 'P00201';
+  static const changeDefaultFloat = 'P00202';
 }

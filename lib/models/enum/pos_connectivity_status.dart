@@ -5,3 +5,5 @@
  */
 
 enum POSConnectivityStatus { Local, Server, None }
+
+

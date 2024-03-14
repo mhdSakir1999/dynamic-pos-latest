@@ -4,6 +4,7 @@
  * Created At: 6/9/21, 6:41 PM
  */
 import 'package:checkout/bloc/cart_bloc.dart';
+import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/controllers/discount_handler.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
@@ -52,22 +53,22 @@ class BillDiscountHandler {
 
     _currentCartList.forEach((cart) {
       double maxDiscPer = maxDiscountAmount;
-      if((cart.maxDiscPer ??0)  != 0){
-        if(cart.maxDiscPer!>maxDiscPer){
+      if ((cart.maxDiscPer ?? 0) != 0) {
+        if (cart.maxDiscPer! > maxDiscPer) {
           maxDiscPer = cart.maxDiscPer!;
         }
         if (maxDiscPer < discountAmount) {
           canApplyDiscount = false;
           shouldAskOverride = true;
         }
-      }else if((cart.maxDiscAmt??0)!=0){
+      } else if ((cart.maxDiscAmt ?? 0) != 0) {
         //calculate max disc amt
-        double maxDiscAmtUser = maxDiscountAmount * cart.selling/100;
-        if(maxDiscAmtUser>cart.maxDiscAmt!){
+        double maxDiscAmtUser = maxDiscountAmount * cart.selling / 100;
+        if (maxDiscAmtUser > cart.maxDiscAmt!) {
           maxDiscAmtUser = cart.maxDiscAmt!;
         }
-        double cartDiscount = cart.amount * discountAmount/100;
-        if(maxDiscAmtUser<cartDiscount){
+        double cartDiscount = cart.amount * discountAmount / 100;
+        if (maxDiscAmtUser < cartDiscount) {
           canApplyDiscount = false;
           shouldAskOverride = true;
         }
@@ -147,12 +148,18 @@ class BillDiscountHandler {
     bool hasPermission = false;
     //check
     final handler = SpecialPermissionHandler(context: context);
-    final permissionList =
-        await AuthController().getUserPermissionListByUserCode(user);
+
+    // I commend this one because this results can be obtain from userbloc
+    // final permissionList =
+    //     await AuthController().getUserPermissionListByUserCode(user);
+    // bool hasPermissionToOverRide = SpecialPermissionHandler(context: context)
+    //     .hasPermissionInList(permissionList?.userRights ?? [],
+    //         PermissionCode.overrideDiscount, "A", user);
+    final permissionList = userBloc.userDetails?.userRights;
 
     bool hasPermissionToOverRide = SpecialPermissionHandler(context: context)
-        .hasPermissionInList(permissionList?.userRights ?? [],
-            PermissionCode.overrideDiscount, "A", user);
+        .hasPermissionInList(
+            permissionList ?? [], PermissionCode.overrideDiscount, "A", user);
 
     if (!hasPermissionToOverRide) {
       //  ask

@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/29/21, 3:21 PM
  */
 
@@ -22,6 +22,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supercharged/supercharged.dart';
 
 import '../../bloc/notification_bloc.dart';
 import '../../components/pos_platform.dart';
@@ -63,7 +64,7 @@ class SharedPreferenceController {
           'cmd.exe', ['/c', 'taskkill /F /IM Dynamic_POS_REST_API.exe']);
       LogWriter().saveLogsToFile('ERROR_Log_', ['Closing previous api...']);
     } catch (e) {
-      LogWriter().saveLogsToFile(
+      await LogWriter().saveLogsToFile(
           'ERROR_Log_', ['Error Closing previous api: ${e.toString()}']);
       print('Error: $e');
     }
@@ -71,7 +72,7 @@ class SharedPreferenceController {
       await Process.run('cmd.exe', ['/c', 'taskkill /F /IM CrystalReport.exe']);
       LogWriter().saveLogsToFile('ERROR_Log_', ['Closing previous api...']);
     } catch (e) {
-      LogWriter().saveLogsToFile(
+      await LogWriter().saveLogsToFile(
           'ERROR_Log_', ['Error Closing previous api: ${e.toString()}']);
       print('Error: $e');
     }
@@ -296,36 +297,88 @@ class SharedPreferenceController {
       print('inside reading config');
       await dotenv.load(fileName: "assets/.env");
       print('reading config completed');
-      POSConfig().server = dotenv.env['SERVER']!;
-      print('SERVER');
-      POSConfig().allowLocalMode = dotenv.env['ALLOW_LOCAL_MODE']! == 'true';
-      POSConfig().local = dotenv.env['LOCAL']!;
-      print('LOCAL');
-      POSConfig().posImageServer = dotenv.env['POS_IMAGE']!;
-      print('POS_IMAGE');
-      POSConfig().loyaltyServerOutlet = dotenv.env['LOYALTY']!;
-      print('LOYALTY');
-      POSConfig().loyaltyServerImage = dotenv.env['LOYALTY_IMAGE']!;
-      print('LOYALTY_IMAGE');
-      POSConfig().webSocketUrl = dotenv.env['WEB_SOCKET']!;
-      print('WEB_SOCKET');
-      POSConfig().saas = dotenv.env['SAAS'] == 'true';
-      print('SAAS');
-      POSConfig().password = dotenv.env['PASSWORD']!;
-      print('PASSWORD');
-      POSConfig().dualScreenWebsite = dotenv.env['DUAL_SCREEN']!;
-      print('DUAL_SCREEN');
+      POSConfig().server = dotenv.env['SERVER'] ?? '';
+      print('SERVER: ${POSConfig().server}');
+      POSConfig().allowLocalMode =
+          dotenv.env['ALLOW_LOCAL_MODE'] == 'true' ?? false;
+      print('ALLOW_LOCAL_MODE: ${POSConfig().allowLocalMode}');
+      POSConfig().local = dotenv.env['LOCAL'] ?? '';
+      print('LOCAL: ${POSConfig().local}');
+      POSConfig().posImageServer = dotenv.env['POS_IMAGE'] ?? '';
+      print('POS_IMAGE: ${POSConfig().posImageServer}');
+      POSConfig().loyaltyServerOutlet = dotenv.env['LOYALTY'] ?? '';
+      print('LOYALTY: ${POSConfig().loyaltyServerOutlet}');
+      POSConfig().loyaltyServerImage = dotenv.env['LOYALTY_IMAGE'] ?? '';
+      print('LOYALTY_IMAGE: ${POSConfig().loyaltyServerImage}');
+      POSConfig().webSocketUrl = dotenv.env['WEB_SOCKET'] ?? '';
+      print('WEB_SOCKET: ${POSConfig().webSocketUrl}');
+      POSConfig().saas = dotenv.env['SAAS'] == 'true' ?? false;
+      print('SAAS: ${POSConfig().saas}');
+      POSConfig().password = dotenv.env['PASSWORD'] ?? '';
+      print('PASSWORD: ${POSConfig().password}');
+      POSConfig().dualScreenWebsite = dotenv.env['DUAL_SCREEN'] ?? '';
+      print('DUAL_SCREEN: ${POSConfig().dualScreenWebsite}');
+      POSConfig.crystalPath = dotenv.env['CRYSTAL_REPORT_PATH'] ?? '';
+      print('DUAL_SCREEN: ${POSConfig().dualScreenWebsite}');
+      POSConfig().enablePollDisplay =
+          dotenv.env['ENABLE_POLL_DISPLAY'] ?? 'false';
+      print('ENABLE_POLL_DISPLAY: ${POSConfig().enablePollDisplay}');
+      POSConfig().pollDisplayPort = dotenv.env['POLL_DISPLAY_PORT'] ?? 'COM3';
+      print('POLL_DISPLAY_PORT: ${POSConfig().pollDisplayPort}');
+      POSConfig().pollDisplayPortBaudRate =
+          (dotenv.env['BAUD_RATE'] ?? '9600').toInt()!;
+      print('POLL_DISPLAY_PORT: ${POSConfig().pollDisplayPort}');
       if (POSPlatform().isDesktop()) {
-        POSConfig().screen_width = double.parse(dotenv.env['SCREEN_WIDTH']!);
-        print('SCREEN_WIDTH');
-        POSConfig().screen_height = double.parse(dotenv.env['SCREEN_HEIGHT']!);
-        POSConfig().default_size = dotenv.env['DEFAULT_SIZE'] == 'true';
+        POSConfig().screen_width =
+            double.parse(dotenv.env['SCREEN_WIDTH'] ?? '1024');
+        print('SCREEN_WIDTH: ${POSConfig().screen_width}');
+        POSConfig().screen_height =
+            double.parse(dotenv.env['SCREEN_HEIGHT'] ?? '768');
+        print('SCREEN_HEIGHT: ${POSConfig().screen_height}');
+        POSConfig().default_size =
+            dotenv.env['DEFAULT_SIZE'] == 'true' ?? false;
       }
       POSConfig().singleSwipeActive =
           (int.parse(dotenv.env['CARD_SWIPE'] ?? '0') == 1 ? true : false);
+      print('SINGLE_SWIPE_ACTIVE: ${POSConfig().singleSwipeActive}');
+      POSConfig.localPrintPath =
+          dotenv.env['LOCAL_PRINT_TEMPLATES_PATH'] ?? 'C:/checkout/LOCAL_PRINT';
+      print('LOCAL_PRINT_TEMPLATES_PATH: ${POSConfig.localPrintPath}');
+      POSConfig.printerName = dotenv.env['PRINTER_NAME'] ?? 'POS-80C';
+      print('PRINTER_NAME: ${POSConfig.printerName}');
+      POSConfig.font_a_length = int.parse(dotenv.env['FONT_A_LENGTH'] ?? '42');
+      print('FONT_A_LENGTH: ${POSConfig.font_a_length}');
+      POSConfig.font_b_length = int.parse(dotenv.env['FONT_B_LENGTH'] ?? '56');
+      print('FONT_B_LENGTH: ${POSConfig.font_b_length}');
 
       print('loading config from .env completed');
+      await LogWriter().saveLogsToFile('ERROR_LOG_', [
+        'loading config from .env completed',
+        'SERVER: ${POSConfig().server}',
+        'LOCAL: ${POSConfig().local}',
+        'POS_IMAGE: ${POSConfig().posImageServer}',
+        'LOYALTY: ${POSConfig().loyaltyServerOutlet}',
+        'LOYALTY_IMAGE: ${POSConfig().loyaltyServerImage}',
+        'WEB_SOCKET: ${POSConfig().webSocketUrl}',
+        'SAAS: ${POSConfig().saas}',
+        'PASSWORD: ${POSConfig().password}',
+        'DUAL_SCREEN: ${POSConfig().dualScreenWebsite}',
+        'ENABLE_POLL_DISPLAY: ${POSConfig().enablePollDisplay}',
+        'SCREEN_WIDTH: ${POSConfig().screen_width}',
+        'SCREEN_HEIGHT: ${POSConfig().screen_height}',
+        'SINGLE_SWIPE_ACTIVE: ${POSConfig().singleSwipeActive}',
+        'LOCAL_PRINT_TEMPLATES_PATH: ${POSConfig.localPrintPath}',
+        'PRINTER_NAME: ${POSConfig.printerName}',
+        'FONT_A_LENGTH: ${POSConfig.font_a_length}',
+        'FONT_B_LENGTH: ${POSConfig.font_b_length}'
+      ]);
       print('after load settings ' + POSConfig().webSocketUrl);
+    } catch (e) {
+      await LogWriter().saveLogsToFile('ERROR_LOG_', [
+        'Exception on ENV Reading : ${e.toString()} \nCheck your env and ensure all the variables are there...'
+      ]);
+    }
+    try {
       SquareButtonController squareButtonController =
           SquareButtonController(_preferences!);
       CartConfigController cartConfigController =
@@ -465,7 +518,11 @@ class SharedPreferenceController {
       if (getSetup) {
         pos.locCode = _preferences!.getString(_locCode) ?? '';
         final setup = await SetUpController().getSetupData(pos.server);
+        LogWriter().saveLogsToFile(
+            'API_LOG_', ['setupData: ${setup?.toJson().toString()}']);
         if (setup != null) {
+          LogWriter().saveLogsToFile(
+              'API_LOG_', ['setupData: ${setup?.toJson().toString()}']);
           pos.setup = setup;
           String clientId = setup.clientLicense ?? '';
           notificationBloc.getAnnouncements();
@@ -535,7 +592,7 @@ class SharedPreferenceController {
           formData: FormData.fromMap({'data': jsonEncode(data)}),
           authorize: false);
     } catch (e) {
-      LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
+      await LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
     }
   }
 
@@ -567,14 +624,14 @@ class SharedPreferenceController {
           }
         });
       } else {
-        LogWriter().saveLogsToFile('ERROR_LOG_', [
+        await LogWriter().saveLogsToFile('ERROR_LOG_', [
           res.toString(),
           res?.data.toString() ?? '',
           res?.statusCode.toString() ?? ''
         ]);
       }
     } catch (e) {
-      LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
+      await LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
     }
   }
 }

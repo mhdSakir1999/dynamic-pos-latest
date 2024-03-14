@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 5/15/21, 10:35 AM
  */
 
@@ -13,6 +13,7 @@ import 'package:checkout/controllers/product_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/controllers/time_controller.dart';
 import 'package:checkout/extension/extensions.dart';
+import 'package:checkout/models/pos/Inv_appliedPeomotons.dart';
 import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/cart_summary_model.dart';
 import 'package:checkout/models/pos/gift_voucher_result.dart';
@@ -353,14 +354,14 @@ class POSPriceCalculator {
       }
     }
 
-    /// handle multiple prices
-    if (secondApiCall) {
-      final secondCall = (await ProductController()
-          .getProductsMultiplePrices(product.pLUCODE ?? '', qty.toDouble()));
-      multiplePrices = secondCall?.price;
-      proPrices = secondCall?.proPrice;
-      proTax = secondCall?.proTax;
-    }
+    // /// handle multiple prices
+    // if (secondApiCall) {
+    //   final secondCall = (await ProductController()
+    //       .getProductsMultiplePrices(product.pLUCODE ?? '', qty.toDouble()));
+    //   multiplePrices = secondCall?.price;
+    //   proPrices = secondCall?.proPrice;
+    //   proTax = secondCall?.proTax;
+    // }
 
     // filter the fixed price mode if the price mode is not selected (double check)
     if ((cartBloc.cartSummary?.priceMode ?? '').isEmpty) {
@@ -410,14 +411,15 @@ class POSPriceCalculator {
     if (multiplePrices != null && canPopUpMultiplePrice) {
       bool canPopUpMultiplePrice = true;
       //if price mode selected
-      if ((cartBloc.cartSummary?.priceMode ?? '').isNotEmpty) {
-        final ProPriceResults? priceRes = await ProductController()
-            .getProductsMultiplePrices(product.pLUCODE ?? '', qty.toDouble());
-        if (priceRes != null) {
-          multiplePrices = priceRes.price ?? multiplePrices;
-          //handle pro prices
-        }
-      }
+      // if ((cartBloc.cartSummary?.priceMode ?? '').isNotEmpty) {
+      //   // added !secondApiCall flag here, because there is no need to call the api for the 2nd time
+      //   final ProPriceResults? priceRes = await ProductController()
+      //       .getProductsMultiplePrices(product.pLUCODE ?? '', qty.toDouble());
+      //   if (priceRes != null) {
+      //     multiplePrices = priceRes.price ?? multiplePrices;
+      //     //handle pro prices
+      //   }
+      // }
 
       if (multiplePrices.length > 0 && canPopUpMultiplePrice) {
         // add the current price to multiple price array
@@ -456,8 +458,9 @@ class POSPriceCalculator {
             priceMode: '');
 
     // check sih
+    bool? allowMinusRes;
     if (product.allowMinus == false && qty > (product.sIH ?? 0)) {
-      bool allowMinusRes =
+      allowMinusRes =
           await allowMinusAlert(context, cartSummary.invoiceNo, product, qty);
       if (!allowMinusRes) return null;
     }
@@ -482,6 +485,10 @@ class POSPriceCalculator {
     var lineAmount = qty * selling;
     List<String> lineRemark = [];
     CartModel? returnProduct;
+
+    List<double> lineAmounts = [];
+    List<double> sellings = [];
+    List<CartModel?> returnProducts = [];
 
     ///exchangeable item calculation
     if (!minus) {
@@ -528,9 +535,9 @@ class POSPriceCalculator {
           // var res = await showInvoice(context);
           cartSummary.refNo = salesReturn['refInvNo'];
           lineRemark.add(salesReturn['refInvNo']);
-          lineAmount = salesReturn['amount'];
-          selling = salesReturn['selling'];
-          returnProduct = salesReturn['returnProduct']; //new change
+          lineAmounts = salesReturn['amounts'];
+          sellings = salesReturn['sellings'];
+          returnProducts = salesReturn['returnProducts']; //new change
         } else if (salesReturn['continue'] == 'continue_without_inv') {
           //check for permissions to SKIP ORIGINAL INVOICE WHEN RETURN ITEMS
           SpecialPermissionHandler handler =
@@ -557,122 +564,237 @@ class POSPriceCalculator {
         }
       }
     }
-    double disAmt = 0;
-    double disPre = 0;
 
-    // get current cart list
-    final cartList = cartBloc.currentCart ?? {};
+    if (returnProducts.length == 0 &&
+        lineAmounts.length == 0 &&
+        sellings.length == 0) {
+      double disAmt = 0;
+      double disPre = 0;
 
-    //check item already in the cart or not
-    //iteration through map
-    final founded = cartList.values.toList().indexWhere((element) =>
-        element.proCode == product.pLUCODE &&
-        element.itemVoid != true &&
-        element.unitQty > 0 &&
-        element.stockCode == product.pLUSTOCKCODE &&
-        element.selling == selling);
-    bool alreadyAdded = founded != -1;
+      // get current cart list
+      final cartList = cartBloc.currentCart ?? {};
 
-    if (!alreadyAdded && !minus) {
-      cartSummary.items++;
-    }
-    String discReason = "";
+      //check item already in the cart or not
+      //iteration through map
+      final founded = cartList.values.toList().indexWhere((element) =>
+          element.proCode == product.pLUCODE &&
+          element.itemVoid != true &&
+          element.unitQty > 0 &&
+          element.stockCode == product.pLUSTOCKCODE &&
+          element.selling == selling);
+      bool alreadyAdded = founded != -1;
 
-    //TODO block item batch for disounted items/multiple price
-    // if (alreadyAdded && POSConfig().cartBatchItem) {
-    //   //  handle anything for already added item
-    //   final item = cartList.values.toList()[founded];
-    //   disAmt = item.discAmt!;
-    //   disPre = item.discPer!;
-    //   discReason = item.discountReason ?? "";
-    //   if (disPre > 0) {
-    //     lineAmount -= ((lineAmount * disPre) / 100);
-    //   }
-    // }
-
-    //new change
-    //this allows to pass the correct discount(per or amnt) for the return products
-    if (minus) {
-      disAmt = returnProduct?.discAmt ?? 0;
-      disPre = returnProduct?.discPer ?? 0;
-      discReason = returnProduct?.discountReason ?? '';
-    }
-
-    //calculate and apply bill discount
-    final billDisc = cartSummary.discPer ?? 0;
-    double billDiscAmt = 0;
-    if (billDisc > 0 && product.pLUNODISC != true && blAllowDiscount) {
-      billDiscAmt = (lineAmount * billDisc / 100);
-    }
-
-    cartSummary.subTotal += (lineAmount - billDiscAmt);
-
-    final model = CartModel(
-      setUpLocation: POSConfig().setupLocation,
-      posDesc: product.pLUPOSDESC ?? "",
-      proSelling: product.sELLINGPRICE ?? 0,
-      noDisc: product.pLUNODISC ?? true,
-      scanBarcode: product.sCANCODE ?? "",
-      proCode: product.pLUCODE ?? "",
-      stockCode: product.pLUSTOCKCODE ?? "",
-      selling: selling,
-      proCaseSize: product.caseSize,
-      proCost: product.cost ?? 0,
-      proAvgCost: product.avgCost ?? 0,
-      itemVoid: false,
-      discAmt: disAmt,
-      discPer: disPre,
-      billDiscPer: blAllowDiscount ? cartSummary.discPer : 0,
-      unitQty: qty,
-      discountReason: discReason,
-      maxDiscAmt: product.maxDiscAmt,
-      maxDiscPer: product.maxDiscPer,
-      amount: lineAmount,
-      proUnit: product.pluUnit,
-      volume: product.volume,
-      maxVolume: product.maxVolume,
-      maxVolumeGroup: product.maxVolumeGroup,
-      lineRemark: lineRemark,
-      maxVolumeGroupLvl: product.maxVolumeGroupLvl,
-      allowDiscount: !minus
-          ? blAllowDiscount
-          : false, //this is to ensure that no discounts allow for return products //new change
-      allowLoyalty: blAllowLoyalty,
-      priceMode: strPriceMode,
-    )..proTax = proTax ?? [];
-    int lineNo = cartList.length;
-    model.lineNo = lineNo + 1;
-    if (!POSConfig().localMode) model.image = product.image;
-    POSLoggerController.addNewLog(
-        POSLogger(POSLoggerLevel.info, "New Item Added to the cart"));
-
-    final res = await cartBloc.updateCurrentCart(model, alreadyAdded);
-    if (res) {
-      final String startTime = cartSummary.startTime;
-      if (startTime.isEmpty) {
-        //fetch time from server
-        final dateTime = await TimeController().getCurrentServerTime();
-        cartSummary.startTime = dateTime.toString();
-      }
-      cartBloc.updateCartSummary(cartSummary);
-      final controller = InvoiceController();
-      controller.updateTempCartSummary(cartSummary);
-      if (successToast) {
-        EasyLoading.showSuccess("easy_loading.item_add".tr());
-        return model;
-      }
-    } else {
-      //revert the current calculations
-      cartSummary.subTotal -= lineAmount;
       if (!alreadyAdded && !minus) {
-        cartSummary.items--;
+        cartSummary.items++;
       }
-      if (!minus) {
-        cartSummary.qty -= qty;
+      String discReason = "";
+
+      //TODO block item batch for disounted items/multiple price
+      // if (alreadyAdded && POSConfig().cartBatchItem) {
+      //   //  handle anything for already added item
+      //   final item = cartList.values.toList()[founded];
+      //   disAmt = item.discAmt!;
+      //   disPre = item.discPer!;
+      //   discReason = item.discountReason ?? "";
+      //   if (disPre > 0) {
+      //     lineAmount -= ((lineAmount * disPre) / 100);
+      //   }
+      // }
+
+      // //new change
+      // //this allows to pass the correct discount(per or amnt) for the return products
+      // if (minus) {
+      //   disAmt = returnProduct?.discAmt ?? 0;
+      //   disPre = returnProduct?.discPer ?? 0;
+      //   discReason = returnProduct?.discountReason ?? '';
+      // }
+
+      //calculate and apply bill discount
+      final billDisc = cartSummary.discPer ?? 0;
+      double billDiscAmt = 0;
+      if (billDisc > 0 && product.pLUNODISC != true && blAllowDiscount) {
+        billDiscAmt = (lineAmount * billDisc / 100);
       }
-      cartBloc.updateCartSummary(cartSummary);
+
+      cartSummary.subTotal += (lineAmount - billDiscAmt);
+
+      final model = CartModel(
+          setUpLocation: POSConfig().setupLocation,
+          posDesc: product.pLUPOSDESC ?? "",
+          proSelling: product.sELLINGPRICE ?? 0,
+          noDisc: product.pLUNODISC ?? true,
+          scanBarcode: product.sCANCODE ?? "",
+          proCode: product.pLUCODE ?? "",
+          stockCode: product.pLUSTOCKCODE ?? "",
+          selling: selling,
+          proCaseSize: product.caseSize,
+          proCost: product.cost ?? 0,
+          proAvgCost: product.avgCost ?? 0,
+          itemVoid: false,
+          discAmt: disAmt,
+          discPer: disPre,
+          billDiscPer: blAllowDiscount ? cartSummary.discPer : 0,
+          unitQty: qty,
+          discountReason: discReason,
+          maxDiscAmt: product.maxDiscAmt,
+          maxDiscPer: product.maxDiscPer,
+          amount: lineAmount,
+          proUnit: product.pluUnit,
+          volume: product.volume,
+          maxVolume: product.maxVolume,
+          maxVolumeGroup: product.maxVolumeGroup,
+          lineRemark: lineRemark,
+          maxVolumeGroupLvl: product.maxVolumeGroupLvl,
+          allowDiscount: !minus
+              ? blAllowDiscount
+              : false, //this is to ensure that no discounts allow for return products //new change
+          allowLoyalty: blAllowLoyalty,
+          priceMode: strPriceMode,
+          varientEnabled: product.varientEnable,
+          batchEnabled: product.batchEnable,
+          allowMinus: product.allowMinus,
+          userAllowedMinus: allowMinusRes)
+        ..proTax = proTax ?? [];
+      int lineNo = cartList.length;
+      model.lineNo = lineNo + 1;
+      if (!POSConfig().localMode) model.image = product.image;
+      POSLoggerController.addNewLog(
+          POSLogger(POSLoggerLevel.info, "New Item Added to the cart"));
+
+      final res = await cartBloc.updateCurrentCart(model, alreadyAdded);
+      if (res) {
+        final String startTime = cartSummary.startTime;
+        if (startTime.isEmpty) {
+          //fetch time from server
+          final dateTime = await TimeController().getCurrentServerTime();
+          cartSummary.startTime = dateTime.toIso8601String();
+
+          // DateFormat("yyyy-MM-dd HH:mm:ss.000")
+          //     .parse(dateTime.toString())
+          //     .toIso8601String();
+        }
+        cartBloc.updateCartSummary(cartSummary);
+        final controller = InvoiceController();
+        controller.updateTempCartSummary(cartSummary);
+        if (successToast) {
+          EasyLoading.showSuccess("easy_loading.item_add".tr());
+          return model;
+        }
+      } else {
+        //revert the current calculations
+        cartSummary.subTotal -= lineAmount;
+        if (!alreadyAdded && !minus) {
+          cartSummary.items--;
+        }
+        if (!minus) {
+          cartSummary.qty -= qty;
+        }
+        cartBloc.updateCartSummary(cartSummary);
+      }
+      return null;
+    } else {
+      // This block is exclusive for product returns
+      for (int j = 0; j < returnProducts.length; j++) {
+        double disAmt = 0;
+        double disPre = 0;
+        final cartList = cartBloc.currentCart ?? {};
+        final founded = cartList.values.toList().indexWhere((element) =>
+            element.proCode == product.pLUCODE &&
+            element.itemVoid != true &&
+            element.unitQty > 0 &&
+            element.stockCode == product.pLUSTOCKCODE &&
+            element.selling == sellings[j]);
+        bool alreadyAdded = founded != -1;
+        if (!alreadyAdded && !minus) {
+          cartSummary.items++;
+        }
+        String discReason = "";
+        if (minus) {
+          disAmt = returnProducts[j]?.discAmt ?? 0;
+          disPre = returnProducts[j]?.discPer ?? 0;
+          discReason = returnProducts[j]?.discountReason ?? '';
+        }
+        final billDisc = cartSummary.discPer ?? 0;
+        double billDiscAmt = 0;
+        if (billDisc > 0 && product.pLUNODISC != true && blAllowDiscount) {
+          billDiscAmt = (lineAmounts[j] * billDisc / 100);
+        }
+
+        double addedQty = (qty * -1 <= returnProducts[j]!.unitQty)
+            ? qty
+            : -1 * returnProducts[j]!.unitQty;
+
+        cartSummary.subTotal += (lineAmounts[j] - billDiscAmt);
+
+        final model = CartModel(
+            setUpLocation: POSConfig().setupLocation,
+            posDesc: product.pLUPOSDESC ?? "",
+            proSelling: product.sELLINGPRICE ?? 0,
+            noDisc: product.pLUNODISC ?? true,
+            scanBarcode: product.sCANCODE ?? "",
+            proCode: product.pLUCODE ?? "",
+            stockCode: product.pLUSTOCKCODE ?? "",
+            selling: sellings[j],
+            proCaseSize: product.caseSize,
+            proCost: product.cost ?? 0,
+            proAvgCost: product.avgCost ?? 0,
+            itemVoid: false,
+            discAmt: (disAmt / returnProducts[j]!.unitQty) * addedQty * -1,
+            discPer: disPre,
+            billDiscPer: blAllowDiscount ? cartSummary.discPer : 0,
+            unitQty: addedQty, // qty,
+            discountReason: discReason,
+            maxDiscAmt: product.maxDiscAmt,
+            maxDiscPer: product.maxDiscPer,
+            amount: lineAmounts[j],
+            proUnit: product.pluUnit,
+            volume: product.volume,
+            maxVolume: product.maxVolume,
+            maxVolumeGroup: product.maxVolumeGroup,
+            lineRemark: lineRemark,
+            maxVolumeGroupLvl: product.maxVolumeGroupLvl,
+            allowDiscount: !minus
+                ? blAllowDiscount
+                : false, //this is to ensure that no discounts allow for return products //new change
+            allowLoyalty: blAllowLoyalty,
+            priceMode: strPriceMode,
+            allowMinus: product.allowMinus,
+            varientEnabled: product.varientEnable,
+            batchEnabled: product.batchEnable)
+          ..proTax = proTax ?? [];
+        int lineNo = cartList.length;
+        model.lineNo = lineNo + 1;
+        if (!POSConfig().localMode) model.image = product.image;
+        POSLoggerController.addNewLog(
+            POSLogger(POSLoggerLevel.info, "New Item Added to the cart"));
+
+        final res = await cartBloc.updateCurrentCart(model, alreadyAdded);
+        if (res) {
+          final String startTime = cartSummary.startTime;
+          if (startTime.isEmpty) {
+            final dateTime = await TimeController().getCurrentServerTime();
+            cartSummary.startTime = dateTime.toIso8601String();
+          }
+          cartBloc.updateCartSummary(cartSummary);
+          final controller = InvoiceController();
+          controller.updateTempCartSummary(cartSummary);
+          if (successToast) {
+            EasyLoading.showSuccess("easy_loading.item_add".tr());
+            // return model;
+          }
+        } else {
+          cartSummary.subTotal -= lineAmounts[j];
+          if (!alreadyAdded && !minus) {
+            cartSummary.items--;
+          }
+          if (!minus) {
+            cartSummary.qty -= qty;
+          }
+          cartBloc.updateCartSummary(cartSummary);
+        }
+      }
+      return null;
     }
-    return null;
   }
 
   void voidItem(CartModel cartModel, BuildContext? context) async {
@@ -726,7 +848,10 @@ class POSPriceCalculator {
 
     //deduct item and qty
     cartSummary.items = cartSummary.items - deductItem;
-    cartSummary.qty = cartSummary.qty - cartModel.unitQty;
+
+    // reason for this if statement and condition is when the returned product is voided it adds +1 to qty...ex:(1-(-1))
+    if (cartModel.unitQty > 0)
+      cartSummary.qty = cartSummary.qty - cartModel.unitQty;
     bool res = await cartBloc.voidCartItem(cartModel);
     if (res) {
       cartBloc.updateCartSummary(cartSummary);
@@ -810,7 +935,8 @@ class POSPriceCalculator {
                   keyBoardController.showBottomDPKeyBoard(
                       _multiplePriceEditingController,
                       onEnter: () =>
-                          onEnterMultiplePrice(prices, context, true));
+                          onEnterMultiplePrice(prices, context, true),
+                      buildContext: context);
                 },
                 autofocus: true,
                 controller: _multiplePriceEditingController,
@@ -914,6 +1040,9 @@ class POSPriceCalculator {
       if (item.itemVoid == true) {
         continue;
       }
+      // if (item.isTaxCalculated == true) {
+      //   continue;
+      // }
       double basePrice =
           item.amount - (item.amount * (item.billDiscPer ?? 0) / 100);
       //used for calculation
@@ -951,7 +1080,7 @@ class POSPriceCalculator {
             lineNo: lineNo,
             taxSeq: proTax.ttXSEQUENCE ?? 0));
       }
-
+      // item.isTaxCalculated = true;
       //save item price after the tax
       // double priceWithTax = basePrice;
       // List<ProTax> proTaxesInc =
@@ -1066,24 +1195,34 @@ class POSPriceCalculator {
                     keyBoardController.dismiss();
                     keyBoardController.init(context);
                     keyBoardController.showBottomDPKeyBoard(
-                        _refNoEditingController,
-                        onEnter: () => Navigator.pop(context, 'continue'));
+                        _refNoEditingController, onEnter: () {
+                      if (_refNoEditingController.text != "") {
+                        KeyBoardController().dismiss();
+                        Navigator.pop(context, 'continue');
+                      }
+                    }, buildContext: context);
                   },
                   controller: _refNoEditingController,
-                  onEditingComplete: () => Navigator.pop(context, 'continue'),
+                  onEditingComplete: () {
+                    if (_refNoEditingController.text.isEmpty) {
+                      EasyLoading.showError('Please enter the invoice number');
+                      return;
+                    }
+                    Navigator.pop(context, 'continue');
+                  },
+                  autofocus: true,
                 )
               ],
             ),
             actions: [
               AlertDialogButton(
-                  onPressed: () => Navigator.pop(context, 'cancel'),
-                  text: 'return_sales.cancel'.tr()),
-              SizedBox(
-                height: 15.h,
-                width: 5.w,
-              ),
-              AlertDialogButton(
-                  onPressed: () => Navigator.pop(context, 'continue'),
+                  onPressed: () {
+                    if (_refNoEditingController.text.isEmpty) {
+                      EasyLoading.showError('Please enter the invoice number');
+                      return;
+                    }
+                    Navigator.pop(context, 'continue');
+                  },
                   text: 'return_sales.continue'.tr()),
               SizedBox(
                 height: 15.h,
@@ -1092,7 +1231,14 @@ class POSPriceCalculator {
               AlertDialogButton(
                   onPressed: () =>
                       Navigator.pop(context, 'continue_without_inv'),
-                  text: 'return_sales.continue_without_ref'.tr())
+                  text: 'return_sales.continue_without_ref'.tr()),
+              SizedBox(
+                height: 15.h,
+                width: 5.w,
+              ),
+              AlertDialogButton(
+                  onPressed: () => Navigator.pop(context, 'cancel'),
+                  text: 'return_sales.cancel'.tr()),
             ],
           );
         },
@@ -1107,8 +1253,11 @@ class POSPriceCalculator {
     double selling = 0;
 
     //new change for new product window
-    CartModel? selectedProduct;
+    List<CartModel?>? selectedProducts = [];
     double sold = 0;
+
+    List<double> sellings = [];
+    List<double> lineAmounts = [];
 
     if (canContinue) {
       canContinue = false;
@@ -1116,18 +1265,42 @@ class POSPriceCalculator {
       EasyLoading.show(status: 'please_wait'.tr());
       final itemList = await InvoiceController().getCartDetails(refInvNo);
       //chekc the item is in the database
-      final summarizedReturnList =
-          itemList.where((element) => element.stockCode == itemCode).toList();
+      final summarizedReturnList = itemList
+          .where((element) =>
+              element.stockCode == itemCode && element.itemVoid == false)
+          .toList();
       if (summarizedReturnList.isEmpty) {
+        EasyLoading.dismiss();
         await _salesReturnError(context, 'invalid_item', refInvNo);
+        return {
+          'continue': 'cancel',
+        };
+      }
+
+      if ((POSConfig().setup?.itemReturnDayLimit ?? 0) > 0 &&
+          summarizedReturnList.first.dateTime != null) {
+        DateTime expiredDate = DateFormat('yyyy-MM-dd').parse(
+            (summarizedReturnList.first.dateTime)!
+                .add(Duration(days: POSConfig().setup!.itemReturnDayLimit!))
+                .toIso8601String());
+        bool expired = DateFormat('yyyy-MM-dd')
+            .parse(DateTime.now().toIso8601String())
+            .isAfter(expiredDate);
+        if (expired) {
+          EasyLoading.dismiss();
+          await _salesReturnError(context, 'expired', refInvNo);
+          return {
+            'continue': 'cancel',
+          };
+        }
       }
       EasyLoading.dismiss();
 
       /*
-      * Editor: TM.Sakir
+      * Author: TM.Sakir
       * change: Added a window for showing product list and giving the facility to select the desired product to return
       */
-      selectedProduct = await showInvoice(context,
+      selectedProducts = await showInvoicedProducts(context,
           cartItems: summarizedReturnList, invNo: refInvNo);
 
       // final List<CartModel> new_itemList=[];
@@ -1162,20 +1335,32 @@ class POSPriceCalculator {
       //   lineAmount = selling * enteredQty;
       // }
 
-      if (selectedProduct == null) {
+      if (selectedProducts == null) {
         output = 'cancel';
         // await _salesReturnError(context, 'invalid_item', refInvNo);
       } else {
-        double summarizedTotalQty = selectedProduct?.unitQty ?? 0;
-        double summarizedAmount = selectedProduct?.amount ?? 0;
+        double summarizedTotalQty = 0;
+        selectedProducts.forEach((element) {
+          summarizedTotalQty += element!.unitQty;
+        });
+
         if ((totalQty * -1) > summarizedTotalQty) {
           await _salesReturnError(context, 'invalid_qty', refInvNo);
+          output = 'cancel';
         } else {
-          canContinue = true;
-          output = 'continue';
-          sold = summarizedAmount / summarizedTotalQty;
-          lineAmount = sold * enteredQty;
-          selling = selectedProduct.selling;
+          for (int i = 0; i < selectedProducts.length; i++) {
+            canContinue = true;
+            output = 'continue';
+            sold = selectedProducts[i]!.amount / selectedProducts[i]!.unitQty;
+            // lineAmount = sold * (-1 * selectedProducts[i]!.unitQty); //wrong
+            lineAmount = (selectedProducts[i]!.unitQty >= (-1 * enteredQty))
+                ? sold * enteredQty
+                : sold * -1 * selectedProducts[i]!.unitQty;
+            selling = selectedProducts[i]!.selling;
+
+            sellings.add(selling);
+            lineAmounts.add(lineAmount);
+          }
         }
       }
     }
@@ -1183,9 +1368,9 @@ class POSPriceCalculator {
     return {
       'continue': output,
       'refInvNo': refInvNo,
-      'amount': lineAmount,
-      'selling': selling,
-      'returnProduct': selectedProduct
+      'amounts': lineAmounts,
+      'sellings': sellings,
+      'returnProducts': selectedProducts
     };
   }
 
@@ -1207,8 +1392,11 @@ class POSPriceCalculator {
     );
   }
 
-  Future<void> applyPromotions(List<CartModel> cart, double totalBillDiscount,
-      double totalLineDiscount) async {
+  Future<void> applyPromotions(
+      List<CartModel> cart,
+      double totalBillDiscount,
+      double totalLineDiscount,
+      List<InvBillDiscAmountPromo> billDiscPromo) async {
     //TODO: store DISCOUNT in a global variable
     final List<CartModel> cartList =
         cart.where((element) => element.proCode == "DISCOUNT").toList();
@@ -1221,7 +1409,7 @@ class POSPriceCalculator {
       summary.promoDiscount = (totalBillDiscount + totalLineDiscount);
       summary.subTotal -= (totalBillDiscount + totalLineDiscount);
       cartBloc.updateCartSummary(summary);
-      cartBloc.updateCartForPromo(cart);
+      cartBloc.updateCartForPromo(cart, billDiscPromo);
     }
   }
 
@@ -1397,10 +1585,10 @@ class POSPriceCalculator {
     final summary = cartBloc.cartSummary;
 
     if (summary != null) {
+      summary.subTotal = summary.subTotal - (summary.taxExc ?? 0);
       summary.taxExc = 0;
       summary.taxInc = 0;
       summary.invTax = [];
-      summary.subTotal = summary.subTotal - (summary.taxExc ?? 0);
       cartBloc.updateCartSummary(summary);
     }
   }
@@ -1412,6 +1600,7 @@ class POSPriceCalculator {
       summary.promoDiscount = 0;
       cartBloc.updateCartSummary(summary);
       cartBloc.clearPromoTickets();
+      cartBloc.clearAppliedPromo();
     }
     //going through cart items
     cartBloc.currentCart?.values.forEach((element) {
@@ -1487,7 +1676,7 @@ class POSPriceCalculator {
     return res;
   }
 
-  Future<CartModel?> showInvoice(BuildContext context,
+  Future<List<CartModel?>?> showInvoicedProducts(BuildContext context,
       {required List<CartModel> cartItems, required String invNo}) async {
     Color iconColor = CurrentTheme.primaryLightColor!;
     final space1 = SizedBox(
@@ -1501,7 +1690,12 @@ class POSPriceCalculator {
     for (int i = 0; i < cartItems.length; i++) {
       total += cartItems[i].amount;
     }
-    var res = await showGeneralDialog(
+
+    List<bool> isSelected = List.generate(cartItems.length, (index) => false);
+    List<int> selectedProductIndexes = [];
+    List<CartModel?> selectedProducts = [];
+    // bool isSelected = false;
+    List<int?>? res = await showGeneralDialog<List<int?>>(
       context: context,
       transitionDuration: const Duration(milliseconds: 200),
       barrierDismissible: true,
@@ -1511,369 +1705,425 @@ class POSPriceCalculator {
         return const SizedBox();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) =>
-          Transform.scale(
-        scale: animation.value,
-        child: Padding(
-          padding: EdgeInsets.all(height * 0.05),
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-            color: Theme.of(context).primaryColor,
-            elevation: 5,
-            shadowColor: Theme.of(context).primaryColor,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: width * 0.02,
-                    right: width * 0.02,
-                    bottom: height * 0.02),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: height * 0.1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            FontAwesome5.clipboard,
-                            color: iconColor,
-                          ),
-                          space1,
-                          Tooltip(
-                            message: "Invoice Number",
-                            child: Text(
-                              invNo,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 26.sp),
+          StatefulBuilder(builder: (context, StateSetter setState) {
+        return Transform.scale(
+          scale: animation.value,
+          child: Padding(
+            padding: EdgeInsets.all(height * 0.05),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)),
+              color: Theme.of(context).primaryColor,
+              elevation: 5,
+              shadowColor: Theme.of(context).primaryColor,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: width * 0.02,
+                      right: width * 0.02,
+                      bottom: height * 0.02),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: height * 0.1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              FontAwesome5.clipboard,
+                              color: iconColor,
                             ),
-                          ),
-                        ],
+                            space1,
+                            Tooltip(
+                              message: "Invoice Number",
+                              child: Text(
+                                invNo,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 26.sp),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: width * 0.02),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: height * 0.13,
-                            child: Column(
-                              children: [
-                                Divider(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text('ItemCode',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: fontSize,
-                                              color: Colors.white)),
+                      Padding(
+                        padding: EdgeInsets.only(left: width * 0.02),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: height * 0.13,
+                              child: Column(
+                                children: [
+                                  Divider(),
+                                  ListTile(
+                                    leading: SizedBox(
+                                      width: width * 0.02,
                                     ),
-                                    Expanded(
-                                      flex: 6,
-                                      child: Text('Description',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: fontSize,
-                                              color: Colors.white)),
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        // Expanded(
+                                        //   flex: 1,
+                                        //   child: Text(''),
+                                        // ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text('ItemCode',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: fontSize,
+                                                  color: Colors.white)),
+                                        ),
+                                        Expanded(
+                                          flex: 6,
+                                          child: Text('Description',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: fontSize,
+                                                  color: Colors.white)),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text('Unit Prc',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: fontSize,
+                                                  color: Colors.white)),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text('Qty ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: fontSize,
+                                                  color: Colors.white)),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text('Disc.per',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: fontSize,
+                                                  color: Colors.white)),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text('Disc.amt',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: fontSize,
+                                                  color: Colors.white)),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text('Promotion \nDisc.per',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: fontSize,
+                                                  color: Colors.white)),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text('Promotion \nDisc.amt',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: fontSize,
+                                                  color: Colors.white)),
+                                        ),
+                                        Expanded(
+                                          flex: 4,
+                                          child: Text('Total \nAmount',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: fontSize,
+                                                  color: Colors.white)),
+                                        ),
+                                      ],
                                     ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text('Unit Prc',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: fontSize,
-                                              color: Colors.white)),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text('Qty ',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: fontSize,
-                                              color: Colors.white)),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text('Disc.per',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: fontSize,
-                                              color: Colors.white)),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text('Disc.amt',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: fontSize,
-                                              color: Colors.white)),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text('Promotion \nDisc.per',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: fontSize,
-                                              color: Colors.white)),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text('Promotion \nDisc.amt',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: fontSize,
-                                              color: Colors.white)),
-                                    ),
-                                    Expanded(
-                                      flex: 4,
-                                      child: Text('Total \nAmount',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: fontSize,
-                                              color: Colors.white)),
-                                    ),
-                                  ],
-                                ),
-                                Divider()
-                              ],
+                                  ),
+                                  Divider()
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: height * 0.47,
-                            child: ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: cartItems.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
-                                    child: InkWell(
-                                      onTap: () =>
-                                          Navigator.pop(context, index),
-                                      child: SizedBox(
-                                        height: height * 0.08,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Expanded(
-                                              flex: 3,
-                                              child: Text(
-                                                  cartItems[index].proCode,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 20.sp,
-                                                      color: Colors.white)),
+                            SizedBox(
+                              height: height * 0.47,
+                              child: ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount: cartItems.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      leading: SizedBox(
+                                        width: width * 0.02,
+                                        child: Checkbox(
+                                            value: isSelected[index],
+                                            onChanged: (value) {
+                                              setState(
+                                                () {
+                                                  isSelected[index] = value!;
+                                                },
+                                              );
+                                              if (value == true) {
+                                                selectedProductIndexes
+                                                    .add(index);
+                                              } else {
+                                                selectedProductIndexes
+                                                    .remove(index);
+                                              }
+                                              setState(
+                                                () {},
+                                              );
+                                              print(selectedProductIndexes);
+                                            }),
+                                      ),
+                                      title: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: InkWell(
+                                          onTap: () {
+                                            // if (selectedProductIndexes.length ==
+                                            //     0) {
+                                            //   selectedProductIndexes.add(index);
+                                            //   Navigator.pop(context,
+                                            //       selectedProductIndexes);
+                                            // }
+                                          },
+                                          child: SizedBox(
+                                            height: height * 0.08,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Text(
+                                                      cartItems[index].proCode,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 20.sp,
+                                                          color: Colors.white)),
+                                                ),
+                                                Expanded(
+                                                  flex: 6,
+                                                  child: Text(
+                                                      cartItems[index].posDesc,
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 20.sp,
+                                                          color: Colors.white)),
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Text(
+                                                      cartItems[index]
+                                                          .proSelling
+                                                          .toStringAsFixed(2),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 20.sp,
+                                                          color: Colors.white)),
+                                                ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Text(
+                                                      cartItems[index]
+                                                          .unitQty
+                                                          .toStringAsFixed(2),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 20.sp,
+                                                          color: Colors.white)),
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Text(
+                                                      cartItems[index]
+                                                              .discPer
+                                                              ?.toStringAsFixed(
+                                                                  2) ??
+                                                          '0.00',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 20.sp,
+                                                          color: (cartItems[index]
+                                                                          .discPer ==
+                                                                      null ||
+                                                                  cartItems[index]
+                                                                          .discPer!
+                                                                          .toStringAsFixed(
+                                                                              2) ==
+                                                                      '0.00')
+                                                              ? Colors.white
+                                                              : Colors.red)),
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Text(
+                                                      cartItems[index]
+                                                              .discAmt
+                                                              ?.toStringAsFixed(
+                                                                  2) ??
+                                                          '0.00',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 20.sp,
+                                                          color: (cartItems[index]
+                                                                          .discAmt ==
+                                                                      null ||
+                                                                  cartItems[index]
+                                                                          .discAmt!
+                                                                          .toStringAsFixed(
+                                                                              2) ==
+                                                                      '0.00')
+                                                              ? Colors.white
+                                                              : Colors.red)),
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Text(
+                                                      cartItems[index]
+                                                              .promoDiscPre
+                                                              ?.toStringAsFixed(
+                                                                  2) ??
+                                                          '0.00',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 20.sp,
+                                                          color: (cartItems[index]
+                                                                          .promoDiscPre ==
+                                                                      null ||
+                                                                  cartItems[index]
+                                                                          .promoDiscPre!
+                                                                          .toStringAsFixed(
+                                                                              2) ==
+                                                                      '0.00')
+                                                              ? Colors.white
+                                                              : Colors.red)),
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Text(
+                                                      cartItems[index]
+                                                              .promoDiscAmt
+                                                              ?.toStringAsFixed(
+                                                                  2) ??
+                                                          '0.00',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 20.sp,
+                                                          color: (cartItems[index]
+                                                                          .promoDiscAmt ==
+                                                                      null ||
+                                                                  cartItems[index]
+                                                                          .promoDiscAmt!
+                                                                          .toStringAsFixed(
+                                                                              2) ==
+                                                                      '0.00')
+                                                              ? Colors.white
+                                                              : Colors.red)),
+                                                ),
+                                                Expanded(
+                                                  flex: 4,
+                                                  child: Text(
+                                                      cartItems[index]
+                                                          .amount
+                                                          .toStringAsFixed(2),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 20.sp,
+                                                          color: Colors.white)),
+                                                ),
+                                              ],
                                             ),
-                                            Expanded(
-                                              flex: 6,
-                                              child: Text(
-                                                  cartItems[index].posDesc,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 20.sp,
-                                                      color: Colors.white)),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Text(
-                                                  cartItems[index]
-                                                      .proSelling
-                                                      .toStringAsFixed(2),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 20.sp,
-                                                      color: Colors.white)),
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                  cartItems[index]
-                                                      .unitQty
-                                                      .toStringAsFixed(2),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 20.sp,
-                                                      color: Colors.white)),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Text(
-                                                  cartItems[index]
-                                                          .discPer
-                                                          ?.toStringAsFixed(
-                                                              2) ??
-                                                      '0.00',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 20.sp,
-                                                      color: (cartItems[index]
-                                                                      .discPer ==
-                                                                  null ||
-                                                              cartItems[index]
-                                                                      .discPer!
-                                                                      .toStringAsFixed(
-                                                                          2) ==
-                                                                  '0.00')
-                                                          ? Colors.white
-                                                          : Colors.red)),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Text(
-                                                  cartItems[index]
-                                                          .discAmt
-                                                          ?.toStringAsFixed(
-                                                              2) ??
-                                                      '0.00',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 20.sp,
-                                                      color: (cartItems[index]
-                                                                      .discAmt ==
-                                                                  null ||
-                                                              cartItems[index]
-                                                                      .discAmt!
-                                                                      .toStringAsFixed(
-                                                                          2) ==
-                                                                  '0.00')
-                                                          ? Colors.white
-                                                          : Colors.red)),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Text(
-                                                  cartItems[index]
-                                                          .promoDiscPre
-                                                          ?.toStringAsFixed(
-                                                              2) ??
-                                                      '0.00',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 20.sp,
-                                                      color: (cartItems[index]
-                                                                      .promoDiscPre ==
-                                                                  null ||
-                                                              cartItems[index]
-                                                                      .promoDiscPre!
-                                                                      .toStringAsFixed(
-                                                                          2) ==
-                                                                  '0.00')
-                                                          ? Colors.white
-                                                          : Colors.red)),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Text(
-                                                  cartItems[index]
-                                                          .promoDiscAmt
-                                                          ?.toStringAsFixed(
-                                                              2) ??
-                                                      '0.00',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 20.sp,
-                                                      color: (cartItems[index]
-                                                                      .promoDiscAmt ==
-                                                                  null ||
-                                                              cartItems[index]
-                                                                      .promoDiscAmt!
-                                                                      .toStringAsFixed(
-                                                                          2) ==
-                                                                  '0.00')
-                                                          ? Colors.white
-                                                          : Colors.red)),
-                                            ),
-                                            Expanded(
-                                              flex: 4,
-                                              child: Text(
-                                                  cartItems[index]
-                                                      .amount
-                                                      .toStringAsFixed(2),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 20.sp,
-                                                      color: Colors.white)),
-                                            ),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                }),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text('Items: ${cartItems.length}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: fontSize,
-                                        color: Colors.white)),
-                                space1,
-                                space1,
-                                Text(
-                                    'Total Amount: Rs. ${total.toStringAsFixed(2)}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: fontSize,
-                                        color: Colors.white))
-                              ],
+                                    );
+                                  }),
                             ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text('Items: ${cartItems.length}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: fontSize,
+                                          color: Colors.white)),
+                                  space1,
+                                  space1,
+                                  Text(
+                                      'Total Amount: Rs. ${total.toStringAsFixed(2)}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: fontSize,
+                                          color: Colors.white))
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Divider(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 25,
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Divider(),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          AlertDialogButton(
-                              onPressed: () => Navigator.pop(context, null),
-                              text: 'return_sales.cancel'.tr()),
-                        ],
-                      ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          right: 25,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            AlertDialogButton(
+                                onPressed: () => Navigator.pop(context, null),
+                                text: 'return_sales.cancel'.tr()),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            AlertDialogButton(
+                                onPressed: () => Navigator.pop(
+                                    context, selectedProductIndexes),
+                                text: 'return_sales.continue'.tr()),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
     if (res != null) {
-      return cartItems[int.parse(res.toString())];
+      res.forEach((element) {
+        selectedProducts.add(cartItems[element!]);
+      });
+      return selectedProducts;
+
+      //cartItems[int.parse(res.toString())];
     }
     return null;
   }

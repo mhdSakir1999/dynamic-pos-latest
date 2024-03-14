@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 5/19/21, 3:43 PM
  */
 
@@ -13,6 +13,7 @@ import 'package:checkout/components/api_client.dart';
 import 'package:checkout/components/ext_loyalty/ext_module_helper.dart';
 import 'package:checkout/controllers/customer_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/sms_controller.dart';
 import 'package:checkout/models/enum/signon_status.dart';
@@ -347,12 +348,13 @@ class InvoiceController {
     print('+++++++++++++++++++++++++++++++++++++++++++');
 
     Map<String, dynamic> temp = {
-      'START_TIME': DateFormat('yyyy-MM-ddThh:mm:ss.000')
+      'START_TIME': DateFormat('yyyy-MM-ddTHH:mm:ss.000')
           .format(startTime.parseDateTime()),
       "INV_DETAILS": cartList,
       "PAYMENTS": invoiced ? payments : [],
       "MEMBER_CODE": customerBloc.currentCustomer?.cMCODE ?? "",
-      "INVOICE_NO": cartSummary.invoiceNo,
+      "INVOICE_NO":
+          invoiced ? cartSummary.invoiceNo : 'HOLD${cartSummary.invoiceNo}',
       "NET_AMOUNT": netAmt,
       "GROSS_AMOUNT": grossAmt,
       "PAY_AMOUNT": payAmt,
@@ -388,9 +390,12 @@ class InvoiceController {
           cartBloc.promoAppliedList?.map((e) => e.toMap()).toList() ?? [],
       'INV_TICKETS':
           cartBloc.promoFreeTickets?.map((e) => e.toMap()).toList() ?? [],
+      'REDEEMED_COUPONS':
+          cartBloc.redeemedCoupon?.map((e) => e.toMap()).toList() ?? [],
     };
 
-    final res = await ApiClient.call("invoice/save", ApiMethod.POST,
+    final res = await ApiClient.call(
+        invoiced ? "invoice/save" : 'invoice/hold_invoice', ApiMethod.POST,
         data: temp, successCode: 200);
 
     if (hasExVoucher) {
@@ -407,7 +412,8 @@ class InvoiceController {
     final resReturn = res?.data?["res"].toString();
 
     if (success) {
-      DualScreenController().setView('thank_you');
+      if (POSConfig().dualScreenWebsite != "")
+        DualScreenController().setView('thank_you');
     } else {
       EasyLoading.showError(res?.data?['res']);
     }
@@ -441,8 +447,8 @@ class InvoiceController {
           });
     } else if (mobile.isNotEmpty &&
         customerBloc.currentCustomer?.cMLOYALTY == true) {
-      SMSController().sendBillSave(
-          mobile, netAmt, cartSummary.invoiceNo, earnedLoyaltyPoints);
+      SMSController().sendBillSave(mobile, netAmt, cartSummary.invoiceNo,
+          earnedLoyaltyPoints, customerBloc.currentCustomer?.cMNAME ?? '');
     }
 
     return InvoiceSaveRes(success, earnedLoyaltyPoints, resReturn);
@@ -466,7 +472,8 @@ class InvoiceController {
     final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
     final res = await ApiClient.call("invoice/hold/$cashier", ApiMethod.GET,
         errorToast: false);
-    if (res?.data == null)
+
+    if (res?.data == null || res?.data == '')
       return [];
     else {
       return HoldHeaderResult.fromJson(res?.data).holdInvoiceHeaders ?? [];
@@ -476,7 +483,7 @@ class InvoiceController {
   Future getHoldCart(HoldInvoiceHeaders header) async {
     // get the hold cart details
     String invoice = header.invheDINVNO ?? "";
-    final holdDetails = await getCartDetails(invoice);
+    final holdDetails = await getCartDetails(invoice, isHoldInv: true);
 
     int lineNo = 0;
     int itemCount = 0;
@@ -484,6 +491,11 @@ class InvoiceController {
     double subTotal = 0;
 
     holdDetails.forEach((element) async {
+      // added this block to set the allowDiscount flag using (noDisc, unitQty) since we dont get any priceLists details along with the api call
+      if (element.noDisc == false && element.unitQty > 0) {
+        element.allowDiscount = true;
+      }
+
       CartModel cart = element;
       if (POSConfig().cartBatchItem) {
         cart.key = cart.proCode;
@@ -531,7 +543,10 @@ class InvoiceController {
       await InvoiceController().saveItemTempCart(element);
     });
 
-    final invoiceNo = invoice;
+    // now we should assign a current inv number for recalled inv header
+    // final invoiceNo = invoice;
+    final invoiceNo = cartBloc.cartSummary?.invoiceNo ?? '';
+
     //   update cart summary
     final cartSum = CartSummaryModel(
         invoiceNo: invoiceNo,
@@ -569,8 +584,14 @@ class InvoiceController {
   }
 
   /// get cart details by id
-  Future<List<CartModel>> getCartDetails(String invoice) async {
-    final res = await ApiClient.call("invoice/details/$invoice", ApiMethod.GET);
+  Future<List<CartModel>> getCartDetails(String invoice,
+      {bool isHoldInv = false}) async {
+    // getting hold invoice details endpoint is changed
+    final res = await ApiClient.call(
+        isHoldInv
+            ? "invoice/details_hold/$invoice"
+            : "invoice/details/$invoice",
+        ApiMethod.GET);
     if (res?.data == null)
       return [];
     else {
@@ -608,22 +629,33 @@ class InvoiceController {
   Future<bool> cancelInvoice(String invoice, BuildContext context,
       {bool print = true}) async {
     final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
-    final res =
-        await ApiClient.call("invoice/$invoice/$cashier", ApiMethod.DELETE);
+    final res = await ApiClient.call(
+        "invoice/$invoice/$cashier/?locCode=${POSConfig().locCode}&invMode=INV",
+        ApiMethod.DELETE);
     bool result = res?.data?["success"].toString().parseBool() ?? false;
     if (result && print) {
-      await PrintController().printHandler(
-          invoice, PrintController().printCancelInvoice(invoice), context);
+      if (POSConfig.crystalPath != '') {
+        await PrintController().printHandler(
+            invoice, PrintController().printCancelInvoice(invoice), context);
+      } else {
+        await POSManualPrint()
+            .printInvoice(data: res?.data?["data"], cancel: true);
+      }
     }
 
     return result;
   }
 
-  Future<bool> reprintInvoice(String invoice) async {
-    final res =
-        await ApiClient.call("invoice/reprint_invoice/$invoice", ApiMethod.GET);
-    return (res?.data?["success"].toString().parseBool() ?? false) &&
-        res?.statusCode == 200;
+  Future<String> reprintInvoice(String invoice) async {
+    final res = await ApiClient.call(
+        "invoice/reprint_invoice/$invoice?locCode=${POSConfig().locCode}&invMode=INV",
+        ApiMethod.GET);
+    if ((res?.data?["success"].toString().parseBool() ?? false) &&
+        res?.statusCode == 200) {
+      return res?.data['data'];
+    } else {
+      return '';
+    }
   }
 
   Future<bool> clearMemberCode() async {

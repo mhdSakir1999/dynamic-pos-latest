@@ -27,10 +27,10 @@ class LogWriter {
       // Open the file in append mode
       IOSink sink = file.openWrite(mode: FileMode.append);
 
-      // Write logs to the file
-      sink.writeln('\n' + DateTime.now().toLocal().toString());
+      // // Write logs to the file
+      // sink.writeln('\n' + DateTime.now().toLocal().toString());
       for (String log in logs) {
-        sink.writeln(log);
+        sink.writeln(DateTime.now().toLocal().toString() + ' : ' + log);
       }
 
       // Close the file

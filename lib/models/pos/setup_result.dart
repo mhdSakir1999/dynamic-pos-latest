@@ -65,15 +65,19 @@ class Setup {
   bool? autoRoundOff;
   double? autoRoundoffTo;
   late DateTime serverTime;
+  double? maxCashLimit;
+  int? itemReturnDayLimit;
 
-  Setup(
-      {this.setuPLOCATION,
-      this.setuPCOMNAME,
-      this.setuPCOMPANY,
-      this.loCDESC,
-      this.otpEnabled,
-      this.setuPSCALESYMBOL,
-      this.setuPSCALEDIGIT});
+  Setup({
+    this.setuPLOCATION,
+    this.setuPCOMNAME,
+    this.setuPCOMPANY,
+    this.loCDESC,
+    this.otpEnabled,
+    this.setuPSCALESYMBOL,
+    this.setuPSCALEDIGIT,
+    this.itemReturnDayLimit,
+  });
 
   Setup.fromJson(Map<String, dynamic> json) {
     setuPLOCATION = json['setuP_LOCATION'];
@@ -99,8 +103,7 @@ class Setup {
     // centralPOSServer = kReleaseMode
     //     ? json['setuP_CENTRALPOSSERVER']?.toString()
     //     : POSConfig().local.replaceAll('71/api/', '71');
-    validatePosIp =
-        json['setuP_VALIDATEPOSIP']?.toString().parseBool() ?? false;
+    validatePosIp = json['seuP_VALIDATEPOSIP']?.toString().parseBool() ?? false;
     qtyDecimalPoints =
         json['setuP_DECIMALPLACE_QTY']?.toString().parseDouble().toInt() ?? 3;
     amountDecimalPoints =
@@ -125,6 +128,15 @@ class Setup {
     autoRoundOff = json['setuP_AUTO_ROUNDOFF']?.toString().parseBool() ?? false;
     autoRoundoffTo =
         json['setuP_AUTO_ROUNDOFF_TO']?.toString().parseDouble() ?? 0;
+
+    // i am using try-catch because qc team using old api which doesnt sending json['setuP_MAX_CASH_LIMIT']
+    try {
+      maxCashLimit =
+          json['setuP_MAX_CASH_LIMIT']?.toString().parseDouble() ?? 0;
+    } catch (e) {
+      maxCashLimit = 0;
+    }
+    itemReturnDayLimit = json?['setuP_RETURN_DAYS'] ?? 0;
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

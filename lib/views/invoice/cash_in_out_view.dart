@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 7/9/21, 2:36 PM
  */
 
@@ -11,8 +11,10 @@ import 'package:checkout/components/widgets/pay_button.dart';
 import 'package:checkout/components/widgets/poskeyboard.dart';
 import 'package:checkout/controllers/cash_in_out_controller.dart';
 import 'package:checkout/controllers/keyboard_controller.dart';
+import 'package:checkout/controllers/local_storage_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/cash_in_out_result.dart';
@@ -57,11 +59,12 @@ class _CashInOutViewState extends State<CashInOutView> {
   final Color selectedColor = CurrentTheme.backgroundColor!;
   String invoiceNo = "";
   bool active = false;
-
+  LocalStorageController _localStorageController = LocalStorageController();
   @override
   void initState() {
     super.initState();
     invoiceNo = widget.invoiceNo;
+    amountFocus.requestFocus();
     Future.delayed(Duration(seconds: 1)).then((value) {
       if (mounted)
         setState(() {
@@ -81,6 +84,7 @@ class _CashInOutViewState extends State<CashInOutView> {
 
   @override
   Widget build(BuildContext context) {
+    KeyBoardController().init(context);
     return POSBackground(
         child: Padding(
       padding: const EdgeInsets.all(8.0),
@@ -180,12 +184,32 @@ class _CashInOutViewState extends State<CashInOutView> {
               FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
             ],
             onEditingComplete: () {
-              remarkFocus.requestFocus();
-              KeyBoardController().dismiss();
-              KeyBoardController().showBottomDPKeyBoard(remarkEditingController,
-                  onEnter: () {
+              // KeyBoardController().dismiss();
+              // setState(() {
+              // KeyBoardController().showBottomDPKeyBoard(remarkEditingController,
+              //     onEnter: () {
+              //   KeyBoardController().dismiss();
+              //   handleEnter();
+              // }, buildContext: context);
+              // remarkFocus.requestFocus();
+              // });
+            },
+            onTap: () async {
+              await KeyBoardController().showBottomDPKeyBoard(
+                  amountEditingController, onEnter: () async {
                 KeyBoardController().dismiss();
-              });
+                remarkFocus.requestFocus();
+                // setState(() {
+                await KeyBoardController()
+                    .showBottomDPKeyBoard(remarkEditingController, onEnter: () {
+                  KeyBoardController().dismiss();
+                  if (POSConfig().touchKeyboardEnabled) {
+                    Navigator.pop(context);
+                  }
+                  handleEnter();
+                }, buildContext: context);
+                // });
+              }, buildContext: context);
             },
             controller: amountEditingController,
             decoration: InputDecoration(
@@ -198,15 +222,20 @@ class _CashInOutViewState extends State<CashInOutView> {
         Container(
           child: TextField(
             onEditingComplete: () {
+              KeyBoardController().dismiss();
               handleEnter();
             },
-            onChanged: (value) {
-              if (value.contains("\n")) handleEnter();
-            },
+            // onChanged: (value) {
+            //   if (value.contains("\n")) {
+            //     KeyBoardController().dismiss();
+            //     handleEnter();
+            //   }
+            // },
             onTap: () {
               KeyBoardController().showBottomDPKeyBoard(remarkEditingController,
                   onEnter: () {
                 KeyBoardController().dismiss();
+                handleEnter();
               }, buildContext: context);
             },
             focusNode: remarkFocus,
@@ -356,6 +385,14 @@ class _CashInOutViewState extends State<CashInOutView> {
       showAlert("amount_required");
       return;
     }
+
+    // if it is the advanced payment then the remark field is mendetory
+    if (selectedCashInOutType?.rWADVANCE == 1 &&
+        remarkEditingController.text.isEmpty) {
+      showAlert("remark_required");
+      return;
+    }
+
     // continue the cash in out option
     final cartModel = CartModel(
         setUpLocation: POSConfig().setupLocation,
@@ -389,7 +426,7 @@ class _CashInOutViewState extends State<CashInOutView> {
         scanBarcode: "")
       ..key = "";
 
-    bool res = await CashInOutController().saveCashInOut(
+    Map<String, dynamic> res = await CashInOutController().saveCashInOut(
         cashIn: widget.cashIn,
         cart: cartModel,
         paidModel: PaidModel(
@@ -405,15 +442,29 @@ class _CashInOutViewState extends State<CashInOutView> {
             selectedPayModeHeader?.pHDESC ?? ""),
         invoice: invoiceNo);
     //
-    if (res == true) {
-      PrintController().cashIn(
-        invoiceNo,
-        widget.cashIn,
-      );
+    if (res['status'] == true) {
+      if (POSConfig.crystalPath != '') {
+        PrintController().cashIn(
+          invoiceNo,
+          widget.cashIn,
+        );
+      } else {
+        POSManualPrint().printCashReceiptSlip(
+            data: res['returnRes'],
+            cashIn: widget.cashIn,
+            runno: invoiceNo,
+            isAdvance: selectedCashInOutType?.rWADVANCE == 1);
+      }
+
       EasyLoading.showSuccess('easy_loading.success_save'.tr());
-      invoiceNo = await CashInOutController().getInvoiceNo(widget.cashIn);
+      // invoiceNo = await CashInOutController().getInvoiceNo(widget.cashIn);
+      await _localStorageController.setWithdrawal(invoiceNo);
       //clear the fields
       clear();
+
+      Navigator.pop(context);
+    } else {
+      EasyLoading.showError('Something went wrong');
     }
   }
 

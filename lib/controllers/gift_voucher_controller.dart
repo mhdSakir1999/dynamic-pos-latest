@@ -4,7 +4,6 @@
  * Created At: 6/7/21, 5:55 PM
  */
 
-
 import 'package:checkout/components/api_client.dart';
 import 'package:checkout/models/pos/gift_voucher_result.dart';
 import 'package:checkout/models/pos_config.dart';
@@ -21,7 +20,7 @@ class GiftVoucherController {
     EasyLoading.show(
         status: 'Fetching gift voucher details from Central server.');
     final Response<dynamic>? res = await ApiClient.call(
-        'gift_vouchers?loc=${POSConfig().setupLocation}&id=$id', ApiMethod.GET,
+        'gift_vouchers?loc=${POSConfig().locCode}&id=$id', ApiMethod.GET,
         overrideUrl: _url, authorize: false, errorToast: false);
     EasyLoading.dismiss();
     if (res?.statusCode == 400) {

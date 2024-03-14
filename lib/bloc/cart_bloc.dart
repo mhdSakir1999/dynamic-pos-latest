@@ -31,6 +31,7 @@ class CartBloc {
   final _cartSummary = BehaviorSubject<CartSummaryModel>();
   final _paidList = BehaviorSubject<List<PaidModel>>();
   final _invAppliedPromo = BehaviorSubject<List<InvAppliedPromotion>>();
+  final _invBillDiscPromo = BehaviorSubject<List<InvBillDiscAmountPromo>>();
   final _invRefList = BehaviorSubject<List<EcrCard>>();
   final _promoFreeItems = BehaviorSubject<List<PromotionFreeItems>>();
   final _currentCartLst = BehaviorSubject<Map<String, CartModel>>();
@@ -39,6 +40,7 @@ class CartBloc {
       BehaviorSubject<SelectablePaymentModeWisePromotions?>();
   final _promoFreeGVs = BehaviorSubject<List<PromotionFreeGVs>>();
   final _promoFreeTickets = BehaviorSubject<List<PromotionFreeTickets>>();
+  final _redeemedCoupons = BehaviorSubject<List<RedeemedCoupon>>();
 
   BuildContext? context;
 
@@ -49,12 +51,14 @@ class CartBloc {
   Stream<List<PromotionFreeGVs>> get PromotionFreeGV => _promoFreeGVs.stream;
   Stream<List<PromotionFreeTickets>> get PromotionFreeTicket =>
       _promoFreeTickets.stream;
+  Stream<List<RedeemedCoupon>> get RedeemCoupon => _redeemedCoupons.stream;
   Stream<Map<String, CartModel>> get currentCartSnapshot =>
       _currentCartLst.stream;
   Stream<List<PaidModel>> get paidListStream => _paidList.stream;
   Stream<List<InvAppliedPromotion>> get promoAppliedStream =>
       _invAppliedPromo.stream;
-
+  Stream<List<InvBillDiscAmountPromo>> get promoBillDiscStream =>
+      _invBillDiscPromo.stream;
   CartSummaryModel? get cartSummary => _cartSummary.valueOrNull;
   SelectablePaymentModeWisePromotions? get specificPayMode =>
       _specificPayMode.valueOrNull;
@@ -62,12 +66,14 @@ class CartBloc {
   List<PaidModel>? get paidList => _paidList.valueOrNull;
   List<InvAppliedPromotion>? get promoAppliedList =>
       _invAppliedPromo.valueOrNull;
+  List<InvBillDiscAmountPromo>? get promoBillDiscList =>
+      _invBillDiscPromo.valueOrNull;
   List<EcrCard>? get invReference => _invRefList.valueOrNull;
   List<PromotionFreeItems>? get promoFreeItems => _promoFreeItems.valueOrNull;
   List<PromotionFreeGVs>? get promoFreeGVs => _promoFreeGVs.valueOrNull;
   List<PromotionFreeTickets>? get promoFreeTickets =>
       _promoFreeTickets.valueOrNull;
-
+  List<RedeemedCoupon>? get redeemedCoupon => _redeemedCoupons.valueOrNull;
   //add free item
   void addPromoFreeItems(List<PromotionFreeItems> promotionFreeItems) {
     _promoFreeItems.sink.add(promotionFreeItems);
@@ -79,6 +85,10 @@ class CartBloc {
 
   void addPromoFreeTickets(List<PromotionFreeTickets> promotionFreeTickets) {
     _promoFreeTickets.sink.add(promotionFreeTickets);
+  }
+
+  void addRedeemedCoupons(List<RedeemedCoupon> redeemcoupons) {
+    _redeemedCoupons.sink.add(redeemcoupons);
   }
 
   void addSpecificPayMode(SelectablePaymentModeWisePromotions? payMode) {
@@ -134,7 +144,8 @@ class CartBloc {
   // This method updates the  cart summary
   void updateCartSummary(CartSummaryModel cartSummary) async {
     _cartSummary.sink.add(cartSummary);
-    DualScreenController().sendLastProduct(null);
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().sendLastProduct(null);
   }
 
   void addBillPromotionToSummary(double discPre, String promoCode) async {
@@ -144,7 +155,8 @@ class CartBloc {
       cartSummary.promoDiscountPre = discPre;
       _cartSummary.sink.add(cartSummary);
     }
-    DualScreenController().sendLastProduct(null);
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().sendLastProduct(null);
   }
 
   void updateCartSummaryPrice(double amount) async {
@@ -159,7 +171,8 @@ class CartBloc {
     cart.subTotal += amount;
     await InvoiceController().updateTempCartSummary(cart);
     _cartSummary.sink.add(cart);
-    DualScreenController().sendLastProduct(null);
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().sendLastProduct(null);
   }
 
   final invController = InvoiceController();
@@ -210,7 +223,8 @@ class CartBloc {
       }
     }
     _currentCartLst.sink.add(currentMap);
-    DualScreenController().sendLastProduct(cartModel);
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().sendLastProduct(cartModel);
     return result;
   }
 
@@ -218,7 +232,8 @@ class CartBloc {
     Map<String, CartModel> currentMap = _currentCartLst.valueOrNull ?? {};
     currentMap[cartModel.key] = cartModel;
     print(cartModel.key);
-    DualScreenController().sendLastProduct(cartModel);
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().sendLastProduct(cartModel);
     _currentCartLst.sink.add(currentMap);
   }
 
@@ -249,7 +264,8 @@ class CartBloc {
     final res = await invController.saveItemTempCart(cartModel);
     if (res) currentMap[cartModel.key] = cartModel;
     _currentCartLst.sink.add(currentMap);
-    DualScreenController().sendLastProduct(cartModel);
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().sendLastProduct(cartModel);
     return res;
   }
 
@@ -262,11 +278,13 @@ class CartBloc {
     final res = await invController.updateTempCartItem(cartModel);
     if (res) currentMap[cartModel.key] = cartModel;
     _currentCartLst.sink.add(currentMap);
-    DualScreenController().sendLastProduct(cartModel);
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().sendLastProduct(cartModel);
     return res;
   }
 
-  Future<void> updateCartForPromo(List<CartModel> cartItems) async {
+  Future<void> updateCartForPromo(List<CartModel> cartItems,
+      List<InvBillDiscAmountPromo> billDiscPromo) async {
     Map<String, CartModel> currentMap = _currentCartLst.valueOrNull ?? {};
     // final oldMap = _currentCartLst.valueOrNull??{};
     double discPer = 0;
@@ -276,7 +294,11 @@ class CartBloc {
       final CartModel? currentItem = cartModel;
       if (currentItem != null) {
         currentMap[cartModel.key] = currentItem;
-        if (currentItem.promoCode != null && currentItem.promoCode != '') {
+        //comment this line by Pubudu on 18/Jan/2024 because we need to record only the item which has promotion discounts applied
+        //if (currentItem.promoCode != null && currentItem.promoCode != '') {
+        if ((currentItem.promoDiscAmt ?? 0) != 0 &&
+            (currentItem.promoDiscPre ?? 0) != 0 &&
+            (currentItem.promoBillDiscPre ?? 0) != 0) {
           discPer = currentItem.promoDiscPre ?? 0;
           billDiscPer = currentItem.promoBillDiscPre ?? 0;
           addInvPromotion(new InvAppliedPromotion(
@@ -300,13 +322,33 @@ class CartBloc {
       }
     }
     _currentCartLst.sink.add(currentMap);
+
+    for (InvBillDiscAmountPromo billDiscPromoItem in billDiscPromo) {
+      addInvPromotion(new InvAppliedPromotion(
+          billDiscPromoItem.Location_code,
+          billDiscPromoItem.promotion_code ?? '',
+          billDiscPromoItem.product_code,
+          billDiscPromoItem.cancelled,
+          billDiscPromoItem.discount_per,
+          billDiscPromoItem.discount_amt,
+          billDiscPromoItem.line_no,
+          billDiscPromoItem.barcode,
+          billDiscPromoItem.free_qty,
+          billDiscPromoItem.selling_price,
+          billDiscPromoItem.invoice_qty,
+          'INV',
+          DateTime.now(),
+          billDiscPromoItem.coupon_code,
+          billDiscPromoItem.promo_product,
+          billDiscPromoItem.beneficial_value));
+    }
   }
 
   void addPayment(PaidModel paid, {bool savePayment = true}) {
     final currentList = _paidList.valueOrNull ?? [];
     currentList.add(paid);
     _paidList.sink.add(currentList);
-    if (savePayment) InvoiceController().saveTempPayment(paid);
+    // if (savePayment) InvoiceController().saveTempPayment(paid);
   }
 
   void addInvPromotion(InvAppliedPromotion promo, {bool savePayment = true}) {
@@ -314,6 +356,12 @@ class CartBloc {
     currentList.add(promo);
     _invAppliedPromo.sink.add(currentList);
     //if (savePayment) InvoiceController().saveTempPayment(promo);
+  }
+
+  void addBillDiscPromotion(InvBillDiscAmountPromo promo) {
+    final currentList = _invBillDiscPromo.valueOrNull ?? [];
+    currentList.add(promo);
+    _invBillDiscPromo.sink.add(currentList);
   }
 
   void addNewReference(EcrCard card, {bool savePayment = true}) {
@@ -333,6 +381,8 @@ class CartBloc {
     _promoFreeGVs.close();
     _invAppliedPromo.close();
     _promoFreeTickets.close();
+    _invBillDiscPromo.close();
+    _redeemedCoupons.close();
   }
 
   Future resetCart() async {
@@ -357,9 +407,13 @@ class CartBloc {
     customerBloc.changeCurrentCustomer(null, update: false);
     _paidList.sink.add([]);
     _invAppliedPromo.sink.add([]);
+    _invBillDiscPromo.sink.add([]);
     _invRefList.sink.add([]);
     customerCouponBloc.clearCoupons();
     _specificPayMode.add(null);
+    _redeemedCoupons.add([]);
+    _promoFreeTickets.add([]);
+    _promoFreeGVs.add([]);
   }
 
   /* Server connection confirmation dialog*/
@@ -397,7 +451,7 @@ class CartBloc {
   }
 
   //return reveresed payment amount
-  double reversePaymentModePromo() {
+  double reversePaymentModePromo(String promoCode) {
     final cartSummary = _cartSummary.valueOrNull;
     if (cartSummary != null) {
       cartSummary.promoCode = null;
@@ -412,8 +466,8 @@ class CartBloc {
     if (index != -1) {
       final String phCode = payModeList[index].pHCODE ?? '';
       final paidList = _paidList.valueOrNull ?? [];
-      int paidIndex =
-          paidList.indexWhere((element) => element.phCode == phCode);
+      int paidIndex = paidList.indexWhere(
+          (element) => element.phCode == phCode && element.refNo == promoCode);
       if (paidIndex != -1) {
         double amount = paidList[paidIndex].paidAmount;
         paidList.removeAt(paidIndex);
@@ -428,6 +482,7 @@ class CartBloc {
     _currentCartLst.sink.add({});
     _paidList.sink.add([]);
     _invAppliedPromo.sink.add([]);
+    _invBillDiscPromo.sink.add([]);
   }
 
   void clearCartList() {
@@ -441,6 +496,19 @@ class CartBloc {
 
   clearPromoTickets() {
     _promoFreeTickets.sink.add([]);
+  }
+
+  clearRedeemedCoupon() {
+    _redeemedCoupons.sink.add([]);
+  }
+
+  //09/01/2024
+  clearAppliedPromo() {
+    _invAppliedPromo.sink.add([]);
+  }
+
+  clearBillDiscPromo() {
+    _invBillDiscPromo.sink.add([]);
   }
 
   void updateLastInvoice(LastInvoiceDetails details) {

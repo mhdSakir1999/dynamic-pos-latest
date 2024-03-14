@@ -1,24 +1,32 @@
+/// Author: [TM.Sakir] at 2024-01-04
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'indicator.dart';
 
-class PieChartSample2 extends StatefulWidget {
-  const PieChartSample2({Key? key}) : super(key: key);
+class PieChartSample extends StatefulWidget {
+  final List<String> legendData;
+  final Map<String, dynamic> chartData;
+  final num totalCount;
+  const PieChartSample(
+      {super.key,
+      required this.legendData,
+      required this.chartData,
+      required this.totalCount});
 
   @override
-  State<StatefulWidget> createState() => PieChart2State();
+  PieChartSampleState createState() => PieChartSampleState();
 }
 
-class PieChart2State extends State {
+class PieChartSampleState extends State<PieChartSample> {
   int touchedIndex = -1;
-
   @override
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
         SizedBox(
           height: 250.0,
-          width: 250.0,
+          width: MediaQuery.of(context).size.width * 0.3,
           child: PieChart(
             PieChartData(
                 pieTouchData: PieTouchData(
@@ -32,6 +40,7 @@ class PieChart2State extends State {
                     }
                     touchedIndex =
                         pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    print(touchedIndex.toString());
                   });
                 }),
                 borderData: FlBorderData(
@@ -39,47 +48,15 @@ class PieChart2State extends State {
                 ),
                 sectionsSpace: 0,
                 centerSpaceRadius: 40,
-                sections: showingSections()),
+                sections: showingSections(
+                    widget.chartData, widget.legendData, widget.totalCount)),
           ),
         ),
         Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const <Widget>[
-            Indicator(
-              color: Color(0xff0293ee),
-              text: 'First',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Indicator(
-              color: Color(0xfff8b250),
-              text: 'Second',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Indicator(
-              color: Color(0xff845bef),
-              text: 'Third',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Indicator(
-              color: Color(0xff13d38e),
-              text: 'Fourth',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 18,
-            ),
-          ],
+          children: showingLegends(widget.legendData),
         ),
         const SizedBox(
           width: 28,
@@ -88,59 +65,129 @@ class PieChart2State extends State {
     );
   }
 
-  List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
+  List<Widget> showingLegends(List<String> legends) {
+    return List.generate(legends.length, (i) {
+      switch (i) {
+        case 0:
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Indicator(
+              color: Color.fromARGB(255, 18, 97, 146),
+              text: legends[i],
+              textColor: Colors.white,
+              isSquare: true,
+            ),
+          );
+        case 1:
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Indicator(
+              color: Color(0xfff8b250),
+              text: legends[i],
+              textColor: Colors.white,
+              isSquare: true,
+            ),
+          );
+        case 2:
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Indicator(
+              color: Color(0xff845bef),
+              text: legends[i],
+              textColor: Colors.white,
+              isSquare: true,
+            ),
+          );
+        case 3:
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Indicator(
+              color: Color(0xff13d38e),
+              text: legends[i],
+              textColor: Colors.white,
+              isSquare: true,
+            ),
+          );
+        case 4:
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Indicator(
+              color: Color.fromARGB(255, 153, 19, 211),
+              text: legends[i],
+              textColor: Colors.white,
+              isSquare: true,
+            ),
+          );
+        case 5:
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Indicator(
+              color: Color.fromARGB(255, 211, 19, 73),
+              text: legends[i],
+              textColor: Colors.white,
+              isSquare: true,
+            ),
+          );
+        default:
+          return SizedBox.shrink();
+      }
+    });
+  }
+
+  List<PieChartSectionData> showingSections(
+      Map<String, dynamic> pieData, List<String> legend, num total) {
+    double rate = total != 0 ? 100 / total : 100;
+    return List.generate(legend.length, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 60.0 : 50.0;
       switch (i) {
         case 0:
-          return PieChartSectionData(
-            color: const Color(0xff0293ee),
-            value: 40,
-            title: '40%',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
+          return pieSectionWidget(pieData, legend, i, rate, radius, fontSize,
+              Color.fromARGB(255, 18, 97, 146));
         case 1:
-          return PieChartSectionData(
-            color: const Color(0xfff8b250),
-            value: 30,
-            title: '30%',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
+          return pieSectionWidget(pieData, legend, i, rate, radius, fontSize,
+              const Color(0xfff8b250));
+
         case 2:
-          return PieChartSectionData(
-            color: const Color(0xff845bef),
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
+          return pieSectionWidget(pieData, legend, i, rate, radius, fontSize,
+              const Color(0xff845bef));
+
         case 3:
-          return PieChartSectionData(
-            color: const Color(0xff13d38e),
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffffffff)),
-          );
+          return pieSectionWidget(pieData, legend, i, rate, radius, fontSize,
+              const Color(0xff13d38e));
+        case 4:
+          return pieSectionWidget(pieData, legend, i, rate, radius, fontSize,
+              Color.fromARGB(255, 153, 19, 211));
+        case 5:
+          return pieSectionWidget(pieData, legend, i, rate, radius, fontSize,
+              Color.fromARGB(255, 211, 19, 73));
         default:
           throw Error();
       }
     });
+  }
+
+  PieChartSectionData pieSectionWidget(
+      Map<String, dynamic> pieData,
+      List<String> legend,
+      int i,
+      double rate,
+      double radius,
+      double fontSize,
+      Color color) {
+    return PieChartSectionData(
+      color: color,
+      value:
+          (pieData[legend[i]] * rate) != 0 ? pieData[legend[i]] * rate : 0.01,
+      title: (pieData[legend[i]]) != 0
+          ? (pieData[legend[i]]).toStringAsFixed(0)
+          : '',
+      radius: radius,
+      titleStyle: TextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+          color: const Color(0xffffffff)),
+    );
   }
 }

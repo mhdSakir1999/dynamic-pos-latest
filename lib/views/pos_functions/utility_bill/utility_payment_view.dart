@@ -181,8 +181,9 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
     if (list.length != 0) {
       loaded = true;
     }
-    DualScreenController()
-        .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController()
+          .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
     if (mounted) setState(() {});
   }
 
@@ -673,8 +674,9 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
     String phDesc = selectedPayModeHeader?.pHDESC ?? "";
     String pdDesc = selectedPayModeDetail?.pDDESC ?? phDesc;
     final tot = cartBloc.cartSummary?.subTotal ?? 0;
-    DualScreenController()
-        .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController()
+          .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
     cartBloc.addPayment(PaidModel(
         // temp < 0 ? balanceDueTemp : entered,
         //entered > balanceDue ? balanceDueTemp : entered,
@@ -1968,7 +1970,8 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
     String reference = selectedPayModeHeader?.reference ?? '';
     switch (reference.toLowerCase()) {
       case 'lankaqr':
-        DualScreenController().sendLankaQr(amount);
+        if (POSConfig().dualScreenWebsite != "")
+          DualScreenController().sendLankaQr(amount);
         break;
       default:
         if (mounted) {

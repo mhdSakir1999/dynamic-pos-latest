@@ -12,7 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 final double screenWidth = ScreenUtil().screenWidth;
 
-bool get isMobile =>(!kIsWeb) && (Platform.isIOS || Platform.isAndroid);
+bool get isMobile => (!kIsWeb) && (Platform.isIOS || Platform.isAndroid);
 // bool get isMobile =>false;
 
 enum ScreenSize { lg, md }
@@ -50,19 +50,21 @@ double getLandingButtonSize() {
 }
 
 class HideWidgetOnScreenSize extends StatelessWidget {
-  const HideWidgetOnScreenSize({Key? key,required this.child,this.lg=false,this.md=false}) : super(key: key);
+  const HideWidgetOnScreenSize(
+      {Key? key, required this.child, this.lg = false, this.md = false})
+      : super(key: key);
   final Widget child;
   final bool lg;
   final bool md;
   @override
   Widget build(BuildContext context) {
     final ScreenSize screenSize = getScreenSize();
-    switch (screenSize){
+    switch (screenSize) {
       case ScreenSize.lg:
-        if(lg) return child;
+        if (lg) return child;
         break;
       case ScreenSize.md:
-        if(md) return child;
+        if (md) return child;
         break;
     }
     return SizedBox.shrink();

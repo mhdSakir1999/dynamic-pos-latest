@@ -94,7 +94,7 @@ class ApiClient {
       debugPrint(uri);
       switch (method) {
         case ApiMethod.GET:
-          response = await dio.get(uri, options: options);
+          response = await dio.get(uri, options: options, data: tempFormData);
           break;
         case ApiMethod.POST:
           // FormData temp = formData??FormData.fromMap(data);
@@ -117,7 +117,7 @@ class ApiClient {
         logger.d('API Call: ${method.toString()} \nURL: $uri');
         logger.d('Status Code: ${response.statusCode}');
         logger.d('Response Body: ${response.data.toString()}');
-        LogWriter().saveLogsToFile('API_Log_', [
+        await LogWriter().saveLogsToFile('API_Log_', [
           'API Call: ${method.toString()} \nURL: $uri',
           'Status Code: ${response.statusCode}',
           'Response Body: ${response.data.toString()}',
@@ -127,7 +127,7 @@ class ApiClient {
         logger.d('Status Code: ${response.statusCode}');
         logger.d('Response Body: ${response.data.toString()}');
         logger.d('API Call Error: ${e.toString()}');
-        LogWriter().saveLogsToFile('API_Log_', [
+        await LogWriter().saveLogsToFile('API_Log_', [
           'API Call: ${method.toString()} \nURL: $uri',
           'Status Code: ${response.statusCode}',
           'Response Body: ${response.data.toString()}',
@@ -163,7 +163,8 @@ class ApiClient {
         //debugPrint(result);
         if (errorToast && !local) {
           if (result == null || result.toString().isEmpty)
-            EasyLoading.showToast("easy_loading.invalid".tr()); //Invalid api response
+            EasyLoading.showToast(
+                "easy_loading.invalid".tr()); //Invalid api response
           else {
             final message = result?["message"] ?? "";
             if (message.toString().isNotEmpty && !local) {

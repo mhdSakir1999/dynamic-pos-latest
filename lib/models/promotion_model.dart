@@ -86,6 +86,12 @@ class Promotion {
   String? proIGROUPBUNDLEGROUPS;
   late bool proSELECTABLE;
   late PromotionStat status;
+  late bool pGEXCLUDEINCLUSIVE;
+  late bool pGVALIDQTYCHECKSKU;
+  late bool pGDISCAMTAPPLYTOBILL;
+  late bool pGTICKETVALUE;
+  late bool pGCOUPONREDEMPTION;
+  late int proCOUPONTYPE;
   Promotion({
     this.prOCODE,
     this.prODESC,
@@ -161,6 +167,12 @@ class Promotion {
     proISUPGROUPS = json['proI_SUPGROUPS'];
     proIITEMBUNDLEGROUPS = json['proI_ITEMBUNDLEGROUPS'];
     proIGROUPBUNDLEGROUPS = json['proI_GROUPBUNDLEGROUPS'];
+    pGEXCLUDEINCLUSIVE = intToBool(json['pG_EXCLUDE_INCLUSIVE']);
+    pGVALIDQTYCHECKSKU = intToBool(json['pG_VALIDQTY_CHECK_SKU']);
+    pGDISCAMTAPPLYTOBILL = intToBool(json['pG_DISCAMT_APPLY_TO_BILL']);
+    pGTICKETVALUE = intToBool(json['pG_TICKET_VALUE']);
+    pGCOUPONREDEMPTION = intToBool(json['pG_COUPON_REDEMPTION']);
+    proCOUPONTYPE = (json['prO_COUPON_TYPE']);
   }
 
   bool intToBool(dynamic value) {

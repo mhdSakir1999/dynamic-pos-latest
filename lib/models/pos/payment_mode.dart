@@ -5,7 +5,6 @@
  */
 import 'package:checkout/extension/extensions.dart';
 
-
 /// This class contains the all available payment mode in the app
 class PayModeResult {
   bool? success;
@@ -48,6 +47,7 @@ class PayModeHeader {
   String? reference;
   double? pointRate;
   bool? pHLOCALMODE;
+  bool? pHLINKADVANCE;
   List<PayModeDetails>? pDDETAILSLIST;
 
   PayModeHeader(
@@ -58,7 +58,8 @@ class PayModeHeader {
       this.pHLINKCREDIT,
       this.pHLINKLOYALTY,
       this.reference,
-        this.pHLOCALMODE,
+      this.pHLOCALMODE,
+      this.pHLINKADVANCE,
       this.pDDETAILSLIST});
 
   PayModeHeader.fromJson(Map<String, dynamic> json) {
@@ -81,7 +82,8 @@ class PayModeHeader {
     isGv = json['pH_LINKGV']?.toString().parseBool() ?? false;
     showInSignOff = json['pH_SW_SIGNOFF']?.toString().parseBool() ?? false;
     apiSp = json['pH_APISP']?.toString();
-    pointRate = json['pH_POINTSPER']?.toString().parseDouble()??0;
+    pointRate = json['pH_POINTSPER']?.toString().parseDouble() ?? 0;
+    pHLINKADVANCE = json['pH_LINKADVANCE']?.toString().parseBool() ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -93,6 +95,7 @@ class PayModeHeader {
     data['PH_LINKCREDIT'] = this.pHLINKCREDIT;
     data['PH_LINKLOYALTY'] = this.pHLINKLOYALTY;
     data['pH_LOCALMODE'] = this.pHLOCALMODE;
+    data['pH_LINKADVANCE'] = this.pHLINKADVANCE;
     if (this.pDDETAILSLIST != null) {
       data['PD_DETAILS_LIST'] =
           this.pDDETAILSLIST?.map((v) => v.toJson()).toList();

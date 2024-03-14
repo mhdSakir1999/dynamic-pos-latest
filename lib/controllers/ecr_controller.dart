@@ -23,10 +23,11 @@ class EcrController {
     return null;
   }
 
-  Future<EcrResponse?> doSale(double amount) async {
+  Future<EcrResponse?> doSale(double amount, {String refNo = ''}) async {
     final res = await ApiClient.call('ecr', ApiMethod.POST, local: true, data: {
       'amount': amount.toStringAsFixed(2),
-      'txnNo': cartBloc.cartSummary?.invoiceNo ?? ''
+      'txnNo': cartBloc.cartSummary?.invoiceNo ?? '',
+      'binRef': refNo
     });
     if (res?.statusCode == 200) {
       final EcrResponse ecrResponse = EcrResponse.fromJson(res?.data);

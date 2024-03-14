@@ -1,9 +1,8 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/27/21, 9:40 AM
  */
-
 
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
@@ -13,6 +12,7 @@ import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/local_storage_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_error_alert.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/product_controller.dart';
@@ -127,6 +127,18 @@ class CartDynamicButtonFunction {
     //       POSLogger(POSLoggerLevel.error, "Discount already applied"));
     //   return;
     // }
+
+    //if it is already discounted (linewise) preventing the same discount apply
+    if (discountPercentage && cart.discPer != 0) {
+      EasyLoading.showError('line_discount_entry_view.already_added'
+          .tr(namedArgs: {'type': 'Percentage-Wise'}));
+      return;
+    }
+    if (discountPercentage && cart.discAmt != 0) {
+      EasyLoading.showError('line_discount_entry_view.already_added'
+          .tr(namedArgs: {'type': 'Amount-Wise'}));
+      return;
+    }
     showModalBottomSheet(
       isScrollControlled: true,
       useRootNavigator: true,
@@ -237,21 +249,21 @@ class CartDynamicButtonFunction {
         var res = await InvoiceController()
             .billClose(invoiced: false, context: context!);
 
-        /// new change by [TM.Sakir] -- initializing new invoice when holding a invoice ----------------------------------------------
-        /// comparing the summaryInvNumber(contains hold bill) with actual inv number from local storage.
-        /// if summaryInv > inv: we are holding the invoice for the first time. so we have to initiate next inv to do invoicing.
-        /// else: we are holding a invoice which is recalled (holded before some invoices). so dont do anything
-        String? invNo = await _localStorageController.getInvoice();
+        // /// new change by [TM.Sakir] -- initializing new invoice when holding a invoice ----------------------------------------------
+        // /// comparing the summaryInvNumber(contains hold bill) with actual inv number from local storage.
+        // /// if summaryInv > inv: we are holding the invoice for the first time. so we have to initiate next inv to do invoicing.
+        // /// else: we are holding a invoice which is recalled (holded before some invoices). so dont do anything
+        // String? invNo = await _localStorageController.getInvoice();
 
-        if (res.success &&
-            (int.parse(currentSummaryInv ?? '0') > int.parse(invNo ?? '0'))) {
-          try {
-            InvoiceController().setInvoiceNo(currentSummaryInv!);
-          } catch (e) {
-            print(e);
-          }
-        }
-        //--------------------------------------------------------------------
+        // if (res.success &&
+        //     (int.parse(currentSummaryInv ?? '0') > int.parse(invNo ?? '0'))) {
+        //   try {
+        //     InvoiceController().setInvoiceNo(currentSummaryInv!);
+        //   } catch (e) {
+        //     print(e);
+        //   }
+        // }
+        // //--------------------------------------------------------------------
         await cartBloc.resetCart();
         EasyLoading.dismiss();
       }
@@ -495,7 +507,8 @@ class CartDynamicButtonFunction {
         break;
       case "hold":
         await _holdBill();
-        DualScreenController().setLandingScreen();
+        if (POSConfig().dualScreenWebsite != "")
+          DualScreenController().setLandingScreen();
         break;
       case "recall":
         await _recall();
@@ -535,13 +548,17 @@ class CartDynamicButtonFunction {
 
     // fetch permission list
     final userCode = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
-    EasyLoading.show(status: 'please_wait'.tr());
-    final permissionList =
-        await AuthController().getUserPermissionListByUserCode(userCode);
-    EasyLoading.dismiss();
+    // EasyLoading.show(status: 'please_wait'.tr());
+    // final permissionList =
+    //     await AuthController().getUserPermissionListByUserCode(userCode);
+    // EasyLoading.dismiss();
 
+    // hasPermission = SpecialPermissionHandler(context: context!)
+    //     .hasPermissionInList(permissionList?.userRights ?? [],
+    //         PermissionCode.resetPOSScreenWithItems, "A", userCode);
+    final permissionList = userBloc.userDetails?.userRights;
     hasPermission = SpecialPermissionHandler(context: context!)
-        .hasPermissionInList(permissionList?.userRights ?? [],
+        .hasPermissionInList(permissionList ?? [],
             PermissionCode.resetPOSScreenWithItems, "A", userCode);
 
     //if user doesnt have the permission
@@ -566,7 +583,8 @@ class CartDynamicButtonFunction {
     EasyLoading.show(status: 'please_wait'.tr());
 
     await cartBloc.resetCart();
-    DualScreenController().setLandingScreen();
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().setLandingScreen();
     EasyLoading.dismiss();
   }
 
@@ -589,7 +607,12 @@ class CartDynamicButtonFunction {
           .success;
       if (!success) return;
     }
-    PrintController()
-        .printHandler("", PrintController().openDrawer(), context!);
+
+    if (POSConfig.crystalPath != '') {
+      PrintController()
+          .printHandler("", PrintController().openDrawer(), context!);
+    } else {
+      await POSManualPrint().openDrawer();
+    }
   }
 }

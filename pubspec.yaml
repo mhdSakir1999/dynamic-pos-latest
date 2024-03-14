@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <=4.0.0"
+  sdk: ">=3.0.0 <=4.0.0"
 
 dependencies:
   flutter:
@@ -39,7 +39,7 @@ dependencies:
     git:
       url: https://github.com/adarsh-technocrat/flutter-icons
   responsive_grid: ^2.1.0
-  wakelock: ^0.6.2
+  wakelock: ^0.4.0
   shared_preferences: ^2.0.15
   flex_color_picker: ^3.3.0
   dio: ^5.3.2
@@ -58,7 +58,7 @@ dependencies:
   url_launcher: ^6.0.8
   fingerprintjs: ^2.0.0
   desktop_window: ^0.4.0
-  device_info_plus: ^8.2.2
+  device_info_plus:
   web_socket_channel: ^2.2.0
   infinite_scroll_pagination: ^4.0.0
   uuid: ^4.1.0
@@ -72,16 +72,17 @@ dependencies:
   overlay_tutorial: ^3.0.0
   lottie: ^2.6.0
   path_provider: ^2.0.11
-  bitsdojo_window: ^0.1.5
+  bitsdojo_window: ^0.1.3
   dropdown_button2: ^2.3.9
   logger: ^2.0.2+1
   xml2json: ^6.2.0
-  package_info_plus: ^3.1.2
+  package_info_plus:
   marquee: ^2.2.3
   loading_indicator: ^3.1.1
   esc_pos_utils_plus: ^2.0.3
   usb_esc_printer_windows: ^0.0.2
   qr_flutter: ^4.1.0
+  serial_port_win32: 
 
 dev_dependencies:
   flutter_test:
@@ -112,6 +113,7 @@ flutter:
     - assets/translations/
     - assets/lottie/
     - assets/.env
+    - assets/appData.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

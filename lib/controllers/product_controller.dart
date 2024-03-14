@@ -21,22 +21,23 @@ import '../models/pos/location_wise_stock_result.dart';
 class ProductController {
   //TODO user_bloc => Current user , POSConfig() => terminal+location
   Future<ProductResult?> searchProductByBarcode(String code, double qty) async {
+    // I am sending absolute qty because this api cannot return proPrices if it is a minus qty
     final res = await ApiClient.call(
-        "products/${POSConfig().locCode}/$code?priceMode=${cartBloc.cartSummary?.priceMode ?? ''}&qty=$qty",
+        "products/${POSConfig().locCode}/$code?priceMode=${cartBloc.cartSummary?.priceMode ?? ''}&qty=${qty.abs()}",
         ApiMethod.GET);
     print(res?.data);
     if (res == null || res.data == null || res.data is String) return null;
     return ProductResult.fromJson(res.data);
   }
 
-  Future<List<Product>> searchProductByKeyword(
-      String keyword, int page, int filterBy) async {
+  Future<List<Product>> searchProductByKeyword(String keyword, int page,
+      int filterBy, bool firstLetterSearch, bool combinedSearch) async {
     final res = await ApiClient.call(
-        "products/search/${POSConfig().locCode}/$keyword?items=100&page=$page&filteredBy=$filterBy",
+        "products/search/${POSConfig().locCode}/$keyword?items=100&page=$page&filteredBy=$filterBy&byfirstletter=${firstLetterSearch ? 1 : 0}&combineSearch=${combinedSearch ? 1 : 0}",
         ApiMethod.GET);
     if (res == null || res.data == null) return [];
     final List<dynamic> products = res.data?["products"] ?? [];
-    return products.map((e) => Product.fromJson(e)).toList();
+    return products.take(20).map((e) => Product.fromJson(e)).toList();
   }
 
   Future<ProPriceResults?> getProductsMultiplePrices(
@@ -119,5 +120,16 @@ class ProductController {
         "product": Product.fromJson(product),
       };
     }
+  }
+
+  Future<List> getStockInHandDetails(List<Map<String, dynamic>> proList) async {
+    var data = Map<String, dynamic>.from(
+        {"location": POSConfig().locCode, "items": proList});
+    final res = await ApiClient.call(
+        "products/check_stock", data: data, ApiMethod.POST);
+    if (res?.statusCode == 200 && res?.data != null) {
+      return res?.data['stock_details'] ?? [];
+    }
+    return [];
   }
 }

@@ -15,7 +15,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:checkout/controllers/permission_controller.dart';
 import 'package:supercharged/supercharged.dart';
 
-
 class ApprovalAlert extends StatefulWidget {
   final String accessType;
   final String permissionCode;
@@ -108,10 +107,9 @@ class _ApprovalAlertState extends State<ApprovalAlert> {
   void handlePermission() async {
     String reason = reasonController.text;
     String password = passwordController.text;
-    if (reason.isEmpty) {
+    if (reason.isEmpty || (!widget.sameUser && password.isEmpty)) {
       return;
     }
-
     if (widget.sameUser) {
       final user = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
       try {

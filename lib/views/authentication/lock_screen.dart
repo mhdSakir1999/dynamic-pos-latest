@@ -108,13 +108,13 @@ class _LockScreenState extends State<LockScreen> {
             width: width,
             child: TextField(
               onTap: () {
-                KeyBoardController().dismiss();
+                // KeyBoardController().dismiss();
                 KeyBoardController().showBottomDPKeyBoard(
                     passwordEditingController,
                     obscureText: true, onEnter: () {
                   KeyBoardController().dismiss();
                   validatePassword();
-                });
+                }, buildContext: context);
               },
               controller: passwordEditingController,
               obscureText: true,

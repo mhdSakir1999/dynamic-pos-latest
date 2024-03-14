@@ -1,11 +1,12 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 7/7/21, 3:24 PM
  */
 import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/components/api_client.dart';
 import 'package:checkout/controllers/auth_controller.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/models/pos/pos_denomination_model.dart';
 import 'package:checkout/models/pos_config.dart';
@@ -45,30 +46,42 @@ class DenominationController {
       "shift_no": user?.shiftNo?.toString() ?? "0",
       "sign_on_date": user?.uSERHEDSIGNONDATE ?? "",
       "sign_on_time": user?.uSERHEDSIGNONTIME ?? "",
-      "location": POSConfig().setupLocation,
+      "location": POSConfig().locCode,
       "terminal_id": user?.uSERHEDSTATIONID ??
           "", //POSConfig().terminalId, //passing the terminal id which is being managerSigned-off
       "approved_user": approvedUser ?? user?.uSERHEDUSERCODE
     };
+    print(map.toString());
 
     final res = await ApiClient.call("denomination", ApiMethod.POST, data: map);
     await AuthController().checkUsername(
         userBloc.currentUser?.uSERHEDUSERCODE ?? '',
         authorize: true);
     if (res?.statusCode == 200) {
+      POSConfig.localPrintData = res?.data['data'];
+      POSConfig.denominations = denominations;
+      POSConfig.denominationDet = denominationDetails;
+      print(POSConfig.localPrintData);
       EasyLoading.showSuccess('easy_loading.success_save'.tr());
 
       //new change -- after successfuly manager signed-off, clear the pendinguser bloc
       // if (pendingSignoff) {
       //   userBloc.changePendingUser(UserHed());
       // }
-    }
 
-    await PrintController().printMngSignOffSlip(
-        user?.uSERHEDUSERCODE ?? '',
-        POSConfig().setupLocation,
-        user?.uSERHEDSTATIONID ?? "", //POSConfig().terminalId,
-        user?.shiftNo?.toString() ?? "0",
-        user?.uSERHEDSIGNONTIME ?? "");
+      if (POSConfig.crystalPath != '') {
+        await PrintController().printMngSignOffSlip(
+            user?.uSERHEDUSERCODE ?? '',
+            POSConfig().setupLocation,
+            user?.uSERHEDSTATIONID ?? "", //POSConfig().terminalId,
+            user?.shiftNo?.toString() ?? "0",
+            user?.uSERHEDSIGNONTIME ?? "");
+      } else {
+       await POSManualPrint().printManagerSlip(
+            data: res?.data['data'],
+            denominations: denominations,
+            denominationDet: denominationDetails);
+      }
+    }
   }
 }

@@ -509,6 +509,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         location,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: fontSize),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Spacer(),

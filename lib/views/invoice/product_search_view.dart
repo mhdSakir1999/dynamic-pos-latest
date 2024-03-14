@@ -1,15 +1,18 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/27/21, 4:20 PM
  */
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/widgets/go_back.dart';
+import 'package:checkout/components/widgets/poskeyboard.dart';
 import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
 import 'package:checkout/controllers/product_controller.dart';
+import 'package:checkout/controllers/usb_serial_controller.dart';
 import 'package:checkout/models/pos/location_wise_stock_result.dart';
 import 'package:checkout/models/pos/product_result.dart';
 import 'package:checkout/models/pos/variant_result.dart';
@@ -57,6 +60,9 @@ class _ProductSearchViewState extends State<ProductSearchView> {
   final addFocusNode = FocusNode();
   List<LocationStocks> locationStocks = [];
   List<LocationStocks> allLocationStocks = [];
+  bool codeSearch = false;
+  bool firstLetterSearch = false;
+  bool combinedSearch = false;
 
   @override
   void initState() {
@@ -106,8 +112,12 @@ class _ProductSearchViewState extends State<ProductSearchView> {
   Future searchItem() async {
     if (searchEditingController.text.length > 2) {
       EasyLoading.show(status: 'please_wait'.tr());
-      productList = await ProductController()
-          .searchProductByKeyword(searchEditingController.text, 0, _sortIndex);
+      productList = await ProductController().searchProductByKeyword(
+          searchEditingController.text,
+          0,
+          _sortIndex,
+          firstLetterSearch,
+          combinedSearch);
       if (mounted) setState(() {});
       EasyLoading.dismiss();
     }
@@ -130,13 +140,90 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                 textAlignVertical: TextAlignVertical.center,
                 style: TextStyle(
                     fontSize: 22.sp, color: CurrentTheme.primaryColor),
-                onTap: () {
-                  KeyBoardController().dismiss();
-                  KeyBoardController().init(context);
-                  KeyBoardController().showBottomDPKeyBoard(
-                      searchEditingController, onEnter: () {
-                    searchItem();
-                  });
+                onTap: () async {
+                  // KeyBoardController().dismiss();
+                  if (codeSearch == true && POSConfig().touchKeyboardEnabled) {
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          backgroundColor: Colors.transparent,
+                          alignment: Alignment.bottomCenter,
+                          content: SizedBox(
+                            width: 520.w,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    icon: Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    )),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Tooltip(
+                                  message: "product_view.code_search".tr(),
+                                  child: TextField(
+                                    // onEditingComplete: () => searchItem(),
+                                    onSubmitted: (value) async {
+                                      Navigator.pop(context);
+                                      await searchItem();
+                                    },
+                                    controller: searchEditingController,
+                                    autofocus: true,
+                                    decoration: InputDecoration(
+                                        hintStyle: CurrentTheme.headline6!
+                                            .copyWith(
+                                                color: CurrentTheme
+                                                    .primaryDarkColor),
+                                        hintText:
+                                            "product_view.code_search".tr(),
+                                        filled: true),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                POSKeyBoard(
+                                  color: Colors.transparent,
+                                  onPressed: () {
+                                    //_customerCodeEditingController.clear();
+                                    if (searchEditingController.text.length !=
+                                        0) {
+                                      searchEditingController.text =
+                                          searchEditingController.text
+                                              .substring(
+                                                  0,
+                                                  searchEditingController
+                                                          .text.length -
+                                                      1);
+                                    }
+                                  },
+                                  clearButton: true,
+                                  isInvoiceScreen: false,
+                                  disableArithmetic: true,
+                                  onEnter: () async {
+                                    Navigator.pop(context);
+                                    await searchItem();
+                                  },
+                                  controller: searchEditingController,
+                                  nextFocusTo: searchFocus,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    KeyBoardController().init(context);
+                    KeyBoardController().showBottomDPKeyBoard(
+                        searchEditingController, onEnter: () {
+                      searchItem();
+                    }, buildContext: context);
+                  }
                 },
                 onEditingComplete: () => searchItem(),
                 controller: searchEditingController,
@@ -225,7 +312,19 @@ class _ProductSearchViewState extends State<ProductSearchView> {
         onTap: () {
           if (mounted) {
             _sortIndex = index;
-            setState(() {});
+            setState(() {
+              if (text == "product_view.code".tr()) {
+                codeSearch = true;
+              } else {
+                codeSearch = false;
+              }
+
+              if (index == 0 || index == 1) {
+                combinedSearch = combinedSearch;
+              } else {
+                combinedSearch = false;
+              }
+            });
             searchFocus.requestFocus();
           }
         },
@@ -333,31 +432,144 @@ class _ProductSearchViewState extends State<ProductSearchView> {
     );
   }
 
-  void _qtyKeyboard() {
-    KeyBoardController().dismiss();
-    KeyBoardController().showBottomDPKeyBoard(qtyEditingController,
-        onEnter: () {
-      _addQtyToCart();
-      KeyBoardController().dismiss();
-    });
+  void _qtyKeyboard() async {
+    // KeyBoardController().dismiss();
+    if (POSConfig().touchKeyboardEnabled) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.transparent,
+            alignment: Alignment.bottomCenter,
+            content: SizedBox(
+              width: 520.w,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      )),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Tooltip(
+                    message: 'quantity',
+                    child: TextField(
+                      // onEditingComplete: () => searchItem(),
+                      onSubmitted: (value) async {
+                        Navigator.pop(context);
+                        await _addQtyToCart();
+                      },
+                      controller: qtyEditingController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                          hintStyle: CurrentTheme.headline6!
+                              .copyWith(color: CurrentTheme.primaryDarkColor),
+                          hintText: '',
+                          filled: true),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  POSKeyBoard(
+                    color: Colors.transparent,
+                    onPressed: () {
+                      //_customerCodeEditingController.clear();
+                      if (qtyEditingController.text.length != 0) {
+                        qtyEditingController.text = qtyEditingController.text
+                            .substring(0, qtyEditingController.text.length - 1);
+                      }
+                    },
+                    clearButton: true,
+                    isInvoiceScreen: false,
+                    disableArithmetic: true,
+                    onEnter: () async {
+                      Navigator.pop(context);
+                      await _addQtyToCart();
+                    },
+                    controller: qtyEditingController,
+                    nextFocusTo: editingFocusNode,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+    // else {
+    //   KeyBoardController().showBottomDPKeyBoard(qtyEditingController,
+    //       onEnter: () async {
+    //     KeyBoardController().dismiss();
+    //     await _addQtyToCart();
+    //   }, buildContext: context);
+    // }
   }
 
   Widget buildRHS() {
-    return selectedProduct == null
-        ? SizedBox.shrink()
-        : Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                rhsProduct(),
-                SizedBox(
-                  height: 10.h,
+    return Column(
+      children: [
+        Row(
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Row(
+                  children: [
+                    Text('First Letter Search : ',
+                        style: TextStyle(
+                            fontSize: 18.sp,
+                            color: CurrentTheme.primaryColor,
+                            fontWeight: FontWeight.bold)),
+                    Switch(
+                        value: firstLetterSearch,
+                        onChanged: (value) => setState(() {
+                              firstLetterSearch = value;
+                            })),
+                    Text('Combined Search : ',
+                        style: TextStyle(
+                            fontSize: 18.sp,
+                            color: CurrentTheme.primaryColor,
+                            fontWeight: FontWeight.bold)),
+                    Switch(
+                        value: combinedSearch,
+                        onChanged: (_sortIndex == 0 || _sortIndex == 1)
+                            ? (value) => setState(() {
+                                  combinedSearch = value;
+                                })
+                            : null),
+                  ],
                 ),
-                allLocationStocks.isNotEmpty ? _stockView() : _firstView(),
-              ],
+              ),
             ),
-          );
+          ],
+        ),
+        selectedProduct == null
+            ? SizedBox.shrink()
+            : Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    rhsProduct(),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    allLocationStocks.isNotEmpty ? _stockView() : _firstView(),
+                  ],
+                ),
+              ),
+      ],
+    );
   }
 
   Widget _firstView() {
@@ -393,7 +605,11 @@ class _ProductSearchViewState extends State<ProductSearchView> {
               child: Center(
                 child: TextField(
                   onTap: () => _qtyKeyboard(),
-                  onEditingComplete: () => addFocusNode.requestFocus(),
+                  onSubmitted: (value) async {
+                    await _addQtyToCart();
+                    // Navigator.pop(context);
+                  },
+                  // onEditingComplete: () => _addQtyToCart,
                   controller: qtyEditingController,
                   decoration: InputDecoration(
                     filled: true,
@@ -494,118 +710,118 @@ class _ProductSearchViewState extends State<ProductSearchView> {
     Color color = POSConfig().primaryDarkGrayColor.toColor();
     final myList = locationStocks;
     final titleStyle = TextStyle(fontWeight: FontWeight.bold);
-    return Expanded(
-      child: Column(
-        children: [
-          TextField(
-            textAlignVertical: TextAlignVertical.center,
-            style: TextStyle(fontSize: 22.sp, color: CurrentTheme.primaryColor),
-            onTap: () {
-              KeyBoardController().dismiss();
-              KeyBoardController().init(context);
-              KeyBoardController()
-                  .showBottomDPKeyBoard(locationSearchController, onEnter: () {
-                searchLocation();
-              });
-            },
-            onChanged: (String value) {
+    return Column(
+      children: [
+        TextField(
+          textAlignVertical: TextAlignVertical.center,
+          style: TextStyle(fontSize: 22.sp, color: CurrentTheme.primaryColor),
+          onTap: () {
+            KeyBoardController().dismiss();
+            KeyBoardController().init(context);
+            KeyBoardController().showBottomDPKeyBoard(locationSearchController,
+                onEnter: () {
               searchLocation();
-            },
-            onEditingComplete: () => searchLocation(),
-            controller: locationSearchController,
-            decoration: InputDecoration(
-                filled: true,
-                prefixIcon: Icon(
-                  MaterialCommunityIcons.magnify,
-                  size: 28.sp,
-                ),
-                hintText: "product_view.location_search".tr(),
-                hintStyle: TextStyle(
-                    fontSize: 22.sp,
-                    color: CurrentTheme.primaryColor,
-                    fontWeight: FontWeight.w500)),
-          ),
-          Expanded(
-            child: Card(
-              color: CurrentTheme.primaryColor,
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: myList.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0)
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: REdgeInsets.symmetric(vertical: 8.h),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                'product_view.location'.tr(),
-                                textAlign: TextAlign.center,
-                                style: titleStyle,
-                              )),
-                              Expanded(
-                                  child: Text(
-                                'product_view.location_stock'.tr(),
-                                textAlign: TextAlign.center,
-                                style: titleStyle,
-                              )),
-                              Expanded(
-                                  child: Text(
-                                'product_view.location_price'.tr(),
-                                textAlign: TextAlign.center,
-                                style: titleStyle,
-                              )),
-                            ],
-                          ),
-                        ),
-                        const Divider()
-                      ],
-                    );
-                  final location = myList[index - 1];
+            }, buildContext: context);
+          },
+          onChanged: (String value) {
+            searchLocation();
+          },
+          onEditingComplete: () => searchLocation(),
+          controller: locationSearchController,
+          decoration: InputDecoration(
+              filled: true,
+              prefixIcon: Icon(
+                MaterialCommunityIcons.magnify,
+                size: 28.sp,
+              ),
+              hintText: "product_view.location_search".tr(),
+              hintStyle: TextStyle(
+                  fontSize: 22.sp,
+                  color: CurrentTheme.primaryColor,
+                  fontWeight: FontWeight.w500)),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.49,
+          child: Card(
+            color: CurrentTheme.primaryColor,
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              physics: BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: myList.length + 1,
+              itemBuilder: (context, index) {
+                if (index == 0)
                   return Column(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                              child: Text(
-                            location.loCDESC ?? '',
-                            textAlign: TextAlign.center,
-                          )),
-                          Expanded(
-                              child: Text(
-                            location.iplUSIH?.qtyFormatter() ?? "0.00",
-                            textAlign: TextAlign.center,
-                          )),
-                          Expanded(
-                              child: Text(
-                            (location.iplUSELL?.thousandsSeparator() ?? "0.00")
-                                .toString()
-                                .parseDouble()
-                                .thousandsSeparator(),
-                            textAlign: TextAlign.center,
-                          )),
-                        ],
+                      Padding(
+                        padding: REdgeInsets.symmetric(vertical: 8.h),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Text(
+                              'product_view.location'.tr(),
+                              textAlign: TextAlign.center,
+                              style: titleStyle,
+                            )),
+                            Expanded(
+                                child: Text(
+                              'product_view.location_stock'.tr(),
+                              textAlign: TextAlign.center,
+                              style: titleStyle,
+                            )),
+                            Expanded(
+                                child: Text(
+                              'product_view.location_price'.tr(),
+                              textAlign: TextAlign.center,
+                              style: titleStyle,
+                            )),
+                          ],
+                        ),
                       ),
                       const Divider()
                     ],
                   );
-                },
-              ),
+                final location = myList[index - 1];
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Text(
+                          location.loCDESC ?? '',
+                          textAlign: TextAlign.center,
+                        )),
+                        Expanded(
+                            child: Text(
+                          location.iplUSIH?.qtyFormatter() ?? "0.00",
+                          textAlign: TextAlign.center,
+                        )),
+                        Expanded(
+                            child: Text(
+                          (location.iplUSELL?.thousandsSeparator() ?? "0.00")
+                              .toString()
+                              .parseDouble()
+                              .thousandsSeparator(),
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ),
+                    const Divider()
+                  ],
+                );
+              },
             ),
           ),
-          Container(
-              width: width,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: color),
-                  onPressed: () {
-                    _resetStock();
-                  },
-                  child: Text("product_view.reset".tr()))),
-        ],
-      ),
+        ),
+        Container(
+            width: width,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: color),
+                onPressed: () {
+                  _resetStock();
+                },
+                child: Text("product_view.reset".tr()))),
+      ],
     );
   }
 
@@ -678,16 +894,30 @@ class _ProductSearchViewState extends State<ProductSearchView> {
         .searchProductByBarcode(selectedProduct?.pLUCODE ?? '', qty.toDouble());
     EasyLoading.dismiss();
     if (productRes?.product == null) return;
-    await POSPriceCalculator().addItemToCart(
-        productRes!.product!.first, qty, context, null, null, null,
+    await POSPriceCalculator().addItemToCart(productRes!.product!.first, qty,
+        context, productRes.prices, productRes.proPrices, productRes.proTax,
         secondApiCall: true);
+
+// Poll Display
+//===========================================================================================================================================
+    var lastItem = cartBloc.currentCart?.values.last;
+    if (POSConfig().enablePollDisplay == 'true' && lastItem != null) {
+      usbSerial.sendToSerialDisplay(
+          '${usbSerial.addSpacesBack(lastItem.posDesc, 20)}');
+      usbSerial.sendToSerialDisplay(
+          'x${usbSerial.addSpacesBack(lastItem.unitQty.toString(), 5)}${usbSerial.addSpacesFront(lastItem.amount.toStringAsFixed(2), 14)}');
+    }
+//===========================================================================================================================================
+
     if (productRes.product?.first.returnBottleCode != null &&
         productRes.product!.first.returnBottleCode!.isNotEmpty) {
       EasyLoading.show(status: 'please_wait'.tr());
       var returnProRes = await POSPriceCalculator()
           .searchProduct(productRes.product!.first.returnBottleCode!);
       EasyLoading.dismiss();
-      if (returnProRes != null && returnProRes.product != null) {
+      if (returnProRes != null &&
+          returnProRes.product != null &&
+          returnProRes.product?.length != 0) {
         await showGeneralDialog(
             context: context,
             transitionDuration: const Duration(milliseconds: 200),
@@ -775,12 +1005,9 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                                       returnProRes.product!.first,
                                       newqty,
                                       context,
-                                      null,
-                                      null,
-                                      null,
-                                      // returnProRes.prices,
-                                      // returnProRes.proPrices,
-                                      // returnProRes.proTax,
+                                      returnProRes.prices,
+                                      returnProRes.proPrices,
+                                      returnProRes.proTax,
                                       secondApiCall: true,
                                     );
                                     Navigator.pop(context);
@@ -807,12 +1034,9 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                                         returnProRes.product!.first,
                                         newqty,
                                         context,
-                                        null,
-                                        null,
-                                        null,
-                                        // returnProRes.prices,
-                                        // returnProRes.proPrices,
-                                        // returnProRes.proTax,
+                                        returnProRes.prices,
+                                        returnProRes.proPrices,
+                                        returnProRes.proTax,
                                         secondApiCall: true,
                                       );
                                       Navigator.pop(context);

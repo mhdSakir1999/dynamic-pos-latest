@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 7/9/21, 6:22 PM
  */
 
@@ -16,40 +16,47 @@ import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/extension/extensions.dart';
 
 import 'local_storage_controller.dart';
+
 class CashInOutController {
   LocalStorageController _localStorageController = LocalStorageController();
-  String incrementInvoiceNo(String? invNo){
+  String incrementInvoiceNo(String? invNo) {
     int invNoInt = 6;
-    String invPrefix  = POSConfig().comCode.getLastNChar(2) + POSConfig().locCode.getLastNChar(2)+POSConfig().terminalId.getLastNChar(2);
-    if(invNo == null|| invNo.isEmpty){
-      return invPrefix+ "1".padLeft(invNoInt, '0');
+    String invPrefix = POSConfig().comCode.getLastNChar(2) +
+        POSConfig().locCode.getLastNChar(2) +
+        POSConfig().terminalId.getLastNChar(2);
+    if (invNo == null || invNo.isEmpty) {
+      return invPrefix + "1".padLeft(invNoInt, '0');
     }
 
     /// check if the invoice is avalable for the current inv no
     int currentSeq = int.parse(invNo.replaceAll(invPrefix, ''));
-    return invPrefix+ (currentSeq + 1).toString().padLeft(invNoInt, '0');
+    return invPrefix + (currentSeq + 1).toString().padLeft(invNoInt, '0');
   }
+
   // this method will return the run no
   Future<String> getInvoiceNo(bool cashIn) async {
     //TODO seperation of number generation for cash in / Out
     String? invNo = await _localStorageController.getWithdrawal();
-    if(invNo == null){
-      String? witInvNo = await InvoiceController().getMaximumInvNo(InvoiceController().getInvPrefix(), 'WIT');
-      String? retInvNo = await InvoiceController().getMaximumInvNo(InvoiceController().getInvPrefix(), 'REC');
+    if (invNo == null) {
+      String? witInvNo = await InvoiceController()
+          .getMaximumInvNo(InvoiceController().getInvPrefix(), 'WIT');
+      String? retInvNo = await InvoiceController()
+          .getMaximumInvNo(InvoiceController().getInvPrefix(), 'REC');
       int maxNo = 0;
-      if(witInvNo != null){
-        maxNo = int.parse(witInvNo.replaceAll(InvoiceController().getInvPrefix(), ''));
+      if (witInvNo != null) {
+        maxNo = int.parse(
+            witInvNo.replaceAll(InvoiceController().getInvPrefix(), ''));
       }
-      if(retInvNo != null){
-        int temp =int.parse(retInvNo.replaceAll(InvoiceController().getInvPrefix(), ''));
-        maxNo = maxNo >  temp? maxNo :temp;
+      if (retInvNo != null) {
+        int temp = int.parse(
+            retInvNo.replaceAll(InvoiceController().getInvPrefix(), ''));
+        maxNo = maxNo > temp ? maxNo : temp;
       }
-      invNo = InvoiceController().getInvPrefix()+ (maxNo).toString().padLeft(6, '0');
+      invNo = InvoiceController().getInvPrefix() +
+          (maxNo).toString().padLeft(6, '0');
     }
 
     String nextInv = incrementInvoiceNo(invNo);
-    //TODO remove from here and implement after save
-    await _localStorageController.setWithdrawal(nextInv);
     return nextInv;
   }
 
@@ -62,7 +69,7 @@ class CashInOutController {
     return CashInOutResult.fromJson(res?.data);
   }
 
-  Future<bool> saveCashInOut(
+  Future<Map<String, dynamic>> saveCashInOut(
       {required bool cashIn,
       required CartModel cart,
       required PaidModel paidModel,
@@ -88,6 +95,7 @@ class CashInOutController {
 
     // handle entered cartlist
     final cartMap = cart.toMap();
+    cartMap['LINE_REMARK'] = '';
     final List<dynamic> cartList = [];
     cartList.add(cartMap);
 
@@ -117,12 +125,19 @@ class CashInOutController {
       "INVOICED": true,
       "LINE_DISC_PER": lineDiscPer.toDouble(),
       "LINE_DISC_AMT": lineDiscAmt.toDouble(),
-      "INV_REF":[],
-      "PRO_TAX":[]
+      "INV_REF": [],
+      "PRO_TAX": [],
+      "LINE_REMARKS": [],
+      "FREE_ISSUE": [],
+      "INV_TICKETS": [],
+      'REDEEMED_COUPONS': []
     };
     final res = await ApiClient.call(
         "cash_in_out/${cashIn ? "cash_in" : "cash_out"}", ApiMethod.POST,
         data: temp, successCode: 200);
-    return res?.data?["success"] == true;
+    return {
+      "status": res?.data?["success"] == true,
+      "returnRes": res?.data?['res']?['result'] ?? ''
+    };
   }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/27/21, 1:43 PM
  */
 
@@ -25,6 +25,7 @@ import 'package:checkout/controllers/ecr_controller.dart';
 import 'package:checkout/controllers/email_controller.dart';
 import 'package:checkout/controllers/gift_voucher_controller.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
+import 'package:checkout/controllers/local_storage_controller.dart';
 import 'package:checkout/controllers/loyalty_controller.dart';
 import 'package:checkout/controllers/otp_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
@@ -32,8 +33,10 @@ import 'package:checkout/controllers/pos_logger_controller.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
 import 'package:checkout/controllers/print_controller.dart';
+import 'package:checkout/controllers/usb_serial_controller.dart';
 import 'package:checkout/models/enum/keyboard_type.dart';
 import 'package:checkout/models/last_invoice_details.dart';
+import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/cart_summary_model.dart';
 import 'package:checkout/models/pos/ecr_response.dart';
 import 'package:checkout/models/pos/gift_voucher_result.dart';
@@ -43,6 +46,7 @@ import 'package:checkout/models/pos/paid_model.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
 import 'package:checkout/views/invoice/cart.dart';
+import 'package:checkout/views/invoice/discount_breakdown.dart';
 import 'package:checkout/views/invoice/payment_breakdown.dart';
 import 'package:checkout/views/invoice/tax_breakdown_view.dart';
 
@@ -131,8 +135,13 @@ class _PaymentViewState extends State<PaymentView> {
     }
     saving = absolute - lineTotal;
 
-    DualScreenController()
-        .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController()
+          .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
+
+    if (POSConfig().enablePollDisplay == 'true')
+      usbSerial.sendToSerialDisplay(
+          'TOTAL AMOUNT        ${usbSerial.addSpacesFront(lineTotal.toStringAsFixed(2), 20)}');
   }
 
   void _ecrTimer() {
@@ -183,26 +192,34 @@ class _PaymentViewState extends State<PaymentView> {
     if (list.length != 0) {
       loaded = true;
     }
-    DualScreenController()
-        .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController()
+          .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
     if (mounted) setState(() {});
   }
 
   bool active = false;
 
   void viewListeners() {
-    POSPriceCalculator().taxCalculation();
-    cartBloc.cartSummarySnapshot.listen((event) {
-      subTotal = event.subTotal;
-      if (!loaded) balanceDue = event.subTotal;
-      loaded = true;
-      if (selectedPayModeHeader?.defaultPaymentMode == true) {
-        dueBalanceEditingController.text = balanceDue.toStringAsFixed(2);
-      }
+    // POSPriceCalculator().taxCalculation();
+    // cartBloc.cartSummarySnapshot.listen((event) {
+    // subTotal = event.subTotal;
+    // if (!loaded) balanceDue = event.subTotal;
+    // loaded = true;
+    // if (selectedPayModeHeader?.defaultPaymentMode == true) {
+    //   dueBalanceEditingController.text = balanceDue.toStringAsFixed(2);
+    // }
 
-      if (mounted) setState(() {});
-    });
+    // if (mounted) setState(() {});
+    // });
+    subTotal = cartBloc.cartSummary?.subTotal ?? 0;
+    if (!loaded) balanceDue = cartBloc.cartSummary?.subTotal ?? 0;
+    loaded = true;
+    if (selectedPayModeHeader?.defaultPaymentMode != true) {
+      dueBalanceEditingController.text = balanceDue.toStringAsFixed(2);
+    }
 
+    if (mounted) setState(() {});
     loadPaidData();
     Future.delayed(
       Duration(seconds: 1),
@@ -324,6 +341,47 @@ class _PaymentViewState extends State<PaymentView> {
             ]);
       },
     );
+  }
+
+  Future<bool> _handleAdvancePayment() async {
+    final String advanceSlipNumber = dueBalanceEditingController.text;
+    if (advanceSlipNumber.isEmpty) {
+      _advancePaymentError('advance_pay_error.empty'.tr());
+      return false;
+    }
+    // check if its already added or not
+    if ((cartBloc.paidList?.indexWhere((element) =>
+                element.phCode == selectedPayModeHeader?.pHCODE &&
+                element.refNo == advanceSlipNumber) ??
+            -1) !=
+        -1) {
+      _advancePaymentError('advance_pay_error.already_added'.tr());
+      dueBalanceEditingController.clear();
+      return false;
+    }
+
+    final advPaymentRes = await ApiClient.call(
+      'invoice/validate_advance/?advance_no=$advanceSlipNumber',
+      ApiMethod.GET,
+    );
+    if (advPaymentRes?.statusCode != 200 ||
+        advPaymentRes?.data == null ||
+        advPaymentRes?.data['success'] == false) {
+      _advancePaymentError(
+          advPaymentRes?.data['message'] ?? 'advance_pay_error.not_found'.tr());
+      return false;
+    } else {
+      double amount = advPaymentRes?.data['advance_pay']?['adV_AMOUNT'] ?? 0;
+      if (amount != 0) {
+        dueBalanceEditingController.text = amount.toStringAsFixed(2);
+        detailsEditingController.text = advanceSlipNumber;
+      } else {
+        _advancePaymentError('advance_pay_error.zero_amount'.tr());
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /// handle cashier entered gift vouchers
@@ -536,6 +594,11 @@ class _PaymentViewState extends State<PaymentView> {
   }
 
   Future<void> handleEnterPress() async {
+    //heandling advanced payments
+    if (selectedPayModeHeader?.pHLINKADVANCE == true &&
+        !(await _handleAdvancePayment())) {
+      return;
+    }
     //handle gv
     if (!(await _handleEnteredGv())) {
       return;
@@ -635,6 +698,21 @@ class _PaymentViewState extends State<PaymentView> {
     );
   }
 
+  void _advancePaymentError(String error) {
+    showDialog(
+      context: context,
+      builder: (context) => POSErrorAlert(
+          title: 'advance_pay_error.title'.tr(),
+          subtitle: error,
+          actions: <Widget>[
+            AlertDialogButton(
+              onPressed: () => Navigator.pop(context),
+              text: 'advance_pay_error.okay'.tr(),
+            )
+          ]),
+    );
+  }
+
   void handleCalculation() async {
     double entered =
         dueBalanceEditingController.text.parseDouble() * currentRate;
@@ -677,7 +755,9 @@ class _PaymentViewState extends State<PaymentView> {
     // }
 
     if ((selectedPayModeDetail?.pdMask ?? '') != '' &&
-        detailsEditingController.text == '') {
+        (detailsEditingController.text == '' ||
+            detailsEditingController.text.length !=
+                selectedPayModeDetail?.pdMask?.length)) {
       POSLoggerController.addNewLog(
           POSLogger(POSLoggerLevel.error, "Enter a valid card number"));
       showCardNoNotEnteredErrorDialog();
@@ -693,12 +773,10 @@ class _PaymentViewState extends State<PaymentView> {
     if (!binRes) {
       return;
     }
-
+    balanceDue = temp;
     final balanceDueTemp = balanceDue;
     entered = dueBalanceEditingController.text.parseDouble() * currentRate;
-    temp = balanceDue - entered;
-
-    balanceDue = temp;
+    // temp = balanceDue - entered;
 
     paid += entered;
     String phCode = selectedPayModeHeader?.pHCODE ?? "";
@@ -706,8 +784,13 @@ class _PaymentViewState extends State<PaymentView> {
     String phDesc = selectedPayModeHeader?.pHDESC ?? "";
     String pdDesc = selectedPayModeDetail?.pDDESC ?? phDesc;
     final tot = cartBloc.cartSummary?.subTotal ?? 0;
-    DualScreenController()
-        .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
+
+    if (phCode == 'CSH' && temp < 0) {
+      entered = entered + temp;
+    }
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController()
+          .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
     cartBloc.addPayment(PaidModel(
         // temp < 0 ? balanceDueTemp : entered,
         //entered > balanceDue ? balanceDueTemp : entered,
@@ -924,7 +1007,8 @@ class _PaymentViewState extends State<PaymentView> {
   }
 
   void clearTempPayment() {
-    DualScreenController().setView('invoice');
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().setView('invoice');
     if (selectedPayModeHeader == null) {
       POSPriceCalculator().clearPayments();
       Navigator.pop(context);
@@ -1158,14 +1242,27 @@ class _PaymentViewState extends State<PaymentView> {
       });
 
       if (res.success) {
-        DualScreenController().completeInvoice(
-            paid.toDouble(), balanceDue.toDouble(), balanceDue.toDouble(), 0);
+        if (POSConfig().dualScreenWebsite != "")
+          DualScreenController().completeInvoice(
+              paid.toDouble(), balanceDue.toDouble(), balanceDue.toDouble(), 0);
 
         String invoice = cartBloc.cartSummary?.invoiceNo ?? "";
+        String latestInvoiceNumber = invoice;
+        String lastInvNo = await InvoiceController().getInvoiceNo();
 
-        //added to update the latest saved invoice number to the local storage
-        InvoiceController().setInvoiceNo(invoice);
+        String lastInvPrefix = lastInvNo.substring(0, 6);
+        String lastInvSuffix = lastInvNo.substring(6);
 
+        int lengthOfSuffixInt =
+            (int.parse(lastInvSuffix) - 1).toString().length;
+        int zeroLength = 6 - lengthOfSuffixInt;
+
+        if (int.parse(invoice) < int.parse(lastInvNo)) {
+          latestInvoiceNumber = lastInvPrefix +
+              ('0' * zeroLength) +
+              (int.parse(lastInvSuffix) - 1).toString();
+        }
+        InvoiceController().setInvoiceNo(latestInvoiceNumber);
         LastInvoiceDetails lastInvoice = LastInvoiceDetails(
             invoiceNo: invoice,
             billAmount: subTotal.toStringAsFixed(2),
@@ -1266,12 +1363,24 @@ class _PaymentViewState extends State<PaymentView> {
 
   Future printInvoice(String invoiceNo, double earnedPoints, double totalPoints,
       bool taxbill, String? resReturn) async {
-    // await PrintController().printHandler(
-    //     invoiceNo,
-    //     PrintController().printInvoice(
-    //         invoiceNo, earnedPoints, totalPoints, taxbill, resReturn),
-    //     context);
-    await POSManualPrint().printInvoice(data: resReturn);
+    if (POSConfig.crystalPath != '') {
+      await PrintController().printHandler(
+          invoiceNo,
+          PrintController().printInvoice(
+              invoiceNo, earnedPoints, totalPoints, taxbill, resReturn),
+          context);
+    } else {
+      POSConfig.localPrintData = resReturn!;
+      var stopwatch = Stopwatch();
+
+      stopwatch.start();
+      POSManualPrint().printInvoice(data: resReturn!, points: totalPoints);
+      stopwatch.stop();
+      print(stopwatch.elapsed.toString());
+    }
+
+    if (POSConfig().enablePollDisplay == 'true')
+      await usbSerial.customTimeMessages();
 
     // var result = await PrintController().printInvoice(invoiceNo);
     // var tempRes = PrintStatus(true, true, "");
@@ -1401,7 +1510,16 @@ class _PaymentViewState extends State<PaymentView> {
         EasyLoading.showError('local_mode_func_disable'.tr());
         return;
       }
-      dueBalanceEditingController.text = '';
+
+      if (mounted) {
+        setState(() {
+          selectedPayModeHeader = payButton;
+        });
+      }
+      // dueBalanceEditingController.text = '';
+      dueBalanceEditingController.clear();
+      balanceFocus.requestFocus();
+      return;
     }
 
     if (payButton.pHDETAIL != true) {
@@ -1444,6 +1562,11 @@ class _PaymentViewState extends State<PaymentView> {
         selectedPayModeHeader = null;
       });
       _errorPaymentMode();
+      return;
+    }
+
+    if (payButton.pHLINKADVANCE == true) {
+      dueBalanceEditingController.clear();
       return;
     }
   }
@@ -1638,20 +1761,76 @@ class _PaymentViewState extends State<PaymentView> {
                                   padding: const EdgeInsets.all(0),
                                   color: Colors.black,
                                   onPressed: () async {
+                                    if (!RegExp(r'^\d+\.?\d{0,2}?$').hasMatch(
+                                        amountEditingController.text)) {
+                                      EasyLoading.showError(
+                                          'wrong_format'.tr());
+                                      return;
+                                    }
+                                    if (double.parse(
+                                            amountEditingController.text) >
+                                        balanceDue) {
+                                      EasyLoading.showError(
+                                          'payment_view.no_overpay'.tr());
+                                      return;
+                                    }
                                     //Call ECR Integration
                                     final ecrAmount =
                                         amountEditingController.text.toDouble();
                                     if (ecrAmount == 0) return;
-                                    EasyLoading.show(
-                                        status: 'please_wait'.tr());
-                                    try {
-                                      ecr = await EcrController()
-                                          .doSale(ecrAmount!);
 
-                                      // _ecr = false;
-                                      // _ecrTimeOut = 60;
-                                      // _timer?.cancel();
-                                      EasyLoading.dismiss();
+                                    bool validBin = true;
+                                    try {
+                                      final requiredBins =
+                                          cartBloc.specificPayMode?.cardBin ??
+                                              [];
+                                      String refString = '';
+                                      // bin request & validation for crc promotion related payments
+                                      if (requiredBins.length > 0) {
+                                        EasyLoading.show(
+                                            status: 'please_wait'.tr());
+                                        final EcrResponse? ecrBin =
+                                            await EcrController().binRequest();
+                                        EasyLoading.dismiss();
+                                        if (ecrBin?.success == true) {
+                                          EasyLoading.showInfo(
+                                              "Successfully fetch the card details");
+                                          _ecr = true;
+                                          formatCardNoFromEcr(
+                                              ecrBin?.ecrCard?.strTxnCardBin ??
+                                                  '',
+                                              '****');
+                                          _ecrTimer();
+                                          if (mounted) {
+                                            setState(() {});
+                                          }
+                                          validBin = _checkCardBin(
+                                              detailsEditingController.text);
+                                          if (validBin) {
+                                            refString =
+                                                ecrBin?.ecrCard?.strBinRef ??
+                                                    '';
+                                          }
+                                        } else {
+                                          EasyLoading.showInfo(
+                                              "Something error happens when fetching the card details");
+                                          return;
+                                        }
+                                      }
+                                      if (validBin) {
+                                        EasyLoading.show(
+                                            status: 'please_wait'.tr());
+                                        ecr = await EcrController().doSale(
+                                            ecrAmount!,
+                                            refNo: refString);
+
+                                        // _ecr = false;
+                                        // _ecrTimeOut = 60;
+                                        // _timer?.cancel();
+                                        EasyLoading.dismiss();
+                                      } else {
+                                        return;
+                                      }
                                       if (ecr != null) {
                                         Navigator.pop(context);
                                         return;
@@ -1715,7 +1894,10 @@ class _PaymentViewState extends State<PaymentView> {
                                     Container(
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 20),
-                                      child: TextFormField(
+                                      child: TextField(
+                                        onTap: () {
+                                          amountEditingController.clear();
+                                        },
                                         enabled: true,
                                         style: CurrentTheme.bodyText2!.copyWith(
                                             color: CurrentTheme.primaryColor,
@@ -1724,9 +1906,10 @@ class _PaymentViewState extends State<PaymentView> {
                                         controller: amountEditingController,
                                         textInputAction: TextInputAction.next,
                                         textAlign: TextAlign.center,
-                                        onChanged: (String value) {
-                                          //if (mounted) setState(() {});
-                                        },
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'^\d+\.?\d{0,2}')),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -1774,12 +1957,30 @@ class _PaymentViewState extends State<PaymentView> {
                           Expanded(
                             child: POSKeyBoard(
                               color: Colors.transparent,
-                              onPressed: () {},
+                              onPressed: () {
+                                if (amountEditingController.text.length != 0) {
+                                  amountEditingController.text =
+                                      amountEditingController.text.substring(
+                                          0,
+                                          amountEditingController.text.length -
+                                              1);
+                                }
+                              },
                               clearButton: true,
                               isInvoiceScreen: false,
                               disableArithmetic: true,
                               onEnter: () {},
                               controller: amountEditingController,
+                              normalKeyPress: () {
+                                if (amountEditingController.text
+                                    .contains('.')) {
+                                  var rational = amountEditingController.text
+                                      .split('.')[1];
+                                  if (rational.length >= 2) {
+                                    return 0;
+                                  }
+                                }
+                              },
                             ),
                           ),
                         ],
@@ -1939,31 +2140,64 @@ class _PaymentViewState extends State<PaymentView> {
 
 // this is the default rhs in the app
   Widget buildDefaultRHS() {
-    double discount = (cartBloc.cartSummary?.promoDiscount ?? 0);
+    double totalNetDisc = 0;
+    double totalLineDisc = 0;
+    double netDiscAmount = 0;
+    double lineDiscAmtFromPer = 0;
+    double lineDiscAmtFromAmt = 0;
+    double promoDiscount = (cartBloc.cartSummary?.promoDiscount ?? 0);
+    List<CartModel?> item = [];
+    cartBloc.currentCart?.forEach((key, value) {
+      item.add(value);
+    });
+    for (int i = 0; i < item.length; i++) {
+      if (item.isNotEmpty && (item[i]!.itemVoid! != true)
+          // &&
+          // (item[i]?.billDiscPer != 0 ||
+          //     item[i]?.discPer != 0 ||
+          //     item[i]?.discAmt != 0)
+
+          ) {
+        double grossAmount =
+            (item[i]?.unitQty ?? 0) * (item[i]?.proSelling ?? 0);
+        netDiscAmount = ((item[i]?.billDiscPer ?? 0) * grossAmount) / 100;
+        lineDiscAmtFromPer = ((item[i]?.discPer ?? 0) * grossAmount) / 100;
+        lineDiscAmtFromAmt = (item[i]?.discAmt ?? 0);
+
+        totalNetDisc += netDiscAmount;
+        totalLineDisc += (lineDiscAmtFromPer + lineDiscAmtFromAmt);
+      }
+    }
+
     return Container(
       child: Column(
         children: [
           Row(
             children: [
+              // if (promoDiscount > 0)
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: _showDiscList,
+                        child: buildCard(
+                            "payment_view.discount".tr(),
+                            (totalLineDisc + totalNetDisc + promoDiscount)
+                                .thousandsSeparator(),
+                            color: Colors.green),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                  ],
+                ),
+              ),
               Expanded(
                 child: buildCard("payment_view.sub_total".tr(),
                     subTotal.thousandsSeparator()),
               ),
-              if (discount > 0)
-                Expanded(
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 10.w,
-                      ),
-                      Expanded(
-                        child: buildCard("payment_view.discount".tr(),
-                            discount.thousandsSeparator(),
-                            color: Colors.green),
-                      ),
-                    ],
-                  ),
-                ),
             ],
           ),
           (selectedPayModeDetail?.pDRATE ?? 0) <= 0
@@ -2325,11 +2559,27 @@ class _PaymentViewState extends State<PaymentView> {
     );
   }
 
+  void _showDiscList() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'discount_list.disc_title'.tr(),
+            textAlign: TextAlign.center,
+          ),
+          content: SizedBox(width: double.infinity, child: DiscountBreakdown()),
+        );
+      },
+    );
+  }
+
   Future<void> _handleReferencedPayMode(double amount) async {
     String reference = selectedPayModeHeader?.reference ?? '';
     switch (reference.toLowerCase()) {
       case 'lankaqr':
-        DualScreenController().sendLankaQr(amount);
+        if (POSConfig().dualScreenWebsite != "")
+          DualScreenController().sendLankaQr(amount);
         break;
       default:
         if (mounted) {

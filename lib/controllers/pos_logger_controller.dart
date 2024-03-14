@@ -48,7 +48,8 @@ class POSLoggerController {
   }
 
   static Future writeToFile(POSLoggerLevel logger, String text) async {
-    LogWriter().saveLogsToFile('ERROR_Log_', [text]);
+    if (logger == POSLoggerLevel.error)
+      await LogWriter().saveLogsToFile('ERROR_Log_', [text]);
     // if(!POSConfig().saas)
     // await ApiClient.call("poslog", ApiMethod.POST,
     //     formData: FormData.fromMap({"type": logger, "message": text}),

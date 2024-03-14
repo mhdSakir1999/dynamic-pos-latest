@@ -1,0 +1,80 @@
+2023-11-03
+=================
+* Prevent the user from open the second instance of the application (c++ code updates).
+* adding empty bottle to invoices seperately -- general invoicing.
+* adding empty bottle to invoices seperately -- category selection/search.
+* runzone mismatch issue fixed (freezing when debug still exist).
+
+2023-11-06
+=================
+* adding empty bottle to invoices seperately -- description search
+
+2023-11-08
+=================
+* since local api took little/more time to start it self,
+    -> initialization of wesocket is moved to login page
+    -> initialization of crystal report pluging is moved to login page
+    (because these are depend on local api)
+* added some UI element to wheighted item view (category wise invoicing)
+    -> exit button
+    -> invoice price&qty summary card
+* added a loading widget in the login screen till the connection is acquired
+* added sql connection status in the ping dialog box
+
+2023-11-15
+=================
+* enable f keys for trigger functions (shortcut key feature)
+* correction on enable/disable the onscreen keyboard facility
+
+2023-11-20
+=================
+* added more shortcut key trigger feature
+* fix the issue on customer change in cart screen
+
+2023-11-21/22
+=================
+* added a showdialog window to select the desired (varient) product if it has varients.
+* added a dialog window to select salesrep for punched cart items
+* new env variable for allow/dis-allow to switch local mode when lost the server connection
+
+2023-11-28
+=================
+* created a selectable varients view (specific varient can be selected and added to cart with desired quantity)
+* added a button for open varient(s) view from product search page
+* small log writing implements on get local config issue.
+
+2023-12-13
+=================
+* corrections in signon, signoff, manager signoff, eod  (setupLocation --> locCode, passsing locCode as additional parameter)
+* Keyboard widget full function correction (major update)
+* OTP skipping when customer creation
+
+2024-01-03
+=================
+* product limitation to 20 in search product page
+* Manual printing implementation: replacement for crystal printing
+    -> xml templates are designed for invoice, signoff/signon, managerSignOff
+    -> pos_manual_print_controller for read the xml and automate the generation of esc/pos commands and printing it
+* correction in saving payAmount (saving the actual amount that has to be paid instead of saving what customer give(it maybe overpay))
+* Change: Cannot move to home page while cart has products
+* Invoice number corrections: when holded bill is recalled and proceed to payment
+
+2024-01-04/05
+=================
+* Tax calculation issue fixed
+* Dashboard implementation
+* Image printing solution (converting any image to black&white Bitmap, resizing and printing)
+
+2024-01-18
+=================
+* Many QC fixes (keyboard fixes, qty validations, return product fixes & so.)
+* Many printing changes
+* promotion changes
+
+2024-01-30
+=================
+* Manual Printings
+* USB Serial Display functions
+
+2024-02-02 : removed some api calls (await AuthController().getUserPermissionListByUserCode(user); // getting user permission list) and get the userpermission data from [userBloc.userDetails?.userRights;]
+changed places: discount_handler(line 130), bill_discount_handler(line 152), customer_helper(line 21), cart_dynamic_button_function (line 539)

@@ -659,23 +659,26 @@ BorderRadius pOSKeyBoarder() {
 }
 
 class NumKey extends StatelessWidget {
-  const NumKey({
-    Key? key,
-    required this.text,
-    this.onTextInput,
-    this.flex = 1,
-    this.controller,
-    this.mask,
-    required this.disableArithmetic,
-    this.focusNode,
-  }) : super(key: key);
+  const NumKey(
+      {Key? key,
+      required this.text,
+      this.onTextInput,
+      this.flex = 1,
+      this.controller,
+      this.mask,
+      required this.disableArithmetic,
+      required this.disableValueAfterPoint,
+      this.focusNode,
+      required this.normalKeyPress})
+      : super(key: key);
   final String text;
   final String? mask;
   final bool disableArithmetic;
+  final bool disableValueAfterPoint;
   final ValueSetter<String>? onTextInput;
   final int flex;
   final FocusNode? focusNode;
-
+  final Function() normalKeyPress;
   // The controller connected to the InputField
   final TextEditingController? controller;
 
@@ -691,11 +694,19 @@ class NumKey extends StatelessWidget {
           child: InkWell(
             borderRadius: pOSKeyBoarder(),
             onTap: () {
+              final shouldStopExecution = normalKeyPress();
+              // Checking if the callback requested to stop execution (returning 0 means stop)
+              if (shouldStopExecution == 0) {
+                return; // Stop further execution here
+              }
               String keyValue = text;
               //Bind Key with event trigger
               KeyBoardConfig().shift = false;
               keyBoardBloc.setKey(keyType.None);
               if (disableArithmetic && (keyValue == '*' || keyValue == "-")) {
+                return;
+              }
+              if (disableValueAfterPoint && (keyValue == '.')) {
                 return;
               }
               print(mask);

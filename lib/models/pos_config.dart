@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/21/21, 11:31 AM
  */
 
 import 'package:checkout/models/pos/client_license_results.dart';
+import 'package:checkout/models/pos/pos_denomination_model.dart';
 import 'package:flutter/material.dart';
 
 import 'pos/setup_result.dart';
@@ -58,6 +59,9 @@ class POSConfig {
   String webSocketUrl = "";
   String password = "";
   String dualScreenWebsite = "";
+  String enablePollDisplay = "";
+  String pollDisplayPort = '';
+  int pollDisplayPortBaudRate = 9600;
   double screen_width = 0;
   double screen_height = 0;
   bool default_size = false;
@@ -122,7 +126,7 @@ class POSConfig {
   double checkoutDataTableFontSize = 14;
 
   // cart dynamic button width
-  double paymentDynamicButtonWidth = 250;
+  double paymentDynamicButtonWidth = 275;
   double paymentDynamicButtonHeight = 70;
   double paymentDynamicButtonPadding = 3;
   double paymentDynamicButtonFontSize = 11;
@@ -157,4 +161,19 @@ class POSConfig {
 
   //it is for store the validation otp when customer creation
   static String validateOTP = '';
+
+  static String crystalPath = '';
+
+  //Necessary for local printing
+  static String printerName = 'POS-80C';
+  static int font_a_length = 42;
+  static int font_b_length = 56;
+  static String localPrintPath =
+      'C:/checkout/LOCAL_PRINT'; //Contains all xml templates and images related to local printing
+  static String localPrintData =
+      ''; // This is used to temperorily catch the data and using it in the test print function (any)
+  static List<POSDenominationDetail> denominationDet =
+      []; // This is used to temperorily catch the data and using it in the test print function (manager sign off)
+  static List<POSDenominationModel> denominations =
+      []; // This is used to temperorily catch the data and using it in the test print function (manager sign off)
 }

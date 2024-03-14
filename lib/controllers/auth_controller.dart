@@ -79,7 +79,6 @@ class AuthController {
         return LoginResult.fromJson(res.data);
       } else {
         ApiClient.bearerToken = res.data["token"];
-
         await SharedPreferenceController().getConfig(true);
         await checkUsername(userName, authorize: true);
         return LoginResult.fromJson(res.data);

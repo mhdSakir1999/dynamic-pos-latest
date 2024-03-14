@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/28/21, 1:30 PM
  */
 
@@ -19,6 +19,7 @@ import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:supercharged/supercharged.dart';
@@ -58,6 +59,7 @@ class _ShiftReconciliationEntryViewState
   List<FocusNode> focusNodeList = [];
   int selectedDenominationIndex = -1;
   FocusNode textFieldFocus = FocusNode();
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -149,6 +151,7 @@ class _ShiftReconciliationEntryViewState
         ),
         Expanded(
             child: Scrollbar(
+                controller: scrollController,
                 child: len > 0
                     ? buildDenominationEntryView()
                     : buildPaymentButtonList()))
@@ -293,13 +296,50 @@ class _ShiftReconciliationEntryViewState
                 style: ElevatedButton.styleFrom(
                     backgroundColor:
                         POSConfig().primaryDarkGrayColor.toColor()),
-                onPressed: () {
+                onPressed: () async {
+                  bool? confirm = await showGeneralDialog<bool?>(
+                      context: context,
+                      transitionDuration: const Duration(milliseconds: 200),
+                      barrierDismissible: true,
+                      barrierLabel: '',
+                      transitionBuilder: (context, a, b, _) => Transform.scale(
+                            scale: a.value,
+                            child: AlertDialog(
+                                content: Text(
+                                    'general_dialog.mngSignOff_confirm'.tr()),
+                                actions: [
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: POSConfig()
+                                              .primaryDarkGrayColor
+                                              .toColor()),
+                                      onPressed: () {
+                                        Navigator.pop(context, false);
+                                      },
+                                      child:
+                                          Text('general_dialog.change'.tr())),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: POSConfig()
+                                              .primaryDarkGrayColor
+                                              .toColor()),
+                                      onPressed: () {
+                                        Navigator.pop(context, true);
+                                      },
+                                      child: Text('general_dialog.yes'.tr()))
+                                ]),
+                          ),
+                      pageBuilder: (context, animation, secondaryAnimation) {
+                        return SizedBox();
+                      });
+                  if (confirm != true) return;
                   saveManagerSignOff(
                       pendingSignoff: widget
                           .pendingSignoff); //new change -- passing a flag to identify the current_user of pending_user(get from pending sign off dialog window)
 
-                  DualScreenController().setView(
-                      'closed'); //coppied it from printManagerSignOff() because this method is going to be commented
+                  if (POSConfig().dualScreenWebsite != "")
+                    DualScreenController().setView(
+                        'closed'); //coppied it from printManagerSignOff() because this method is going to be commented
                   // printManagerSignOff(); //comment this because the same function is called inside the saveManagerSignOff(). so it is no longer needed to call it again
                   Navigator.pop(context);
                   // await DenominationController().managerSignOff(denominationsList,widget.spotCheck,widget.approvedUser);
@@ -312,6 +352,7 @@ class _ShiftReconciliationEntryViewState
     );
   }
 
+  //commented because it is already used inside saveManagerSignOff() -> managerSignOff()
   // void printManagerSignOff() async {
   //   DualScreenController().setView('closed');
   //   await PrintController().printMngSignOffSlip(
@@ -359,7 +400,7 @@ class _ShiftReconciliationEntryViewState
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d+\.?\d*')),
+                              RegExp(r'^\d+\.?\d{0,2}')),
                         ],
                       ),
                     ),
@@ -369,13 +410,36 @@ class _ShiftReconciliationEntryViewState
             child: Container(
               margin: EdgeInsets.symmetric(vertical: spacing.r),
               child: POSKeyBoard(
-                  onEnter: handleEnterKeyPress,
-                  onPressed: handleClearKey,
-                  isInvoiceScreen: true,
-                  clearButton: true,
-                  controller: selectedDenominationIndex == -1
-                      ? textEditingController
-                      : controllerList[selectedDenominationIndex]),
+                onEnter: handleEnterKeyPress,
+                onPressed: handleClearKey,
+                isInvoiceScreen: true,
+                clearButton: true,
+                disableArithmetic: true,
+                controller: selectedDenominationIndex == -1
+                    ? textEditingController
+                    : controllerList[selectedDenominationIndex],
+                normalKeyPress: () {
+                  if (selectedDenominationIndex == -1 &&
+                      textEditingController.text.contains('.')) {
+                    var rational = textEditingController.text.split('.')[1];
+                    if (rational.length >= 2) {
+                      return 0;
+                    }
+                  } else if (selectedDenominationIndex != -1 &&
+                      controllerList[selectedDenominationIndex]
+                          .text
+                          .contains('.')) {
+                    var rational = controllerList[selectedDenominationIndex]
+                        .text
+                        .split('.')[1];
+                    if (rational.length >= 0) {
+                      EasyLoading.showInfo(
+                          'Entered format is wrong \nRemove the symbol');
+                      return 0;
+                    }
+                  }
+                },
+              ),
             ),
           ),
         ],
@@ -425,70 +489,77 @@ class _ShiftReconciliationEntryViewState
 
   Widget buildDenominationEntryView() {
     final denominationList = selectedDenomination?.denominations ?? [];
-    return Container(
-      child: Row(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: denominationList.length + 1,
-              itemBuilder: (context, index) {
-                if (index == denominationList.length) {
-                  return Padding(
-                    padding: EdgeInsets.all(5.r),
-                    child: ElevatedButton(
-                        onPressed: handleBackButtonPress,
-                        child: Text("shift_reconciliation_view.done".tr())),
-                  );
-                }
+    return Scrollbar(
+      controller: scrollController,
+      thumbVisibility: true,
+      thickness: 25,
+      child: Container(
+        child: Row(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                controller: scrollController,
+                itemCount: denominationList.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == denominationList.length) {
+                    return Padding(
+                      padding: EdgeInsets.all(5.r),
+                      child: ElevatedButton(
+                          onPressed: handleBackButtonPress,
+                          child: Text("shift_reconciliation_view.done".tr())),
+                    );
+                  }
 
-                final denomination = denominationList[index];
-                final denoVal = denomination.value.toStringAsFixed(2);
-                return Card(
-                  color: CurrentTheme.primaryColor,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 15.r,
-                      ),
-                      Text(
-                        "$denoVal * ${denomination.count} = ${denomination.value * denomination.count}",
-                        style: CurrentTheme.headline6,
-                      ),
-                      Spacer(),
-                      Container(
-                        width: 300.w,
-                        padding: EdgeInsets.all(5.r),
-                        child: TextField(
-                          onTap: () {
-                            if (mounted)
-                              setState(() {
-                                selectedDenominationIndex = index;
-                              });
-                          },
-                          focusNode: focusNodeList[index],
-                          onEditingComplete: () {
-                            handleEnteredDenominationValue();
-                          },
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          controller: controllerList[index],
-                          textInputAction: TextInputAction.next,
-                          // controller: denomination.count == 0?null: TextEditingController(text: denomination.count.toString()),
-                          decoration: InputDecoration(
-                            filled: true,
-                            // hintText: denomination.deNDENOCODE ?? "2"
+                  final denomination = denominationList[index];
+                  final denoVal = denomination.value.toStringAsFixed(2);
+                  return Card(
+                    color: CurrentTheme.primaryColor,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 15.r,
+                        ),
+                        Text(
+                          "$denoVal * ${denomination.count} = ${denomination.value * denomination.count}",
+                          style: CurrentTheme.headline6,
+                        ),
+                        Spacer(),
+                        Container(
+                          width: 300.w,
+                          padding: EdgeInsets.all(5.r),
+                          child: TextField(
+                            onTap: () {
+                              if (mounted)
+                                setState(() {
+                                  selectedDenominationIndex = index;
+                                });
+                            },
+                            focusNode: focusNodeList[index],
+                            onEditingComplete: () {
+                              handleEnteredDenominationValue();
+                            },
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: controllerList[index],
+                            textInputAction: TextInputAction.next,
+                            // controller: denomination.count == 0?null: TextEditingController(text: denomination.count.toString()),
+                            decoration: InputDecoration(
+                              filled: true,
+                              // hintText: denomination.deNDENOCODE ?? "2"
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-          // POSKeyBoard(isInvoiceScreen: false)
-        ],
+            // POSKeyBoard(isInvoiceScreen: false)
+          ],
+        ),
       ),
     );
   }
@@ -500,11 +571,17 @@ class _ShiftReconciliationEntryViewState
   }
 
   void handleEnterKeyPress() {
-    if (selectedDenomination == null) return;
-    if (selectedDenomination!.denominations.length == 0) {
-      handleEnteredValue();
+    if (RegExp(r'^\d+\.?\d{0,2}?$').hasMatch(textEditingController.text) ||
+        RegExp(r'^\d*?$')
+            .hasMatch(controllerList[selectedDenominationIndex].text)) {
+      if (selectedDenomination == null) return;
+      if (selectedDenomination!.denominations.length == 0) {
+        handleEnteredValue();
+      } else {
+        handleEnteredDenominationValue();
+      }
     } else {
-      handleEnteredDenominationValue();
+      EasyLoading.showError('wrong_format'.tr());
     }
   }
 

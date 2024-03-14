@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 6/8/21, 2:18 PM
  */
 
@@ -10,6 +10,7 @@ import 'package:checkout/components/components.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_warning_alert.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/models/pos/invoice_header_result.dart';
@@ -33,6 +34,7 @@ class ReprintView extends StatefulWidget {
 
 class _ReprintViewState extends State<ReprintView> {
   final searchController = TextEditingController();
+  final scrollController = ScrollController();
   late List<InvoiceHeader> headers;
   bool clicked = false;
 
@@ -84,7 +86,10 @@ class _ReprintViewState extends State<ReprintView> {
           ),
           Expanded(
             child: Scrollbar(
+              thumbVisibility: true,
+              controller: scrollController,
               child: SingleChildScrollView(
+                controller: scrollController,
                 child: DataTable(
                   dataRowMinHeight: 50.r,
                   headingRowColor: MaterialStateColor.resolveWith(
@@ -192,12 +197,14 @@ class _ReprintViewState extends State<ReprintView> {
               ElevatedButton(
                   onPressed: () => reprintBill(invoice, memberCode),
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: POSConfig().primaryDarkGrayColor.toColor()),
+                      backgroundColor:
+                          POSConfig().primaryDarkGrayColor.toColor()),
                   child: Text("reprint_warning.yes".tr())),
               ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: POSConfig().primaryDarkGrayColor.toColor()),
+                      backgroundColor:
+                          POSConfig().primaryDarkGrayColor.toColor()),
                   child: Text("reprint_warning.no".tr())),
             ]);
       },
@@ -224,15 +231,22 @@ class _ReprintViewState extends State<ReprintView> {
 
     //if permission granted
     if (hasPermission) {
-      await InvoiceController().reprintInvoice(invoice);
+      var res = await InvoiceController().reprintInvoice(invoice);
       double loyaltyPoints = 0;
       if (customerCode.isNotEmpty) {
         var customerRes =
             await LoyaltyController().getLoyaltySummary(customerCode);
         loyaltyPoints = customerRes?.pOINTSUMMARY ?? 0;
       }
-      await PrintController().printHandler(invoice,
-          PrintController().rePrintInvoice(invoice, loyaltyPoints), context);
+
+      if (POSConfig.crystalPath != '') {
+        // await PrintController().printHandler(invoice,
+        //     PrintController().rePrintInvoice(invoice, loyaltyPoints), context);
+      } else {
+        POSManualPrint()
+            .printInvoice(data: res, points: loyaltyPoints, reprint: true);
+      }
+
       setState(() {
         clicked = false;
       });

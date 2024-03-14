@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 5/13/21, 1:55 PM
  */
 
@@ -14,8 +14,10 @@ import 'package:checkout/controllers/customer_controller.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/keyboard_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/loyalty_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
+import 'package:checkout/controllers/usb_serial_controller.dart';
 import 'package:checkout/models/loyalty/customer_list_result.dart';
 import 'package:checkout/models/loyalty/loyalty_summary.dart';
 import 'package:checkout/models/pos_config.dart';
@@ -53,7 +55,8 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
     super.initState();
     KeyBoardController().dismiss();
     init();
-    DualScreenController().setView('loyalty');
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().setView('loyalty');
     // _timer = Timer.periodic(Duration(seconds: 1), (_) => _getDualScreenData());
   }
 
@@ -95,7 +98,8 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
   @override
   void dispose() {
     if (_timer.isActive) _timer.cancel();
-    DualScreenController().setView('invoice');
+    if (POSConfig().dualScreenWebsite != "")
+      DualScreenController().setView('invoice');
     _keyboardFocus.dispose();
     searchEditingController.dispose();
     super.dispose();
@@ -570,8 +574,21 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
                             "Selected Customer: ${selectedCustomer!.cMCODE}");
                         customerBloc.changeCurrentCustomer(
                             customer ?? selectedCustomer!);
-                        DualScreenController()
-                            .setCustomer(customer ?? selectedCustomer!);
+                        // show customer info in poll display
+                        if (POSConfig().enablePollDisplay == 'true') {
+                          try {
+                            usbSerial.sendToSerialDisplay(
+                                '${usbSerial.addSpacesBack((customer?.cMNAME ?? 'UNKNOWN').toUpperCase(), 20)}');
+                            usbSerial.sendToSerialDisplay(
+                                '${usbSerial.addSpacesBack((customer?.loyaltyGroup ?? 'LOYALTY GROUP: N/A').toUpperCase(), 20)}');
+                          } catch (e) {
+                            LogWriter()
+                                .saveLogsToFile('ERROR_LOG_', [e.toString()]);
+                          }
+                        }
+                        if (POSConfig().dualScreenWebsite != "")
+                          DualScreenController()
+                              .setCustomer(customer ?? selectedCustomer!);
                         Navigator.pop(context);
                       }
                     }

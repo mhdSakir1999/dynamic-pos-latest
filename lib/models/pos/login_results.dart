@@ -9,6 +9,7 @@ class LoginResult {
   String? token;
   String? message;
   PasswordData? data;
+  LoginAttemptData? loginAttemptData;
 
   LoginResult({this.success, this.token, this.message, this.data});
 
@@ -18,6 +19,10 @@ class LoginResult {
     message = json['message'];
     data =
         json['data'] != null ? new PasswordData.fromJson(json['data']) : null;
+    loginAttemptData = (json?['login_attempts'] != null &&
+            json?['login_attempts']?.length != 0)
+        ? LoginAttemptData.fromJson(json?['login_attempts']?.first)
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -58,5 +63,21 @@ class PasswordData {
     data['passworD_RESET'] = this.passworDRESET;
     data['passworD_POLICY_DESC'] = this.passworDPOLICYDESC;
     return data;
+  }
+}
+
+class LoginAttemptData {
+  int? numberOfAttempts;
+  int? maxAttempts;
+  String? blockedAt;
+
+  LoginAttemptData({this.numberOfAttempts, this.maxAttempts, this.blockedAt});
+
+  LoginAttemptData.fromJson(Map<String, dynamic>? json) {
+    if (json != null && json.length != 0) {
+      numberOfAttempts = json['totalAttempts'];
+      maxAttempts = json['maxAttempts'];
+      blockedAt = json['blockedAt'];
+    }
   }
 }

@@ -65,9 +65,10 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();   
+
     //check discount applicable or not
-    if (widget.cartItem != null) {
+    if (widget.cartItem != null && widget.cartItem!.noDisc == true) {
       if (widget.cartItem!.allowDiscount != true) Navigator.pop(context);
     }
     getMaxDiscountAmount(userBloc.currentUser?.uSERHEDUSERCODE ?? '');
@@ -82,9 +83,9 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
 
     if (widget.cartItem != null) {
       final item = widget.cartItem!;
-      if (widget.discountPercentage)
+      if (widget.discountPercentage) {
         total = (item.unitQty * item.selling).toDouble();
-      else {
+      } else {
         final item = widget.cartItem!;
         final zero = 0;
         final hundred = 100.0;
@@ -380,7 +381,7 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
         width: 2000,
         child: TextField(
           readOnly: isMobile,
-          showCursor: false,
+          showCursor: true,
           textInputAction: TextInputAction.next,
           textAlign: TextAlign.end,
           focusNode: discountFocus,
@@ -482,7 +483,8 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
             actions: [
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: POSConfig().primaryDarkGrayColor.toColor()),
+                      backgroundColor:
+                          POSConfig().primaryDarkGrayColor.toColor()),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -496,7 +498,7 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
       //validate the discount percentage is more than 100%
       if ((widget.discountPercentage && amount > 100) ||
           (!widget.discountPercentage &&
-              amount > (widget.cartItem?.amount ?? 0))) {
+              amount > (widget.cartItem?.amount.abs() ?? 0))) {
         await overDiscountAmount();
         return;
       } else {
@@ -603,8 +605,10 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
 
   Future handleLineDiscount() async {
     var cart = widget.cartItem!;
-    if (cart.allowDiscount != true) {
-      return;
+    if (cart.noDisc == true) {
+      if (cart.allowDiscount != true) {
+        return;
+      }
     }
     // check override amount
     var enteredDiscount = discountEditingController.text.parseDouble();

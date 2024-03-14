@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 7/12/21, 1:08 PM
  */
 
@@ -38,14 +38,13 @@ class _OpenItemViewState extends State<OpenItemView> {
   void initState() {
     super.initState();
     amountFocus.requestFocus();
-    Future.delayed(
-      Duration(seconds: 2),
-    ).then((value) {
-      setState(() {
-        active = true;
-      });
-    });
-
+    // Future.delayed(
+    //   Duration(seconds: 2),
+    // ).then((value) {
+    //   setState(() {
+    //     active = true;
+    //   });
+    // });
   }
 
   @override
@@ -55,16 +54,18 @@ class _OpenItemViewState extends State<OpenItemView> {
       replaceController: priceController,
       replaceCart: buildBody(),
       replacePayButton: actionButtons(),
-          replaceOnEnter: (){
+      replaceOnEnter: () {
         showAlphaKey();
-          },
+      },
+      openCustomerEnter: false,
     ));
   }
 
   void showAlphaKey() {
     KeyBoardController().init(context);
     KeyBoardController().dismiss();
-    KeyBoardController().showBottomDPKeyBoard(descriptionController,onEnter: (){
+    KeyBoardController().showBottomDPKeyBoard(descriptionController,
+        onEnter: () {
       Navigator.pop(context);
       handleDone();
     });

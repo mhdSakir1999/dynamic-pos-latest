@@ -14,6 +14,7 @@ import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -225,7 +226,9 @@ class _BillCancellationViewState extends State<BillCancellationView> {
 
     //if permission granted
     if (hasPermission) {
+      EasyLoading.show(status: 'please_wait'.tr());
       final res = await InvoiceController().cancelInvoice(invoice, context);
+      EasyLoading.dismiss();
       setState(() {
         clicked = false;
       });

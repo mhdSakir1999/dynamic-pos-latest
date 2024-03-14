@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/21/21, 10:50 AM
  */
 
@@ -77,7 +77,7 @@ class _LoginViewState extends State<LoginView> {
     if (!kReleaseMode) {
       // usernameEditingController.text = 'MYPOS';
       passwordEditingController.text = 'ADMIN';
-      usernameEditingController.text = 'CAS3';
+      usernameEditingController.text = 'CAS1';
       // passwordEditingController.text = 'myPOS@1234';
     }
     //DesktopWindow.setFullScreen(true);
@@ -111,25 +111,6 @@ class _LoginViewState extends State<LoginView> {
                         stream: posConnectivity.connectivityStream.stream,
                         builder: (BuildContext context,
                             AsyncSnapshot<POSConnectivityStatus> snapshot) {
-                          // String text = "";
-                          // TextStyle style = TextStyle();
-                          // switch (snapshot.data) {
-                          //   case POSConnectivityStatus.Local:
-                          //     text = "Local";
-                          //     style = TextStyle(color: Colors.yellowAccent);
-                          //     break;
-                          //   case POSConnectivityStatus.Server:
-                          //     text = "Server";
-                          //     style = TextStyle(color: Colors.greenAccent);
-                          //     break;
-                          //   case POSConnectivityStatus.None:
-                          //     text = "None";
-                          //     style = TextStyle(color: Colors.redAccent);
-                          //     break;
-                          //   default:
-                          //     text = "N/A";
-                          //     style = TextStyle(color: Colors.redAccent);
-                          // }
                           return (snapshot.data == POSConnectivityStatus.Server)
                               ? buildBody()
                               : (snapshot.data == POSConnectivityStatus.Local)
@@ -199,7 +180,21 @@ class _LoginViewState extends State<LoginView> {
                         right: 40,
                         child: IconButton(
                             icon: Icon(Icons.close),
-                            onPressed: () {
+                            onPressed: () async {
+                              try {
+                                final result = await Process.run('cmd.exe', [
+                                  '/c',
+                                  'taskkill /F /IM Dynamic_POS_REST_API.exe'
+                                ]);
+                                LogWriter().saveLogsToFile(
+                                    'ERROR_Log_', ['Closing previous api...']);
+                              } catch (e) {
+                                await LogWriter().saveLogsToFile('ERROR_Log_', [
+                                  'Error Closing previous api: ${e.toString()}'
+                                ]);
+                                print('Error: $e');
+                              }
+
                               SystemNavigator.pop();
 
                               if (POSPlatform().isDesktop()) {
@@ -295,12 +290,14 @@ class _LoginViewState extends State<LoginView> {
                       if (mounted)
                         setState(() {
                           currentError = null;
+                          if (kReleaseMode) passwordEditingController.clear();
                           canShowPasswordField = false;
                           KeyBoardController().dismiss();
-                          KeyBoardController().showBottomDPKeyBoard(
-                              usernameEditingController,
-                              onEnter: validateUserName);
                         });
+                      KeyBoardController().showBottomDPKeyBoard(
+                          usernameEditingController,
+                          onEnter: validateUserName,
+                          buildContext: context);
                     },
                   ),
                 ),
@@ -326,7 +323,8 @@ class _LoginViewState extends State<LoginView> {
                                 KeyBoardController().showBottomDPKeyBoard(
                                     passwordEditingController,
                                     onEnter: validatePassword,
-                                    obscureText: true);
+                                    obscureText: true,
+                                    buildContext: context);
                               });
                           },
                           decoration: InputDecoration(
@@ -394,7 +392,7 @@ class _LoginViewState extends State<LoginView> {
           POSLoggerLevel.success, "Username validation success: $result"));
       KeyBoardController().dismiss();
       KeyBoardController().showBottomDPKeyBoard(passwordEditingController,
-          onEnter: validatePassword, obscureText: true);
+          onEnter: validatePassword, obscureText: true, buildContext: context);
       canShowPasswordField = true;
       passwordFocusNode.requestFocus();
     } else {
@@ -463,7 +461,7 @@ class _LoginViewState extends State<LoginView> {
 
         EasyLoading.show(
             status:
-                'Starting the system'); //this block takes ~ 3 seconds to execute..so I added easyloading
+                'Starting the system'); //this block takes ~3 seconds to execute..so I added easyloading
         //check the sign on process
         if (!authController.checkSignOff() &&
             authController.checkManagerSignOff() &&
@@ -506,7 +504,7 @@ class _LoginViewState extends State<LoginView> {
               print('Stdout:\n${result.stdout}');
               print('Stderr:\n${result.stderr}');
             } catch (e) {
-              LogWriter().saveLogsToFile('ERROR_Log_',
+              await LogWriter().saveLogsToFile('ERROR_Log_',
                   ['Error Closing Dual_Display: ${e.toString()}']);
               print('Error: $e');
             }
@@ -553,7 +551,7 @@ class _LoginViewState extends State<LoginView> {
             print('Stdout:\n${result.stdout}');
             print('Stderr:\n${result.stderr}');
           } catch (e) {
-            LogWriter().saveLogsToFile(
+            await LogWriter().saveLogsToFile(
                 'ERROR_Log_', ['Error Closing CrystalReport: ${e.toString()}']);
             print('Error: $e');
           }
@@ -561,8 +559,7 @@ class _LoginViewState extends State<LoginView> {
           try {
             POSLoggerController.addNewLog(POSLogger(
                 POSLoggerLevel.info, "Starting CrystalReport API..."));
-            String localCrystalPath = dotenv.env['CRYSTAL_REPORT_PATH'] ??
-                'C:\\checkout\\CRYSTAL_REPORT';
+            String localCrystalPath = dotenv.env['CRYSTAL_REPORT_PATH'] ?? '';
             //  var exec = "${localAPIPath!} dotnet run --urls http://0.0.0.0:71";
             POSLoggerController.addNewLog(
                 POSLogger(POSLoggerLevel.info, "path: $localCrystalPath"));
@@ -605,8 +602,15 @@ class _LoginViewState extends State<LoginView> {
       EasyLoading.dismiss();
       POSLoggerController.addNewLog(POSLogger(
           POSLoggerLevel.error, "Password validation error: $result"));
-      currentError = result?.message ??
-          'The combination of username and password is invalid';
+      currentError = (result?.loginAttemptData?.blockedAt != null)
+          ? (result?.message ??
+                  'The combination of username and password is invalid') +
+              '\nTry after ${result?.loginAttemptData?.blockedAt?.replaceAll('T', ' ')}'
+          : (result?.message ??
+                  'The combination of username and password is invalid') +
+              ((result?.loginAttemptData == null)
+                  ? ''
+                  : '\nRemaining attempts: ${(result?.loginAttemptData?.maxAttempts ?? 0) - (result?.loginAttemptData?.numberOfAttempts ?? 0)}');
     }
     if (mounted) setState(() {});
   }

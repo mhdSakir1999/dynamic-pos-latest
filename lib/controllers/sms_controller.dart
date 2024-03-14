@@ -20,14 +20,15 @@ class SMSController {
         authorize: false);
   }
 
-  Future<void> sendBillSave(
-      String number, double billAmount, String invoiceNo, double points) async {
+  Future<void> sendBillSave(String number, double billAmount, String invoiceNo,
+      double points, String customer) async {
     await LoyaltyApiClient.call("sms/invoice", ApiMethod.POST,
         data: {
           "billAmount": billAmount.toStringAsFixed(2),
           "number": number,
           "points": points.toStringAsFixed(2),
-          "invoiceNo": invoiceNo
+          "invoiceNo": invoiceNo,
+          "customer_name": customer
         },
         successToast: false);
   }

@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/29/21, 4:13 PM
  */
 
@@ -146,6 +146,7 @@ class _SettingViewState extends State<SettingView> {
           trackVisibility: true,
           child: SingleChildScrollView(
             controller: scrollController,
+            physics: BouncingScrollPhysics(),
             child: Column(
               children: [
                 POSAppBar(),

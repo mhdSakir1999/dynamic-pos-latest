@@ -25,29 +25,29 @@ class BarChartSample2State extends State<BarChartSample2> {
     final barGroup1 = makeGroupData(0, 5, 12);
     final barGroup2 = makeGroupData(1, 8, 9);
     final barGroup3 = makeGroupData(2, 4, 5);
-    final barGroup4 = makeGroupData(3, 6, 5);
-    final barGroup5 = makeGroupData(4, 10, 11);
-    final barGroup6 = makeGroupData(5, 4, 1.5);
-    final barGroup7 = makeGroupData(6, 5, 1.5);
-    final barGroup8 = makeGroupData(7, 8, 1.5);
-    final barGroup9 = makeGroupData(8, 10, 1.5);
-    final barGroup10 = makeGroupData(9, 7, 1.5);
-    final barGroup11 = makeGroupData(10, 4, 1.5);
-    final barGroup12 = makeGroupData(11, 9, 1.5);
+    // final barGroup4 = makeGroupData(3, 6, 5);
+    // final barGroup5 = makeGroupData(4, 10, 11);
+    // final barGroup6 = makeGroupData(5, 4, 1.5);
+    // final barGroup7 = makeGroupData(6, 5, 1.5);
+    // final barGroup8 = makeGroupData(7, 8, 1.5);
+    // final barGroup9 = makeGroupData(8, 10, 1.5);
+    // final barGroup10 = makeGroupData(9, 7, 1.5);
+    // final barGroup11 = makeGroupData(10, 4, 1.5);
+    // final barGroup12 = makeGroupData(11, 9, 1.5);
 
     final items = [
       barGroup1,
       barGroup2,
       barGroup3,
-      barGroup4,
-      barGroup5,
-      barGroup6,
-      barGroup7,
-      barGroup8,
-      barGroup9,
-      barGroup10,
-      barGroup11,
-      barGroup12
+      // barGroup4,
+      // barGroup5,
+      // barGroup6,
+      // barGroup7,
+      // barGroup8,
+      // barGroup9,
+      // barGroup10,
+      // barGroup11,
+      // barGroup12
     ];
 
     rawBarGroups = items;

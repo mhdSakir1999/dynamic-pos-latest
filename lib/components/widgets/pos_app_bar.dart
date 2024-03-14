@@ -4,6 +4,7 @@
  * Created At: 4/22/21, 1:57 PM
  */
 
+import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/lock_screen_bloc.dart';
 import 'package:checkout/bloc/notification_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:checkout/views/pos_alerts/notification_alert.dart';
 import 'package:checkout/views/settings/settings_view.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../models/pos/notification_results.dart';
@@ -42,13 +44,20 @@ class POSAppBar extends StatelessWidget {
                   flex: 5,
                   child: appBarButton(
                       onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) {
-                            return SettingView();
-                          },
-                        );
+                        final cartList =
+                            cartBloc.currentCart?.values.toList() ?? [];
+                        if (cartList.length == 0) //new change
+                        {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) {
+                              return SettingView();
+                            },
+                          );
+                        } else {
+                          EasyLoading.showError('cant_go_settings'.tr());
+                        }
                       },
                       text: "app_bar.settings".tr(),
                       icon: Icons.settings,
@@ -58,10 +67,18 @@ class POSAppBar extends StatelessWidget {
                   flex: 4,
                   child: appBarButton(
                       onPressed: () {
-                        DualScreenController().setView('landing');
-                        if (userBloc.currentUser != null) //new change
+                        final cartList =
+                            cartBloc.currentCart?.values.toList() ?? [];
+                        if (POSConfig().dualScreenWebsite != "")
+                          DualScreenController().setView('landing');
+                        if (userBloc.currentUser != null &&
+                            cartList.length == 0) //new change
+                        {
                           Navigator.pushReplacementNamed(
                               context, LandingView.routeName);
+                        } else {
+                          EasyLoading.showError('cant_go_home'.tr());
+                        }
                       },
                       text: "app_bar.home".tr(),
                       icon: Icons.home,

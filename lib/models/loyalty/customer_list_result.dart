@@ -62,6 +62,7 @@ class CustomerResult {
   String? taxRegNo;
   bool? noPromo;
   bool? sendOTP;
+  double? defaultDiscount;
 
   CustomerResult(
       {this.cMCODE,
@@ -83,7 +84,8 @@ class CustomerResult {
       this.cMDOB,
       this.taxRegNo,
       this.noPromo,
-      this.sendOTP});
+      this.sendOTP,
+      this.defaultDiscount});
 
   CustomerResult.fromJson(Map<String, dynamic> json) {
     cMCODE = json['cM_CODE'];
@@ -114,6 +116,11 @@ class CustomerResult {
     taxRegNo = json['cT_TAXREG'];
     noPromo = json['cG_NOPROMO'];
     sendOTP = json['cG_OTP_REQUIRED'];
+    try {
+      defaultDiscount = json['dS_DISC']?.toString().parseDouble() ?? 0;
+    } catch (e) {
+      defaultDiscount = 0;
+    }
   }
 
   Map<String, dynamic> toJson() {

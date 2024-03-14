@@ -8,12 +8,19 @@ import 'package:checkout/models/keyboard_config.dart';
 import 'package:flutter/material.dart';
 
 class POSKeyBoard extends StatelessWidget {
-
   POSKeyBoard(
       {Key? key,
       this.controller,
       required this.isInvoiceScreen,
-      this.clearButton = false,required this.onEnter,required this.onPressed, this.mask, this.disableArithmetic=false, this.color})
+      this.clearButton = false,
+      required this.onEnter,
+      required this.onPressed,
+      this.mask,
+      this.disableArithmetic = false,
+      this.disableValueAfterPoint = false,
+      this.color,
+      this.nextFocusTo,
+      this.normalKeyPress})
       : super(key: key);
   // The controller connected to the InputField
   final TextEditingController? controller;
@@ -24,6 +31,9 @@ class POSKeyBoard extends StatelessWidget {
   final String? mask;
   final Color? color;
   final bool disableArithmetic;
+  final bool disableValueAfterPoint;
+  final FocusNode? nextFocusTo;
+  final Function()? normalKeyPress;
   @override
   Widget build(BuildContext context) {
     List buttonlist = clearButton
@@ -33,7 +43,7 @@ class POSKeyBoard extends StatelessWidget {
             : KeyBoardConfig().poskeys;
     return Container(
       height: KeyBoardConfig().posKeyboardHeight,
-      color:color?? KeyBoardConfig().bkColor,
+      color: color ?? KeyBoardConfig().bkColor,
       child: Column(
           //Get 1D Array from 2D Array
           children: buttonlist.map<Widget>((e) {
@@ -88,11 +98,14 @@ class POSKeyBoard extends StatelessWidget {
         default:
           return NumKey(
             disableArithmetic: disableArithmetic,
+            disableValueAfterPoint: disableValueAfterPoint,
             mask: mask,
             controller: controller,
             text: e,
             flex: 7,
+            focusNode: nextFocusTo,
             //onTextInput: _textInputHandler,
+            normalKeyPress: normalKeyPress ?? () {},
           );
       }
     }).toList()));

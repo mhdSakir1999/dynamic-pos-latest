@@ -7,6 +7,7 @@
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
 import 'package:checkout/extension/extensions.dart';
+import 'package:checkout/models/pos/Inv_appliedPeomotons.dart';
 import 'package:checkout/models/pos/promotion_free_items.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +22,14 @@ class PromotionView extends StatefulWidget {
   final double totalBillDiscount;
   final double totalLineDiscount;
   final List<SelectablePaymentModeWisePromotions> selectablePromotions;
-
+  final List<InvBillDiscAmountPromo> billDiscPromotions;
   const PromotionView({
     Key? key,
     required this.cartList,
     required this.totalBillDiscount,
     required this.totalLineDiscount,
     required this.selectablePromotions,
+    required this.billDiscPromotions,
   }) : super(key: key);
 
   @override
@@ -48,7 +50,7 @@ class _PromotionViewState extends State<PromotionView> {
   late double sGVValue;
   late List<SelectablePaymentModeWisePromotions> selectablePromotionsList;
   SelectablePaymentModeWisePromotions? selectablePromotion;
-
+  late List<InvBillDiscAmountPromo> billDiscountPromos;
   @override
   void initState() {
     super.initState();
@@ -60,6 +62,7 @@ class _PromotionViewState extends State<PromotionView> {
     sPer = width;
     sAmt = width * 2;
     selectablePromotionsList = widget.selectablePromotions;
+    billDiscountPromos = widget.billDiscPromotions;
   }
 
   @override
@@ -77,6 +80,7 @@ class _PromotionViewState extends State<PromotionView> {
           _buildScanGVField(),
           _buildScanItemField(),
           _buildAppliedPromotions(),
+          _buildBillDiscountPromo(),
           _buildEligibleItems(),
           _buildEligibleGVs(),
           _buildEligibleTickets(),
@@ -235,43 +239,39 @@ class _PromotionViewState extends State<PromotionView> {
                               _buildRowItem('promo.promo_name'.tr(),
                                   sPromoDesc * 2, true),
                               _buildRowItem('promo.free_ticket_code'.tr(),
-                                  sItemCode, true),
-                              _buildRowItem('promo.qty'.tr(), sPer, true),
+                                  sItemCode * 1.5, true),
+                              _buildRowItem('promo.value'.tr(), sPer, true),
                             ],
                           );
                         }
 
-                        return ListView.builder(
-                          itemCount: freeTicketList.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int x) {
-                            final item = freeTicketList[x];
-                            Color? textColor;
-                            if (item.ticketQty > 0) {
-                              textColor = Colors.greenAccent;
-                            }
-                            return SizedBox(
-                              width: double.infinity,
-                              child: Row(
-                                children: [
-                                  _buildRowItem(item.promotionCode, sPromoCode,
-                                      false, false, textColor),
-                                  _buildRowItem(item.promotionDesc,
-                                      sPromoDesc * 2, false, false, textColor),
-                                  _buildRowItem(item.ticketId, sItemCode, false,
-                                      false, textColor),
-                                  _buildRowItem(
-                                      item.ticketQty.toStringAsFixed(0),
-                                      sPer,
-                                      false,
-                                      true,
-                                      textColor),
-                                ],
-                              ),
-                            );
-                          },
+                        //return ListView.builder(
+                        //itemCount: freeTicketList.length,
+                        //physics: NeverScrollableScrollPhysics(),
+                        //shrinkWrap: true,
+                        //itemBuilder: (BuildContext context, int x) {
+                        final item = freeTicketList[index - 1];
+                        Color? textColor;
+                        if (item.ticketQty > 0) {
+                          textColor = Colors.greenAccent;
+                        }
+                        return SizedBox(
+                          width: double.infinity,
+                          child: Row(
+                            children: [
+                              _buildRowItem(item.promotionCode, sPromoCode,
+                                  false, false, textColor),
+                              _buildRowItem(item.promotionDesc, sPromoDesc * 2,
+                                  false, false, textColor),
+                              _buildRowItem(item.ticketSerial, sItemCode * 1.5,
+                                  false, false, textColor),
+                              _buildRowItem(item.ticketValue.toStringAsFixed(2),
+                                  sPer, false, true, textColor),
+                            ],
+                          ),
                         );
+                        //},
+                        //);
                       },
                     ),
                   ),
@@ -662,6 +662,66 @@ class _PromotionViewState extends State<PromotionView> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildBillDiscountPromo() {
+    if (billDiscountPromos.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    final cart = widget.cartList
+        .where((element) => (element.proCode) == "DISCOUNT")
+        .toList();
+
+    if (cart.isNotEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return Column(
+      children: [
+        Text('promo.applied_title'.tr()),
+        Divider(),
+        SizedBox(
+          width: double.infinity,
+          child: SizedBox(
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: billDiscountPromos.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return Row(
+                    children: [
+                      _buildRowItem('promo.promo_code'.tr(), sPromoCode, true),
+                      _buildRowItem('promo.promo_name'.tr(), sPromoDesc, true),
+                      _buildRowItem('promo.disc_amt'.tr(), sAmt, true),
+                    ],
+                  );
+                }
+                InvBillDiscAmountPromo item = billDiscountPromos[index - 1];
+                return SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      _buildRowItem(item.promotion_code ?? '', sPromoCode),
+                      _buildRowItem(
+                          '${item.promotion_name ?? ''} (Applied as a Tender mode)',
+                          sPromoDesc),
+                      _buildRowItem(
+                          item.discount_amt?.thousandsSeparator() ?? '0.00',
+                          sAmt,
+                          false,
+                          true),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        Divider(),
+      ],
     );
   }
 }

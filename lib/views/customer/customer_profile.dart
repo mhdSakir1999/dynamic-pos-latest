@@ -28,6 +28,7 @@ import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/sms_controller.dart';
 import 'package:checkout/controllers/otp_controller.dart';
+import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/extension/extensions.dart';
 import 'package:checkout/models/loyalty/area_result.dart';
 import 'package:checkout/models/loyalty/customer_group_result.dart';
@@ -35,6 +36,7 @@ import 'package:checkout/models/loyalty/customer_list_result.dart';
 import 'package:checkout/models/loyalty/customer_loyalty_group_result.dart';
 import 'package:checkout/models/loyalty/loyalty_summary.dart';
 import 'package:checkout/models/loyalty/title_result.dart';
+import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
@@ -128,7 +130,9 @@ class _CustomerProfileState extends State<CustomerProfile> {
       _editableCustomerCode = false;
       customerCodeEditingController.text = _autoCode;
     } else {
-      _editableCustomerCode = true;
+      // _editableCustomerCode = true;
+      _editableCustomerCode =
+          false; //to permanantly disable customer code edition...also i remove validation
     }
     await customerGroupBloc.fetchAll();
     if (widget.customer != null) assignValues(widget.customer!);
@@ -275,21 +279,24 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                     customerCodeEditingController,
                                     disabled: !_editableCustomerCode,
                                     validator: (String? text) {
-                                      return validateEmpty(
-                                        text,
-                                        "customer_code_error",
-                                        !_editableCustomerCode,
-                                      );
+                                      // return validateEmpty(
+                                      //   text,
+                                      //   "customer_code_error",
+                                      //   !_editableCustomerCode,
+                                      // );
                                     },
-                                    onTap: () {
-                                      KeyBoardController().dismiss();
-                                      KeyBoardController().init(context);
-                                      KeyBoardController().showBottomDPKeyBoard(
-                                          customerCodeEditingController,
-                                          onEnter: () {
-                                        KeyBoardController().dismiss();
-                                      });
-                                    },
+                                    onTap: _editableCustomerCode
+                                        ? () {
+                                            KeyBoardController().dismiss();
+                                            KeyBoardController().init(context);
+                                            KeyBoardController()
+                                                .showBottomDPKeyBoard(
+                                                    customerCodeEditingController,
+                                                    onEnter: () {
+                                              KeyBoardController().dismiss();
+                                            });
+                                          }
+                                        : null,
                                   ),
                                   activeButtonElement(
                                       'customer_profile.active'.tr(),
@@ -450,10 +457,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                     '',
                                     14,
                                     lastNameEditingController,
-                                    validator: (String? text) {
-                                      return validateEmpty(
-                                          text, "last_name_error", true);
-                                    },
+                                    // validator: (String? text) {
+                                    //   return validateEmpty(
+                                    //       text, "last_name_error", true);
+                                    // },
                                     onTap: () {
                                       KeyBoardController().dismiss();
                                       KeyBoardController().init(context);
@@ -476,12 +483,12 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                     '',
                                     14,
                                     address1EditingController,
-                                    validator: (String? text) {
-                                      return validateEmpty(
-                                          text,
-                                          "address1_error",
-                                          POSConfig().requiredAddress);
-                                    },
+                                    // validator: (String? text) {
+                                    //   return validateEmpty(
+                                    //       text,
+                                    //       "address1_error",
+                                    //       POSConfig().requiredAddress);
+                                    // },
                                     onTap: () {
                                       KeyBoardController().dismiss();
                                       KeyBoardController().init(context);
@@ -657,10 +664,29 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                                         horizontal: 15),
                                               ),
                                             ),
-                                            onChanged: (value) {
+                                            onChanged: (value) async {
+                                              if (value != null &&
+                                                  (value.cGPERMISSIONREQUIRED ??
+                                                      false) &&
+                                                  (value.cG_MENUTAG ?? '')
+                                                      .isNotEmpty) {
+                                                final res =
+                                                    await SpecialPermissionHandler(
+                                                            context: context)
+                                                        .askForPermission(
+                                                            permissionCode:
+                                                                value
+                                                                    .cG_MENUTAG,
+                                                            accessType: 'A',
+                                                            refCode: DateTime
+                                                                    .now()
+                                                                .toIso8601String());
+                                                if (res.success != true) return;
+                                              }
                                               customerGroupEditingController
                                                   .text = value?.cGDESC ?? "";
                                               _selectedGroup = value;
+
                                               setState(() {});
                                             },
                                             compareFn: (item, selectedItem) =>
@@ -790,10 +816,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                       String? res = validateEmpty(
                                           text, "mobile_error", true);
                                       if (res == null) {
-                                        if (!phoneNumberVerified &&
-                                            POSConfig().otpEnabled)
-                                          return "customer_profile.number_not_verify"
-                                              .tr();
+                                        // if (!phoneNumberVerified &&
+                                        //     POSConfig().otpEnabled)
+                                        //   return "customer_profile.number_not_verify"
+                                        //       .tr();
                                         return null;
                                       }
                                       return res;
@@ -836,8 +862,13 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                             await SMSController().sendOTP(
                                                 mobileEditingController.text,
                                                 otp);
-                                            await otpController
-                                                .verifyOTP(context, cusCode: customerCodeEditingController.text, mobile: mobileEditingController.text);
+                                            await otpController.verifyOTP(
+                                                context,
+                                                cusCode:
+                                                    customerCodeEditingController
+                                                        .text,
+                                                mobile: mobileEditingController
+                                                    .text);
                                             setState(() {
                                               phoneNumberVerified =
                                                   otpController.validOtp;
@@ -1185,8 +1216,54 @@ class _CustomerProfileState extends State<CustomerProfile> {
     } else {
       permission = await helper.hasCustomerMasterPermission("M");
     }
+    bool otpValidationRes = phoneNumberVerified;
+    if (!phoneNumberVerified) {
+      otpValidationRes = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: Text('customer_profile.skip_otp'.tr()),
+          actions: [
+            AlertDialogButton(
+                onPressed: () => Navigator.pop(context, false),
+                text: 'cancel'.tr()),
+            AlertDialogButton(
+                onPressed: () async {
+                  EasyLoading.show(status: 'please_wait'.tr());
+                  SpecialPermissionHandler handler =
+                      SpecialPermissionHandler(context: context);
+                  bool permissionStatus = handler.hasPermission(
+                      permissionCode: PermissionCode.skipOtpForRegistration,
+                      accessType: 'A',
+                      refCode:
+                          '${customerCodeEditingController.text}@${mobileEditingController.text}');
+                  if (!permissionStatus) {
+                    final permission = await handler.askForPermission(
+                        permissionCode: PermissionCode.skipOtpForRegistration,
+                        accessType: "A",
+                        refCode:
+                            '${customerCodeEditingController.text}@${mobileEditingController.text}');
+                    if (permission.success) {
+                      Navigator.pop(context, true);
+                    } else {
+                      EasyLoading.showError('Action revoked');
+                      Navigator.pop(context, false);
+                    }
+                  } else {
+                    Navigator.pop(context, true);
+                  }
+                  EasyLoading.dismiss();
+                },
+                text: 'skip&continue'.tr()),
+          ],
+        ),
+      );
+    }
     //true if the data is valid
-    if (permission && editable && formKey.currentState!.validate()) {
+    if (permission &&
+        editable &&
+        formKey.currentState!.validate() &&
+        otpValidationRes) {
       // get customer code again
       if (!_editableCustomerCode && widget.customer == null) {
         final String currentCode = customerCodeEditingController.text;
@@ -1294,8 +1371,9 @@ class _CustomerProfileState extends State<CustomerProfile> {
               ? 'M'
               : 'F',
       'areaCode': selectedArea?.aRCODE,
-      'autoIncrementCode': _editableCustomerCode ? 0 : 1,
+      // 'autoIncrementCode': _editableCustomerCode ? 0 : 1,
       //'autoIncrementCode': _editableCustomerCode ? 1 : 0,
+      'autoIncrementCode': customerCodeEditingController.text == "" ? 1 : 0,
       'user': userBloc.currentUser?.uSERHEDUSERCODE,
       'active': activeAccount ? 1 : 0,
       "loyalty": loyaltyActive ? 1 : 0,

@@ -1,0 +1,8 @@
+{
+    "poll_display_message_note": "keep the message length to 40, because serial displays have 40 LEDs",
+    "poll_display_message": {
+        "morning": "*** GOOD MORNING ***                    ",
+        "day": "  *** GOOD DAY ***                      ",
+        "evening": "*** GOOD EVENING ***                    "
+    }
+}

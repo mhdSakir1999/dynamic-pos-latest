@@ -68,6 +68,12 @@ class PromotionDetailsList {
   double? proDVALIDQTY;
   String? proGROUPBUNDLEGROUPS;
   String? pskUCODE;
+  double? ptiCKVALUE;
+  double? ptiCKBILLVALUE;
+  DateTime? ptiCKREDEFROM;
+  DateTime? ptiCKREDETO;
+  double? ptiCKREDEEMBILLVALFROM;
+  double? ptiCKREDEEMBILLVALTO;
 
   PromotionDetailsList(
       {this.prOCODE,
@@ -87,7 +93,13 @@ class PromotionDetailsList {
       this.proDFREEQTY,
       this.proDVALIDQTY,
       this.proGROUPBUNDLEGROUPS,
-      this.pskUCODE});
+      this.pskUCODE,
+      this.ptiCKVALUE,
+      this.ptiCKBILLVALUE,
+      this.ptiCKREDEFROM,
+      this.ptiCKREDETO,
+      this.ptiCKREDEEMBILLVALFROM,
+      this.ptiCKREDEEMBILLVALTO});
 
   PromotionDetailsList.fromJson(Map<String, dynamic> json) {
     prOCODE = json['prO_CODE'];
@@ -108,6 +120,14 @@ class PromotionDetailsList {
     proGROUPBUNDLEGROUPS = json['proE_GROUPBUNDLEGROUPS'];
     proDFREEQTY = json['proD_FREEQTY']?.toString().parseDouble();
     proDVALIDQTY = json['proD_VALIDQTY']?.toString().parseDouble();
+    ptiCKVALUE = json['pticK_VALUE']?.toString().parseDouble();
+    ptiCKBILLVALUE = json['pticK_BILL_VALUE']?.toString().parseDouble();
+    ptiCKREDEFROM = json['pticK_REDE_FROM'].toString().parseDateTime();
+    ptiCKREDETO = json['pticK_REDE_TO'].toString().parseDateTime();
+    ptiCKREDEEMBILLVALFROM =
+        json['pticK_REDEEM_BILL_VALFROM']?.toString().parseDouble();
+    ptiCKREDEEMBILLVALTO =
+        json['pticK_REDEEM_BILL_VALTO']?.toString().parseDouble();
   }
 
   Map<String, dynamic> toJson() {

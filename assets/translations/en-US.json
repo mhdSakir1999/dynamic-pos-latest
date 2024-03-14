@@ -6,6 +6,10 @@
   "login_shift": "Login @ {date} {time} Shift #{shift}",
   "welcome": "Welcome, ",
   "local_mode_func_disable": "This function is not available in the Disconnected Mode",
+  "cant_go_home": "Can't move to home now\nFinish your current invoice first",
+  "cant_go_settings": "Can't move to settings page now\nFinish your current invoice first",
+  "cancel": "Cancel",
+  "wrong_format": "Entered value format is wrong",
   "login_view": {
     "user_name_field": "Enter your User ID",
     "password_field": "Enter your password",
@@ -44,7 +48,8 @@
     "notification": "Notifications",
     "lock": "Lock",
     "select_customer": "Customer",
-    "price_mode": "Price"
+    "price_mode": "Price",
+    "notification_clear": "Notifications are cleared"
   },
   "open_float_view": {
     "opening_float": "Please enter your opening float",
@@ -60,9 +65,10 @@
   },
   "invoice": {
     "search": "Enter item code or scan barcode",
+    "line": "LINES",
     "item": "ITEMS",
-    "quantity": "QUANTITY",
-    "sub_total": "SUB TOTAL",
+    "quantity": "QTY",
+    "sub_total": "TOTAL",
     "bill_close": "Pay & Complete",
     "plu": "PLU",
     "description": "Description",
@@ -103,7 +109,11 @@
     "tax_bill_print_title": "Invoice Print",
     "tax_bill_print_content": "Do you want to print a Tax Invoice ?",
     "tax_bill_print_yes": "Yes",
-    "tax_bill_print_no": "No"
+    "tax_bill_print_no": "No",
+    "no_stock": "No Stock Available",
+    "no_stock_detail": "There is not enough stock for these products\nDo you want to invoice them anyway?\n(Note: you may need valid permission for that)",
+    "stock_yes": "Yes",
+    "stock_no": "No"
   },
   "functions": {
     "special_function": "Special\nFunctions\n[F1]",
@@ -143,7 +153,8 @@
     "voucher_value": "Voucher Value: {value}",
     "voucher_reset": "Reset",
     "HoldBillClearError": "You cannot clear this invoice. Instead please cancel the invoice",
-    "cant_open": "Cannot open while invoicing"
+    "cant_open": "Cannot open while invoicing",
+    "cant_open_local": "Cannot open in local mode"
   },
   "approval_screen": {
     "reason": "Reason",
@@ -151,7 +162,7 @@
     "approve_this_remotely": "Approve this remotely? \nGet myRemote module",
     "approve_this_action": "Approve this action",
     "approve_title": "Approval required!",
-    "approve_description": "myPOS requires higher level of approval with a valid reason to proceed for the action : \"{desc}\". Please enter the password or scan the ID to proceed. If myRemote is activated please wait until the approval is received"
+    "approve_description": "CHECKOUT requires a higher level of approval with a valid reason to proceed for the action : \"{desc}\". Please enter the password or scan the ID to proceed. If myRemote is activated please wait until the approval is received"
   },
   "payment_view": {
     "select_payment_mode": "Select Payment Mode",
@@ -181,10 +192,12 @@
     "invalid_promotion_card_bin_title": "Invalid Card Number",
     "invalid_promotion_card_bin_subtitle": "The entered credit card number is not applicable for this promotion",
     "card_not_entered": "Enter a valid card number",
-    "card_not_entered_title": "Enter a valid card number"
+    "card_not_entered_title": "Enter a valid card number",
+    "no_overpay": "Over pay not allowed"
   },
   "product_view": {
     "search_text": "Enter search text ( Searching by Description )",
+    "code_search": "Enter search code (Searching by product code)",
     "code": "Code",
     "description": "Description",
     "unit": "Unit",
@@ -245,7 +258,8 @@
     "line_amount": "LINE AMOUNT",
     "discount_for": "Line Discount for : ",
     "mrp": "MRP : {mrp}",
-    "quantity": "QUANTITY : {qty}"
+    "quantity": "QUANTITY : {qty}",
+    "already_added": "{type} line discount is already applied \nIt cannot be repeated"
   },
   "shift_reconciliation_view": {
     "title": "Shift Reconciliation",
@@ -427,7 +441,9 @@
     "yes": "Yes",
     "no": "No",
     "title": "Title",
-    "code_used": "This customer code is already used. Do you want to generate new code({code})?"
+    "code_used": "This customer code is already used. Do you want to generate new code({code})?",
+    "skip_otp": "Are you sure skipping the otp validation process?",
+    "skip&continue": "Skip & Continue"
   },
   "payment_mode_empty": {
     "title": "Payment Mode Error",
@@ -608,7 +624,8 @@
     "quantity": "Quantity: {qty}",
     "qty": "Qty",
     "quick_search": "Quick Search(Enter Product Code)",
-    "line_amount": "Line Total: {total}"
+    "line_amount": "Line Total: {total}",
+    "select_bottle": "Selcect an empty bottle"
   },
   "reprint_view": {
     "cashier": "Cashier",
@@ -652,6 +669,19 @@
     "sold": "This gift voucher is already sold",
     "okay": "Okay",
     "already_added": "This gift voucher is already added",
+    "expired_content": "Do you want to continue anyway?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "advance_pay_error": {
+    "title": "Invalid Advance Payment Slip",
+    "empty": "The advance payment slip number cannot be empty",
+    "not_found": "This advance payment slip number is invalid or cannot be found",
+    "expired": "This advance payment slip is already expired",
+    "sold": "This advance payment slip is already sold",
+    "okay": "Okay",
+    "zero_amount": "Advance paid amount is 0",
+    "already_added": "This advance payment slip is already added",
     "expired_content": "Do you want to continue anyway?",
     "yes": "Yes",
     "no": "No"
@@ -738,14 +768,32 @@
     "pay_det": "Pay Type",
     "pay_refno": "Ref. No",
     "pay_rate": "Rate",
-    "pay_refdate": "Ref. Date",
     "pay_amount": "Amount",
+    "pay_refdate": "Ref. Date",
+    "close": "Close"
+  },
+  "discount_list": {
+    "disc_title": "Discount Details",
+    "disc_lineNo": "Line No.",
+    "disc_pro": "Product",
+    "disc_proSelling": "Price",
+    "disc_proQty": "Qty",
+    "disc_lineDiscPer": "Line Disc. %",
+    "disc_lineDiscAmt": "Line Disc. Amt",
+    "disc_netDisc": "Net Disc",
+    "disc_totalLineDisc": "Total Line Disc.",
+    "disc_totalNetDisc": "Total Net Disc.",
+    "disc_grandTotalLineDisc": "TOTAL BILL LINE DISCOUNT",
+    "disc_grandTotalNetDisc": "TOTAL BILL NET DISCOUNT",
+    "disc_grandTotalPromoDisc": "TOTAL BILL PROMOTION DISCOUNT",
+    "disc_totalDisc": "GRAND TOTAL",
     "close": "Close"
   },
   "return_sales": {
     "w": "This item is cannot be found on {inv}",
     "invalid_qty": "The entered quantity has not been sold by {inv} invoice",
     "invalid_item": "The entered item has not been sold by {inv} invoice",
+    "expired": "Return period of {inv} invoice is over",
     "okay": "Okay",
     "cancel": "Cancel",
     "continue": "Continue",
@@ -760,7 +808,11 @@
     "no_of_loyality_customers": "Loyality Customer Registrations",
     "no_of_ebill_reg": "E bill Registrations",
     "value_of_loyality_trans": "Value of Loyality Transactions",
-    "home": "Home"
+    "home": "Home",
+    "tot_Inv_Count": "Total Invoice Count",
+    "cashier_Inv_Count": "My Invoice Count",
+    "loyalty_Inv_Count": "Loyalty Invoice Count",
+    "cashier_loyalty_Inv_Count": "My Loyalty Invoice Count"
   },
   "promo": {
     "title": "Promotional Discount(s)",
@@ -818,8 +870,12 @@
     "handle_cust": "Handle Customer",
     "handle_cust_desc": "Are you want to clear the current customer?",
     "empty_bottle_hed": "Invoicing empty bottle/s",
+    "empty_bottle_select": "Select bottle type",
     "empty_bottle_cancel": "Cancel Invoicing bottles",
     "sales_assist_no_products": "Add items to cart to select sales assistant",
-    "sales_assistant": "Sales Assistant \n     [Ctrl+A]"
+    "sales_assistant": "Sales Assistant \n     [Ctrl+A]",
+    "continue_zero_float": "Are you sure to continue with the float amount of 0.00",
+    "change": "Change",
+    "mngSignOff_confirm": "Do you confirm the amount and want to do sign-off"
   }
 }

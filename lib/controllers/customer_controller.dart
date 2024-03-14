@@ -7,7 +7,9 @@
 import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/components/components.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_alerts/pos_error_alert.dart';
+import 'package:checkout/controllers/usb_serial_controller.dart';
 import 'package:checkout/extension/extensions.dart';
 import 'package:checkout/models/loyalty/customer_list_result.dart';
 import 'package:checkout/models/pos/permission_code.dart';
@@ -37,6 +39,7 @@ class CustomerController {
   Future<String?> createOrUpdateCustomer(
       Map<String, dynamic> data, bool update) async {
     data["update"] = update ? 1 : 0;
+    print(data.toString());
     final res = await LoyaltyApiClient.call(
       "customers",
       update ? ApiMethod.PUT : ApiMethod.POST,
@@ -233,8 +236,7 @@ class CustomerController {
     );
     _customerCodeEditingController.clear();
   }
-  
-  
+
   Future<void> _getCustomerByCode(BuildContext context) async {
     EasyLoading.show(status: 'please_wait'.tr());
     final res = await CustomerController()
@@ -259,8 +261,20 @@ class CustomerController {
       if (valid) {
         customerBloc.changeCurrentCustomer(res, update: true);
 
+        // show customer info in poll display
+        if (POSConfig().enablePollDisplay == 'true') {
+          try {
+            usbSerial.sendToSerialDisplay(
+                '${usbSerial.addSpacesBack((res.cMNAME ?? 'UNKNOWN').toUpperCase(), 20)}');
+            usbSerial.sendToSerialDisplay(
+                '${usbSerial.addSpacesBack((res.loyaltyGroup ?? 'LOYALTY GROUP: N/A').toUpperCase(), 20)}');
+          } catch (e) {
+            LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
+          }
+        }
         //new change -- notify to dual display when customer is entered in cart
-        DualScreenController().setCustomer(res);
+        if (POSConfig().dualScreenWebsite != "")
+          DualScreenController().setCustomer(res);
         //get customer bundles
 
         Navigator.pop(context);

@@ -1,17 +1,20 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 6/4/21, 10:22 AM
  */
 import 'package:checkout/bloc/cart_bloc.dart';
+import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/controllers/auth_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/discount_type_result.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/extension/extensions.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class DiscountHandler {
   Future<double> manualLineDiscount(
@@ -27,8 +30,11 @@ class DiscountHandler {
     final currentLineTotal = cart.amount;
     // bool canNavigate = false;
     var tempVal = enteredDiscount;
-    var exactLineAmount =
-        ((cart.unitQty * cart.selling) - (cart.discAmt ?? 0)).toDouble();
+
+    // var exactLineAmount =
+    //     ((cart.unitQty * cart.selling) - (cart.discAmt ?? 0)).toDouble();
+    var exactLineAmount = (cart.unitQty *
+        cart.selling); // the total amount should be the gross amount(selling*qty) when do percentage discounts
 
     if (!discountPercentage) {
       //  calculate
@@ -50,7 +56,6 @@ class DiscountHandler {
         isProductMaxDiscountExceed = true;
       }
       // check the discount type's maximum discount percentage
-
     } else {
       if ((cart.maxDiscAmt ?? 0) == 0) {
         isProductMaxDiscountExceed = false;
@@ -105,7 +110,12 @@ class DiscountHandler {
       cart.discAmt = discountVal.toString().parseDouble();
     }
     cart.billDiscPer = 0;
-    cart.amount = (exactLineAmount - discountVal).toString().parseDouble();
+
+    // cart.amount = (exactLineAmount - discountVal).toString().parseDouble();  // this is wrong calculation
+    cart.amount = (cart.amount >= 0 || discountPercentage)
+        ? (cart.amount - discountVal)
+        : (cart.amount + discountVal); // this is the correct one
+
     cartBloc.updateCartItem(cart);
     cartBloc.updateCartSummaryPrice(-1 * currentLineTotal);
     cartBloc.updateCartSummaryPrice(cart.amount);
@@ -114,16 +124,24 @@ class DiscountHandler {
 
   Future<bool> hasOverridePermission(String user, CartModel cart,
       BuildContext context, double enteredDiscount) async {
+    // EasyLoading.show(status: 'please_wait'.tr());
     bool hasPermission = false;
     //check
     final handler = SpecialPermissionHandler(context: context);
-    final permissionList =
-        await AuthController().getUserPermissionListByUserCode(user);
+
+    // final permissionList =
+    //     await AuthController().getUserPermissionListByUserCode(user);
+
+    // bool hasPermissionToOverRide = SpecialPermissionHandler(context: context)
+    //     .hasPermissionInList(permissionList?.userRights ?? [],
+    //         PermissionCode.overrideDiscount, "A", user);
+    final permissionList = userBloc.userDetails?.userRights;
 
     bool hasPermissionToOverRide = SpecialPermissionHandler(context: context)
-        .hasPermissionInList(permissionList?.userRights ?? [],
-            PermissionCode.overrideDiscount, "A", user);
+        .hasPermissionInList(
+            permissionList ?? [], PermissionCode.overrideDiscount, "A", user);
 
+    // EasyLoading.dismiss();
     if (!hasPermissionToOverRide) {
       //  ask
       hasPermission = (await handler.askForPermission(

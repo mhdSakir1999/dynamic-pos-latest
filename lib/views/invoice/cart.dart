@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/23/21, 11:50 AM
  */
 
@@ -14,8 +14,10 @@ import 'package:checkout/bloc/price_mode_bloc.dart';
 import 'package:checkout/bloc/salesRep_bloc.dart';
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/mypos_screen_utils.dart';
+import 'package:checkout/components/recurringApiCalls.dart';
 import 'package:checkout/components/widgets/commonUse.dart';
 import 'package:checkout/components/widgets/poskeyboard.dart';
+import 'package:checkout/controllers/audit_log_controller.dart';
 import 'package:checkout/controllers/cart_dynamic_button_controller.dart';
 import 'package:checkout/controllers/cart_dynamic_button_function.dart';
 import 'package:checkout/controllers/customer_controller.dart';
@@ -29,6 +31,7 @@ import 'package:checkout/controllers/pos_price_calculator.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/product_controller.dart';
 import 'package:checkout/controllers/promotion_controller.dart';
+import 'package:checkout/controllers/usb_serial_controller.dart';
 import 'package:checkout/models/last_invoice_details.dart';
 import 'package:checkout/models/loyalty/loyalty_summary.dart';
 import 'package:checkout/models/pos/cart_model.dart';
@@ -45,7 +48,9 @@ import 'package:checkout/views/customer/customer_profile.dart';
 import 'package:checkout/views/invoice/invoice_app_bar.dart';
 import 'package:checkout/views/invoice/payment_view.dart';
 import 'package:checkout/views/invoice/product_search_view.dart';
+import 'package:checkout/views/invoice/returnBottle_selection_view.dart';
 import 'package:checkout/views/invoice/variant_detail_view.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,6 +58,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+import 'package:serial_port_win32/serial_port_win32.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:checkout/extension/extensions.dart';
 
@@ -68,13 +74,15 @@ class Cart extends StatefulWidget {
   final Widget? replacePayButton;
   final TextEditingController? replaceController;
   final VoidCallback? replaceOnEnter;
+  final bool? openCustomerEnter;
 
   const Cart(
       {Key? key,
       this.replaceCart,
       this.replacePayButton,
       this.replaceController,
-      this.replaceOnEnter})
+      this.replaceOnEnter,
+      this.openCustomerEnter = true})
       : super(key: key);
 
   @override
@@ -95,15 +103,19 @@ class _CartState extends State<Cart> {
   bool gvMode = false;
   TextEditingController _remarkEditingController = TextEditingController();
   ScrollController _controller = ScrollController();
+  bool proCodeEntered = false;
   //this index is used to identify the key up down
   int _tempIndex = 0;
   bool activeDynamicButton = true;
+
+  late SerialPort port;
   @override
   void initState() {
     super.initState();
     focusNode.requestFocus();
     if ((cartBloc.currentCart?.length ?? 0) > 0) {
-      DualScreenController().setView('invoice');
+      if (POSConfig().dualScreenWebsite != "")
+        DualScreenController().setView('invoice');
     }
     lockScreenBloc.lockScreenStream.listen((event) {
       if (!event && mounted) {
@@ -119,14 +131,19 @@ class _CartState extends State<Cart> {
             active = true;
           });
       });
+    // handle usb serial display
+    // _getPortsAndOpen();
 
     /// new chage -- not allowing customer pick in local mode
     if (!POSConfig().localMode && customerBloc.currentCustomer == null)
-      Future.delayed(Duration.zero)
-          .then((value) => CustomerController().showCustomerPicker(context));
+      Future.delayed(Duration.zero).then((value) async {
+        if (widget.openCustomerEnter == true)
+          await CustomerController().showCustomerPicker(context);
+        itemCodeFocus.requestFocus();
+      });
 
     // SchedulerBinding.instance.addPostFrameCallback((_) {
-    //   // Perform hit tests or interactions here.
+    //   // Perform hit tests or interactions here.5
     //   _controller.addListener(_scroll);
     // });
     // _scroll();
@@ -176,6 +193,7 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     posConnectivity.setContext(context);
+    recurringApiCalls.setContext(context);
     return GestureDetector(
       onTap: () {
         itemCodeFocus.requestFocus();
@@ -202,6 +220,9 @@ class _CartState extends State<Cart> {
                   if (!value.isShiftPressed &&
                       value.physicalKey == PhysicalKeyboardKey.numpadAdd) {
                     billClose();
+
+                    focusNode.requestFocus();
+                    itemCodeFocus.requestFocus();
                   }
                   if (!value.isShiftPressed &&
                       value.logicalKey == LogicalKeyboardKey.f12 &&
@@ -216,6 +237,8 @@ class _CartState extends State<Cart> {
                   if (!value.isShiftPressed &&
                       value.physicalKey == PhysicalKeyboardKey.delete) {
                     await voidItem();
+                    focusNode.requestFocus();
+                    itemCodeFocus.requestFocus();
                   }
                   if (value.isControlPressed &&
                       value.physicalKey == PhysicalKeyboardKey.keyA) {
@@ -302,7 +325,9 @@ class _CartState extends State<Cart> {
       doWhenClicked(
           func_name: 'net_disc', cart: selectedModel, lastItem: lastItem);
     }
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f1) {
+    if (POSConfig().localMode != true &&
+        !event.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f1) {
       doWhenClicked(
           func_name: 'special_function',
           cart: selectedModel,
@@ -375,6 +400,7 @@ class _CartState extends State<Cart> {
       scrollToBottom();
       clearSelection();
       focusNode.requestFocus();
+      itemCodeFocus.requestFocus();
     }
   }
 
@@ -441,9 +467,18 @@ class _CartState extends State<Cart> {
                             KeyBoardController().dismiss();
                             KeyBoardController().init(context);
                             KeyBoardController().showBottomDPKeyBoard(
-                                itemCodeEditingController, onEnter: () {
-                              _handleScan();
+                                itemCodeEditingController, onEnter: () async {
                               KeyBoardController().dismiss();
+                              if (!proCodeEntered) {
+                                setState(() {
+                                  proCodeEntered = true;
+                                });
+                                var a = await _handleScan();
+
+                                setState(() {
+                                  proCodeEntered = false;
+                                });
+                              }
                             });
                           },
                           readOnly: isMobile,
@@ -453,8 +488,16 @@ class _CartState extends State<Cart> {
                           // showCursor: false,
                           controller: itemCodeEditingController,
                           textInputAction: TextInputAction.done,
-                          onEditingComplete: () {
-                            _handleScan();
+                          onEditingComplete: () async {
+                            if (!proCodeEntered) {
+                              setState(() {
+                                proCodeEntered = true;
+                              });
+                              var a = await _handleScan();
+                              setState(() {
+                                proCodeEntered = false;
+                              });
+                            }
                           },
                           decoration: InputDecoration(
                               prefixIcon: Icon(Icons.search),
@@ -497,10 +540,14 @@ class _CartState extends State<Cart> {
                                           selectedRep?.sACODE ?? '';
                                     }
                                   });
+                                  focusNode.requestFocus();
+                                  itemCodeFocus.requestFocus();
                                 } else {
                                   EasyLoading.showError(
                                       'general_dialog.sales_assist_no_products'
                                           .tr());
+                                  focusNode.requestFocus();
+                                  itemCodeFocus.requestFocus();
                                 }
                               },
                             ),
@@ -573,7 +620,8 @@ class _CartState extends State<Cart> {
     TextEditingController qtyController =
         TextEditingController(text: qty.toString());
     double newqty = 1;
-
+    ProductResult? returnProRes;
+    List<bool> selected;
     if (code.contains(symbol)) {
       //  split it lhs is qty
       final split = code.split(symbol);
@@ -631,157 +679,277 @@ class _CartState extends State<Cart> {
             resList.proPrices, resList.proTax,
             secondApiCall: true, scaleBarcode: isScaleBarcode);
         if (res.returnBottleCode != null && res.returnBottleCode!.isNotEmpty) {
-          var returnProRes =
-              await calculator.searchProduct(res.returnBottleCode!);
-          if (returnProRes != null && returnProRes.product != null) {
-            await showGeneralDialog(
-                context: context,
-                transitionDuration: const Duration(milliseconds: 200),
-                barrierDismissible: false,
-                barrierLabel: '',
-                transitionBuilder: (context, a, b, _) => Transform.scale(
-                    scale: a.value,
-                    child: AlertDialog(
-                      title: Center(
-                          child: Text('general_dialog.empty_bottle_hed'.tr())),
-                      content: Container(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10.0, bottom: 30),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: 100.r,
-                                    child: CachedNetworkImage(
-                                      httpHeaders: {
-                                        'Access-Control-Allow-Origin': '*'
-                                      },
-                                      imageUrl: (POSConfig().posImageServer +
-                                          "images/products/" +
-                                          returnProRes.product!.first.pLUCODE! +
-                                          '.png'),
-                                      errorWidget: (context, url, error) =>
-                                          Image.asset(
-                                              'assets/images/empty_bottle.png'),
-                                      imageBuilder: (context, image) {
-                                        return Card(
-                                          elevation: 5,
-                                          color: CurrentTheme.primaryColor,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(
-                                                  POSConfig()
-                                                      .rounderBorderRadiusBottomLeft),
-                                              bottomRight: Radius.circular(
-                                                  POSConfig()
-                                                      .rounderBorderRadiusBottomRight),
-                                              topLeft: Radius.circular(POSConfig()
-                                                  .rounderBorderRadiusTopLeft),
-                                              topRight: Radius.circular(POSConfig()
-                                                  .rounderBorderRadiusTopRight),
-                                            ),
-                                            child: Image(
-                                              image: image,
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text(
-                                        "${returnProRes.product!.first.pLUCODE} \n${returnProRes.product!.first.pLUPOSDESC}"),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(child: Text('Quantity:')),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.2,
-                                  child: TextField(
-                                    controller: qtyController,
-                                    keyboardType: TextInputType.number,
-                                    onTap: () {
-                                      qtyController.clear();
-                                      KeyBoardController().init(context);
-                                      KeyBoardController().showBottomDPKeyBoard(
-                                          qtyController, onEnter: () async {
-                                        newqty =
-                                            double.parse(qtyController.text);
-                                        KeyBoardController().dismiss();
-                                        Navigator.pop(context);
-                                        //  add to cart
-                                        await calculator.addItemToCart(
-                                            returnProRes.product!.first,
-                                            newqty,
-                                            context,
-                                            returnProRes.prices,
-                                            returnProRes.proPrices,
-                                            returnProRes.proTax,
-                                            secondApiCall: false,
-                                            scaleBarcode: isScaleBarcode);
-                                      });
-                                    },
-                                    onEditingComplete: () {
-                                      newqty = double.parse(qtyController.text);
-                                    },
-                                  ),
-                                )
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-                                          //  add to cart
-                                          await calculator.addItemToCart(
-                                              returnProRes.product!.first,
-                                              newqty,
-                                              context,
-                                              returnProRes.prices,
-                                              returnProRes.proPrices,
-                                              returnProRes.proTax,
-                                              secondApiCall: false,
-                                              scaleBarcode: isScaleBarcode);
-                                        },
-                                        child: Text('Add')),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                            'general_dialog.empty_bottle_cancel'
-                                                .tr())),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )),
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return SizedBox();
-                });
+          List<String> returnBottleCodes =
+              res.returnBottleCode!.split(',') ?? [];
+          List<ProductResult?> returnProResList = [];
+          for (String code in returnBottleCodes) {
+            var res = await calculator.searchProduct(code);
+            if (res != null &&
+                res.product != null &&
+                res.product?.length != 0) {
+              returnProResList.add(res);
+            }
+          }
+          if (returnProResList.isNotEmpty) {
+            await showModalBottomSheet(
+              isScrollControlled: true,
+              useRootNavigator: true,
+              context: context!,
+              builder: (context) {
+                return ReturnBottleSelectionView(
+                    returnProResList: returnProResList);
+              },
+            );
+            // ProductResult? returnProRes =
+            // await showGeneralDialog(
+            //     context: context,
+            //     transitionDuration: const Duration(milliseconds: 200),
+            //     barrierDismissible: true,
+            //     barrierLabel: '',
+            //     pageBuilder: (context, animation, secondaryAnimation) {
+            //       return SizedBox();
+            //     },
+            //     transitionBuilder: (context, a, b, _) => Transform.scale(
+            //           scale: a.value,
+            //           child: StatefulBuilder(
+            //             builder: (context, setState) => AlertDialog(
+            //               title: Center(
+            //                   child: Text(
+            //                       'general_dialog.empty_bottle_select'.tr())),
+            //               content: Row(
+            //                 children: [
+            //                   Container(
+            //                     width: MediaQuery.of(context).size.width * 0.5,
+            //                     height: MediaQuery.of(context).size.width * 0.5,
+            //                     child: ListView.builder(
+            //                         itemCount: returnProResList.length,
+            //                         itemBuilder: (context, index) {
+            //                           var pro = returnProResList[index];
+            //                           selected = List.generate(
+            //                               returnProResList.length,
+            //                               (index) => pro == returnProRes);
+            //                           return InkWell(
+            //                             onTap: () {
+            //                               setState(() {
+            //                                 returnProRes = pro;
+            //                                 selected[index] = true;
+            //                               });
+
+            //                               _qtyKeyboard(qtyController,
+            //                                   returnProRes, isScaleBarcode);
+            //                             },
+            //                             child: ListTile(
+            //                               selected: selected[index],
+            //                               selectedTileColor:
+            //                                   CurrentTheme.primaryColor,
+            //                               title: Row(
+            //                                 children: [
+            //                                   Text(
+            //                                     pro!.product!.first
+            //                                             .pLUSTOCKCODE ??
+            //                                         'N/A',
+            //                                     overflow: TextOverflow.ellipsis,
+            //                                     style: TextStyle(
+            //                                         fontWeight:
+            //                                             FontWeight.bold),
+            //                                   ),
+            //                                   SizedBox(
+            //                                     width: 20,
+            //                                   ),
+            //                                   Text(
+            //                                     (pro!.product!.first
+            //                                                 .pLUPOSDESC ??
+            //                                             'N/A') +
+            //                                         '   -   ' +
+            //                                         pro!.product!.first
+            //                                             .sELLINGPRICE!
+            //                                             .toStringAsFixed(2),
+            //                                     overflow: TextOverflow.ellipsis,
+            //                                     style: TextStyle(
+            //                                         fontWeight:
+            //                                             FontWeight.bold),
+            //                                   ),
+            //                                 ],
+            //                               ),
+            //                             ),
+            //                           );
+            //                         }),
+            //                   ),
+            //                   (returnProRes == null)
+            //                       ? SizedBox.shrink()
+            //                       : Padding(
+            //                           padding:
+            //                               const EdgeInsets.only(right: 16.0),
+            //                           child: VerticalDivider(
+            //                             width: 2,
+            //                           ),
+            //                         ),
+            //                   (returnProRes == null)
+            //                       ? SizedBox.shrink()
+            //                       : Expanded(
+            //                           // width: MediaQuery.of(context).size.width *
+            //                           //     0.3,
+            //                           child: Container(
+            //                             child: Column(
+            //                               mainAxisSize: MainAxisSize.min,
+            //                               children: [
+            //                                 Padding(
+            //                                   padding: const EdgeInsets.only(
+            //                                       top: 10.0, bottom: 30),
+            //                                   child: Row(
+            //                                     children: [
+            //                                       Container(
+            //                                         height: 100.r,
+            //                                         child: CachedNetworkImage(
+            //                                           httpHeaders: {
+            //                                             'Access-Control-Allow-Origin':
+            //                                                 '*'
+            //                                           },
+            //                                           imageUrl: (POSConfig()
+            //                                                   .posImageServer +
+            //                                               "images/products/" +
+            //                                               returnProRes!.product!
+            //                                                   .first.pLUCODE! +
+            //                                               '.png'),
+            //                                           errorWidget: (context,
+            //                                                   url, error) =>
+            //                                               Image.asset(
+            //                                                   'assets/images/empty_bottle.png'),
+            //                                           imageBuilder:
+            //                                               (context, image) {
+            //                                             return Card(
+            //                                               elevation: 5,
+            //                                               color: CurrentTheme
+            //                                                   .primaryColor,
+            //                                               child: ClipRRect(
+            //                                                 borderRadius:
+            //                                                     BorderRadius
+            //                                                         .only(
+            //                                                   bottomLeft: Radius
+            //                                                       .circular(
+            //                                                           POSConfig()
+            //                                                               .rounderBorderRadiusBottomLeft),
+            //                                                   bottomRight: Radius
+            //                                                       .circular(
+            //                                                           POSConfig()
+            //                                                               .rounderBorderRadiusBottomRight),
+            //                                                   topLeft: Radius
+            //                                                       .circular(
+            //                                                           POSConfig()
+            //                                                               .rounderBorderRadiusTopLeft),
+            //                                                   topRight: Radius
+            //                                                       .circular(
+            //                                                           POSConfig()
+            //                                                               .rounderBorderRadiusTopRight),
+            //                                                 ),
+            //                                                 child: Image(
+            //                                                   image: image,
+            //                                                   fit: BoxFit
+            //                                                       .contain,
+            //                                                 ),
+            //                                               ),
+            //                                             );
+            //                                           },
+            //                                         ),
+            //                                       ),
+            //                                       Padding(
+            //                                         padding:
+            //                                             const EdgeInsets.only(
+            //                                                 left: 8.0),
+            //                                         child: Text(
+            //                                           "${returnProRes?.product!.first.pLUCODE} \n${returnProRes?.product!.first.pLUPOSDESC}",
+            //                                           overflow:
+            //                                               TextOverflow.ellipsis,
+            //                                         ),
+            //                                       )
+            //                                     ],
+            //                                   ),
+            //                                 ),
+            //                                 Row(
+            //                                   children: [
+            //                                     SizedBox(
+            //                                         child: Text('Quantity:')),
+            //                                     SizedBox(
+            //                                       width: 10,
+            //                                     ),
+            //                                     SizedBox(
+            //                                       width: size.width * 0.2,
+            //                                       child: TextField(
+            //                                         autofocus: true,
+            //                                         controller: qtyController,
+            //                                         keyboardType:
+            //                                             TextInputType.number,
+            //                                         onTap: () {
+            //                                           qtyController.clear();
+            //                                           _qtyKeyboard(
+            //                                               qtyController,
+            //                                               returnProRes,
+            //                                               isScaleBarcode);
+            //                                         },
+            //                                         onEditingComplete: () {
+            //                                           newqty = double.parse(
+            //                                               qtyController.text);
+            //                                         },
+            //                                       ),
+            //                                     )
+            //                                   ],
+            //                                 ),
+            //                                 Center(
+            //                                   child: Padding(
+            //                                     padding: const EdgeInsets.only(
+            //                                         top: 16.0),
+            //                                     child: Row(
+            //                                       mainAxisAlignment:
+            //                                           MainAxisAlignment.center,
+            //                                       crossAxisAlignment:
+            //                                           CrossAxisAlignment.center,
+            //                                       children: [
+            //                                         Padding(
+            //                                           padding:
+            //                                               const EdgeInsets.all(
+            //                                                   8.0),
+            //                                           child: ElevatedButton(
+            //                                               onPressed: () async {
+            //                                                 Navigator.pop(
+            //                                                     context);
+            //                                                 //  add to cart
+            //                                                 await calculator.addItemToCart(
+            //                                                     returnProRes!
+            //                                                         .product!
+            //                                                         .first,
+            //                                                     newqty,
+            //                                                     context,
+            //                                                     returnProRes!
+            //                                                         .prices,
+            //                                                     returnProRes!
+            //                                                         .proPrices,
+            //                                                     returnProRes!
+            //                                                         .proTax,
+            //                                                     secondApiCall:
+            //                                                         false,
+            //                                                     scaleBarcode:
+            //                                                         isScaleBarcode);
+            //                                               },
+            //                                               child: Text('Add')),
+            //                                         ),
+            //                                       ],
+            //                                     ),
+            //                                   ),
+            //                                 )
+            //                               ],
+            //                             ),
+            //                           ),
+            //                         ),
+            //                 ],
+            //               ),
+            //               actions: [
+            //                 ElevatedButton(
+            //                     onPressed: () => Navigator.pop(context, null),
+            //                     child: Text('Cancel'))
+            //               ],
+            //             ),
+            //           ),
+            //         ));
           }
         }
       }
@@ -804,6 +972,96 @@ class _CartState extends State<Cart> {
         },
       );
       // Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductSearchView(keyword: temp)));
+    }
+  }
+
+  void _qtyKeyboard(TextEditingController qtyController, var returnProRes,
+      bool isScaleBarcode) async {
+    // KeyBoardController().dismiss();
+    if (POSConfig().touchKeyboardEnabled) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.transparent,
+            alignment: Alignment.bottomCenter,
+            content: SizedBox(
+              width: 450.w,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      )),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Tooltip(
+                    message: 'quantity',
+                    child: TextField(
+                      // onEditingComplete: () => searchItem(),
+                      onSubmitted: (value) async {
+                        Navigator.pop(context);
+                        await calculator.addItemToCart(
+                            returnProRes!.product!.first,
+                            double.parse(qtyController.text),
+                            context,
+                            returnProRes!.prices,
+                            returnProRes!.proPrices,
+                            returnProRes!.proTax,
+                            secondApiCall: false,
+                            scaleBarcode: isScaleBarcode);
+                        Navigator.pop(context);
+                      },
+                      controller: qtyController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                          hintStyle: CurrentTheme.headline6!
+                              .copyWith(color: CurrentTheme.primaryDarkColor),
+                          hintText: '',
+                          filled: true),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  POSKeyBoard(
+                    color: Colors.transparent,
+                    onPressed: () {
+                      //_customerCodeEditingController.clear();
+                      if (qtyController.text.length != 0) {
+                        qtyController.text = qtyController.text
+                            .substring(0, qtyController.text.length - 1);
+                      }
+                    },
+                    clearButton: true,
+                    isInvoiceScreen: false,
+                    disableArithmetic: true,
+                    onEnter: () async {
+                      Navigator.pop(context);
+                      await calculator.addItemToCart(
+                          returnProRes!.product!.first,
+                          double.parse(qtyController.text),
+                          context,
+                          returnProRes!.prices,
+                          returnProRes!.proPrices,
+                          returnProRes!.proTax,
+                          secondApiCall: false,
+                          scaleBarcode: isScaleBarcode);
+                      Navigator.pop(context);
+                    },
+                    controller: qtyController,
+                    // nextFocusTo: editingFocusNode,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
     }
   }
 
@@ -894,12 +1152,24 @@ class _CartState extends State<Cart> {
       return;
     }
     if ((cartBloc.currentCart?.length ?? 0) == 0) {
-      DualScreenController().setView('invoice');
+      if (POSConfig().dualScreenWebsite != "")
+        DualScreenController().setView('invoice');
     }
     if (gvMode) {
       await _handleGiftVoucher();
     } else {
       await _handleProductSearch();
+      setState(() {
+        proCodeEntered = false;
+        itemCodeFocus.requestFocus();
+      });
+      var lastItem = cartBloc.currentCart?.values.last;
+      if (POSConfig().enablePollDisplay == 'true' && lastItem != null) {
+        usbSerial.sendToSerialDisplay(
+            '${usbSerial.addSpacesBack(lastItem.posDesc, 20)}');
+        usbSerial.sendToSerialDisplay(
+            'x${usbSerial.addSpacesBack(lastItem.unitQty.toString(), 5)}${usbSerial.addSpacesFront(lastItem.amount.toStringAsFixed(2), 14)}');
+      }
     }
     scrollToBottom();
   }
@@ -933,58 +1203,107 @@ class _CartState extends State<Cart> {
           String items = "${data?.items ?? 0}";
           String qty = data?.qty.qtyFormatter() ?? "0.0";
           String subtotal = "${(data?.subTotal ?? 0).thousandsSeparator()}";
-          String lines = "";
+          String lines = (cartBloc.currentCart)?.length.toString() ?? '0';
 
           return Card(
               color: CurrentTheme.primaryColor,
               margin: EdgeInsets.zero,
               child: Container(
-                padding: EdgeInsets.all(8.r),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                // width: double.maxFinite,
+                // height: 50,
+                padding: EdgeInsets.only(
+                    top: 8.r, bottom: 8.r, right: 12.r, left: 12.r),
+                child:
+
+                    // Marquee(
+                    //   text: 'Total Lines: $lines    ' +
+                    //       'invoice.item'.tr() +
+                    //       ': $items    ' +
+                    //       'invoice.quantity'.tr() +
+                    //       ': $qty    ' +
+                    //       'invoice.sub_total'.tr() +
+                    //       ': $subtotal   ||',
+                    //   velocity: 30,
+                    //   blankSpace: 20,
+                    // ),
+
+                    Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Spacer(),
-                    Text(
-                      'invoice.item'.tr() + ':',
-                      style: style1,
+                    // Spacer(),
+                    Row(
+                      children: [
+                        Text(
+                          'invoice.line'.tr() + ':',
+                          style: style1,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          lines,
+                          style: style1Bold,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 3,
+                    Row(
+                      children: [
+                        Text(
+                          'invoice.item'.tr() + ':',
+                          style: style1,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          items,
+                          style: style1Bold,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                      ],
                     ),
-                    Text(
-                      items,
-                      style: style1Bold,
+
+                    Row(
+                      children: [
+                        Text(
+                          'invoice.quantity'.tr() + ':',
+                          style: style1,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          qty,
+                          style: style1Bold,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'invoice.quantity'.tr() + ':',
-                      style: style1,
-                    ),
-                    SizedBox(
-                      width: 3,
-                    ),
-                    Text(
-                      qty,
-                      style: style1Bold,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'invoice.sub_total'.tr() + ':',
-                      style: style1,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      subtotal,
-                      style: style1Bold,
-                    ),
-                    Spacer(),
+                    Row(
+                      children: [
+                        Text(
+                          'invoice.sub_total'.tr() + ':',
+                          style: style1,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          subtotal,
+                          style: style1Bold,
+                        ),
+                      ],
+                    )
+
+                    // Spacer(),
                   ],
                 ),
               ));
@@ -1406,7 +1725,10 @@ class _CartState extends State<Cart> {
     } else if ((cartModel.billDiscPer ?? zero) > zero) {
       discountText = "${cartModel.billDiscPer?.toStringAsFixed(2)}%";
     }
-    String code = cartModel.stockCode;
+    String code =
+        (cartModel.varientEnabled == true || cartModel.batchEnabled == true)
+            ? cartModel.stockCode
+            : cartModel.proCode;
     if (code.isEmpty) {
       code = cartModel.proCode;
     }
@@ -1712,6 +2034,13 @@ class _CartState extends State<Cart> {
               //     primary: posButton.buttonNormalColor.toColor()),
               onPressed: () async {
                 /// new change by [TM.Sakir]
+                if (POSConfig().localMode == true &&
+                    posButton.functionName == 'special_function') {
+                  EasyLoading.showError(
+                      'special_functions.cant_open_local'.tr());
+                  return;
+                }
+
                 /// if cartBloc.cartSummary has items disabling 'special_function' button
                 if (cartBloc.cartSummary?.items != 0 &&
                     posButton.functionName == 'special_function') {
@@ -1774,6 +2103,7 @@ class _CartState extends State<Cart> {
                   scrollToBottom();
                   clearSelection();
                   focusNode.requestFocus();
+                  itemCodeFocus.requestFocus();
                 }
               },
             ),
@@ -1827,7 +2157,8 @@ class _CartState extends State<Cart> {
                     },
                 isInvoiceScreen: false,
                 controller:
-                    widget.replaceController ?? itemCodeEditingController),
+                    widget.replaceController ?? itemCodeEditingController,
+                nextFocusTo: itemCodeFocus),
           ),
         ),
         SizedBox(
@@ -1842,6 +2173,7 @@ class _CartState extends State<Cart> {
                             POSConfig().primaryDarkGrayColor.toColor()),
                     onPressed: () {
                       billClose();
+                      itemCodeFocus.requestFocus();
                     },
                     child: Text("invoice.bill_close".tr())))
       ],
@@ -1858,6 +2190,9 @@ class _CartState extends State<Cart> {
         active = false;
       });
 
+    /// new change-by [TM.Sakir] this [taxCalculation()] is moved to here from payment view.
+    /// reason: when customer return the product, we should calculate tax and return the paid tax of that product to the customer.
+    POSPriceCalculator().taxCalculation();
     //check void
     final cartList = cartBloc.currentCart?.values.toList() ?? [];
     final voidCount =
@@ -1988,8 +2323,86 @@ class _CartState extends State<Cart> {
     focus = false;
     clearSelection();
 
-    //load promotions
     EasyLoading.dismiss();
+
+    /// For checking the sih again when proceed to pay - by [TM.Sakir]
+    List<CartModel> minusNotAllowedItems = [];
+    cartList.forEach((element) {
+      if (element.allowMinus != true &&
+          element.userAllowedMinus != true &&
+          element.itemVoid != true) {
+        minusNotAllowedItems.add(element);
+      }
+    });
+
+    if (minusNotAllowedItems.length != 0) {
+      List<Map<String, dynamic>> minusNotAllowedItemsMap = List.generate(
+          minusNotAllowedItems.length,
+          (index) => {
+                "stock_code": minusNotAllowedItems[index].stockCode,
+                "qty": minusNotAllowedItems[index].unitQty
+              });
+      // <--- apicall for getting sih --->
+      List res = await ProductController()
+          .getStockInHandDetails(minusNotAllowedItemsMap);
+      if (res.length != 0) {
+        String proDetails = '';
+        res.forEach((element) {
+          proDetails += '\n' +
+              '[Code: ${element['stockCode']}  Qty: ${element['qty']}  SIH: ${element['sih']}]';
+        });
+        final bool? skipMinusProductInfoDialog = await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  'invoice.no_stock'.tr(),
+                  textAlign: TextAlign.center,
+                ),
+                content: Text(
+                  'invoice.no_stock_detail'.tr() + '\n$proDetails',
+                  textAlign: TextAlign.center,
+                ),
+                actions: [
+                  AlertDialogButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      text: 'invoice.stock_no'.tr()),
+                  AlertDialogButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      text: 'invoice.stock_yes'.tr()),
+                ],
+              );
+            });
+
+        bool allowMinusRes = false;
+
+        if (skipMinusProductInfoDialog == true) {
+          allowMinusRes = await allowMinusAlert(context,
+              cartBloc.cartSummary?.invoiceNo ?? '${res.toString()}', '', 0);
+          if (allowMinusRes == true) {
+            for (int i = 0; i < res.length; i++) {
+              if (res[i]['sih'] < res[i]['qty']) {
+                AuditLogController().updateAuditLog(
+                    PermissionCode.stockBypass,
+                    'A',
+                    '${cartBloc.cartSummary?.invoiceNo}@${res[i]['stockCode']}@${res[i]['qty'].toString()}',
+                    'Permission approved through reason and password.',
+                    userBloc.currentUser?.uSERHEDUSERCODE ?? "");
+              }
+            }
+          } else {
+            return;
+          }
+        } else {
+          return;
+        }
+      }
+    }
+
+    ///------------------------------------------------------------------------------------------------------------
+
+    //load promotions
+    // EasyLoading.dismiss();
     await PromotionController(context).applyPromotion();
 
     await showModalBottomSheet(
@@ -2005,7 +2418,33 @@ class _CartState extends State<Cart> {
     });
   }
 
+  Future<bool> allowMinusAlert(BuildContext context, String invNo,
+      String proStockCode, double qty) async {
+    // handle permission
+    SpecialPermissionHandler handler =
+        SpecialPermissionHandler(context: context);
+    String code = PermissionCode.stockBypass;
+    String type = "A";
+    String refCode =
+        invNo + "@" + (proStockCode ?? "") + "@" + qty.toDouble().toString();
+    bool permissionStatus = handler.hasPermission(
+        permissionCode: code, accessType: type, refCode: refCode);
+    if (!permissionStatus) {
+      bool success = (await handler.askForPermission(
+              accessType: type, permissionCode: code, refCode: refCode))
+          .success;
+      return success;
+    }
+    return permissionStatus;
+  }
+
   Future _exchangeVoucher(double totalAmount) async {
+    double subTotal = cartBloc.cartSummary?.subTotal ?? 0;
+    cartBloc.cartSummarySnapshot.listen((event) {
+      subTotal = event.subTotal;
+      if (mounted) setState(() {});
+    });
+    totalAmount = subTotal;
     totalAmount = totalAmount * -1;
     double zero = 0;
     bool isZero = totalAmount == 0;

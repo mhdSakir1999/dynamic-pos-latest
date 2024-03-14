@@ -18,20 +18,25 @@ class CustomerHelper {
 
     // fetch permission list
     final userCode = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
-    final permissionList =
-    await AuthController().getUserPermissionListByUserCode(userCode);
+    // final permissionList =
+    // await AuthController().getUserPermissionListByUserCode(userCode);
+
+    // hasPermission = SpecialPermissionHandler(context: context)
+    //     .hasPermissionInList(permissionList?.userRights ?? [],
+    //     PermissionCode.customerMaster, "A", userCode);
+    final permissionList = userBloc.userDetails?.userRights;
 
     hasPermission = SpecialPermissionHandler(context: context)
-        .hasPermissionInList(permissionList?.userRights ?? [],
-        PermissionCode.customerMaster, "A", userCode);
+        .hasPermissionInList(permissionList ?? [],
+            PermissionCode.customerMaster, "A", userCode);
 
     //if user doesnt have the permission
     if (!hasPermission) {
       final res = await SpecialPermissionHandler(context: context)
           .askForPermission(
-          permissionCode: PermissionCode.customerMaster,
-          accessType: code,
-          refCode: DateTime.now().toIso8601String());
+              permissionCode: PermissionCode.customerMaster,
+              accessType: code,
+              refCode: DateTime.now().toIso8601String());
       hasPermission = res.success;
     }
     return hasPermission;

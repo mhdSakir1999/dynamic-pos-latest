@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 5/6/21, 4:33 PM
  */
 
@@ -15,6 +15,7 @@ import 'package:checkout/controllers/payment_mode_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_alerts/pos_lottie_alert.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/controllers/time_controller.dart';
@@ -45,6 +46,7 @@ class LandingHelper {
   final AuthController _authController;
   final LandingAlertController _alertController;
   FocusNode alertFocusNode = FocusNode();
+  ScrollController scrollController = ScrollController();
 
   LandingHelper(this._context, this._authController, this._alertController);
 
@@ -306,8 +308,15 @@ class LandingHelper {
         customerBloc.changeCurrentCustomer(null);
         final user = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
         await _authController.checkUsername(user);
-        DualScreenController().setView('closed');
-        await PrintController().signOffSlip();
+        if (POSConfig().dualScreenWebsite != "")
+          DualScreenController().setView('closed');
+
+        if (POSConfig.crystalPath != '') {
+          await PrintController().signOffSlip();
+        } else {
+          await POSManualPrint().printSignSlip(data: '', slipType: 'signoff');
+        }
+
         // userBloc.clear();
         EasyLoading.dismiss();
         cartBloc.resetCart();
@@ -669,7 +678,7 @@ class LandingHelper {
               builder: (context) => ShiftReconciliationEntryView(
                 pendingSignoff: (_continue['type'] == 'pending_user')
                     ? true
-                    : false, //new chang -- passing a flag to identify the current_user of pending_user(get from pending sign off dialog window)
+                    : false, //new change -- passing a flag to identify the current_user of pending_user(get from pending sign off dialog window)
                 denominationsList: temp,
               ),
             ));
@@ -791,99 +800,107 @@ class LandingHelper {
                                 )
                               ],
                             ),
-                            Container(
-                              height: size.height * 0.3,
-                              child: (list != null && len > 0)
-                                  ? ListView.builder(
-                                      physics: BouncingScrollPhysics(),
-                                      itemCount: len,
-                                      itemBuilder: (context, index) {
-                                        return InkWell(
-                                          onTap: (() {
-                                            Navigator.pop(context, {
-                                              'type': 'pending_user',
-                                              'selected_index': index
-                                            });
-                                          }),
-                                          child: Container(
-                                            height: (size.height * 0.3) / 4,
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                      list[index]
-                                                              .uSERHEDUSERCODE ??
-                                                          '--',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 20)),
-                                                  flex: 2,
-                                                ),
-                                                Expanded(
-                                                  child: Text(
-                                                      list[index]
-                                                              .uSERHEDTITLE ??
-                                                          '--',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 20)),
-                                                  flex: 2,
-                                                ),
-                                                Expanded(
-                                                  child: Text(
-                                                    list[index]
-                                                            .uSERHEDSTATIONID ??
-                                                        '--',
-                                                    textAlign: TextAlign.center,
-                                                    style:
-                                                        TextStyle(fontSize: 20),
+                            Scrollbar(
+                              controller: scrollController,
+                              thumbVisibility: true,
+                              thickness: 25,
+                              child: Container(
+                                height: size.height * 0.3,
+                                child: (list != null && len > 0)
+                                    ? ListView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        controller: scrollController,
+                                        itemCount: len,
+                                        itemBuilder: (context, index) {
+                                          return InkWell(
+                                            onTap: (() {
+                                              Navigator.pop(context, {
+                                                'type': 'pending_user',
+                                                'selected_index': index
+                                              });
+                                            }),
+                                            child: Container(
+                                              height: (size.height * 0.3) / 4,
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                        list[index]
+                                                                .uSERHEDUSERCODE ??
+                                                            '--',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                    flex: 2,
                                                   ),
-                                                  flex: 2,
-                                                ),
-                                                Expanded(
-                                                  child: Text(
-                                                      (list[index].uSERHEDSIGNONDATE ??
-                                                              '-- 00:00:00')
-                                                          .replaceAll(
-                                                              " 00:00:00", ""),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 20)),
-                                                  flex: 2,
-                                                ),
-                                                Expanded(
-                                                  child: Text(
+                                                  Expanded(
+                                                    child: Text(
+                                                        list[index]
+                                                                .uSERHEDTITLE ??
+                                                            '--',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                    flex: 2,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
                                                       list[index]
-                                                              .uSERHEDSIGNOFFDATE ??
+                                                              .uSERHEDSTATIONID ??
                                                           '--',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
-                                                          fontSize: 20)),
-                                                  flex: 2,
-                                                ),
-                                                Expanded(
-                                                  child: Text(
-                                                      list[index].shiftNo ??
-                                                          '--',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 20)),
-                                                  flex: 1,
-                                                ),
-                                              ],
+                                                          fontSize: 20),
+                                                    ),
+                                                    flex: 2,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                        (list[index].uSERHEDSIGNONDATE ??
+                                                                '-- 00:00:00')
+                                                            .replaceAll(
+                                                                " 00:00:00",
+                                                                ""),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                    flex: 2,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                        list[index]
+                                                                .uSERHEDSIGNOFFDATE ??
+                                                            '--',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                    flex: 2,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                        list[index].shiftNo ??
+                                                            '--',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                    flex: 1,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      })
-                                  : Center(
-                                      child: Text(
-                                          'landing_view.no_mng_signoff'.tr()),
-                                    ),
+                                          );
+                                        })
+                                    : Center(
+                                        child: Text(
+                                            'landing_view.no_mng_signoff'.tr()),
+                                      ),
+                              ),
                             ),
                             SizedBox(
                               height: size.height / 30,

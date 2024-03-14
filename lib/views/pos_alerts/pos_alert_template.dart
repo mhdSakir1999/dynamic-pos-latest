@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/22/21, 5:33 PM
  */
 import 'package:checkout/components/components.dart';
@@ -209,12 +209,12 @@ class POSAlertTemplate extends StatelessWidget {
                                     text2FocusNode.requestFocus();
                                 },
                                 onTap: () {
-                                  KeyBoardController().dismiss();
+                                  // KeyBoardController().dismiss();
                                   KeyBoardController().showBottomDPKeyBoard(
                                       textEditingController1!,
                                       obscureText: obscure1, onEnter: () {
                                     KeyBoardController().dismiss();
-                                  });
+                                  }, buildContext: context);
                                 },
                               ),
                             SizedBox(
@@ -240,12 +240,12 @@ class POSAlertTemplate extends StatelessWidget {
                                         text3FocusNode.requestFocus();
                                     },
                                     onTap: () {
-                                      KeyBoardController().dismiss();
+                                      // KeyBoardController().dismiss();
                                       KeyBoardController().showBottomDPKeyBoard(
                                           textEditingController2!,
                                           obscureText: obscure2, onEnter: () {
                                         KeyBoardController().dismiss();
-                                      });
+                                      }, buildContext: context);
                                     },
                                   ),
                             SizedBox(
@@ -273,7 +273,7 @@ class POSAlertTemplate extends StatelessWidget {
                                           textEditingController3!,
                                           obscureText: obscure3, onEnter: () {
                                         KeyBoardController().dismiss();
-                                      });
+                                      }, buildContext: context);
                                     },
                                   ),
                             SizedBox(

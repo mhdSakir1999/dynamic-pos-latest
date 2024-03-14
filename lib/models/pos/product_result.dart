@@ -28,7 +28,7 @@ class ProductResult {
     // product =
     //     json['product'] != null ? new Product.fromJson(json['product']) : null;
     final List<dynamic> products = json['product'] ?? [];
-    product = products.map((e) => Product.fromJson(e)).toList();
+    product = products.take(20).map((e) => Product.fromJson(e)).toList();
     status = json['status'];
     if (json['prices'] != null) {
       prices = <ProductPriceChanges>[];
@@ -91,6 +91,8 @@ class Product {
   bool? posActive;
   String? vendorPLU;
   String? returnBottleCode;
+  bool? varientEnable;
+  bool? batchEnable;
 
   Product(
       {this.sCANCODE,
@@ -103,7 +105,8 @@ class Product {
       this.caseSize,
       this.pluDecimal,
       this.sIH,
-      this.returnBottleCode});
+      this.returnBottleCode,
+      this.varientEnable});
 
   Product.fromJson(Map<String, dynamic> json) {
     String tempImage = json['imagE_PATH']?.toString() ?? "";
@@ -141,6 +144,8 @@ class Product {
     posActive = json['plU_POSACTIVE']?.toString().parseBool() ?? false;
     vendorPLU = json['plU_VENDORPLU'] ?? '';
     returnBottleCode = json['plU_RETURN'];
+    varientEnable = json['plU_VARIANTANABLE'];
+    batchEnable = json['plU_BATCHENABLE'];
   }
 
   Map<String, dynamic> toJson() {

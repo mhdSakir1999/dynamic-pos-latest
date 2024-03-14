@@ -337,4 +337,3 @@ Future<void> _checkServerStatus(BuildContext context) async {
     },
   );
 }
-

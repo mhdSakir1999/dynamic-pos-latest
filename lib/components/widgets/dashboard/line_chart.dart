@@ -201,9 +201,9 @@ class LineChartView extends StatelessWidget {
           // FlSpot(29.0, 20837.0),
           // FlSpot(30.0, 14495.65)
 
-          FlSpot(8.0, 4.751),
+          FlSpot(5.0, 4.751),
           FlSpot(10.0, 13.502),
-          FlSpot(22.0, 3.04024),
+          FlSpot(22.0, 31.04024),
           FlSpot(23.0, 2.752),
           FlSpot(24.0, 51.4276),
           FlSpot(27.0, 2.2344),
@@ -253,8 +253,8 @@ class LineChartView extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       sampleData1,
-     // swapAnimationDuration: const Duration(milliseconds: 250),
-     duration: const Duration(milliseconds: 250),
+      // swapAnimationDuration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
     );
   }
 }

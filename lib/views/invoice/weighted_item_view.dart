@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 7/12/21, 5:24 PM
  */
 
@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/group_bloc.dart';
 import 'package:checkout/components/components.dart';
+import 'package:checkout/components/mypos_screen_utils.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/components/widgets/poskeyboard.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
@@ -18,6 +19,7 @@ import 'package:checkout/models/pos/cart_summary_model.dart';
 import 'package:checkout/models/pos/product_result.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/views/invoice/invoice_app_bar.dart';
+import 'package:checkout/views/invoice/returnBottle_selection_view.dart';
 
 import 'package:flutter/material.dart';
 import 'package:checkout/extension/extensions.dart';
@@ -36,11 +38,12 @@ class WeightedItemView extends StatefulWidget {
 
 class _WeightedItemViewState extends State<WeightedItemView> {
   TextEditingController editingController = TextEditingController();
+  final POSPriceCalculator calculator = POSPriceCalculator();
   FocusNode textFocus = FocusNode();
   bool quickSearch = true;
   Groups? selectedGroup;
   POSConfig config = POSConfig();
-  final desireWidthMultiplier = .5;
+  final desireWidthMultiplier = .25;
   Product? selectedProduct;
   double qty = 0;
   List<Product> productList = [];
@@ -109,7 +112,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
       children: [
         Card(
             child: Padding(
-          padding: EdgeInsets.all(10.0.h),
+          padding: EdgeInsets.all(6.0.h),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -126,8 +129,9 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                   ),
                   Text(
                     "weighted_item.title".tr(),
-                    style: CurrentTheme.bodyText2!
-                        .copyWith(color: CurrentTheme.primaryColor),
+                    style: CurrentTheme.bodyText2!.copyWith(
+                        color: CurrentTheme.primaryColor,
+                        fontSize: 15 * getFontSize()),
                   ),
                 ],
               ),
@@ -145,16 +149,23 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                         break;
                     }
                     if (mounted) setState(() {});
+                    textFocus.requestFocus();
                   },
                   child: Text('exit'))
             ],
           ),
         )),
         Expanded(child: buildLSHContent()),
-        lineSpace(),
-        buildBottomCard(),
-        buildGroupDetailsCard(),
-        buildProductDetailsCard(),
+        _viewStatus != _ViewStatus.Product ? SizedBox.shrink() : lineSpace(),
+        _viewStatus != _ViewStatus.Product
+            ? SizedBox.shrink()
+            : buildBottomCard(),
+        _viewStatus != _ViewStatus.Product
+            ? SizedBox.shrink()
+            : buildGroupDetailsCard(),
+        _viewStatus != _ViewStatus.Product
+            ? SizedBox.shrink()
+            : buildProductDetailsCard(),
       ],
     );
   }
@@ -180,10 +191,11 @@ class _WeightedItemViewState extends State<WeightedItemView> {
     final style1 =
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     final style1Bold = style1.copyWith(
-        fontWeight: FontWeight.bold, fontSize: style1.fontSize! * 1.5);
-    final style2 =
-        CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
-    final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
+        fontWeight: FontWeight.bold, fontSize: 10 * getFontSize());
+    final style2 = CurrentTheme.headline4!.copyWith(
+        color: CurrentTheme.primaryLightColor, fontSize: 10 * getFontSize());
+    final style2Bold = style2.copyWith(
+        fontWeight: FontWeight.bold, fontSize: 10 * getFontSize());
     return StreamBuilder<CartSummaryModel>(
         stream: cartBloc.cartSummarySnapshot,
         builder: (context, AsyncSnapshot<CartSummaryModel> snapshot) {
@@ -337,6 +349,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                 if (mounted) {
                   setState(() {});
                 }
+                textFocus.requestFocus();
               },
             );
           }).toList(),
@@ -466,85 +479,8 @@ class _WeightedItemViewState extends State<WeightedItemView> {
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                    width: POSConfig().cardIdLength.w,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        "$code",
-                                        style: style,
-                                      ),
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                      width: POSConfig().cardNameLength == 0
-                                          ? double.infinity
-                                          : POSConfig().cardNameLength.w,
-                                      child: Text(
-                                        "${cartModel.noDisc ? "* " : ""}${cartModel.posDesc}",
-                                        style: style,
-                                      )),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Spacer(),
-                                // SizedBox(width: POSConfig().cardIdLength.w,
-                                //     ),
-                                Container(
-                                    width: POSConfig().cardPriceLength.w,
-                                    child: Text(
-                                      "${(cartModel.selling).thousandsSeparator()}",
-                                      style: style,
-                                      textAlign: TextAlign.end,
-                                    )),
-                                Container(
-                                    width: POSConfig().cardQtyLength.w,
-                                    child: Text(
-                                      cartModel.unitQty.qtyFormatter(),
-                                      style: style,
-                                      textAlign: TextAlign.end,
-                                    )),
-                                Container(
-                                    width: POSConfig().cardTotalLength.w,
-                                    child: Text(
-                                      "${(cartModel.amount).thousandsSeparator()}",
-                                      style: style,
-                                      textAlign: TextAlign.end,
-                                    )),
-                              ],
-                            ),
-                          ],
-                        ),
-                        discountText == null
-                            ? SizedBox.shrink()
-                            : Positioned(
-                                right: 0,
-                                child: Card(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 5),
-                                    child: Text(discountText),
-                                  ),
-                                  color: Colors.deepOrange,
-                                ),
-                              ),
-                      ],
-                    ),
-                  ),
                   Container(
-                    height: 80.r,
+                    height: 30.r,
                     child: CachedNetworkImage(
                       httpHeaders: {'Access-Control-Allow-Origin': '*'},
                       imageUrl: (cartModel.image ??
@@ -572,6 +508,89 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                           ),
                         );
                       },
+                    ),
+                  ),
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                    width: POSConfig().cardIdLength.w,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        "$code",
+                                        style: style.copyWith(
+                                            fontSize: 10 * getFontSize()),
+                                      ),
+                                    )),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                      width: POSConfig().cardNameLength == 0
+                                          ? double.infinity
+                                          : POSConfig().cardNameLength.w,
+                                      child: Text(
+                                        "${cartModel.noDisc ? "* " : ""}${cartModel.posDesc}",
+                                        style: style.copyWith(
+                                            fontSize: 10 * getFontSize()),
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Spacer(),
+                                // SizedBox(width: POSConfig().cardIdLength.w,
+                                //     ),
+                                Container(
+                                    width: POSConfig().cardPriceLength.w,
+                                    child: Text(
+                                      "${(cartModel.selling).thousandsSeparator()}",
+                                      style: style.copyWith(
+                                          fontSize: 10 * getFontSize()),
+                                      textAlign: TextAlign.end,
+                                    )),
+                                Container(
+                                    width: POSConfig().cardQtyLength.w,
+                                    child: Text(
+                                      cartModel.unitQty.qtyFormatter(),
+                                      style: style.copyWith(
+                                          fontSize: 10 * getFontSize()),
+                                      textAlign: TextAlign.end,
+                                    )),
+                                Container(
+                                    width: POSConfig().cardTotalLength.w,
+                                    child: Text(
+                                      "${(cartModel.amount).thousandsSeparator()}",
+                                      style: style.copyWith(
+                                          fontSize: 10 * getFontSize()),
+                                      textAlign: TextAlign.end,
+                                    )),
+                              ],
+                            ),
+                          ],
+                        ),
+                        discountText == null
+                            ? SizedBox.shrink()
+                            : Positioned(
+                                right: 0,
+                                child: Card(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 5),
+                                    child: Text(discountText),
+                                  ),
+                                  color: Colors.deepOrange,
+                                ),
+                              ),
+                      ],
                     ),
                   ),
                 ],
@@ -628,13 +647,16 @@ class _WeightedItemViewState extends State<WeightedItemView> {
           child: POSKeyBoard(
             onEnter: () {
               if (active) handleEnterPress();
+              textFocus.requestFocus();
             },
             onPressed: () {
               if (active) editingController.clear();
+              textFocus.requestFocus();
             },
             isInvoiceScreen: false,
             clearButton: true,
             controller: editingController,
+            nextFocusTo: textFocus,
           ),
         )
       ],
@@ -651,17 +673,25 @@ class _WeightedItemViewState extends State<WeightedItemView> {
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(8.r),
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "weighted_item.group_master_code".tr(namedArgs: {"code": code}),
-              style: style,
+            Expanded(
+              flex: 3,
+              child: Text(
+                "weighted_item.group_master_code".tr(namedArgs: {"code": code}),
+                overflow: TextOverflow.ellipsis,
+                style: style!.copyWith(fontSize: 10 * getFontSize()),
+              ),
             ),
-            Text(
-              "weighted_item.group_master_desc".tr(namedArgs: {"desc": desc}),
-              style: style,
+            Expanded(
+              flex: 7,
+              child: Text(
+                "weighted_item.group_master_desc".tr(namedArgs: {"desc": desc}),
+                overflow: TextOverflow.ellipsis,
+                style: style.copyWith(fontSize: 10 * getFontSize()),
+              ),
             ),
           ],
         ),
@@ -691,25 +721,25 @@ class _WeightedItemViewState extends State<WeightedItemView> {
               children: [
                 Text(
                   "weighted_item.product_code".tr(namedArgs: {"code": code}),
-                  style: style,
+                  style: style!.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.product_name".tr(namedArgs: {"name": desc}),
-                  style: style,
+                  style: style!.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.mpr".tr(namedArgs: {"mrp": mrp}),
-                  style: style,
+                  style: style!.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.quantity".tr(namedArgs: {"qty": qty}),
-                  style: style,
+                  style: style!.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.line_amount".tr(namedArgs: {
                     "total": (this.qty * price).thousandsSeparator()
                   }),
-                  style: style,
+                  style: style!.copyWith(fontSize: 10 * getFontSize()),
                 ),
               ],
             ),
@@ -760,6 +790,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
           TextPosition(offset: editingController.text.length));
     }
     if (mounted) setState(() {});
+    textFocus.requestFocus();
   }
 
   /// this method will decrement the qty
@@ -771,6 +802,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
           TextPosition(offset: editingController.text.length));
     }
     if (mounted) setState(() {});
+    textFocus.requestFocus();
   }
 
   /// this method used to handle the back button
@@ -781,6 +813,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
         return;
       case _ViewStatus.Product:
         clear();
+        textFocus.requestFocus();
         break;
     }
     if (mounted) setState(() {});
@@ -839,154 +872,174 @@ class _WeightedItemViewState extends State<WeightedItemView> {
           secondApiCall: true, successToast: false);
       if (myProduct.returnBottleCode != null &&
           myProduct.returnBottleCode!.isNotEmpty) {
-        var returnProRes = await POSPriceCalculator()
-            .searchProduct(myProduct.returnBottleCode!);
-        if (returnProRes != null && returnProRes.product != null) {
-          await showGeneralDialog(
-              context: context,
-              transitionDuration: const Duration(milliseconds: 200),
-              barrierDismissible: false,
-              barrierLabel: '',
-              transitionBuilder: (context, a, b, _) => Transform.scale(
-                  scale: a.value,
-                  child: AlertDialog(
-                    title: Center(child: Text('Invoicing the bottles')),
-                    content: Container(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 10.0, bottom: 30),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 100.r,
-                                  child: CachedNetworkImage(
-                                    httpHeaders: {
-                                      'Access-Control-Allow-Origin': '*'
-                                    },
-                                    imageUrl: (POSConfig().posImageServer +
-                                        "images/products/" +
-                                        returnProRes.product!.first.pLUCODE! +
-                                        '.png'),
-                                    errorWidget: (context, url, error) =>
-                                        Image.asset(
-                                            'assets/images/empty_bottle.png'),
-                                    imageBuilder: (context, image) {
-                                      return Card(
-                                        elevation: 5,
-                                        color: CurrentTheme.primaryColor,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(POSConfig()
-                                                .rounderBorderRadiusBottomLeft),
-                                            bottomRight: Radius.circular(POSConfig()
-                                                .rounderBorderRadiusBottomRight),
-                                            topLeft: Radius.circular(POSConfig()
-                                                .rounderBorderRadiusTopLeft),
-                                            topRight: Radius.circular(POSConfig()
-                                                .rounderBorderRadiusTopRight),
-                                          ),
-                                          child: Image(
-                                            image: image,
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Text(
-                                      "${returnProRes.product!.first.pLUCODE} \n${returnProRes.product!.first.pLUPOSDESC}"),
-                                )
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(child: Text('Quantity:')),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              SizedBox(
-                                width: size.width * 0.2,
-                                child: TextField(
-                                  controller: qtyController,
-                                  keyboardType: TextInputType.number,
-                                  onTap: () {
-                                    qtyController.clear();
-                                    KeyBoardController().init(context);
-                                    KeyBoardController().showBottomDPKeyBoard(
-                                        qtyController, onEnter: () async {
-                                      newqty = double.parse(qtyController.text);
-                                      KeyBoardController().dismiss();
-
-                                      //  add to cart
-                                      await POSPriceCalculator().addItemToCart(
-                                          returnProRes.product!.first,
-                                          newqty,
-                                          context,
-                                          returnProRes.prices,
-                                          returnProRes.proPrices,
-                                          returnProRes.proTax,
-                                          secondApiCall: false,
-                                          successToast: false);
-                                    });
-                                    Navigator.pop(context);
-                                  },
-                                  onEditingComplete: () {
-                                    newqty = double.parse(qtyController.text);
-                                  },
-                                ),
-                              )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                      onPressed: () async {
-                                        //  add to cart
-                                        await POSPriceCalculator()
-                                            .addItemToCart(
-                                                returnProRes.product!.first,
-                                                newqty,
-                                                context,
-                                                returnProRes.prices,
-                                                returnProRes.proPrices,
-                                                returnProRes.proTax,
-                                                secondApiCall: false,
-                                                successToast: false);
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Add')),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Cancel')),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )),
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return SizedBox();
-              });
+        List<String> returnBottleCodes =
+            myProduct.returnBottleCode!.split(',') ?? [];
+        List<ProductResult?> returnProResList = [];
+        for (String code in returnBottleCodes) {
+          var res = await calculator.searchProduct(code);
+          if (res != null && res.product != null && res.product?.length != 0) {
+            returnProResList.add(res);
+          }
         }
+        if (returnProResList.isNotEmpty) {
+          await showModalBottomSheet(
+            isScrollControlled: true,
+            useRootNavigator: true,
+            context: context!,
+            builder: (context) {
+              return ReturnBottleSelectionView(
+                  returnProResList: returnProResList);
+            },
+          );
+        }
+        // var returnProRes = await POSPriceCalculator()
+        //     .searchProduct(myProduct.returnBottleCode!);
+        // if (returnProRes != null && returnProRes.product != null) {
+        //   await showGeneralDialog(
+        //       context: context,
+        //       transitionDuration: const Duration(milliseconds: 200),
+        //       barrierDismissible: false,
+        //       barrierLabel: '',
+        //       transitionBuilder: (context, a, b, _) => Transform.scale(
+        //           scale: a.value,
+        //           child: AlertDialog(
+        //             title: Center(child: Text('Invoicing the bottles')),
+        //             content: Container(
+        //               child: Column(
+        //                 mainAxisSize: MainAxisSize.min,
+        //                 children: [
+        //                   Padding(
+        //                     padding:
+        //                         const EdgeInsets.only(top: 10.0, bottom: 30),
+        //                     child: Row(
+        //                       children: [
+        //                         Container(
+        //                           height: 100.r,
+        //                           child: CachedNetworkImage(
+        //                             httpHeaders: {
+        //                               'Access-Control-Allow-Origin': '*'
+        //                             },
+        //                             imageUrl: (POSConfig().posImageServer +
+        //                                 "images/products/" +
+        //                                 returnProRes.product!.first.pLUCODE! +
+        //                                 '.png'),
+        //                             errorWidget: (context, url, error) =>
+        //                                 Image.asset(
+        //                                     'assets/images/empty_bottle.png'),
+        //                             imageBuilder: (context, image) {
+        //                               return Card(
+        //                                 elevation: 5,
+        //                                 color: CurrentTheme.primaryColor,
+        //                                 child: ClipRRect(
+        //                                   borderRadius: BorderRadius.only(
+        //                                     bottomLeft: Radius.circular(POSConfig()
+        //                                         .rounderBorderRadiusBottomLeft),
+        //                                     bottomRight: Radius.circular(POSConfig()
+        //                                         .rounderBorderRadiusBottomRight),
+        //                                     topLeft: Radius.circular(POSConfig()
+        //                                         .rounderBorderRadiusTopLeft),
+        //                                     topRight: Radius.circular(POSConfig()
+        //                                         .rounderBorderRadiusTopRight),
+        //                                   ),
+        //                                   child: Image(
+        //                                     image: image,
+        //                                     fit: BoxFit.contain,
+        //                                   ),
+        //                                 ),
+        //                               );
+        //                             },
+        //                           ),
+        //                         ),
+        //                         Padding(
+        //                           padding: const EdgeInsets.only(left: 8.0),
+        //                           child: Text(
+        //                               "${returnProRes.product!.first.pLUCODE} \n${returnProRes.product!.first.pLUPOSDESC}"),
+        //                         )
+        //                       ],
+        //                     ),
+        //                   ),
+        //                   Row(
+        //                     children: [
+        //                       SizedBox(child: Text('Quantity:')),
+        //                       SizedBox(
+        //                         width: 10,
+        //                       ),
+        //                       SizedBox(
+        //                         width: size.width * 0.2,
+        //                         child: TextField(
+        //                           controller: qtyController,
+        //                           keyboardType: TextInputType.number,
+        //                           onTap: () {
+        //                             qtyController.clear();
+        //                             KeyBoardController().init(context);
+        //                             KeyBoardController().showBottomDPKeyBoard(
+        //                                 qtyController, onEnter: () async {
+        //                               newqty = double.parse(qtyController.text);
+        //                               KeyBoardController().dismiss();
+
+        //                               //  add to cart
+        //                               await POSPriceCalculator().addItemToCart(
+        //                                   returnProRes.product!.first,
+        //                                   newqty,
+        //                                   context,
+        //                                   returnProRes.prices,
+        //                                   returnProRes.proPrices,
+        //                                   returnProRes.proTax,
+        //                                   secondApiCall: false,
+        //                                   successToast: false);
+        //                             });
+        //                             Navigator.pop(context);
+        //                           },
+        //                           onEditingComplete: () {
+        //                             newqty = double.parse(qtyController.text);
+        //                           },
+        //                         ),
+        //                       )
+        //                     ],
+        //                   ),
+        //                   Padding(
+        //                     padding: const EdgeInsets.only(top: 16.0),
+        //                     child: Row(
+        //                       mainAxisAlignment: MainAxisAlignment.center,
+        //                       children: [
+        //                         Padding(
+        //                           padding: const EdgeInsets.all(8.0),
+        //                           child: ElevatedButton(
+        //                               onPressed: () async {
+        //                                 //  add to cart
+        //                                 await POSPriceCalculator()
+        //                                     .addItemToCart(
+        //                                         returnProRes.product!.first,
+        //                                         newqty,
+        //                                         context,
+        //                                         returnProRes.prices,
+        //                                         returnProRes.proPrices,
+        //                                         returnProRes.proTax,
+        //                                         secondApiCall: false,
+        //                                         successToast: false);
+        //                                 Navigator.pop(context);
+        //                               },
+        //                               child: Text('Add')),
+        //                         ),
+        //                         Padding(
+        //                           padding: const EdgeInsets.all(8.0),
+        //                           child: ElevatedButton(
+        //                               onPressed: () {
+        //                                 Navigator.pop(context);
+        //                               },
+        //                               child: Text('Cancel')),
+        //                         )
+        //                       ],
+        //                     ),
+        //                   )
+        //                 ],
+        //               ),
+        //             ),
+        //           )),
+        //       pageBuilder: (context, animation, secondaryAnimation) {
+        //         return SizedBox();
+        //       });
+        // }
       }
 //-----------------------------------------------------------------------------------------------------------------
       clear(stayInItem: true);
@@ -1006,18 +1059,36 @@ class _WeightedItemViewState extends State<WeightedItemView> {
   /// quick search item by id
   void quickSearchItem() async {
     EasyLoading.show(status: 'please_wait'.tr());
-    final resultMap = await ProductController()
-        .getWeightedProductByID(editingController.text);
+    String input = editingController.text.contains('*')
+        ? editingController.text.split('*')[1]
+        : editingController.text;
+    final resultMap = await ProductController().getWeightedProductByID(input);
     EasyLoading.dismiss();
     if (resultMap == null) return;
+
     final group = resultMap["group"];
     final product = resultMap["product"];
     selectedGroup = group;
     selectedProduct = product;
+
+    if (editingController.text.contains('*')) {
+      try {
+        qty = double.parse(editingController.text.split('*')[0]);
+        addItem();
+        editingController.clear();
+        return;
+      } catch (e) {
+        EasyLoading.showError('Invalid quantity or product code');
+        editingController.clear();
+        return;
+      }
+    }
     _viewStatus = _ViewStatus.Product;
     quickSearch = false;
     editingController.clear();
     if (mounted) setState(() {});
+    // straightly add the product with qty=1
+    // addItem();
   }
 
   @override
