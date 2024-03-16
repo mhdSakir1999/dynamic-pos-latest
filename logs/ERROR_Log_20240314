@@ -1353,3 +1353,333 @@ This can commonly occur when the showDialog function is called after awaiting a 
 2024-03-14 12:57:21.897126 : Null check operator used on a null value
 2024-03-14 13:02:22.058074 : Null check operator used on a null value
 2024-03-14 13:02:41.654557 : Closing previous api...
+2024-03-14 13:17:34.173590 : Closing previous api...
+2024-03-14 13:17:34.409712 : Closing previous api...
+2024-03-14 13:17:34.458606 : loading config from .env completed
+2024-03-14 13:17:34.458606 : SERVER: http://localhost:71/api/
+2024-03-14 13:17:34.458606 : LOCAL: http://localhost:71/api/
+2024-03-14 13:17:34.458606 : POS_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:17:34.458606 : LOYALTY: https://loybackendbeta.24x7retail.com/api/
+2024-03-14 13:17:34.458606 : LOYALTY_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:17:34.458606 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-14 13:17:34.458606 : SAAS: false
+2024-03-14 13:17:34.458606 : PASSWORD: ADMIN
+2024-03-14 13:17:34.458606 : DUAL_SCREEN: 
+2024-03-14 13:17:34.458606 : ENABLE_POLL_DISPLAY: true
+2024-03-14 13:17:34.458606 : SCREEN_WIDTH: 1024.0
+2024-03-14 13:17:34.458606 : SCREEN_HEIGHT: 768.0
+2024-03-14 13:17:34.458606 : SINGLE_SWIPE_ACTIVE: true
+2024-03-14 13:17:34.458606 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-14 13:17:34.458606 : PRINTER_NAME: POS-80C
+2024-03-14 13:17:34.458606 : FONT_A_LENGTH: 48
+2024-03-14 13:17:34.458606 : FONT_B_LENGTH: 64
+2024-03-14 13:17:36.439788 : loading config from .env completed
+2024-03-14 13:17:36.440801 : SERVER: http://localhost:71/api/
+2024-03-14 13:17:36.440801 : LOCAL: http://localhost:71/api/
+2024-03-14 13:17:36.440801 : POS_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:17:36.440801 : LOYALTY: https://loybackendbeta.24x7retail.com/api/
+2024-03-14 13:17:36.440801 : LOYALTY_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:17:36.440801 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-14 13:17:36.440801 : SAAS: false
+2024-03-14 13:17:36.440801 : PASSWORD: ADMIN
+2024-03-14 13:17:36.440801 : DUAL_SCREEN: 
+2024-03-14 13:17:36.440801 : ENABLE_POLL_DISPLAY: true
+2024-03-14 13:17:36.440801 : SCREEN_WIDTH: 1024.0
+2024-03-14 13:17:36.440801 : SCREEN_HEIGHT: 768.0
+2024-03-14 13:17:36.440801 : SINGLE_SWIPE_ACTIVE: true
+2024-03-14 13:17:36.440801 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-14 13:17:36.440801 : PRINTER_NAME: POS-80C
+2024-03-14 13:17:36.440801 : FONT_A_LENGTH: 48
+2024-03-14 13:17:36.440801 : FONT_B_LENGTH: 64
+2024-03-14 13:17:36.644791 : []
+2024-03-14 13:17:36.644791 : []
+2024-03-14 13:17:37.475859 : Exception
+2024-03-14 13:17:59.125132 : Closing previous api...
+2024-03-14 13:17:59.293140 : Closing previous api...
+2024-03-14 13:17:59.323141 : loading config from .env completed
+2024-03-14 13:17:59.323141 : SERVER: http://localhost:71/api/
+2024-03-14 13:17:59.324139 : LOCAL: http://localhost:71/api/
+2024-03-14 13:17:59.324139 : POS_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:17:59.324139 : LOYALTY: https://loybackendbeta.24x7retail.com/api/
+2024-03-14 13:17:59.324139 : LOYALTY_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:17:59.324139 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-14 13:17:59.324139 : SAAS: false
+2024-03-14 13:17:59.324139 : PASSWORD: ADMIN
+2024-03-14 13:17:59.324139 : DUAL_SCREEN: 
+2024-03-14 13:17:59.324139 : ENABLE_POLL_DISPLAY: true
+2024-03-14 13:17:59.324139 : SCREEN_WIDTH: 1024.0
+2024-03-14 13:17:59.324139 : SCREEN_HEIGHT: 768.0
+2024-03-14 13:17:59.324139 : SINGLE_SWIPE_ACTIVE: true
+2024-03-14 13:17:59.324139 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-14 13:17:59.324139 : PRINTER_NAME: POS-80C
+2024-03-14 13:17:59.324139 : FONT_A_LENGTH: 48
+2024-03-14 13:17:59.324139 : FONT_B_LENGTH: 64
+2024-03-14 13:18:00.715998 : loading config from .env completed
+2024-03-14 13:18:00.715998 : SERVER: http://localhost:71/api/
+2024-03-14 13:18:00.715998 : LOCAL: http://localhost:71/api/
+2024-03-14 13:18:00.715998 : POS_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:18:00.715998 : LOYALTY: https://loybackendbeta.24x7retail.com/api/
+2024-03-14 13:18:00.715998 : LOYALTY_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:18:00.715998 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-14 13:18:00.715998 : SAAS: false
+2024-03-14 13:18:00.715998 : PASSWORD: ADMIN
+2024-03-14 13:18:00.715998 : DUAL_SCREEN: 
+2024-03-14 13:18:00.715998 : ENABLE_POLL_DISPLAY: true
+2024-03-14 13:18:00.715998 : SCREEN_WIDTH: 1024.0
+2024-03-14 13:18:00.715998 : SCREEN_HEIGHT: 768.0
+2024-03-14 13:18:00.715998 : SINGLE_SWIPE_ACTIVE: true
+2024-03-14 13:18:00.715998 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-14 13:18:00.715998 : PRINTER_NAME: POS-80C
+2024-03-14 13:18:00.715998 : FONT_A_LENGTH: 48
+2024-03-14 13:18:00.715998 : FONT_B_LENGTH: 64
+2024-03-14 13:18:00.838348 : []
+2024-03-14 13:18:00.838348 : []
+2024-03-14 13:18:01.797858 : Exception
+2024-03-14 13:31:36.741218 : [POSLoggerLevel.error] [2024-03-14 13:31:36.741218] [Windows] [Debug] Password validation error: Instance of 'LoginResult'
+2024-03-14 13:31:42.594074 : [POSLoggerLevel.error] [2024-03-14 13:31:42.594074] [Windows] [Debug] Password validation error: Instance of 'LoginResult'
+2024-03-14 13:31:50.826406 : loading config from .env completed
+2024-03-14 13:31:50.826406 : SERVER: http://localhost:71/api/
+2024-03-14 13:31:50.826406 : LOCAL: http://localhost:71/api/
+2024-03-14 13:31:50.826406 : POS_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:31:50.826406 : LOYALTY: https://loybackendbeta.24x7retail.com/api/
+2024-03-14 13:31:50.826406 : LOYALTY_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:31:50.826406 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-14 13:31:50.826406 : SAAS: false
+2024-03-14 13:31:50.826406 : PASSWORD: ADMIN
+2024-03-14 13:31:50.826406 : DUAL_SCREEN: 
+2024-03-14 13:31:50.826406 : ENABLE_POLL_DISPLAY: true
+2024-03-14 13:31:50.826406 : SCREEN_WIDTH: 1024.0
+2024-03-14 13:31:50.826406 : SCREEN_HEIGHT: 768.0
+2024-03-14 13:31:50.826406 : SINGLE_SWIPE_ACTIVE: true
+2024-03-14 13:31:50.826406 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-14 13:31:50.826406 : PRINTER_NAME: POS-80C
+2024-03-14 13:31:50.826406 : FONT_A_LENGTH: 48
+2024-03-14 13:31:50.826406 : FONT_B_LENGTH: 64
+2024-03-14 13:31:52.384127 : Closing CrystalReport...
+2024-03-14 13:31:52.391127 : [POSLoggerLevel.error] [2024-03-14 13:31:52.391127] [Windows] [Debug] ProcessException: The filename, directory name, or volume label syntax is incorrect.
+
+  Command: cmd.exe /c CrystalReport.exe
+2024-03-14 13:31:52.392129 : [POSLoggerLevel.error] [2024-03-14 13:31:52.391127] [Windows] [Debug] #0      _ProcessImpl._start (dart:io-patch/process_patch.dart:402:33)
+#1      Process.start (dart:io-patch/process_patch.dart:38:20)
+#2      _runNonInteractiveProcess (dart:io-patch/process_patch.dart:579:18)
+#3      Process.run (dart:io-patch/process_patch.dart:49:12)
+#4      _LoginViewState.validatePassword (package:checkout/views/authentication/login_view.dart:570:35)
+<asynchronous suspension>
+
+2024-03-14 13:31:54.906272 : usb serial port issue : Null check operator used on a null value
+2024-03-14 13:34:11.498647 : [POSLoggerLevel.error] [2024-03-14 13:34:11.498647] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-14 13:34:20.873510 : [POSLoggerLevel.error] [2024-03-14 13:34:20.873510] [Windows] [Debug] #0      Iterable.last
+(dart:core/iterable.dart:659:7)
+#1      _CartState._handleScan (package:checkout/views/invoice/cart.dart:1166:51)
+<asynchronous suspension>
+#2      _CartState.buildDefaultLHS.<anonymous closure> (package:checkout/views/invoice/cart.dart:496:39)
+<asynchronous suspension>
+
+2024-03-14 13:34:21.021404 : [POSLoggerLevel.error] [2024-03-14 13:34:21.020405] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-14 13:34:25.915071 : [POSLoggerLevel.error] [2024-03-14 13:34:25.915071] [Windows] [Debug] #0      Iterable.last
+(dart:core/iterable.dart:659:7)
+#1      _CartState._handleScan (package:checkout/views/invoice/cart.dart:1166:51)
+<asynchronous suspension>
+#2      _CartState.buildDefaultLHS.<anonymous closure> (package:checkout/views/invoice/cart.dart:496:39)
+<asynchronous suspension>
+
+2024-03-14 13:34:26.048373 : [POSLoggerLevel.error] [2024-03-14 13:34:26.048373] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-14 13:34:32.762831 : [POSLoggerLevel.error] [2024-03-14 13:34:32.762831] [Windows] [Debug] #0      Iterable.last
+(dart:core/iterable.dart:659:7)
+#1      _CartState._handleScan (package:checkout/views/invoice/cart.dart:1166:51)
+<asynchronous suspension>
+#2      _CartState.buildDefaultLHS.<anonymous closure> (package:checkout/views/invoice/cart.dart:496:39)
+<asynchronous suspension>
+
+2024-03-14 13:34:32.837217 : [POSLoggerLevel.error] [2024-03-14 13:34:32.836236] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-14 13:34:38.653391 : [POSLoggerLevel.error] [2024-03-14 13:34:38.652374] [Windows] [Debug] #0      Iterable.last
+(dart:core/iterable.dart:659:7)
+#1      _CartState._handleScan (package:checkout/views/invoice/cart.dart:1166:51)
+<asynchronous suspension>
+#2      _CartState.buildDefaultLHS.<anonymous closure> (package:checkout/views/invoice/cart.dart:496:39)
+<asynchronous suspension>
+
+2024-03-14 13:34:38.746046 : [POSLoggerLevel.error] [2024-03-14 13:34:38.746046] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-14 13:35:52.180227 : [POSLoggerLevel.error] [2024-03-14 13:35:52.180227] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-14 13:35:59.876333 : Closing previous api...
+2024-03-14 13:36:00.033767 : Closing previous api...
+2024-03-14 13:36:00.076446 : loading config from .env completed
+2024-03-14 13:36:00.076446 : SERVER: http://localhost:71/api/
+2024-03-14 13:36:00.076446 : LOCAL: http://localhost:71/api/
+2024-03-14 13:36:00.076446 : POS_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:36:00.076446 : LOYALTY: https://loybackendbeta.24x7retail.com/api/
+2024-03-14 13:36:00.076446 : LOYALTY_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:36:00.076446 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-14 13:36:00.076446 : SAAS: false
+2024-03-14 13:36:00.076446 : PASSWORD: ADMIN
+2024-03-14 13:36:00.076446 : DUAL_SCREEN: 
+2024-03-14 13:36:00.076446 : ENABLE_POLL_DISPLAY: true
+2024-03-14 13:36:00.076446 : SCREEN_WIDTH: 1024.0
+2024-03-14 13:36:00.076446 : SCREEN_HEIGHT: 768.0
+2024-03-14 13:36:00.076446 : SINGLE_SWIPE_ACTIVE: true
+2024-03-14 13:36:00.076446 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-14 13:36:00.076446 : PRINTER_NAME: POS-80C
+2024-03-14 13:36:00.076446 : FONT_A_LENGTH: 48
+2024-03-14 13:36:00.076446 : FONT_B_LENGTH: 64
+2024-03-14 13:36:01.504582 : loading config from .env completed
+2024-03-14 13:36:01.504582 : SERVER: http://localhost:71/api/
+2024-03-14 13:36:01.504582 : LOCAL: http://localhost:71/api/
+2024-03-14 13:36:01.504582 : POS_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:36:01.504582 : LOYALTY: https://loybackendbeta.24x7retail.com/api/
+2024-03-14 13:36:01.504582 : LOYALTY_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 13:36:01.504582 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-14 13:36:01.504582 : SAAS: false
+2024-03-14 13:36:01.504582 : PASSWORD: ADMIN
+2024-03-14 13:36:01.504582 : DUAL_SCREEN: 
+2024-03-14 13:36:01.504582 : ENABLE_POLL_DISPLAY: true
+2024-03-14 13:36:01.504582 : SCREEN_WIDTH: 1024.0
+2024-03-14 13:36:01.504582 : SCREEN_HEIGHT: 768.0
+2024-03-14 13:36:01.504582 : SINGLE_SWIPE_ACTIVE: true
+2024-03-14 13:36:01.504582 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-14 13:36:01.504582 : PRINTER_NAME: POS-80C
+2024-03-14 13:36:01.504582 : FONT_A_LENGTH: 48
+2024-03-14 13:36:01.504582 : FONT_B_LENGTH: 64
+2024-03-14 13:36:01.608548 : []
+2024-03-14 13:36:01.608548 : []
+2024-03-14 13:36:02.567368 : Exception
+2024-03-14 13:40:53.500142 : [POSLoggerLevel.error] [2024-03-14 13:40:53.499142] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:40:54.068825 : [POSLoggerLevel.error] [2024-03-14 13:40:54.068825] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:40:55.037125 : [POSLoggerLevel.error] [2024-03-14 13:40:55.037125] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:40:56.034567 : [POSLoggerLevel.error] [2024-03-14 13:40:56.034567] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:40:56.767730 : [POSLoggerLevel.error] [2024-03-14 13:40:56.767730] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:40:56.838626 : [POSLoggerLevel.error] [2024-03-14 13:40:56.838626] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:40:56.905484 : [POSLoggerLevel.error] [2024-03-14 13:40:56.904481] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:40:57.045245 : [POSLoggerLevel.error] [2024-03-14 13:40:57.043754] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:40:58.034207 : [POSLoggerLevel.error] [2024-03-14 13:40:58.034207] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:40:59.050866 : [POSLoggerLevel.error] [2024-03-14 13:40:59.050866] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:00.033943 : [POSLoggerLevel.error] [2024-03-14 13:41:00.033943] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:01.037929 : [POSLoggerLevel.error] [2024-03-14 13:41:01.037929] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:01.773742 : Null check operator used on a null value
+2024-03-14 13:41:02.028554 : [POSLoggerLevel.error] [2024-03-14 13:41:02.027554] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:03.025587 : [POSLoggerLevel.error] [2024-03-14 13:41:03.024587] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:04.033350 : [POSLoggerLevel.error] [2024-03-14 13:41:04.033350] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:04.543567 : [POSLoggerLevel.error] [2024-03-14 13:41:04.543567] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:04.574936 : [POSLoggerLevel.error] [2024-03-14 13:41:04.574936] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:04.609935 : [POSLoggerLevel.error] [2024-03-14 13:41:04.608940] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:04.646933 : [POSLoggerLevel.error] [2024-03-14 13:41:04.646933] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:04.675166 : [POSLoggerLevel.error] [2024-03-14 13:41:04.675166] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:04.706172 : [POSLoggerLevel.error] [2024-03-14 13:41:04.706172] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:04.906621 : [POSLoggerLevel.error] [2024-03-14 13:41:04.906621] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:04.970112 : [POSLoggerLevel.error] [2024-03-14 13:41:04.969111] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:05.004202 : [POSLoggerLevel.error] [2024-03-14 13:41:05.004202] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:05.050115 : [POSLoggerLevel.error] [2024-03-14 13:41:05.049115] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:06.023362 : [POSLoggerLevel.error] [2024-03-14 13:41:06.023362] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:06.142427 : [POSLoggerLevel.error] [2024-03-14 13:41:06.142427] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:06.173558 : [POSLoggerLevel.error] [2024-03-14 13:41:06.172558] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:06.294325 : [POSLoggerLevel.error] [2024-03-14 13:41:06.292960] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:06.338254 : [POSLoggerLevel.error] [2024-03-14 13:41:06.336256] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:07.027303 : [POSLoggerLevel.error] [2024-03-14 13:41:07.026303] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:08.029743 : [POSLoggerLevel.error] [2024-03-14 13:41:08.028746] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:09.024034 : [POSLoggerLevel.error] [2024-03-14 13:41:09.023024] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:10.023471 : [POSLoggerLevel.error] [2024-03-14 13:41:10.023471] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:11.035449 : [POSLoggerLevel.error] [2024-03-14 13:41:11.035449] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:11.179648 : [POSLoggerLevel.error] [2024-03-14 13:41:11.178649] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:11.210713 : [POSLoggerLevel.error] [2024-03-14 13:41:11.210713] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:11.250720 : [POSLoggerLevel.error] [2024-03-14 13:41:11.249718] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:11.290035 : [POSLoggerLevel.error] [2024-03-14 13:41:11.289024] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:11.334426 : [POSLoggerLevel.error] [2024-03-14 13:41:11.324426] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:11.355817 : [POSLoggerLevel.error] [2024-03-14 13:41:11.354817] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:11.376819 : [POSLoggerLevel.error] [2024-03-14 13:41:11.376819] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:12.033039 : [POSLoggerLevel.error] [2024-03-14 13:41:12.033039] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:12.768106 : [POSLoggerLevel.error] [2024-03-14 13:41:12.767105] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:12.808111 : [POSLoggerLevel.error] [2024-03-14 13:41:12.807107] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:12.859625 : [POSLoggerLevel.error] [2024-03-14 13:41:12.858625] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:12.909797 : [POSLoggerLevel.error] [2024-03-14 13:41:12.909797] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:12.963938 : [POSLoggerLevel.error] [2024-03-14 13:41:12.962937] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:13.022688 : [POSLoggerLevel.error] [2024-03-14 13:41:13.022688] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:14.036004 : [POSLoggerLevel.error] [2024-03-14 13:41:14.036004] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:15.025527 : [POSLoggerLevel.error] [2024-03-14 13:41:15.025527] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:16.032611 : [POSLoggerLevel.error] [2024-03-14 13:41:16.031609] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:17.023878 : [POSLoggerLevel.error] [2024-03-14 13:41:17.023878] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:18.035623 : [POSLoggerLevel.error] [2024-03-14 13:41:18.034616] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:19.021560 : [POSLoggerLevel.error] [2024-03-14 13:41:19.021560] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:20.033911 : [POSLoggerLevel.error] [2024-03-14 13:41:20.033911] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:21.032886 : [POSLoggerLevel.error] [2024-03-14 13:41:21.032886] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:22.035082 : [POSLoggerLevel.error] [2024-03-14 13:41:22.034096] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:23.021239 : [POSLoggerLevel.error] [2024-03-14 13:41:23.021239] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:24.030246 : [POSLoggerLevel.error] [2024-03-14 13:41:24.029249] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:25.019038 : [POSLoggerLevel.error] [2024-03-14 13:41:25.019038] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:26.020911 : [POSLoggerLevel.error] [2024-03-14 13:41:26.020911] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:27.034867 : [POSLoggerLevel.error] [2024-03-14 13:41:27.033871] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:28.033166 : [POSLoggerLevel.error] [2024-03-14 13:41:28.033166] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:29.028262 : [POSLoggerLevel.error] [2024-03-14 13:41:29.028262] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:30.022301 : [POSLoggerLevel.error] [2024-03-14 13:41:30.021302] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:31.033738 : [POSLoggerLevel.error] [2024-03-14 13:41:31.033738] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:32.030837 : [POSLoggerLevel.error] [2024-03-14 13:41:32.029842] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:33.029162 : [POSLoggerLevel.error] [2024-03-14 13:41:33.029162] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:34.035781 : [POSLoggerLevel.error] [2024-03-14 13:41:34.035781] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:35.019112 : [POSLoggerLevel.error] [2024-03-14 13:41:35.019112] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:36.026909 : [POSLoggerLevel.error] [2024-03-14 13:41:36.025910] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:37.022939 : [POSLoggerLevel.error] [2024-03-14 13:41:37.022939] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:38.018377 : [POSLoggerLevel.error] [2024-03-14 13:41:38.018377] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:39.020659 : [POSLoggerLevel.error] [2024-03-14 13:41:39.019659] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:40.029729 : [POSLoggerLevel.error] [2024-03-14 13:41:40.029729] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:41.037761 : [POSLoggerLevel.error] [2024-03-14 13:41:41.037761] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:41.064763 : [POSLoggerLevel.error] [2024-03-14 13:41:41.064763] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:41.083756 : [POSLoggerLevel.error] [2024-03-14 13:41:41.083756] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:41.104758 : [POSLoggerLevel.error] [2024-03-14 13:41:41.104758] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:41.132762 : [POSLoggerLevel.error] [2024-03-14 13:41:41.132762] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:41.157771 : [POSLoggerLevel.error] [2024-03-14 13:41:41.156770] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:41.193769 : [POSLoggerLevel.error] [2024-03-14 13:41:41.193769] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:41.216204 : [POSLoggerLevel.error] [2024-03-14 13:41:41.216204] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.025331 : [POSLoggerLevel.error] [2024-03-14 13:41:42.025331] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.544537 : [POSLoggerLevel.error] [2024-03-14 13:41:42.544537] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.571276 : [POSLoggerLevel.error] [2024-03-14 13:41:42.571276] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.593555 : [POSLoggerLevel.error] [2024-03-14 13:41:42.593555] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.618871 : [POSLoggerLevel.error] [2024-03-14 13:41:42.618871] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.649709 : [POSLoggerLevel.error] [2024-03-14 13:41:42.648712] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.683079 : [POSLoggerLevel.error] [2024-03-14 13:41:42.682078] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.716201 : [POSLoggerLevel.error] [2024-03-14 13:41:42.715203] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.739289 : [POSLoggerLevel.error] [2024-03-14 13:41:42.739289] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.758837 : [POSLoggerLevel.error] [2024-03-14 13:41:42.757840] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:42.842837 : [POSLoggerLevel.error] [2024-03-14 13:41:42.841836] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:43.001424 : [POSLoggerLevel.error] [2024-03-14 13:41:43.000418] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:43.041176 : [POSLoggerLevel.error] [2024-03-14 13:41:43.040169] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:43.083974 : [POSLoggerLevel.error] [2024-03-14 13:41:43.082973] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:43.103975 : [POSLoggerLevel.error] [2024-03-14 13:41:43.103975] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:43.149631 : [POSLoggerLevel.error] [2024-03-14 13:41:43.149631] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:43.175085 : [POSLoggerLevel.error] [2024-03-14 13:41:43.175085] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:43.219571 : [POSLoggerLevel.error] [2024-03-14 13:41:43.219571] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 13:41:43.249578 : [POSLoggerLevel.error] [2024-03-14 13:41:43.248578] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://media-api.24x7retail.store/images/user/CAS1.png
+2024-03-14 14:10:27.298373 : loading config from .env completed
+2024-03-14 14:10:27.298373 : SERVER: http://localhost:71/api/
+2024-03-14 14:10:27.298373 : LOCAL: http://localhost:71/api/
+2024-03-14 14:10:27.298373 : POS_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 14:10:27.298373 : LOYALTY: https://loybackendbeta.24x7retail.com/api/
+2024-03-14 14:10:27.298373 : LOYALTY_IMAGE: https://media-api.24x7retail.store/
+2024-03-14 14:10:27.298373 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-14 14:10:27.298373 : SAAS: false
+2024-03-14 14:10:27.298373 : PASSWORD: ADMIN
+2024-03-14 14:10:27.298373 : DUAL_SCREEN: 
+2024-03-14 14:10:27.298373 : ENABLE_POLL_DISPLAY: true
+2024-03-14 14:10:27.298373 : SCREEN_WIDTH: 1024.0
+2024-03-14 14:10:27.298373 : SCREEN_HEIGHT: 768.0
+2024-03-14 14:10:27.298373 : SINGLE_SWIPE_ACTIVE: true
+2024-03-14 14:10:27.298373 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-14 14:10:27.298373 : PRINTER_NAME: POS-80C
+2024-03-14 14:10:27.298373 : FONT_A_LENGTH: 48
+2024-03-14 14:10:27.298373 : FONT_B_LENGTH: 64
+2024-03-14 14:10:29.869707 : Closing CrystalReport...
+2024-03-14 14:10:29.882709 : [POSLoggerLevel.error] [2024-03-14 14:10:29.881708] [Windows] [Debug] ProcessException: The filename, directory name, or volume label syntax is incorrect.
+
+  Command: cmd.exe /c CrystalReport.exe
+2024-03-14 14:10:29.883709 : [POSLoggerLevel.error] [2024-03-14 14:10:29.883709] [Windows] [Debug] #0      _ProcessImpl._start (dart:io-patch/process_patch.dart:402:33)
+#1      Process.start (dart:io-patch/process_patch.dart:38:20)
+#2      _runNonInteractiveProcess (dart:io-patch/process_patch.dart:579:18)
+#3      Process.run (dart:io-patch/process_patch.dart:49:12)
+#4      _LoginViewState.validatePassword (package:checkout/views/authentication/login_view.dart:574:35)
+<asynchronous suspension>
+
+2024-03-14 14:10:32.426045 : usb serial port issue : Null check operator used on a null value
+2024-03-14 14:10:56.650561 : [POSLoggerLevel.error] [2024-03-14 14:10:56.650561] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-14 14:18:14.662805 : [POSLoggerLevel.error] [2024-03-14 14:18:14.662805] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-14 14:20:30.494521 : usb serial port issue : Null check operator used on a null value
+2024-03-14 14:20:30.826061 : [POSLoggerLevel.error] [2024-03-14 14:20:30.826061] [Windows] [Debug] A FocusNode was used after being disposed.
+Once you have called dispose() on a FocusNode, it can no longer be used.
+2024-03-14 14:20:33.765377 : Closing previous api...
+2024-03-14 14:20:33.993374 : Closing previous api...

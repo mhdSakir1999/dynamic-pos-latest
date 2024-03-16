@@ -406,6 +406,10 @@ class _LoginViewState extends State<LoginView> {
   ///validate entered password
   Future validatePassword() async {
     KeyBoardController().dismiss();
+    if (passwordEditingController.text.isEmpty) {
+      EasyLoading.showError('Please enter the password');
+      return;
+    }
     if (mounted)
       setState(() {
         currentError = null;
@@ -642,6 +646,7 @@ class _LoginViewState extends State<LoginView> {
                       height: 15.h,
                     ),
                     TextField(
+                      autofocus: true,
                       controller: otpEditingController,
                       onEditingComplete: _continueForgetPassword,
                       keyboardType: TextInputType.number,
