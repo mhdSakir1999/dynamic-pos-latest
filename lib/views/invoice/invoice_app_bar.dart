@@ -523,7 +523,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         }
                       },
                       icon: Icon(
-                        FontAwesome.calculator,
+                        FontAwesome.calculator, //192.168.1.2:71
                       ),
                       iconSize: 30.r,
                       color: Colors.greenAccent,

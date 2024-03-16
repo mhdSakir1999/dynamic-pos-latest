@@ -395,8 +395,10 @@ class InvoiceController {
     };
 
     final res = await ApiClient.call(
-        invoiced ? "invoice/save" : 'invoice/hold_invoice', ApiMethod.POST,
-        data: temp, successCode: 200);
+        invoiced ? "invoice/save" : 'invoice/hold_invoice',
+        ApiMethod.POST, //invoiced ? "invoice/save" : 'invoice/hold_invoice'
+        data: temp,
+        successCode: 200);
 
     if (hasExVoucher) {
       ApiClient.call(
