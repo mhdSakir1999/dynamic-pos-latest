@@ -296,8 +296,8 @@ class CartBloc {
         currentMap[cartModel.key] = currentItem;
         //comment this line by Pubudu on 18/Jan/2024 because we need to record only the item which has promotion discounts applied
         //if (currentItem.promoCode != null && currentItem.promoCode != '') {
-        if ((currentItem.promoDiscAmt ?? 0) != 0 &&
-            (currentItem.promoDiscPre ?? 0) != 0 &&
+        if ((currentItem.promoDiscAmt ?? 0) != 0 ||
+            (currentItem.promoDiscPre ?? 0) != 0 ||
             (currentItem.promoBillDiscPre ?? 0) != 0) {
           discPer = currentItem.promoDiscPre ?? 0;
           billDiscPer = currentItem.promoBillDiscPre ?? 0;
@@ -317,7 +317,8 @@ class CartBloc {
               DateTime.now(),
               '',
               currentItem.promoOriginalItem ?? '',
-              0));
+              0,
+              currentItem.promoDesc ?? ''));
         }
       }
     }
@@ -340,7 +341,8 @@ class CartBloc {
           DateTime.now(),
           billDiscPromoItem.coupon_code,
           billDiscPromoItem.promo_product,
-          billDiscPromoItem.beneficial_value));
+          billDiscPromoItem.beneficial_value,
+          billDiscPromoItem.promotion_name));
     }
   }
 

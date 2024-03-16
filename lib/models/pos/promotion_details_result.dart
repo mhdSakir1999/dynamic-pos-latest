@@ -5,6 +5,7 @@ class PromotionDetailsResult {
   List<PromotionIncludeExcludeSku>? includeItems;
   List<PromotionIncludeExcludeSku>? excludeItems;
   List<PromotionOfferSKU>? offerItems;
+  List<PromotionPriceModeSKU>? priceModeItems;
   bool? success;
 
   PromotionDetailsResult({this.promotionDetails, this.success});
@@ -35,6 +36,13 @@ class PromotionDetailsResult {
         offerItems!.add(new PromotionOfferSKU.fromJson(v));
       });
     }
+    if (json['promotion_pricemodes'] != null) {
+      priceModeItems = <PromotionPriceModeSKU>[];
+      json['promotion_pricemodes'].forEach((v) {
+        priceModeItems!.add(new PromotionPriceModeSKU.fromJson(v));
+      });
+    }
+
     success = json['success'];
   }
 
@@ -167,5 +175,25 @@ class PromotionOfferSKU {
   PromotionOfferSKU.fromJson(Map<String, dynamic> json) {
     pluCode = json['pskU_PLUCODE'];
     bundleCode = json['pskU_CODE'];
+  }
+}
+
+class PromotionPriceModeSKU {
+  late String promoCode;
+  late String pluCode;
+  late double qty_s;
+  late double qty_e;
+  late double discAmt;
+  late double discPer;
+  late double fixedPrice;
+
+  PromotionPriceModeSKU.fromJson(Map<String, dynamic> json) {
+    promoCode = json['prO_CODE'];
+    pluCode = json['pplU_CODE'];
+    qty_s = json['pplU_QTY_S']!.toString().parseDouble();
+    qty_e = json['pplU_QTY_E']!.toString().parseDouble();
+    discAmt = json['pplU_DISCAMT']!.toString().parseDouble();
+    discPer = json['pplU_DISCPER']!.toString().parseDouble();
+    fixedPrice = json['pplU_FIXPRICE']!.toString().parseDouble();
   }
 }

@@ -92,6 +92,9 @@ class Promotion {
   late bool pGTICKETVALUE;
   late bool pGCOUPONREDEMPTION;
   late int proCOUPONTYPE;
+  late int pGPRICEMODE;
+  late String? prOPRICEMODE;
+
   Promotion({
     this.prOCODE,
     this.prODESC,
@@ -173,6 +176,8 @@ class Promotion {
     pGTICKETVALUE = intToBool(json['pG_TICKET_VALUE']);
     pGCOUPONREDEMPTION = intToBool(json['pG_COUPON_REDEMPTION']);
     proCOUPONTYPE = (json['prO_COUPON_TYPE']);
+    pGPRICEMODE = (json['pG_PRICE_MODE']);
+    prOPRICEMODE = json['prO_PRICEMODE'];
   }
 
   bool intToBool(dynamic value) {
