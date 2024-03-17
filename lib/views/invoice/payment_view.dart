@@ -1820,10 +1820,15 @@ class _PaymentViewState extends State<PaymentView> {
                                       if (validBin) {
                                         EasyLoading.show(
                                             status: 'please_wait'.tr());
-                                        ecr = await EcrController().doSale(
-                                            ecrAmount!,
-                                            refNo: refString);
-
+                                        if (requiredBins.length == 0) {
+                                          ecr = await EcrController().doSale(
+                                              ecrAmount!,
+                                              refNo: refString);
+                                        } else {
+                                          ecr = await EcrController()
+                                              .binSaleRequest(ecrAmount!,
+                                                  refNo: refString);
+                                        }
                                         // _ecr = false;
                                         // _ecrTimeOut = 60;
                                         // _timer?.cancel();

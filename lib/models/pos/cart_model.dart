@@ -62,6 +62,7 @@ class CartModel {
   double? promoFreeQty;
   String? promoOriginalItem;
   String? priceMode;
+  double? promoDiscValue;
 
   bool? varientEnabled;
   bool? batchEnabled;
@@ -139,7 +140,8 @@ class CartModel {
       ..promoFreeItems = dyPromoFreeItems
           .map((e) => PromotionFreeItemDetails.fromMap(e))
           .toList()
-      ..promoFreeGVs = dyPromoFreeGVs;
+      ..promoFreeGVs = dyPromoFreeGVs
+      ..promoDiscValue = map['promO_DISC_VALUE']?.toString().parseDouble() ?? 0;
   }
 
   factory CartModel.fromLocalMap(Map<String, dynamic> map) {
@@ -213,7 +215,8 @@ class CartModel {
       ..promoDiscAmt = map['PROMO_DISC_AMT']?.toString().parseDouble() ?? 0
       ..promoDiscPre = map['PROMO_DISC_PRE']?.toString().parseDouble() ?? 0
       ..promoCode = map['PROMO_CODE']?.toString() ?? ""
-      ..promoDesc = map["PROMO_DESC"]?.toString() ?? '';
+      ..promoDesc = map["PROMO_DESC"]?.toString() ?? ''
+      ..promoDiscPre = map['PROMO_DISC_VALUE']?.toString().parseDouble() ?? 0;
   }
 
   CartModel(
@@ -312,6 +315,7 @@ class CartModel {
       'PRICE_MODE': priceMode,
       'ALLOW_DISCOUNT': allowDiscount,
       'ALLOW_LOYALTY': allowLoyalty,
+      'PROMO_DISC_VALUE': promoDiscValue,
       // 'LINE_REMARK': '' //not use in system
     };
   }

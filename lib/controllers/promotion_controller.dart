@@ -294,7 +294,8 @@ class PromotionController {
         DateTime.now(),
         '',
         '',
-        promoOfferedAmt));
+        promoOfferedAmt,
+        discount));
 
     if (POSConfig().setup?.addPromoDiscAsItem == true) {
       //Add as an item
@@ -372,7 +373,8 @@ class PromotionController {
         DateTime.now(),
         '',
         '',
-        promoOfferedAmt));
+        promoOfferedAmt,
+        discAmt));
     if (POSConfig().setup?.addPromoDiscAsItem == true) {
       //Add as an item
       //TODO: store DISCOUNT in a global variable
@@ -443,6 +445,8 @@ class PromotionController {
           item.promoDesc = promoName;
           totalLineDiscount +=
               (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
+          item.promoDiscValue =
+              (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
           // add new item to cart
 
           newItem.unitQty = remainQty;
@@ -462,6 +466,8 @@ class PromotionController {
           item.promoDesc = promoName;
 
           totalLineDiscount +=
+              (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
+          item.promoDiscValue =
               (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
           if (promoRemainQty <= 0 && validQty > 0) break;
         }
@@ -495,6 +501,8 @@ class PromotionController {
             item.promoDesc = promoName;
             totalLineDiscount +=
                 (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
+            item.promoDiscValue =
+                (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
             // add new item to cart
 
             newItem.unitQty = remainQty;
@@ -518,6 +526,8 @@ class PromotionController {
 
             totalLineDiscount +=
                 (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
+            item.promoDiscValue =
+                (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
           }
         } else {
           if (appliedPromoCode != '') continue;
@@ -534,6 +544,8 @@ class PromotionController {
           item.promoDesc = promoName;
 
           totalLineDiscount +=
+              (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
+          item.promoDiscValue =
               (item.unitQty * item.selling * (item.promoDiscPre ?? 0) / 100);
         }
       }
@@ -556,7 +568,8 @@ class PromotionController {
         double remainQty = item.unitQty - promoRemainQty;
         final newItem = CartModel.fromLocalMap(item.toMap());
         item.unitQty = promoRemainQty;
-        item.promoDiscAmt = discAmt;
+        item.promoDiscAmt = (discAmt * item.unitQty);
+        item.promoDiscValue = item.promoDiscAmt;
         item.amount = (item.unitQty * item.selling) - (item.promoDiscAmt ?? 0);
         item.promoCode = promoCode;
         item.promoDesc = promoName;
@@ -571,7 +584,8 @@ class PromotionController {
         break;
       } else {
         //Apply promo disc
-        item.promoDiscAmt = discAmt;
+        item.promoDiscAmt = (discAmt * item.unitQty);
+        item.promoDiscValue = item.promoDiscAmt;
         item.amount = (item.unitQty * item.selling) - (item.promoDiscAmt ?? 0);
         promoRemainQty -= item.unitQty;
         item.promoCode = promoCode;
@@ -601,6 +615,7 @@ class PromotionController {
         item.unitQty = promoRemainQty;
         //item.promoDiscAmt = discAmt;
         item.promoDiscAmt = (discAmt * item.unitQty);
+        item.promoDiscValue = item.promoDiscAmt;
         item.amount = (item.unitQty * item.selling) -
             ((item.promoDiscAmt ?? 0) * item.unitQty);
         item.promoCode = promoCode;
@@ -618,6 +633,7 @@ class PromotionController {
       } else {
         //Apply promo disc
         item.promoDiscAmt = (discAmt * item.unitQty);
+        item.promoDiscValue = item.promoDiscAmt;
         item.amount = (item.unitQty * item.selling) -
             ((item.promoDiscAmt ?? 0) * item.unitQty);
         promoRemainQty -= item.unitQty;
@@ -1501,7 +1517,8 @@ class PromotionController {
             selectablePayMode.pdCode,
             '',
             selectablePayMode.promoEligibleValue,
-            selectablePayMode.desc));
+            selectablePayMode.desc,
+            selectablePayMode.amount));
       } else if (selectablePayMode.isCouponPromo) {
         //Coupon redeem offer - No specific payment mode
         TextEditingController coupon_controller = new TextEditingController();
@@ -1605,7 +1622,8 @@ class PromotionController {
               selectablePayMode.couponNo,
               '',
               selectablePayMode.promoEligibleValue,
-              selectablePayMode.desc));
+              selectablePayMode.desc,
+              selectablePayMode.amount));
           List<RedeemedCoupon> redeemedCouponList = [];
           redeemedCouponList.add(new RedeemedCoupon(
               couponCode: selectablePayMode.couponNo,
@@ -1639,7 +1657,8 @@ class PromotionController {
               selectablePayMode.pdCode,
               item.ticketSerial,
               selectablePayMode.promoEligibleValue,
-              selectablePayMode.desc));
+              selectablePayMode.desc,
+              selectablePayMode.amount));
         }
         cartBloc.addPromoFreeTickets(selectablePayMode.cashBackCoupons);
       }
