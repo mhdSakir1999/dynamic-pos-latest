@@ -318,7 +318,8 @@ class CartBloc {
               '',
               currentItem.promoOriginalItem ?? '',
               0,
-              currentItem.promoDesc ?? ''));
+              currentItem.promoDesc ?? '',
+              currentItem.promoDiscValue ?? 0));
         }
       }
     }
@@ -342,7 +343,8 @@ class CartBloc {
           billDiscPromoItem.coupon_code,
           billDiscPromoItem.promo_product,
           billDiscPromoItem.beneficial_value,
-          billDiscPromoItem.promotion_name));
+          billDiscPromoItem.promotion_name,
+          billDiscPromoItem.discountValue));
     }
   }
 

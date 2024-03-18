@@ -41,4 +41,26 @@ class EcrController {
 
     return null;
   }
+
+  Future<EcrResponse?> binSaleRequest(double amount,
+      {String refNo = ''}) async {
+    final res = await ApiClient.call('ecr/bin_sale_req', ApiMethod.POST,
+        local: true,
+        data: {
+          'amount': amount.toStringAsFixed(2),
+          'txnNo': cartBloc.cartSummary?.invoiceNo ?? '',
+          'binRef': refNo
+        });
+    if (res?.statusCode == 200) {
+      final EcrResponse ecrResponse = EcrResponse.fromJson(res?.data);
+      return ecrResponse;
+    }
+    if (res?.statusCode == 403) {
+      final EcrErrorResponse ecrErrorResponse =
+          EcrErrorResponse.fromJson(res?.data);
+      EasyLoading.showError(ecrErrorResponse.error ?? '');
+    }
+
+    return null;
+  }
 }

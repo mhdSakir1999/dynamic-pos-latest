@@ -25,6 +25,7 @@ class InvAppliedPromotion {
   late String promo_product;
   late double beneficial_value;
   late String promotion_name;
+  late double discountValue;
 
   InvAppliedPromotion(
       this.Location_code,
@@ -43,7 +44,8 @@ class InvAppliedPromotion {
       this.coupon_code,
       this.promo_product,
       this.beneficial_value,
-      this.promotion_name);
+      this.promotion_name,
+      this.discountValue);
 
   InvAppliedPromotion.fromMap(Map<String, dynamic> map) {
     final tempDate = map['date_time'];
@@ -74,6 +76,7 @@ class InvAppliedPromotion {
     promo_product = map['promo_product'];
     beneficial_value = map['beneficial_value']?.toString().parseDouble() ?? 0;
     promotion_name = map['promo_name'];
+    discountValue = map['discountValue']?.toString().parseDouble() ?? 0;
   }
 
   Map<String, dynamic> toMap() {
@@ -94,7 +97,8 @@ class InvAppliedPromotion {
       'promo_product': this.promo_product,
       'beneficial_value': this.beneficial_value.toDouble(),
       'invoice_date': this.invoice_date.toString(),
-      'promotion_name': this.promotion_name
+      'promotion_name': this.promotion_name,
+      'discountValue': this.discountValue.toDouble(),
     };
   }
 }
@@ -117,6 +121,7 @@ class InvBillDiscAmountPromo {
   late String coupon_code;
   late String promo_product;
   late double beneficial_value;
+  late double discountValue;
 
   InvBillDiscAmountPromo(
       this.Location_code,
@@ -135,7 +140,8 @@ class InvBillDiscAmountPromo {
       this.invoice_date,
       this.coupon_code,
       this.promo_product,
-      this.beneficial_value);
+      this.beneficial_value,
+      this.discountValue);
 
   InvBillDiscAmountPromo.fromMap(Map<String, dynamic> map) {
     final tempDate = map['date_time'];
@@ -166,6 +172,7 @@ class InvBillDiscAmountPromo {
     coupon_code = map['coupon_code'];
     promo_product = map['promo_product'];
     beneficial_value = map['beneficial_value']?.toString().parseDouble() ?? 0;
+    discountValue = map['discountValue']?.toString().parseDouble() ?? 0;
   }
 
   Map<String, dynamic> toMap() {
@@ -187,6 +194,7 @@ class InvBillDiscAmountPromo {
       'promo_product': this.promo_product,
       'beneficial_value': this.beneficial_value.toDouble(),
       'invoice_date': this.invoice_date.toString(),
+      'discountValue': this.discountValue.toDouble(),
     };
   }
 }
