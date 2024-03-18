@@ -736,10 +736,12 @@ class POSManualPrint {
               "{promo_sum_lineNo}", addSpacesBack('$promo_sum_lineNo', 3));
           value = value.replaceAll("{promo_line_desc}",
               addSpacesBack('$promoSummaryLineName', variableMaxLength - 13));
+
+          num promoSummaryLineAmountNum = promoSummaryLineAmount;
           value = value.replaceAll(
               "{promo_line_amount}",
               addSpacesFront(
-                  '${promoSummaryLineAmount.toStringAsFixed(2)}', 10));
+                  '${formatWithCommas(promoSummaryLineAmountNum)}', 10));
           // skip printing gross amount if gross == net
           if (label == 'gross_amount' && totalLineAmount == netAmount) {
             continue;
