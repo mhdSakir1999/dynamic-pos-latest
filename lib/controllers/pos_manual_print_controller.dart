@@ -771,9 +771,9 @@ class POSManualPrint {
             continue;
           }
 
-          if (label == 'promoSummary_heading' && promoSummary.isEmpty) {
-            continue;
-          }
+          // if (label == 'promoSummary_heading' && promoSummary.isEmpty) {
+          //   continue;
+          // }
 
           bytes += generator.text(value,
               styles: PosStyles(
@@ -1055,38 +1055,49 @@ class POSManualPrint {
             print(e);
           }
         }
+
         if (node.name.local == 'promotionSummary' && promoSummary.isNotEmpty) {
+          List<xml.XmlNode> promotionSummaryChildNodes = node.children;
+          await writeInvoiceBytes(
+              childNodes: promotionSummaryChildNodes,
+              reprint: reprint,
+              cancel: cancel);
+        }
+        if (node.name.local == 'promoSummary') {
           List<xml.XmlNode> promoSummaryChildNodes = node.children;
           int lineno = promo_sum_lineNo;
+          List<Map<String, dynamic>> filteredSummaries = [];
           for (int p = 0; p < promoSummary.length; p++) {
-            bool condition1 = (promoSummary[p]['INVPROMO_DISCPER'] == null ||
-                promoSummary[p]['INVPROMO_DISCPER'] == 0);
-            bool condition2 = (promoSummary[p]['INVPROMO_DICAMT'] == null ||
-                promoSummary[p]['INVPROMO_DICAMT'] == 0);
-            if (condition1 && condition2) {
-              continue;
-            }
-            promoSummaryLineName = promoSummary[p]['INVPROMO_DESC'];
-            if (condition1 && !condition2) {
-              promoSummaryLineAmount =
-                  double.parse(promoSummary[p]['INVPROMO_DICAMT'].toString());
-              print(promoSummaryLineName +
-                  '   ' +
-                  promoSummaryLineAmount.toString());
+            var promo = promoSummary[p];
+            if (filteredSummaries.isEmpty) {
+              filteredSummaries.add({
+                "code": promo['INVPROMO_PROCODE'],
+                "desc": promo['INVPROMO_DESC'],
+                "value": promo['INVPROMO_DISC_VALUE']
+              });
             } else {
-              double promo_qty = double.parse(
-                  promoSummary[p]['INVPROMO_INVQTY']?.toString() ?? '0');
-              double promo_sell = double.parse(
-                  promoSummary[p]['INVPROMO_SPRICE']?.toString() ?? '0');
-              double promo_perc =
-                  double.parse(promoSummary[p]['INVPROMO_DISCPER'].toString());
-
-              promoSummaryLineAmount =
-                  (promo_qty * promo_sell * promo_perc) / 100;
-              print(promoSummaryLineName +
-                  '   ' +
-                  promoSummaryLineAmount.toString());
+              var available = filteredSummaries.firstWhere(
+                (element) => element['code'] == promo['INVPROMO_PROCODE'],
+                orElse: () => {"code": null, "desc": null, "value": null},
+              );
+              if (available['code'] == null) {
+                filteredSummaries.add({
+                  "code": promo['INVPROMO_PROCODE'],
+                  "desc": promo['INVPROMO_DESC'],
+                  "value": promo['INVPROMO_DISC_VALUE']
+                });
+              } else {
+                // filteredSummaries.removeWhere((element)=> element['code'] == promo['INVPROMO_PROCODE']);
+                available['value'] = (available['value'] ?? 0) +
+                    (promo['INVPROMO_DISC_VALUE'] ?? 0);
+              }
             }
+          }
+          for (int s = 0; s < filteredSummaries.length; s++) {
+            int lineno = promo_sum_lineNo;
+            promoSummaryLineName = filteredSummaries[s]['desc'];
+            promoSummaryLineAmount =
+                double.parse(filteredSummaries[s]['value']?.toString() ?? '0');
 
             if (promoSummaryLineAmount != 0) {
               promo_sum_lineNo = lineno + 1;
@@ -1096,6 +1107,45 @@ class POSManualPrint {
                   cancel: cancel);
             }
           }
+          // for (int p = 0; p < promoSummary.length; p++) {
+          //   int lineno = promo_sum_lineNo;
+          //   bool condition1 = (promoSummary[p]['INVPROMO_DISCPER'] == null ||
+          //       promoSummary[p]['INVPROMO_DISCPER'] == 0);
+          //   bool condition2 = (promoSummary[p]['INVPROMO_DICAMT'] == null ||
+          //       promoSummary[p]['INVPROMO_DICAMT'] == 0);
+          //   if (condition1 && condition2) {
+          //     continue;
+          //   }
+          //   promoSummaryLineName = promoSummary[p]['INVPROMO_DESC'];
+          //   if (condition1 && !condition2) {
+          //     promoSummaryLineAmount =
+          //         double.parse(promoSummary[p]['INVPROMO_DICAMT'].toString());
+          //     print(promoSummaryLineName +
+          //         '   ' +
+          //         promoSummaryLineAmount.toString());
+          //   } else {
+          //     double promo_qty = double.parse(
+          //         promoSummary[p]['INVPROMO_INVQTY']?.toString() ?? '0');
+          //     double promo_sell = double.parse(
+          //         promoSummary[p]['INVPROMO_SPRICE']?.toString() ?? '0');
+          //     double promo_perc =
+          //         double.parse(promoSummary[p]['INVPROMO_DISCPER'].toString());
+
+          //     promoSummaryLineAmount =
+          //         (promo_qty * promo_sell * promo_perc) / 100;
+          //     print(promoSummaryLineName +
+          //         '   ' +
+          //         promoSummaryLineAmount.toString());
+          //   }
+
+          // if (promoSummaryLineAmount != 0) {
+          //   promo_sum_lineNo = lineno + 1;
+          //   await writeInvoiceBytes(
+          //       childNodes: promoSummaryChildNodes,
+          //       reprint: reprint,
+          //       cancel: cancel);
+          // }
+          // }
         }
       }
     }

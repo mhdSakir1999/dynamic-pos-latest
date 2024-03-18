@@ -2088,7 +2088,7 @@ class _PaymentViewState extends State<PaymentView> {
           });
     } else {
       EasyLoading.showToast("easy_loading.no_coupon".tr(),
-          duration: Duration(seconds: 5), dismissOnTap: true);
+          duration: Duration(seconds: 2), dismissOnTap: true);
       selectedPayModeDetail = null;
       if (mounted) setState(() {});
     }
