@@ -27,6 +27,7 @@ class POSManualPrint {
   late Generator generator;
   List<int> bytes = [];
   late Map<String, dynamic> invHed = {}, loc_det = {};
+  late List<dynamic> promoSummary = [];
   late Map<String, dynamic>? customer;
   String invNo = '';
   String loc_code = '';
@@ -59,6 +60,7 @@ class POSManualPrint {
   int totalPayments = 0;
   List<PosColumn> posColList = [];
   String lineNo = '->';
+
   String proDesc = 'product_description';
   String stockCode = 'stock_code';
   String sellingPrice = '--';
@@ -70,6 +72,9 @@ class POSManualPrint {
   double balancePoints = 0;
   double earnedPoints = 0;
   double redeemedPoints = 0;
+  String promoSummaryLineName = '';
+  double promoSummaryLineAmount = 0;
+  int promo_sum_lineNo = 0;
 
   String setupAdd1 = '';
   String setupAdd2 = '';
@@ -236,6 +241,8 @@ class POSManualPrint {
       invPayModeDet = det['M_TBLPAYMODEDET'];
 
       totalPayments = invPayment.length;
+
+      promoSummary = det['T_TBLINVFREEISSUES'] ?? [];
 
       await LogWriter()
           .saveLogsToFile('ERROR_LOG_', ['Start writing the invoice...']);
@@ -725,7 +732,14 @@ class POSManualPrint {
               addSpacesBack("${formatWithCommas(balancePoints)}",
                   variableMaxLength - 24));
           value = value.replaceAll("{printMessage}", '$printMessage');
-
+          value = value.replaceAll(
+              "{promo_sum_lineNo}", addSpacesBack('$promo_sum_lineNo', 3));
+          value = value.replaceAll("{promo_line_desc}",
+              addSpacesBack('$promoSummaryLineName', variableMaxLength - 13));
+          value = value.replaceAll(
+              "{promo_line_amount}",
+              addSpacesFront(
+                  '${promoSummaryLineAmount.toStringAsFixed(2)}', 10));
           // skip printing gross amount if gross == net
           if (label == 'gross_amount' && totalLineAmount == netAmount) {
             continue;
@@ -752,6 +766,10 @@ class POSManualPrint {
 
           // skip some parts if it is a cancel bill
           if (cancel && inCancelBill == 'false') {
+            continue;
+          }
+
+          if (label == 'promoSummary_heading' && promoSummary.isEmpty) {
             continue;
           }
 
@@ -1033,6 +1051,48 @@ class POSManualPrint {
                 size: QRSize.Size6, align: PosAlign.center);
           } catch (e) {
             print(e);
+          }
+        }
+        if (node.name.local == 'promotionSummary' && promoSummary.isNotEmpty) {
+          List<xml.XmlNode> promoSummaryChildNodes = node.children;
+          int lineno = promo_sum_lineNo;
+          for (int p = 0; p < promoSummary.length; p++) {
+            bool condition1 = (promoSummary[p]['INVPROMO_DISCPER'] == null ||
+                promoSummary[p]['INVPROMO_DISCPER'] == 0);
+            bool condition2 = (promoSummary[p]['INVPROMO_DICAMT'] == null ||
+                promoSummary[p]['INVPROMO_DICAMT'] == 0);
+            if (condition1 && condition2) {
+              continue;
+            }
+            promoSummaryLineName = promoSummary[p]['INVPROMO_DESC'];
+            if (condition1 && !condition2) {
+              promoSummaryLineAmount =
+                  double.parse(promoSummary[p]['INVPROMO_DICAMT'].toString());
+              print(promoSummaryLineName +
+                  '   ' +
+                  promoSummaryLineAmount.toString());
+            } else {
+              double promo_qty = double.parse(
+                  promoSummary[p]['INVPROMO_INVQTY']?.toString() ?? '0');
+              double promo_sell = double.parse(
+                  promoSummary[p]['INVPROMO_SPRICE']?.toString() ?? '0');
+              double promo_perc =
+                  double.parse(promoSummary[p]['INVPROMO_DISCPER'].toString());
+
+              promoSummaryLineAmount =
+                  (promo_qty * promo_sell * promo_perc) / 100;
+              print(promoSummaryLineName +
+                  '   ' +
+                  promoSummaryLineAmount.toString());
+            }
+
+            if (promoSummaryLineAmount != 0) {
+              promo_sum_lineNo = lineno + 1;
+              await writeInvoiceBytes(
+                  childNodes: promoSummaryChildNodes,
+                  reprint: reprint,
+                  cancel: cancel);
+            }
           }
         }
       }
