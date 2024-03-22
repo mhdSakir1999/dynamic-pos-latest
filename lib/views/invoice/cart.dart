@@ -432,6 +432,7 @@ class _CartState extends State<Cart> {
       );
   }
 
+  bool isPressed = false;
   // this is the default lhs in the app
   Widget buildDefaultLHS() {
     return Column(
@@ -459,7 +460,10 @@ class _CartState extends State<Cart> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.425,
+                        // height: MediaQuery.of(context).size.height * 0.07,
+                        width: isPressed
+                            ? MediaQuery.of(context).size.width * 0.3
+                            : MediaQuery.of(context).size.width * 0.425,
                         // margin: EdgeInsets.only(right: 16),
                         child: TextField(
                           onTap: () {
@@ -505,14 +509,17 @@ class _CartState extends State<Cart> {
                               hintText: "invoice.search".tr()),
                         ),
                       ),
-                      Container(
+                      Expanded(
                         // margin: EdgeInsets.all(5),
                         // width: MediaQuery.of(context).size.width * 0.03,
                         child: Tooltip(
-                          message: 'general_dialog.sales_assistant'.tr(),
+                          message: '', // 'general_dialog.sales_assistant'.tr(),
                           child: Padding(
-                            padding: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.01),
+                            padding: EdgeInsets.zero,
+                            // EdgeInsets.only(
+                            //     left: MediaQuery.of(context).size.width *
+                            //         0.01
+                            //         ),
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               icon: Icon(
@@ -521,6 +528,11 @@ class _CartState extends State<Cart> {
                                 size: MediaQuery.of(context).size.height * 0.05,
                               ),
                               onPressed: () async {
+                                // setState(() {
+                                //   isPressed = !isPressed;
+                                //   focusNode.requestFocus();
+                                //   itemCodeFocus.requestFocus();
+                                // });
                                 final selectedRep;
                                 if (cartBloc.currentCart != null &&
                                     cartBloc.currentCart!.length > 0) {
@@ -553,6 +565,212 @@ class _CartState extends State<Cart> {
                             ),
                           ),
                         ),
+                        //   isPressed
+                        //       ? AnimatedContainer(
+                        //           duration: Duration(seconds: 10),
+                        //           width: MediaQuery.of(context).size.width * 0.15,
+                        //           child: Card(
+                        //               color: CurrentTheme.primaryLightColor,
+                        //               child: Container(
+                        //                 height:
+                        //                     MediaQuery.of(context).size.height *
+                        //                         0.06,
+                        //                 child: Padding(
+                        //                   padding:
+                        //                       const EdgeInsets.only(bottom: 8.0),
+                        //                   child: Row(
+                        //                     crossAxisAlignment:
+                        //                         CrossAxisAlignment.center,
+                        //                     children: [
+                        //                       Expanded(
+                        //                         flex: 1,
+                        //                         child: IconButton(
+                        //                             onPressed: () {
+                        //                               setState(() {
+                        //                                 isPressed = !isPressed;
+                        //                                 focusNode.requestFocus();
+                        //                                 itemCodeFocus
+                        //                                     .requestFocus();
+                        //                               });
+                        //                             },
+                        //                             icon: Icon(
+                        //                               Icons.arrow_forward_ios,
+                        //                               color: CurrentTheme
+                        //                                   .primaryColor,
+                        //                               size: MediaQuery.of(context)
+                        //                                       .size
+                        //                                       .height *
+                        //                                   0.04,
+                        //                             )),
+                        //                       ),
+                        //                       Expanded(
+                        //                         flex: 1,
+                        //                         child: Tooltip(
+                        //                           message:
+                        //                               'tool_tip.sales_assistant'
+                        //                                   .tr(),
+                        //                           child: IconButton(
+                        //                               onPressed: () async {
+                        //                                 final selectedRep;
+                        //                                 if (cartBloc.currentCart !=
+                        //                                         null &&
+                        //                                     cartBloc.currentCart!
+                        //                                             .length >
+                        //                                         0) {
+                        //                                   if (salesRepBloc
+                        //                                               .currentSalesRep ==
+                        //                                           null ||
+                        //                                       salesRepBloc
+                        //                                               .currentSalesRep
+                        //                                               ?.length ==
+                        //                                           0) {
+                        //                                     EasyLoading.showError(
+                        //                                         'No sales assistants found');
+                        //                                     return;
+                        //                                   }
+                        //                                   selectedRep =
+                        //                                       await selecetSalesRep(
+                        //                                           context);
+                        //                                   cartBloc
+                        //                                       .currentCart?.values
+                        //                                       .forEach((element) {
+                        //                                     if (element.saleman ==
+                        //                                             null ||
+                        //                                         element.saleman ==
+                        //                                             '') {
+                        //                                       element.saleman =
+                        //                                           selectedRep
+                        //                                                   ?.sACODE ??
+                        //                                               '';
+                        //                                     }
+                        //                                   });
+                        //                                   focusNode
+                        //                                       .requestFocus();
+                        //                                   itemCodeFocus
+                        //                                       .requestFocus();
+                        //                                 } else {
+                        //                                   EasyLoading.showError(
+                        //                                       'general_dialog.sales_assist_no_products'
+                        //                                           .tr());
+                        //                                   focusNode
+                        //                                       .requestFocus();
+                        //                                   itemCodeFocus
+                        //                                       .requestFocus();
+                        //                                 }
+                        //                               },
+                        //                               icon: Icon(
+                        //                                 Icons.man_3_rounded,
+                        //                                 color: CurrentTheme
+                        //                                     .primaryColor,
+                        //                                 size:
+                        //                                     MediaQuery.of(context)
+                        //                                             .size
+                        //                                             .height *
+                        //                                         0.04,
+                        //                               )),
+                        //                         ),
+                        //                       ),
+                        //                       Expanded(
+                        //                         flex: 1,
+                        //                         child: Tooltip(
+                        //                           message:
+                        //                               'tool_tip.promo_refresh'
+                        //                                   .tr(),
+                        //                           child: IconButton(
+                        //                               onPressed: () async {
+                        //                                 EasyLoading.show(
+                        //                                     status: 'please_wait'
+                        //                                         .tr());
+                        //                                 var res =
+                        //                                     await PromotionController(
+                        //                                             context)
+                        //                                         .getPromotions();
+                        //                                 EasyLoading.dismiss();
+                        //                                 res?.success == true
+                        //                                     ? EasyLoading.showSuccess(
+                        //                                         'invoice.promo_loaded'
+                        //                                             .tr())
+                        //                                     : EasyLoading.showError(
+                        //                                         'No new promotions available');
+                        //                                 setState(() {
+                        //                                   focusNode
+                        //                                       .requestFocus();
+                        //                                   itemCodeFocus
+                        //                                       .requestFocus();
+                        //                                 });
+                        //                               },
+                        //                               icon: Icon(
+                        //                                 Icons.refresh_rounded,
+                        //                                 color: CurrentTheme
+                        //                                     .primaryColor,
+                        //                                 size:
+                        //                                     MediaQuery.of(context)
+                        //                                             .size
+                        //                                             .height *
+                        //                                         0.04,
+                        //                               )),
+                        //                         ),
+                        //                       )
+                        //                     ],
+                        //                   ),
+                        //                 ),
+                        //               )),
+                        //         )
+                        //       : Tooltip(
+                        //           message:
+                        //               '', // 'general_dialog.sales_assistant'.tr(),
+                        //           child: Padding(
+                        //             padding: EdgeInsets.zero,
+                        //             // EdgeInsets.only(
+                        //             //     left: MediaQuery.of(context).size.width *
+                        //             //         0.01
+                        //             //         ),
+                        //             child: IconButton(
+                        //               padding: EdgeInsets.zero,
+                        //               icon: Icon(
+                        //                 Icons.functions_rounded,
+                        //                 color: Colors.white,
+                        //                 size: MediaQuery.of(context).size.height *
+                        //                     0.05,
+                        //               ),
+                        //               onPressed: () async {
+                        //                 setState(() {
+                        //                   isPressed = !isPressed;
+                        //                   focusNode.requestFocus();
+                        //                   itemCodeFocus.requestFocus();
+                        //                 });
+                        //                 // final selectedRep;
+                        //                 // if (cartBloc.currentCart != null &&
+                        //                 //     cartBloc.currentCart!.length > 0) {
+                        //                 //   if (salesRepBloc.currentSalesRep == null ||
+                        //                 //       salesRepBloc.currentSalesRep?.length ==
+                        //                 //           0) {
+                        //                 //     EasyLoading.showError(
+                        //                 //         'No sales assistants found');
+                        //                 //     return;
+                        //                 //   }
+                        //                 //   selectedRep = await selecetSalesRep(context);
+                        //                 //   cartBloc.currentCart?.values
+                        //                 //       .forEach((element) {
+                        //                 //     if (element.saleman == null ||
+                        //                 //         element.saleman == '') {
+                        //                 //       element.saleman =
+                        //                 //           selectedRep?.sACODE ?? '';
+                        //                 //     }
+                        //                 //   });
+                        //                 //   focusNode.requestFocus();
+                        //                 //   itemCodeFocus.requestFocus();
+                        //                 // } else {
+                        //                 //   EasyLoading.showError(
+                        //                 //       'general_dialog.sales_assist_no_products'
+                        //                 //           .tr());
+                        //                 //   focusNode.requestFocus();
+                        //                 //   itemCodeFocus.requestFocus();
+                        //                 // }
+                        //               },
+                        //             ),
+                        //           ),
+                        //         ),
                       )
                     ],
                   ),

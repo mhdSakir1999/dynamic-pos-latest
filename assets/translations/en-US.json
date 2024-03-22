@@ -113,7 +113,8 @@
     "no_stock": "No Stock Available",
     "no_stock_detail": "There is not enough stock for these products\nDo you want to invoice them anyway?\n(Note: you may need valid permission for that)",
     "stock_yes": "Yes",
-    "stock_no": "No"
+    "stock_no": "No",
+    "promo_loaded": "Promotions are up to date"
   },
   "functions": {
     "special_function": "Special\nFunctions\n[F1]",
@@ -873,9 +874,12 @@
     "empty_bottle_select": "Select bottle type",
     "empty_bottle_cancel": "Cancel Invoicing bottles",
     "sales_assist_no_products": "Add items to cart to select sales assistant",
-    "sales_assistant": "Sales Assistant \n     [Ctrl+A]",
     "continue_zero_float": "Are you sure to continue with the float amount of 0.00",
     "change": "Change",
     "mngSignOff_confirm": "Do you confirm the amount and want to do sign-off"
+  },
+  "tool_tip": {
+    "promo_refresh": "Promotion Refresh",
+    "sales_assistant": "Sales Assistant \n     [Ctrl+A]"
   }
 }

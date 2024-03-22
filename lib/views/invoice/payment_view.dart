@@ -130,7 +130,7 @@ class _PaymentViewState extends State<PaymentView> {
     final payModes = payModeBloc.payModeResult?.payModes ?? [];
     int defaultPayModeIndex =
         payModes.indexWhere((element) => element.defaultPaymentMode == true);
-    if (defaultPayModeIndex != -1) {
+    if (defaultPayModeIndex != -1 && cartBloc.specificPayMode == null) {
       selectedPayModeHeader = payModes[defaultPayModeIndex];
     }
     saving = absolute - lineTotal;
@@ -1668,8 +1668,8 @@ class _PaymentViewState extends State<PaymentView> {
                     cartBloc.addNewReference(ecrResponse.ecrCard!);
                   formatCardNoFromEcr(
                       ecrResponse.ecrCard?.strTxnCardBin ?? '', '****');
-                  dueBalanceEditingController.text =
-                      balanceDue.toStringAsFixed(2);
+                  // dueBalanceEditingController.text =
+                  //     balanceDue.toStringAsFixed(2);
                   handleCalculation();
                 }
               }
@@ -1837,6 +1837,8 @@ class _PaymentViewState extends State<PaymentView> {
                                         return;
                                       }
                                       if (ecr != null) {
+                                        dueBalanceEditingController.text =
+                                            ecrAmount.toString();
                                         Navigator.pop(context);
                                         return;
                                       }
