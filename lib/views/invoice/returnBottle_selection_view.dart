@@ -32,8 +32,10 @@ import '../../controllers/keyboard_controller.dart';
 
 class ReturnBottleSelectionView extends StatefulWidget {
   final List<ProductResult?> returnProResList;
+  final bool isMinus;
 
-  ReturnBottleSelectionView({Key? key, required this.returnProResList})
+  ReturnBottleSelectionView(
+      {Key? key, required this.returnProResList, required this.isMinus})
       : super(key: key);
   @override
   _ReturnBottleSelectionViewState createState() =>
@@ -794,6 +796,9 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
       TextEditingController qtyController =
           TextEditingController(text: qty.toString());
       double newqty = 1;
+      if (widget.isMinus == true) {
+        qty = -1 * qty;
+      }
       await POSPriceCalculator().addItemToCart(
           myProduct!, qty, context, null, null, null,
           secondApiCall: true, successToast: false);

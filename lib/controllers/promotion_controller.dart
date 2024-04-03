@@ -573,7 +573,8 @@ class PromotionController {
         item.amount = (item.unitQty * item.selling) - (item.promoDiscAmt ?? 0);
         item.promoCode = promoCode;
         item.promoDesc = promoName;
-        totalLineDiscount += discAmt;
+        //totalLineDiscount += discAmt;
+        totalLineDiscount += item.promoDiscAmt ?? 0;
         // add new item to cart
 
         newItem.unitQty = remainQty;
@@ -590,7 +591,8 @@ class PromotionController {
         promoRemainQty -= item.unitQty;
         item.promoCode = promoCode;
         item.promoDesc = promoName;
-        totalLineDiscount += discAmt;
+        //totalLineDiscount += discAmt;
+        totalLineDiscount += item.promoDiscAmt ?? 0;
         if (promoRemainQty <= 0 && validQty > 0) break;
       }
     }

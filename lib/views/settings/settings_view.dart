@@ -149,7 +149,7 @@ class _SettingViewState extends State<SettingView> {
             physics: BouncingScrollPhysics(),
             child: Column(
               children: [
-                POSAppBar(),
+                // POSAppBar(),
                 buildPOSKeyboardSettings(),
                 buildItemCard("settings.pos_settings".tr(), buildPosSettings()),
                 buildItemCard(

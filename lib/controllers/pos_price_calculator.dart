@@ -680,6 +680,7 @@ class POSPriceCalculator {
           EasyLoading.showSuccess("easy_loading.item_add".tr());
           return model;
         }
+        return model;
       } else {
         //revert the current calculations
         cartSummary.subTotal -= lineAmount;
@@ -780,8 +781,9 @@ class POSPriceCalculator {
           controller.updateTempCartSummary(cartSummary);
           if (successToast) {
             EasyLoading.showSuccess("easy_loading.item_add".tr());
-            // return model;
+            return model;
           }
+          return model;
         } else {
           cartSummary.subTotal -= lineAmounts[j];
           if (!alreadyAdded && !minus) {
@@ -1855,29 +1857,25 @@ class POSPriceCalculator {
                                   itemCount: cartItems.length,
                                   itemBuilder: (context, index) {
                                     return ListTile(
-                                      leading: SizedBox(
-                                        width: width * 0.02,
-                                        child: Checkbox(
-                                            value: isSelected[index],
-                                            onChanged: (value) {
-                                              setState(
-                                                () {
-                                                  isSelected[index] = value!;
-                                                },
-                                              );
-                                              if (value == true) {
-                                                selectedProductIndexes
-                                                    .add(index);
-                                              } else {
-                                                selectedProductIndexes
-                                                    .remove(index);
-                                              }
-                                              setState(
-                                                () {},
-                                              );
-                                              print(selectedProductIndexes);
-                                            }),
-                                      ),
+                                      leading: Checkbox(
+                                          value: isSelected[index],
+                                          onChanged: (value) {
+                                            setState(
+                                              () {
+                                                isSelected[index] = value!;
+                                              },
+                                            );
+                                            if (value == true) {
+                                              selectedProductIndexes.add(index);
+                                            } else {
+                                              selectedProductIndexes
+                                                  .remove(index);
+                                            }
+                                            setState(
+                                              () {},
+                                            );
+                                            print(selectedProductIndexes);
+                                          }),
                                       title: Padding(
                                         padding:
                                             const EdgeInsets.only(bottom: 12),

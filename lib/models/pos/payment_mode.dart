@@ -48,6 +48,7 @@ class PayModeHeader {
   double? pointRate;
   bool? pHLOCALMODE;
   bool? pHLINKADVANCE;
+  bool? pHQRPAY;
   List<PayModeDetails>? pDDETAILSLIST;
 
   PayModeHeader(
@@ -60,6 +61,7 @@ class PayModeHeader {
       this.reference,
       this.pHLOCALMODE,
       this.pHLINKADVANCE,
+      this.pHQRPAY,
       this.pDDETAILSLIST});
 
   PayModeHeader.fromJson(Map<String, dynamic> json) {
@@ -84,6 +86,7 @@ class PayModeHeader {
     apiSp = json['pH_APISP']?.toString();
     pointRate = json['pH_POINTSPER']?.toString().parseDouble() ?? 0;
     pHLINKADVANCE = json['pH_LINKADVANCE']?.toString().parseBool() ?? false;
+    pHQRPAY = json['pH_QRPAY']?.toString().parseBool() ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -96,6 +99,7 @@ class PayModeHeader {
     data['PH_LINKLOYALTY'] = this.pHLINKLOYALTY;
     data['pH_LOCALMODE'] = this.pHLOCALMODE;
     data['pH_LINKADVANCE'] = this.pHLINKADVANCE;
+    data['pH_QRPAY'] = this.pHQRPAY;
     if (this.pDDETAILSLIST != null) {
       data['PD_DETAILS_LIST'] =
           this.pDDETAILSLIST?.map((v) => v.toJson()).toList();

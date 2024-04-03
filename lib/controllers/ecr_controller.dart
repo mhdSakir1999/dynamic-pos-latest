@@ -63,4 +63,23 @@ class EcrController {
 
     return null;
   }
+
+  Future<EcrResponse?> QrSaleRequest(double amount, {String refNo = ''}) async {
+    final res =
+        await ApiClient.call('ecr/qr_sale', ApiMethod.POST, local: true, data: {
+      'amount': amount.toStringAsFixed(2),
+      'txnNo': cartBloc.cartSummary?.invoiceNo ?? '',
+      'binRef': refNo
+    });
+    if (res?.statusCode == 200) {
+      final EcrResponse ecrResponse = EcrResponse.fromJson(res?.data);
+      return ecrResponse;
+    } else {
+      final EcrErrorResponse ecrErrorResponse =
+          EcrErrorResponse.fromJson(res?.data);
+      EasyLoading.showError(ecrErrorResponse.error ?? '');
+    }
+
+    return null;
+  }
 }

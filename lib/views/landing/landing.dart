@@ -325,10 +325,10 @@ class _LandingViewState extends State<LandingView> {
                 AlertDialogButton(
                     onPressed: () async {
                       String data = POSConfig.localPrintData;
-                      // List<POSDenominationModel> denominations =
-                      //     POSConfig.denominations;
-                      // List<POSDenominationDetail> denominationDet =
-                      //     POSConfig.denominationDet;
+                      List<POSDenominationModel> denominations =
+                          POSConfig.denominations;
+                      List<POSDenominationDetail> denominationDet =
+                          POSConfig.denominationDet;
                       await POSManualPrint()
                           .printInvoice(data: data, points: 0.0);
                       // await POSManualPrint().printSignSlip(

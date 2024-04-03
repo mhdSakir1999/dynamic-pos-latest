@@ -1,0 +1,1022 @@
+2024-03-25 11:27:54.333957 : Closing previous api...
+2024-03-25 11:27:54.455305 : Closing previous api...
+2024-03-25 11:27:54.490306 : loading config from .env completed
+2024-03-25 11:27:54.490306 : SERVER: http://localhost:71/api/
+2024-03-25 11:27:54.490306 : LOCAL: http://localhost:71/api/
+2024-03-25 11:27:54.490306 : POS_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:27:54.490306 : LOYALTY: http://localhost:72/api/
+2024-03-25 11:27:54.490306 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:27:54.490306 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 11:27:54.490306 : SAAS: false
+2024-03-25 11:27:54.490306 : PASSWORD: ADMIN
+2024-03-25 11:27:54.490306 : DUAL_SCREEN: 
+2024-03-25 11:27:54.490306 : ENABLE_POLL_DISPLAY: true
+2024-03-25 11:27:54.490306 : SCREEN_WIDTH: 1024.0
+2024-03-25 11:27:54.490306 : SCREEN_HEIGHT: 768.0
+2024-03-25 11:27:54.490306 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 11:27:54.490306 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 11:27:54.490306 : PRINTER_NAME: POS-80C
+2024-03-25 11:27:54.491307 : FONT_A_LENGTH: 48
+2024-03-25 11:27:54.491307 : FONT_B_LENGTH: 64
+2024-03-25 11:27:56.423649 : loading config from .env completed
+2024-03-25 11:27:56.423649 : SERVER: http://localhost:71/api/
+2024-03-25 11:27:56.423649 : LOCAL: http://localhost:71/api/
+2024-03-25 11:27:56.423649 : POS_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:27:56.423649 : LOYALTY: http://localhost:72/api/
+2024-03-25 11:27:56.423649 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:27:56.423649 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 11:27:56.423649 : SAAS: false
+2024-03-25 11:27:56.423649 : PASSWORD: ADMIN
+2024-03-25 11:27:56.423649 : DUAL_SCREEN: 
+2024-03-25 11:27:56.423649 : ENABLE_POLL_DISPLAY: true
+2024-03-25 11:27:56.423649 : SCREEN_WIDTH: 1024.0
+2024-03-25 11:27:56.423649 : SCREEN_HEIGHT: 768.0
+2024-03-25 11:27:56.423649 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 11:27:56.423649 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 11:27:56.423649 : PRINTER_NAME: POS-80C
+2024-03-25 11:27:56.423649 : FONT_A_LENGTH: 48
+2024-03-25 11:27:56.423649 : FONT_B_LENGTH: 64
+2024-03-25 11:27:56.529878 : []
+2024-03-25 11:27:56.529878 : []
+2024-03-25 11:27:57.299736 : Exception
+2024-03-25 11:28:04.816712 : Closing previous api...
+2024-03-25 11:28:04.992888 : Closing previous api...
+2024-03-25 11:28:05.026889 : loading config from .env completed
+2024-03-25 11:28:05.026889 : SERVER: http://localhost:71/api/
+2024-03-25 11:28:05.026889 : LOCAL: http://localhost:71/api/
+2024-03-25 11:28:05.027888 : POS_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:05.027888 : LOYALTY: http://localhost:72/api/
+2024-03-25 11:28:05.027888 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:05.027888 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 11:28:05.027888 : SAAS: false
+2024-03-25 11:28:05.027888 : PASSWORD: ADMIN
+2024-03-25 11:28:05.027888 : DUAL_SCREEN: 
+2024-03-25 11:28:05.027888 : ENABLE_POLL_DISPLAY: true
+2024-03-25 11:28:05.027888 : SCREEN_WIDTH: 1024.0
+2024-03-25 11:28:05.027888 : SCREEN_HEIGHT: 768.0
+2024-03-25 11:28:05.027888 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 11:28:05.027888 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 11:28:05.027888 : PRINTER_NAME: POS-80C
+2024-03-25 11:28:05.027888 : FONT_A_LENGTH: 48
+2024-03-25 11:28:05.027888 : FONT_B_LENGTH: 64
+2024-03-25 11:28:06.359636 : loading config from .env completed
+2024-03-25 11:28:06.359636 : SERVER: http://localhost:71/api/
+2024-03-25 11:28:06.359636 : LOCAL: http://localhost:71/api/
+2024-03-25 11:28:06.359636 : POS_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:06.359636 : LOYALTY: http://localhost:72/api/
+2024-03-25 11:28:06.359636 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:06.359636 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 11:28:06.359636 : SAAS: false
+2024-03-25 11:28:06.359636 : PASSWORD: ADMIN
+2024-03-25 11:28:06.359636 : DUAL_SCREEN: 
+2024-03-25 11:28:06.359636 : ENABLE_POLL_DISPLAY: true
+2024-03-25 11:28:06.359636 : SCREEN_WIDTH: 1024.0
+2024-03-25 11:28:06.359636 : SCREEN_HEIGHT: 768.0
+2024-03-25 11:28:06.359636 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 11:28:06.359636 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 11:28:06.359636 : PRINTER_NAME: POS-80C
+2024-03-25 11:28:06.359636 : FONT_A_LENGTH: 48
+2024-03-25 11:28:06.359636 : FONT_B_LENGTH: 64
+2024-03-25 11:28:06.446138 : []
+2024-03-25 11:28:06.446138 : []
+2024-03-25 11:28:07.169137 : Exception
+2024-03-25 11:28:14.440431 : Closing previous api...
+2024-03-25 11:28:14.592815 : Closing previous api...
+2024-03-25 11:28:14.617926 : loading config from .env completed
+2024-03-25 11:28:14.617926 : SERVER: http://localhost:71/api/
+2024-03-25 11:28:14.617926 : LOCAL: http://localhost:71/api/
+2024-03-25 11:28:14.617926 : POS_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:14.617926 : LOYALTY: http://localhost:72/api/
+2024-03-25 11:28:14.617926 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:14.617926 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 11:28:14.617926 : SAAS: false
+2024-03-25 11:28:14.617926 : PASSWORD: ADMIN
+2024-03-25 11:28:14.617926 : DUAL_SCREEN: 
+2024-03-25 11:28:14.617926 : ENABLE_POLL_DISPLAY: true
+2024-03-25 11:28:14.617926 : SCREEN_WIDTH: 1024.0
+2024-03-25 11:28:14.617926 : SCREEN_HEIGHT: 768.0
+2024-03-25 11:28:14.617926 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 11:28:14.617926 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 11:28:14.617926 : PRINTER_NAME: POS-80C
+2024-03-25 11:28:14.617926 : FONT_A_LENGTH: 48
+2024-03-25 11:28:14.617926 : FONT_B_LENGTH: 64
+2024-03-25 11:28:15.944927 : loading config from .env completed
+2024-03-25 11:28:15.944927 : SERVER: http://localhost:71/api/
+2024-03-25 11:28:15.944927 : LOCAL: http://localhost:71/api/
+2024-03-25 11:28:15.944927 : POS_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:15.944927 : LOYALTY: http://localhost:72/api/
+2024-03-25 11:28:15.944927 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:15.944927 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 11:28:15.944927 : SAAS: false
+2024-03-25 11:28:15.944927 : PASSWORD: ADMIN
+2024-03-25 11:28:15.944927 : DUAL_SCREEN: 
+2024-03-25 11:28:15.944927 : ENABLE_POLL_DISPLAY: true
+2024-03-25 11:28:15.944927 : SCREEN_WIDTH: 1024.0
+2024-03-25 11:28:15.944927 : SCREEN_HEIGHT: 768.0
+2024-03-25 11:28:15.944927 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 11:28:15.944927 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 11:28:15.944927 : PRINTER_NAME: POS-80C
+2024-03-25 11:28:15.944927 : FONT_A_LENGTH: 48
+2024-03-25 11:28:15.944927 : FONT_B_LENGTH: 64
+2024-03-25 11:28:16.035519 : []
+2024-03-25 11:28:16.036486 : []
+2024-03-25 11:28:16.778792 : Exception
+2024-03-25 11:28:46.101983 : loading config from .env completed
+2024-03-25 11:28:46.101983 : SERVER: http://localhost:71/api/
+2024-03-25 11:28:46.101983 : LOCAL: http://localhost:71/api/
+2024-03-25 11:28:46.101983 : POS_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:46.101983 : LOYALTY: http://localhost:72/api/
+2024-03-25 11:28:46.101983 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 11:28:46.101983 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 11:28:46.101983 : SAAS: false
+2024-03-25 11:28:46.101983 : PASSWORD: ADMIN
+2024-03-25 11:28:46.101983 : DUAL_SCREEN: 
+2024-03-25 11:28:46.101983 : ENABLE_POLL_DISPLAY: true
+2024-03-25 11:28:46.101983 : SCREEN_WIDTH: 1024.0
+2024-03-25 11:28:46.101983 : SCREEN_HEIGHT: 768.0
+2024-03-25 11:28:46.101983 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 11:28:46.101983 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 11:28:46.101983 : PRINTER_NAME: POS-80C
+2024-03-25 11:28:46.101983 : FONT_A_LENGTH: 48
+2024-03-25 11:28:46.101983 : FONT_B_LENGTH: 64
+2024-03-25 11:28:47.613852 : Closing CrystalReport...
+2024-03-25 11:28:47.629854 : [POSLoggerLevel.error] [2024-03-25 11:28:47.628856] [Windows] [Debug] ProcessException: The filename, directory name, or volume label syntax is incorrect.
+
+  Command: cmd.exe /c CrystalReport.exe2024-03-25 11:28:47.631852 : [POSLoggerLevel.error] [2024-03-25 11:28:47.630869] [Windows] [Debug] #0      _ProcessImpl._start (dart:io-patch/process_patch.dart:402:33)
+#1      Process.start (dart:io-patch/process_patch.dart:38:20)
+#2      _runNonInteractiveProcess (dart:io-patch/process_patch.dart:579:18)
+#3      Process.run (dart:io-patch/process_patch.dart:49:12)
+#4      _LoginViewState.validatePassword (package:checkout/views/authentication/login_view.dart:574:35)
+<asynchronous suspension>
+
+2024-03-25 11:28:50.149165 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:28:53.701478 : [POSLoggerLevel.error] [2024-03-25 11:28:53.701478] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-25 11:29:14.201710 : [POSLoggerLevel.error] [2024-03-25 11:29:14.201710] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-25 11:29:15.532246 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:29:23.494042 : [POSLoggerLevel.error] [2024-03-25 11:29:23.494042] [Windows] [Debug] #0      ChangeNotifier.debugAssertNotDisposed.<anonymous closure> (package:flutter/src/foundation/change_notifier.dart:179:9)
+#1      Chang
+Notifier.debugAssertNotDisposed (package:flutter/src/foundation/change_notifier.dart:186:6)
+#2      ChangeNotifier.notifyListeners (package:flutter/src/foundation/change_notifier.dart:412:27)
+#3      ValueNotifier.value= (package:flutter/src/foundation/change_notifier.dart:555:5)
+#4      TextEditingController.value= (package:flutter/src/widgets/editable_text.dart:240:11)
+#5      TextEditingController.clear (package:flutter/src/widgets/editable_text.dart:311:5)
+#6      _ReturnBottleSelectionViewState.clear (package:checkout/views/invoice/returnBottle_selection_view.dart:815:23)
+#7      _ReturnBottleSelectionViewState.addItem (package:checkout/views/invoice/returnBottle_selection_view.dart:806:7)
+<asynchronous suspension>
+
+2024-03-25 11:29:50.407538 : [POSLoggerLevel.error] [2024-03-25 11:29:50.407538] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-25 11:29:55.895556 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:30:11.297181 : [POSLoggerLevel.error] [2024-03-25 11:30:11.297181] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-25 11:30:14.011943 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:32:51.676439 : [POSLoggerLevel.error] [2024-03-25 11:32:51.676439] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-25 11:32:54.730700 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:34:08.886836 : [POSLoggerLevel.error] [2024-03-25 11:34:08.885844] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-25 11:34:11.240037 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:34:15.203399 : [POSLoggerLevel.error] [2024-03-25 11:34:15.202402] [Windows] [Debug] #0      ChangeNotifier.debugAssertNotDisposed.<anonymous closure> (package:flutter/src/foundation/change_notifier.dart:179:9)
+#1      Chang
+Notifier.debugAssertNotDisposed (package:flutter/src/foundation/change_notifier.dart:186:6)
+#2      ChangeNotifier.notifyListeners (package:flutter/src/foundation/change_notifier.dart:412:27)
+#3      ValueNotifier.value= (package:flutter/src/foundation/change_notifier.dart:555:5)
+#4      TextEditingController.value= (package:flutter/src/widgets/editable_text.dart:240:11)
+#5      TextEditingController.clear (package:flutter/src/widgets/editable_text.dart:311:5)
+#6      _ReturnBottleSelectionViewState.clear (package:checkout/views/invoice/returnBottle_selection_view.dart:815:23)
+#7      _ReturnBottleSelectionViewState.addItem (package:checkout/views/invoice/returnBottle_selection_view.dart:806:7)
+<asynchronous suspension>
+
+2024-03-25 11:35:48.379850 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:35:55.863303 : [POSLoggerLevel.error] [2024-03-25 11:35:55.862302] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-25 11:35:57.594773 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:36:01.088337 : [POSLoggerLevel.error] [2024-03-25 11:36:01.088337] [Windows] [Debug] #0      _debugIsActive (package:flutter/src/material/dialog.dart:1491:5)
+#1      showDialog (package:flutter/src/material/dialog.dart:1412:10)
+#2      POSPriceCalculator._salesReturnError (package:checkout/controllers/pos_price_calculator.dart:1379:5)
+#3      POSPriceCalculator._showSalesReturnDialog (package:checkout/controllers/pos_price_calculator.dart:1
+48:17)
+<asynchronous suspension>
+#4      POSPriceCalculator.addItemToCart (package:checkout/controllers/pos_price_calculator.dart:531:44)
+<asynchronous suspension>
+#5      _ReturnBottleSelectionViewState.addItem (package:checkout/views/invoice/returnBottle_selection_view.dart:802:7)
+<asynchronous suspension>
+
+2024-03-25 11:36:20.147921 : [POSLoggerLevel.error] [2024-03-25 11:36:20.147921] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-25 11:36:22.074298 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:36:27.764991 : [POSLoggerLevel.error] [2024-03-25 11:36:27.764991] [Windows] [Debug] #0      _debugIsActive (package:flutter/src/material/dialog.dart:1491:5)
+#1      showDialog (package:flutter/src/material/dialog.dart:1412:10)
+#2      POSPriceCalculator._salesReturnError (package:checkout/controllers/pos_price_calculator.dart:1379:5)
+#3      POSPriceCalculator._showSalesReturnDialog (package:checkout/controllers/pos_price_calculator.dart:1
+48:17)
+<asynchronous suspension>
+#4      POSPriceCalculator.addItemToCart (package:checkout/controllers/pos_price_calculator.dart:531:44)
+<asynchronous suspension>
+#5      _ReturnBottleSelectionViewState.addItem (package:checkout/views/invoice/returnBottle_selection_view.dart:802:7)
+<asynchronous suspension>
+
+2024-03-25 11:37:00.838610 : [POSLoggerLevel.error] [2024-03-25 11:37:00.838610] [Windows] [Debug] A RenderFlex overflowed by 43 pixels on the right.
+2024-03-25 11:37:02.882122 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:37:06.350227 : [POSLoggerLevel.error] [2024-03-25 11:37:06.349227] [Windows] [Debug] #0      ChangeNotifier.debugAssertNotDisposed.<anonymous closure> (package:flutter/src/foundation/change_notifier.dart:179:9)
+#1      Chang
+Notifier.debugAssertNotDisposed (package:flutter/src/foundation/change_notifier.dart:186:6)
+#2      ChangeNotifier.notifyListeners (package:flutter/src/foundation/change_notifier.dart:412:27)
+#3      ValueNotifier.value= (package:flutter/src/foundation/change_notifier.dart:555:5)
+#4      TextEditingController.value= (package:flutter/src/widgets/editable_text.dart:240:11)
+#5      TextEditingController.clear (package:flutter/src/widgets/editable_text.dart:311:5)
+#6      _ReturnBottleSelectionViewState.clear (package:checkout/views/invoice/returnBottle_selection_view.dart:815:23)
+#7      _ReturnBottleSelectionViewState.addItem (package:checkout/views/invoice/returnBottle_selection_view.dart:806:7)
+<asynchronous suspension>
+
+2024-03-25 11:37:53.131621 : usb serial port issue : Null check operator used on a null value
+2024-03-25 11:37:53.459339 : [POSLoggerLevel.error] [2024-03-25 11:37:53.458374] [Windows] [Debug] A FocusNode was used after being disposed.
+Once you have called dispose() on a FocusNode, it can no longer be used.
+2024-03-25 14:40:37.572301 : Closing previous api...
+2024-03-25 14:40:38.028868 : Closing previous api...
+2024-03-25 14:40:38.087584 : loading config from .env completed
+2024-03-25 14:40:38.088586 : SERVER: https://spar-pos-api.24x7retail.com/api/
+2024-03-25 14:40:38.088586 : LOCAL: http://localhost:71/api/
+2024-03-25 14:40:38.088586 : POS_IMAGE: https://spar-media-api.24x7retail.com/api/
+2024-03-25 14:40:38.088586 : LOYALTY: http://localhost:72/api/
+2024-03-25 14:40:38.088586 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 14:40:38.088586 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 14:40:38.088586 : SAAS: false
+2024-03-25 14:40:38.088586 : PASSWORD: ADMIN
+2024-03-25 14:40:38.088586 : DUAL_SCREEN: 
+2024-03-25 14:40:38.088586 : ENABLE_POLL_DISPLAY: true
+2024-03-25 14:40:38.088586 : SCREEN_WIDTH: 1024.0
+2024-03-25 14:40:38.088586 : SCREEN_HEIGHT: 768.0
+2024-03-25 14:40:38.088586 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 14:40:38.088586 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 14:40:38.088586 : PRINTER_NAME: POS-80C
+2024-03-25 14:40:38.088586 : FONT_A_LENGTH: 48
+2024-03-25 14:40:38.088586 : FONT_B_LENGTH: 64
+2024-03-25 14:40:40.437728 : [POSLoggerLevel.error] [2024-03-25 14:40:40.437728] [Windows] [Debug] #0      _AssertionError._doThrowNew (dart:core-patch/errors_patch.dart:51:61)
+#1      _Assert
+onError._throwNew (dart:core-patch/errors_patch.dart:40:5)
+#2      Easy
+oading._show (package:flutter_easyloading/src/easy_loading.dart:425:7)
+#3      EasyLoading.showError (package:flutter_easyloading/src/easy_loading.dart:339:22)
+#4      ApiClient.call (package:checkout/components/api_client.dart:187:19)
+<asynchronous suspension>
+#5      SharedPreferenceController.getConfigLocal (package:checkout/controllers/config/shared_preference_controller.dart:601:19)
+<asynchronous suspension>
+#6      main.<anonymous closure> (package:checkout/main.dart:46:5)
+<asynchronous suspension>
+
+2024-03-25 14:40:40.446241 : loading config from .env completed
+2024-03-25 14:40:40.446241 : SERVER: https://spar-pos-api.24x7retail.com/api/
+2024-03-25 14:40:40.446241 : LOCAL: http://localhost:71/api/
+2024-03-25 14:40:40.446241 : POS_IMAGE: https://spar-media-api.24x7retail.com/api/
+2024-03-25 14:40:40.446241 : LOYALTY: http://localhost:72/api/
+2024-03-25 14:40:40.446241 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 14:40:40.446241 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 14:40:40.446241 : SAAS: false
+2024-03-25 14:40:40.446241 : PASSWORD: ADMIN
+2024-03-25 14:40:40.446241 : DUAL_SCREEN: 
+2024-03-25 14:40:40.446241 : ENABLE_POLL_DISPLAY: true
+2024-03-25 14:40:40.446241 : SCREEN_WIDTH: 1024.0
+2024-03-25 14:40:40.446241 : SCREEN_HEIGHT: 768.0
+2024-03-25 14:40:40.446241 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 14:40:40.446241 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 14:40:40.446241 : PRINTER_NAME: POS-80C
+2024-03-25 14:40:40.446241 : FONT_A_LENGTH: 48
+2024-03-25 14:40:40.446241 : FONT_B_LENGTH: 64
+2024-03-25 14:40:40.570163 : []
+2024-03-25 14:40:40.570163 : []
+2024-03-25 14:40:41.887298 : Exception
+2024-03-25 14:40:48.526416 : Closing previous api...
+2024-03-25 14:40:48.721309 : Closing previous api...
+2024-03-25 14:40:48.756675 : loading config from .env completed
+2024-03-25 14:40:48.756675 : SERVER: https://spar-pos-api.24x7retail.com/api/
+2024-03-25 14:40:48.756675 : LOCAL: http://localhost:71/api/
+2024-03-25 14:40:48.756675 : POS_IMAGE: https://spar-media-api.24x7retail.com/api/
+2024-03-25 14:40:48.756675 : LOYALTY: http://localhost:72/api/
+2024-03-25 14:40:48.756675 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 14:40:48.756675 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 14:40:48.756675 : SAAS: false
+2024-03-25 14:40:48.756675 : PASSWORD: ADMIN
+2024-03-25 14:40:48.756675 : DUAL_SCREEN: 
+2024-03-25 14:40:48.756675 : ENABLE_POLL_DISPLAY: true
+2024-03-25 14:40:48.756675 : SCREEN_WIDTH: 1024.0
+2024-03-25 14:40:48.756675 : SCREEN_HEIGHT: 768.0
+2024-03-25 14:40:48.756675 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 14:40:48.756675 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 14:40:48.756675 : PRINTER_NAME: POS-80C
+2024-03-25 14:40:48.756675 : FONT_A_LENGTH: 48
+2024-03-25 14:40:48.756675 : FONT_B_LENGTH: 64
+2024-03-25 14:40:50.268169 : loading config from .env completed
+2024-03-25 14:40:50.268169 : SERVER: https://spar-pos-api.24x7retail.com/api/
+2024-03-25 14:40:50.268169 : LOCAL: http://localhost:71/api/
+2024-03-25 14:40:50.268169 : POS_IMAGE: https://spar-media-api.24x7retail.com/api/
+2024-03-25 14:40:50.268169 : LOYALTY: http://localhost:72/api/
+2024-03-25 14:40:50.268169 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 14:40:50.268169 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 14:40:50.268169 : SAAS: false
+2024-03-25 14:40:50.268169 : PASSWORD: ADMIN
+2024-03-25 14:40:50.268169 : DUAL_SCREEN: 
+2024-03-25 14:40:50.268169 : ENABLE_POLL_DISPLAY: true
+2024-03-25 14:40:50.268169 : SCREEN_WIDTH: 1024.0
+2024-03-25 14:40:50.268169 : SCREEN_HEIGHT: 768.0
+2024-03-25 14:40:50.268169 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 14:40:50.268169 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 14:40:50.268169 : PRINTER_NAME: POS-80C
+2024-03-25 14:40:50.268169 : FONT_A_LENGTH: 48
+2024-03-25 14:40:50.268169 : FONT_B_LENGTH: 64
+2024-03-25 14:40:50.391986 : []
+2024-03-25 14:40:50.391986 : []
+2024-03-25 14:40:51.225618 : Exception
+2024-03-25 14:41:21.684233 : loading config from .env completed
+2024-03-25 14:41:21.684233 : SERVER: https://spar-pos-api.24x7retail.com/api/
+2024-03-25 14:41:21.684233 : LOCAL: http://localhost:71/api/
+2024-03-25 14:41:21.684233 : POS_IMAGE: https://spar-media-api.24x7retail.com/api/
+2024-03-25 14:41:21.684233 : LOYALTY: http://localhost:72/api/
+2024-03-25 14:41:21.684233 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 14:41:21.684233 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 14:41:21.684233 : SAAS: false
+2024-03-25 14:41:21.684233 : PASSWORD: ADMIN
+2024-03-25 14:41:21.684233 : DUAL_SCREEN: 
+2024-03-25 14:41:21.684233 : ENABLE_POLL_DISPLAY: true
+2024-03-25 14:41:21.684233 : SCREEN_WIDTH: 1024.0
+2024-03-25 14:41:21.684233 : SCREEN_HEIGHT: 768.0
+2024-03-25 14:41:21.684233 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 14:41:21.684233 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 14:41:21.684233 : PRINTER_NAME: POS-80C
+2024-03-25 14:41:21.684233 : FONT_A_LENGTH: 48
+2024-03-25 14:41:21.684233 : FONT_B_LENGTH: 64
+2024-03-25 14:41:23.633924 : Closing CrystalReport...
+2024-03-25 14:41:23.639929 : [POSLoggerLevel.error] [2024-03-25 14:41:23.639929] [Windows] [Debug] ProcessException: The filename, directory name, or volume label syntax is incorrect.
+
+  Command: cmd.exe /c CrystalReport.exe
+2024-03-25 14:41:23.640928 : [POSLoggerLevel.error] [2024-03-25 14:41:23.640928] [Windows] [Debug] #0      _ProcessImpl._start (dart:io-patch/process_patch.dart:402:33)
+#1      Process.start (dart:io-patch/process_patch.dart:38:20)
+#2      _runNonInteractiveProcess (dart:io-patch/process_patch.dart:579:18)
+#3      Process.run (dart:io-patch/process_patch.dart:49:12)
+#4      _LoginViewState.validatePassword (package:checkout/views/authentication/login_view.dart:574:35)
+<asynchronous suspension>
+
+2024-03-25 14:41:26.152991 : usb serial port issue : Null check operator used on a null value
+2024-03-25 14:41:26.908511 : [POSLoggerLevel.error] [2024-03-25 14:41:26.907510] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:27.092016 : [POSLoggerLevel.error] [2024-03-25 14:41:27.092016] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:27.272210 : [POSLoggerLevel.error] [2024-03-25 14:41:27.271216] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:27.451825 : [POSLoggerLevel.error] [2024-03-25 14:41:27.451825] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:27.640835 : [POSLoggerLevel.error] [2024-03-25 14:41:27.639828] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:27.822597 : [POSLoggerLevel.error] [2024-03-25 14:41:27.822597] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:27.978632 : [POSLoggerLevel.error] [2024-03-25 14:41:27.977631] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:28.143890 : [POSLoggerLevel.error] [2024-03-25 14:41:28.142884] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:28.313176 : [POSLoggerLevel.error] [2024-03-25 14:41:28.313176] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:28.480927 : [POSLoggerLevel.error] [2024-03-25 14:41:28.479928] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:28.613854 : [POSLoggerLevel.error] [2024-03-25 14:41:28.613854] [Windows] [Debug] Invalid invoice number. Please adjust the invoice number.
+2024-03-25 14:41:28.644273 : [POSLoggerLevel.error] [2024-03-25 14:41:28.644273] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:28.814081 : [POSLoggerLevel.error] [2024-03-25 14:41:28.813081] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:28.990232 : [POSLoggerLevel.error] [2024-03-25 14:41:28.990232] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:29.158816 : [POSLoggerLevel.error] [2024-03-25 14:41:29.158816] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:29.331692 : [POSLoggerLevel.error] [2024-03-25 14:41:29.331692] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:29.495918 : [POSLoggerLevel.error] [2024-03-25 14:41:29.495918] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:29.681636 : [POSLoggerLevel.error] [2024-03-25 14:41:29.681636] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:29.850415 : [POSLoggerLevel.error] [2024-03-25 14:41:29.850415] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:30.028175 : [POSLoggerLevel.error] [2024-03-25 14:41:30.028175] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:30.185530 : [POSLoggerLevel.error] [2024-03-25 14:41:30.185530] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:30.330591 : [POSLoggerLevel.error] [2024-03-25 14:41:30.330591] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:30.500036 : [POSLoggerLevel.error] [2024-03-25 14:41:30.500036] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:30.780323 : [POSLoggerLevel.error] [2024-03-25 14:41:30.780323] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:30.980334 : [POSLoggerLevel.error] [2024-03-25 14:41:30.979334] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:31.168429 : [POSLoggerLevel.error] [2024-03-25 14:41:31.168429] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:31.389331 : [POSLoggerLevel.error] [2024-03-25 14:41:31.388331] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:31.573276 : [POSLoggerLevel.error] [2024-03-25 14:41:31.572282] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:31.778755 : [POSLoggerLevel.error] [2024-03-25 14:41:31.778755] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:31.973392 : [POSLoggerLevel.error] [2024-03-25 14:41:31.972361] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:32.147950 : [POSLoggerLevel.error] [2024-03-25 14:41:32.147950] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:32.299064 : [POSLoggerLevel.error] [2024-03-25 14:41:32.299064] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:32.481921 : [POSLoggerLevel.error] [2024-03-25 14:41:32.481921] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:32.696407 : [POSLoggerLevel.error] [2024-03-25 14:41:32.696407] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:32.863191 : [POSLoggerLevel.error] [2024-03-25 14:41:32.863191] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:33.056398 : [POSLoggerLevel.error] [2024-03-25 14:41:33.056398] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:33.241476 : [POSLoggerLevel.error] [2024-03-25 14:41:33.240080] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:33.415218 : [POSLoggerLevel.error] [2024-03-25 14:41:33.415218] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:33.567661 : [POSLoggerLevel.error] [2024-03-25 14:41:33.567661] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:33.724581 : [POSLoggerLevel.error] [2024-03-25 14:41:33.724581] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:33.894663 : [POSLoggerLevel.error] [2024-03-25 14:41:33.894663] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:34.064112 : [POSLoggerLevel.error] [2024-03-25 14:41:34.063115] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:34.245909 : [POSLoggerLevel.error] [2024-03-25 14:41:34.244910] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:34.410734 : [POSLoggerLevel.error] [2024-03-25 14:41:34.410734] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:34.566252 : [POSLoggerLevel.error] [2024-03-25 14:41:34.566252] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:34.748730 : [POSLoggerLevel.error] [2024-03-25 14:41:34.748730] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:34.893215 : [POSLoggerLevel.error] [2024-03-25 14:41:34.893215] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:35.060218 : [POSLoggerLevel.error] [2024-03-25 14:41:35.060218] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:35.228950 : [POSLoggerLevel.error] [2024-03-25 14:41:35.228950] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:35.386645 : [POSLoggerLevel.error] [2024-03-25 14:41:35.386645] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:35.584436 : [POSLoggerLevel.error] [2024-03-25 14:41:35.584436] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:35.729066 : [POSLoggerLevel.error] [2024-03-25 14:41:35.729066] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:35.989797 : [POSLoggerLevel.error] [2024-03-25 14:41:35.988795] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:36.112959 : [POSLoggerLevel.error] [2024-03-25 14:41:36.112959] [Windows] [Debug] A RenderFlex overflowed by 46 pixels on the right.
+2024-03-25 14:41:36.296768 : [POSLoggerLevel.error] [2024-03-25 14:41:36.295768] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:37.163208 : [POSLoggerLevel.error] [2024-03-25 14:41:37.163208] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:37.873562 : [POSLoggerLevel.error] [2024-03-25 14:41:37.873562] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:38.066467 : [POSLoggerLevel.error] [2024-03-25 14:41:38.066467] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:38.639757 : [POSLoggerLevel.error] [2024-03-25 14:41:38.638734] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:39.174836 : [POSLoggerLevel.error] [2024-03-25 14:41:39.174836] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:39.742304 : [POSLoggerLevel.error] [2024-03-25 14:41:39.741307] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:40.313079 : [POSLoggerLevel.error] [2024-03-25 14:41:40.313079] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:40.405766 : usb serial port issue : Null check operator used on a null value
+2024-03-25 14:41:40.615945 : [POSLoggerLevel.error] [2024-03-25 14:41:40.615945] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:41.165910 : [POSLoggerLevel.error] [2024-03-25 14:41:41.165910] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:41.432025 : [POSLoggerLevel.error] [2024-03-25 14:41:41.432025] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:42.158317 : [POSLoggerLevel.error] [2024-03-25 14:41:42.157314] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:43.156034 : [POSLoggerLevel.error] [2024-03-25 14:41:43.156034] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:43.306323 : [POSLoggerLevel.error] [2024-03-25 14:41:43.305321] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:44.157252 : [POSLoggerLevel.error] [2024-03-25 14:41:44.157252] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:45.161627 : [POSLoggerLevel.error] [2024-03-25 14:41:45.161627] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:46.163139 : [POSLoggerLevel.error] [2024-03-25 14:41:46.163139] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:47.185880 : [POSLoggerLevel.error] [2024-03-25 14:41:47.185880] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:48.162612 : [POSLoggerLevel.error] [2024-03-25 14:41:48.161613] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:49.162939 : [POSLoggerLevel.error] [2024-03-25 14:41:49.162939] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:50.192990 : [POSLoggerLevel.error] [2024-03-25 14:41:50.192990] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:51.184427 : [POSLoggerLevel.error] [2024-03-25 14:41:51.184427] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:52.178455 : [POSLoggerLevel.error] [2024-03-25 14:41:52.177456] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:53.169070 : [POSLoggerLevel.error] [2024-03-25 14:41:53.169070] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:54.170226 : [POSLoggerLevel.error] [2024-03-25 14:41:54.170226] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:55.151270 : [POSLoggerLevel.error] [2024-03-25 14:41:55.150273] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:56.175494 : [POSLoggerLevel.error] [2024-03-25 14:41:56.175494] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:57.174399 : [POSLoggerLevel.error] [2024-03-25 14:41:57.174399] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:58.178805 : [POSLoggerLevel.error] [2024-03-25 14:41:58.178805] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:41:59.163851 : [POSLoggerLevel.error] [2024-03-25 14:41:59.162841] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:00.176124 : [POSLoggerLevel.error] [2024-03-25 14:42:00.175123] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:01.181161 : [POSLoggerLevel.error] [2024-03-25 14:42:01.180162] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:02.175625 : [POSLoggerLevel.error] [2024-03-25 14:42:02.175625] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:03.166683 : [POSLoggerLevel.error] [2024-03-25 14:42:03.165682] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:04.173572 : [POSLoggerLevel.error] [2024-03-25 14:42:04.173572] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:05.170785 : [POSLoggerLevel.error] [2024-03-25 14:42:05.170785] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:06.179168 : [POSLoggerLevel.error] [2024-03-25 14:42:06.178170] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:07.174191 : [POSLoggerLevel.error] [2024-03-25 14:42:07.173190] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:08.192302 : [POSLoggerLevel.error] [2024-03-25 14:42:08.192302] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:09.164937 : [POSLoggerLevel.error] [2024-03-25 14:42:09.164937] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:10.176268 : [POSLoggerLevel.error] [2024-03-25 14:42:10.176268] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:11.167156 : [POSLoggerLevel.error] [2024-03-25 14:42:11.167156] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:12.177234 : [POSLoggerLevel.error] [2024-03-25 14:42:12.177234] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:13.182435 : [POSLoggerLevel.error] [2024-03-25 14:42:13.182435] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:14.165811 : [POSLoggerLevel.error] [2024-03-25 14:42:14.165811] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:15.176276 : [POSLoggerLevel.error] [2024-03-25 14:42:15.176276] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:16.169017 : [POSLoggerLevel.error] [2024-03-25 14:42:16.169017] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:17.174590 : [POSLoggerLevel.error] [2024-03-25 14:42:17.174590] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:18.175622 : [POSLoggerLevel.error] [2024-03-25 14:42:18.175622] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:19.165307 : [POSLoggerLevel.error] [2024-03-25 14:42:19.165307] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:20.163094 : [POSLoggerLevel.error] [2024-03-25 14:42:20.162107] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:21.167006 : [POSLoggerLevel.error] [2024-03-25 14:42:21.167006] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:22.162525 : [POSLoggerLevel.error] [2024-03-25 14:42:22.162525] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:23.172419 : [POSLoggerLevel.error] [2024-03-25 14:42:23.172419] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:24.176128 : [POSLoggerLevel.error] [2024-03-25 14:42:24.176128] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:25.169178 : [POSLoggerLevel.error] [2024-03-25 14:42:25.167723] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:26.162430 : [POSLoggerLevel.error] [2024-03-25 14:42:26.162430] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:27.186662 : [POSLoggerLevel.error] [2024-03-25 14:42:27.186662] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:28.167737 : [POSLoggerLevel.error] [2024-03-25 14:42:28.167737] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:29.180088 : [POSLoggerLevel.error] [2024-03-25 14:42:29.180088] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:30.177405 : [POSLoggerLevel.error] [2024-03-25 14:42:30.176404] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:31.173050 : [POSLoggerLevel.error] [2024-03-25 14:42:31.173050] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:32.181883 : [POSLoggerLevel.error] [2024-03-25 14:42:32.181883] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:33.173427 : [POSLoggerLevel.error] [2024-03-25 14:42:33.173427] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:34.179917 : [POSLoggerLevel.error] [2024-03-25 14:42:34.179917] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:35.172215 : [POSLoggerLevel.error] [2024-03-25 14:42:35.172215] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:36.173130 : [POSLoggerLevel.error] [2024-03-25 14:42:36.173130] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:37.165741 : [POSLoggerLevel.error] [2024-03-25 14:42:37.165741] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:38.183004 : [POSLoggerLevel.error] [2024-03-25 14:42:38.183004] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:39.162334 : [POSLoggerLevel.error] [2024-03-25 14:42:39.162334] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:40.173192 : [POSLoggerLevel.error] [2024-03-25 14:42:40.172191] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:41.164534 : [POSLoggerLevel.error] [2024-03-25 14:42:41.164534] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:42.172999 : [POSLoggerLevel.error] [2024-03-25 14:42:42.172] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:43.166569 : [POSLoggerLevel.error] [2024-03-25 14:42:43.166569] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:44.177632 : [POSLoggerLevel.error] [2024-03-25 14:42:44.177632] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:45.176370 : [POSLoggerLevel.error] [2024-03-25 14:42:45.176370] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:46.172976 : [POSLoggerLevel.error] [2024-03-25 14:42:46.171976] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:47.174611 : [POSLoggerLevel.error] [2024-03-25 14:42:47.174611] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:48.179118 : [POSLoggerLevel.error] [2024-03-25 14:42:48.179118] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:49.177787 : [POSLoggerLevel.error] [2024-03-25 14:42:49.177787] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:50.179107 : [POSLoggerLevel.error] [2024-03-25 14:42:50.179107] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:51.168311 : [POSLoggerLevel.error] [2024-03-25 14:42:51.167311] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:52.171185 : [POSLoggerLevel.error] [2024-03-25 14:42:52.171185] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:53.166743 : [POSLoggerLevel.error] [2024-03-25 14:42:53.166743] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:54.161325 : [POSLoggerLevel.error] [2024-03-25 14:42:54.161325] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:55.174134 : [POSLoggerLevel.error] [2024-03-25 14:42:55.174134] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:56.164987 : [POSLoggerLevel.error] [2024-03-25 14:42:56.164987] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:57.172772 : [POSLoggerLevel.error] [2024-03-25 14:42:57.172772] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:58.168972 : [POSLoggerLevel.error] [2024-03-25 14:42:58.168972] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:42:59.149525 : [POSLoggerLevel.error] [2024-03-25 14:42:59.149525] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:00.178378 : [POSLoggerLevel.error] [2024-03-25 14:43:00.178378] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:01.161247 : [POSLoggerLevel.error] [2024-03-25 14:43:01.161247] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:02.160813 : [POSLoggerLevel.error] [2024-03-25 14:43:02.160813] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:03.171160 : [POSLoggerLevel.error] [2024-03-25 14:43:03.171160] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:04.153927 : [POSLoggerLevel.error] [2024-03-25 14:43:04.152928] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:05.177873 : [POSLoggerLevel.error] [2024-03-25 14:43:05.176831] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:06.174200 : [POSLoggerLevel.error] [2024-03-25 14:43:06.174200] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:07.165667 : [POSLoggerLevel.error] [2024-03-25 14:43:07.165667] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:08.191036 : [POSLoggerLevel.error] [2024-03-25 14:43:08.191036] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:09.188852 : [POSLoggerLevel.error] [2024-03-25 14:43:09.188852] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:10.169989 : [POSLoggerLevel.error] [2024-03-25 14:43:10.169989] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:11.178071 : [POSLoggerLevel.error] [2024-03-25 14:43:11.177061] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:12.171816 : [POSLoggerLevel.error] [2024-03-25 14:43:12.171816] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:13.184669 : [POSLoggerLevel.error] [2024-03-25 14:43:13.183656] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:14.176836 : [POSLoggerLevel.error] [2024-03-25 14:43:14.175835] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:15.173770 : [POSLoggerLevel.error] [2024-03-25 14:43:15.173770] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:16.169267 : [POSLoggerLevel.error] [2024-03-25 14:43:16.169267] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:17.179370 : [POSLoggerLevel.error] [2024-03-25 14:43:17.179370] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:18.191183 : [POSLoggerLevel.error] [2024-03-25 14:43:18.191183] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:19.169067 : [POSLoggerLevel.error] [2024-03-25 14:43:19.168828] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:27.821888 : [POSLoggerLevel.error] [2024-03-25 14:43:27.821888] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:28.176470 : [POSLoggerLevel.error] [2024-03-25 14:43:28.175470] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:29.171055 : [POSLoggerLevel.error] [2024-03-25 14:43:29.171055] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:30.171909 : [POSLoggerLevel.error] [2024-03-25 14:43:30.171909] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:31.174569 : [POSLoggerLevel.error] [2024-03-25 14:43:31.174569] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:32.169853 : [POSLoggerLevel.error] [2024-03-25 14:43:32.169853] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:33.190295 : [POSLoggerLevel.error] [2024-03-25 14:43:33.190295] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:34.170562 : [POSLoggerLevel.error] [2024-03-25 14:43:34.170562] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:35.185147 : [POSLoggerLevel.error] [2024-03-25 14:43:35.184146] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:36.168942 : [POSLoggerLevel.error] [2024-03-25 14:43:36.168942] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:37.159843 : [POSLoggerLevel.error] [2024-03-25 14:43:37.159843] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:38.171969 : [POSLoggerLevel.error] [2024-03-25 14:43:38.171969] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:39.172881 : [POSLoggerLevel.error] [2024-03-25 14:43:39.171881] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:40.160586 : [POSLoggerLevel.error] [2024-03-25 14:43:40.160586] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:41.180169 : [POSLoggerLevel.error] [2024-03-25 14:43:41.180169] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:42.187111 : [POSLoggerLevel.error] [2024-03-25 14:43:42.186111] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:43.167369 : [POSLoggerLevel.error] [2024-03-25 14:43:43.166366] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:44.166545 : [POSLoggerLevel.error] [2024-03-25 14:43:44.166545] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:45.173092 : [POSLoggerLevel.error] [2024-03-25 14:43:45.173092] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:46.192102 : [POSLoggerLevel.error] [2024-03-25 14:43:46.177594] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:47.158228 : [POSLoggerLevel.error] [2024-03-25 14:43:47.158228] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:48.421481 : [POSLoggerLevel.error] [2024-03-25 14:43:48.421481] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:49.159316 : [POSLoggerLevel.error] [2024-03-25 14:43:49.159316] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:50.156286 : [POSLoggerLevel.error] [2024-03-25 14:43:50.156286] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:51.206221 : [POSLoggerLevel.error] [2024-03-25 14:43:51.206221] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:52.156952 : [POSLoggerLevel.error] [2024-03-25 14:43:52.156952] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:53.166511 : [POSLoggerLevel.error] [2024-03-25 14:43:53.166511] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:54.160735 : [POSLoggerLevel.error] [2024-03-25 14:43:54.160735] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:55.155134 : [POSLoggerLevel.error] [2024-03-25 14:43:55.155134] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:43:56.174029 : [POSLoggerLevel.error] [2024-03-25 14:43:56.174029] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:00.155600 : [POSLoggerLevel.error] [2024-03-25 14:44:00.155600] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:01.185906 : [POSLoggerLevel.error] [2024-03-25 14:44:01.185906] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:02.156267 : [POSLoggerLevel.error] [2024-03-25 14:44:02.156267] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:03.164005 : [POSLoggerLevel.error] [2024-03-25 14:44:03.164005] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:04.154299 : [POSLoggerLevel.error] [2024-03-25 14:44:04.154299] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:05.160201 : [POSLoggerLevel.error] [2024-03-25 14:44:05.160201] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:06.158504 : [POSLoggerLevel.error] [2024-03-25 14:44:06.158504] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:07.176838 : [POSLoggerLevel.error] [2024-03-25 14:44:07.176838] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:08.168136 : [POSLoggerLevel.error] [2024-03-25 14:44:08.168136] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:09.175239 : [POSLoggerLevel.error] [2024-03-25 14:44:09.174609] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:10.187297 : [POSLoggerLevel.error] [2024-03-25 14:44:10.186147] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:11.154835 : [POSLoggerLevel.error] [2024-03-25 14:44:11.154835] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:12.175348 : [POSLoggerLevel.error] [2024-03-25 14:44:12.174349] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:13.166134 : [POSLoggerLevel.error] [2024-03-25 14:44:13.166134] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:14.153515 : [POSLoggerLevel.error] [2024-03-25 14:44:14.153515] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:15.171186 : [POSLoggerLevel.error] [2024-03-25 14:44:15.171186] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:16.199207 : [POSLoggerLevel.error] [2024-03-25 14:44:16.199207] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:17.166652 : [POSLoggerLevel.error] [2024-03-25 14:44:17.166652] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:18.175316 : [POSLoggerLevel.error] [2024-03-25 14:44:18.175316] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:19.167041 : [POSLoggerLevel.error] [2024-03-25 14:44:19.167041] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:20.184960 : [POSLoggerLevel.error] [2024-03-25 14:44:20.184960] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:21.177629 : [POSLoggerLevel.error] [2024-03-25 14:44:21.177629] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:22.154403 : [POSLoggerLevel.error] [2024-03-25 14:44:22.154075] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:23.170152 : [POSLoggerLevel.error] [2024-03-25 14:44:23.170152] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:24.166779 : [POSLoggerLevel.error] [2024-03-25 14:44:24.166779] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:25.151288 : [POSLoggerLevel.error] [2024-03-25 14:44:25.151288] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:26.172526 : [POSLoggerLevel.error] [2024-03-25 14:44:26.172526] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:27.178512 : [POSLoggerLevel.error] [2024-03-25 14:44:27.178512] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:28.166517 : [POSLoggerLevel.error] [2024-03-25 14:44:28.166517] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:29.191593 : [POSLoggerLevel.error] [2024-03-25 14:44:29.191593] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:30.175700 : [POSLoggerLevel.error] [2024-03-25 14:44:30.175700] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:31.165400 : [POSLoggerLevel.error] [2024-03-25 14:44:31.165400] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:32.152777 : [POSLoggerLevel.error] [2024-03-25 14:44:32.152777] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:33.153650 : [POSLoggerLevel.error] [2024-03-25 14:44:33.153650] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:34.152802 : [POSLoggerLevel.error] [2024-03-25 14:44:34.152802] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:35.166114 : [POSLoggerLevel.error] [2024-03-25 14:44:35.166114] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:36.164121 : [POSLoggerLevel.error] [2024-03-25 14:44:36.164121] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:37.164263 : [POSLoggerLevel.error] [2024-03-25 14:44:37.164263] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:38.165105 : [POSLoggerLevel.error] [2024-03-25 14:44:38.164106] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:39.168312 : [POSLoggerLevel.error] [2024-03-25 14:44:39.168148] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:40.167038 : [POSLoggerLevel.error] [2024-03-25 14:44:40.167038] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:41.175874 : [POSLoggerLevel.error] [2024-03-25 14:44:41.175874] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:42.171791 : [POSLoggerLevel.error] [2024-03-25 14:44:42.171791] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:43.169823 : [POSLoggerLevel.error] [2024-03-25 14:44:43.169823] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:44.179255 : [POSLoggerLevel.error] [2024-03-25 14:44:44.179255] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:45.164963 : [POSLoggerLevel.error] [2024-03-25 14:44:45.164963] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:46.185577 : [POSLoggerLevel.error] [2024-03-25 14:44:46.185577] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:47.168638 : [POSLoggerLevel.error] [2024-03-25 14:44:47.168638] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:48.163205 : [POSLoggerLevel.error] [2024-03-25 14:44:48.163205] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:49.192966 : [POSLoggerLevel.error] [2024-03-25 14:44:49.191957] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:50.168204 : [POSLoggerLevel.error] [2024-03-25 14:44:50.168204] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:51.162253 : [POSLoggerLevel.error] [2024-03-25 14:44:51.162253] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:52.172119 : [POSLoggerLevel.error] [2024-03-25 14:44:52.172119] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:53.167740 : [POSLoggerLevel.error] [2024-03-25 14:44:53.167740] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:54.159116 : [POSLoggerLevel.error] [2024-03-25 14:44:54.159116] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:55.165015 : [POSLoggerLevel.error] [2024-03-25 14:44:55.165015] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:56.164933 : [POSLoggerLevel.error] [2024-03-25 14:44:56.164933] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:57.164434 : [POSLoggerLevel.error] [2024-03-25 14:44:57.164434] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:58.165059 : [POSLoggerLevel.error] [2024-03-25 14:44:58.165059] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:44:59.167394 : [POSLoggerLevel.error] [2024-03-25 14:44:59.167394] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:00.181833 : [POSLoggerLevel.error] [2024-03-25 14:45:00.181833] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:01.162295 : [POSLoggerLevel.error] [2024-03-25 14:45:01.162295] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:02.172544 : [POSLoggerLevel.error] [2024-03-25 14:45:02.172544] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:03.163658 : [POSLoggerLevel.error] [2024-03-25 14:45:03.163658] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:04.168623 : [POSLoggerLevel.error] [2024-03-25 14:45:04.168623] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:05.189286 : [POSLoggerLevel.error] [2024-03-25 14:45:05.189286] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:06.147555 : [POSLoggerLevel.error] [2024-03-25 14:45:06.147555] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:07.266451 : [POSLoggerLevel.error] [2024-03-25 14:45:07.266451] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:08.169281 : [POSLoggerLevel.error] [2024-03-25 14:45:08.169281] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:09.174338 : [POSLoggerLevel.error] [2024-03-25 14:45:09.174338] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:10.185645 : [POSLoggerLevel.error] [2024-03-25 14:45:10.185645] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:11.160998 : [POSLoggerLevel.error] [2024-03-25 14:45:11.160998] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:12.172026 : [POSLoggerLevel.error] [2024-03-25 14:45:12.172026] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:13.173830 : [POSLoggerLevel.error] [2024-03-25 14:45:13.173830] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:14.168284 : [POSLoggerLevel.error] [2024-03-25 14:45:14.168284] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:15.179667 : [POSLoggerLevel.error] [2024-03-25 14:45:15.179299] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:16.163678 : [POSLoggerLevel.error] [2024-03-25 14:45:16.163678] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:17.180766 : [POSLoggerLevel.error] [2024-03-25 14:45:17.180766] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:18.190232 : [POSLoggerLevel.error] [2024-03-25 14:45:18.190232] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:19.180621 : [POSLoggerLevel.error] [2024-03-25 14:45:19.180621] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:20.186102 : [POSLoggerLevel.error] [2024-03-25 14:45:20.186102] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:21.174610 : [POSLoggerLevel.error] [2024-03-25 14:45:21.174610] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:21.932753 : [POSLoggerLevel.error] [2024-03-25 14:45:21.932753] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:22.164531 : [POSLoggerLevel.error] [2024-03-25 14:45:22.163526] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:22.623699 : [POSLoggerLevel.error] [2024-03-25 14:45:22.623699] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:22.779255 : [POSLoggerLevel.error] [2024-03-25 14:45:22.779255] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:23.173408 : [POSLoggerLevel.error] [2024-03-25 14:45:23.173408] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:24.174867 : [POSLoggerLevel.error] [2024-03-25 14:45:24.173867] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:25.182451 : [POSLoggerLevel.error] [2024-03-25 14:45:25.182451] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:25.663989 : [POSLoggerLevel.error] [2024-03-25 14:45:25.663570] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:25.815684 : [POSLoggerLevel.error] [2024-03-25 14:45:25.815684] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:26.178488 : [POSLoggerLevel.error] [2024-03-25 14:45:26.177482] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:26.334741 : [POSLoggerLevel.error] [2024-03-25 14:45:26.334741] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:26.488143 : [POSLoggerLevel.error] [2024-03-25 14:45:26.488143] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:29.716487 : [POSLoggerLevel.error] [2024-03-25 14:45:29.716487] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:30.161851 : [POSLoggerLevel.error] [2024-03-25 14:45:30.161851] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:31.155108 : [POSLoggerLevel.error] [2024-03-25 14:45:31.155108] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:35.164367 : [POSLoggerLevel.error] [2024-03-25 14:45:35.164367] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:36.165280 : [POSLoggerLevel.error] [2024-03-25 14:45:36.165280] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:37.183665 : [POSLoggerLevel.error] [2024-03-25 14:45:37.183665] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:38.170624 : [POSLoggerLevel.error] [2024-03-25 14:45:38.169624] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:39.185554 : [POSLoggerLevel.error] [2024-03-25 14:45:39.185554] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:40.186236 : [POSLoggerLevel.error] [2024-03-25 14:45:40.185228] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:41.176734 : [POSLoggerLevel.error] [2024-03-25 14:45:41.175732] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:42.435953 : [POSLoggerLevel.error] [2024-03-25 14:45:42.435953] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:43.178635 : [POSLoggerLevel.error] [2024-03-25 14:45:43.178635] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:44.180906 : [POSLoggerLevel.error] [2024-03-25 14:45:44.180906] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:45.175602 : [POSLoggerLevel.error] [2024-03-25 14:45:45.175602] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:46.202031 : [POSLoggerLevel.error] [2024-03-25 14:45:46.202031] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:47.172440 : [POSLoggerLevel.error] [2024-03-25 14:45:47.171440] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:48.190068 : [POSLoggerLevel.error] [2024-03-25 14:45:48.190068] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:49.178254 : [POSLoggerLevel.error] [2024-03-25 14:45:49.178254] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:50.185515 : [POSLoggerLevel.error] [2024-03-25 14:45:50.184522] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:51.176735 : [POSLoggerLevel.error] [2024-03-25 14:45:51.175771] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:52.177816 : [POSLoggerLevel.error] [2024-03-25 14:45:52.176808] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:53.190034 : [POSLoggerLevel.error] [2024-03-25 14:45:53.190034] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:54.188548 : [POSLoggerLevel.error] [2024-03-25 14:45:54.188548] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:55.184698 : [POSLoggerLevel.error] [2024-03-25 14:45:55.183691] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:56.185957 : [POSLoggerLevel.error] [2024-03-25 14:45:56.185449] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:57.173107 : [POSLoggerLevel.error] [2024-03-25 14:45:57.172585] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:58.175508 : [POSLoggerLevel.error] [2024-03-25 14:45:58.174270] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:45:59.177851 : [POSLoggerLevel.error] [2024-03-25 14:45:59.177851] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:00.175434 : [POSLoggerLevel.error] [2024-03-25 14:46:00.175434] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:01.182283 : [POSLoggerLevel.error] [2024-03-25 14:46:01.182283] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:02.194279 : [POSLoggerLevel.error] [2024-03-25 14:46:02.193268] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:03.452397 : [POSLoggerLevel.error] [2024-03-25 14:46:03.451396] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:04.177118 : [POSLoggerLevel.error] [2024-03-25 14:46:04.176804] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:05.176947 : [POSLoggerLevel.error] [2024-03-25 14:46:05.175869] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:06.174242 : [POSLoggerLevel.error] [2024-03-25 14:46:06.174242] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:07.181632 : [POSLoggerLevel.error] [2024-03-25 14:46:07.181632] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:11.172911 : [POSLoggerLevel.error] [2024-03-25 14:46:11.172911] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:12.172395 : [POSLoggerLevel.error] [2024-03-25 14:46:12.156549] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:13.430381 : [POSLoggerLevel.error] [2024-03-25 14:46:13.430381] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:14.157437 : [POSLoggerLevel.error] [2024-03-25 14:46:14.157437] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:15.172900 : [POSLoggerLevel.error] [2024-03-25 14:46:15.172900] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:16.436110 : [POSLoggerLevel.error] [2024-03-25 14:46:16.436110] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:17.156870 : [POSLoggerLevel.error] [2024-03-25 14:46:17.156870] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:18.165854 : [POSLoggerLevel.error] [2024-03-25 14:46:18.165854] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:19.157270 : [POSLoggerLevel.error] [2024-03-25 14:46:19.157270] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:20.160797 : [POSLoggerLevel.error] [2024-03-25 14:46:20.159965] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:21.159609 : [POSLoggerLevel.error] [2024-03-25 14:46:21.159609] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:22.170798 : [POSLoggerLevel.error] [2024-03-25 14:46:22.170618] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:23.165928 : [POSLoggerLevel.error] [2024-03-25 14:46:23.165928] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:24.169822 : [POSLoggerLevel.error] [2024-03-25 14:46:24.169822] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:25.171904 : [POSLoggerLevel.error] [2024-03-25 14:46:25.171904] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:26.177112 : [POSLoggerLevel.error] [2024-03-25 14:46:26.177112] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:27.170991 : [POSLoggerLevel.error] [2024-03-25 14:46:27.170991] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:28.189127 : [POSLoggerLevel.error] [2024-03-25 14:46:28.189127] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:29.168796 : [POSLoggerLevel.error] [2024-03-25 14:46:29.164322] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:30.155653 : [POSLoggerLevel.error] [2024-03-25 14:46:30.155653] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:31.171114 : [POSLoggerLevel.error] [2024-03-25 14:46:31.171114] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:32.174962 : [POSLoggerLevel.error] [2024-03-25 14:46:32.174962] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:33.176221 : [POSLoggerLevel.error] [2024-03-25 14:46:33.176221] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:34.176186 : [POSLoggerLevel.error] [2024-03-25 14:46:34.176186] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:35.173729 : [POSLoggerLevel.error] [2024-03-25 14:46:35.172729] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:36.170765 : [POSLoggerLevel.error] [2024-03-25 14:46:36.170765] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:37.169761 : [POSLoggerLevel.error] [2024-03-25 14:46:37.168762] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:38.173120 : [POSLoggerLevel.error] [2024-03-25 14:46:38.173120] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:39.185357 : [POSLoggerLevel.error] [2024-03-25 14:46:39.185357] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:40.173209 : [POSLoggerLevel.error] [2024-03-25 14:46:40.173209] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:41.204156 : [POSLoggerLevel.error] [2024-03-25 14:46:41.203140] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:42.172010 : [POSLoggerLevel.error] [2024-03-25 14:46:42.171009] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:43.167958 : [POSLoggerLevel.error] [2024-03-25 14:46:43.167958] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:44.171157 : [POSLoggerLevel.error] [2024-03-25 14:46:44.171157] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:45.162747 : [POSLoggerLevel.error] [2024-03-25 14:46:45.162747] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:46.173907 : [POSLoggerLevel.error] [2024-03-25 14:46:46.173907] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:47.162129 : [POSLoggerLevel.error] [2024-03-25 14:46:47.162129] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:48.172349 : [POSLoggerLevel.error] [2024-03-25 14:46:48.172349] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:49.165795 : [POSLoggerLevel.error] [2024-03-25 14:46:49.165795] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:50.181192 : [POSLoggerLevel.error] [2024-03-25 14:46:50.181192] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:51.165738 : [POSLoggerLevel.error] [2024-03-25 14:46:51.165738] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:52.171923 : [POSLoggerLevel.error] [2024-03-25 14:46:52.171923] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:53.164999 : [POSLoggerLevel.error] [2024-03-25 14:46:53.164999] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:54.169755 : [POSLoggerLevel.error] [2024-03-25 14:46:54.169755] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:55.175809 : [POSLoggerLevel.error] [2024-03-25 14:46:55.174808] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:56.189158 : [POSLoggerLevel.error] [2024-03-25 14:46:56.189158] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:57.162231 : [POSLoggerLevel.error] [2024-03-25 14:46:57.162231] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:58.201383 : [POSLoggerLevel.error] [2024-03-25 14:46:58.201383] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:46:59.176152 : [POSLoggerLevel.error] [2024-03-25 14:46:59.176152] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:00.190955 : [POSLoggerLevel.error] [2024-03-25 14:47:00.190955] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:01.176917 : [POSLoggerLevel.error] [2024-03-25 14:47:01.175911] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:02.163546 : [POSLoggerLevel.error] [2024-03-25 14:47:02.163546] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:03.199480 : [POSLoggerLevel.error] [2024-03-25 14:47:03.199480] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:04.167546 : [POSLoggerLevel.error] [2024-03-25 14:47:04.167546] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:05.150014 : [POSLoggerLevel.error] [2024-03-25 14:47:05.150014] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:06.175761 : [POSLoggerLevel.error] [2024-03-25 14:47:06.175761] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:07.170935 : [POSLoggerLevel.error] [2024-03-25 14:47:07.170935] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:08.163556 : [POSLoggerLevel.error] [2024-03-25 14:47:08.163556] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:09.172717 : [POSLoggerLevel.error] [2024-03-25 14:47:09.172717] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:10.175973 : [POSLoggerLevel.error] [2024-03-25 14:47:10.175973] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:11.172280 : [POSLoggerLevel.error] [2024-03-25 14:47:11.172280] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:12.182652 : [POSLoggerLevel.error] [2024-03-25 14:47:12.181492] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:13.188652 : [POSLoggerLevel.error] [2024-03-25 14:47:13.188652] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:14.190804 : [POSLoggerLevel.error] [2024-03-25 14:47:14.190804] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:15.180333 : [POSLoggerLevel.error] [2024-03-25 14:47:15.180333] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:16.198768 : [POSLoggerLevel.error] [2024-03-25 14:47:16.198768] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:17.156708 : [POSLoggerLevel.error] [2024-03-25 14:47:17.156708] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:17.696404 : [POSLoggerLevel.error] [2024-03-25 14:47:17.696404] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:18.156796 : [POSLoggerLevel.error] [2024-03-25 14:47:18.156796] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:19.027778 : [POSLoggerLevel.error] [2024-03-25 14:47:19.027778] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:19.178215 : [POSLoggerLevel.error] [2024-03-25 14:47:19.170825] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:20.177611 : [POSLoggerLevel.error] [2024-03-25 14:47:20.177611] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:21.171113 : [POSLoggerLevel.error] [2024-03-25 14:47:21.171113] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:22.167497 : [POSLoggerLevel.error] [2024-03-25 14:47:22.167497] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:22.315708 : [POSLoggerLevel.error] [2024-03-25 14:47:22.315708] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:23.154645 : [POSLoggerLevel.error] [2024-03-25 14:47:23.153424] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:24.168082 : [POSLoggerLevel.error] [2024-03-25 14:47:24.168082] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:25.166009 : [POSLoggerLevel.error] [2024-03-25 14:47:25.166009] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:26.162114 : [POSLoggerLevel.error] [2024-03-25 14:47:26.162114] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:27.166699 : [POSLoggerLevel.error] [2024-03-25 14:47:27.165699] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:28.166378 : [POSLoggerLevel.error] [2024-03-25 14:47:28.166378] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:28.618580 : [POSLoggerLevel.error] [2024-03-25 14:47:28.618580] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:29.135234 : [POSLoggerLevel.error] [2024-03-25 14:47:29.135234] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:30.145284 : [POSLoggerLevel.error] [2024-03-25 14:47:30.144284] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:31.154817 : [POSLoggerLevel.error] [2024-03-25 14:47:31.154817] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:31.524824 : [POSLoggerLevel.error] [2024-03-25 14:47:31.524824] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:31.677375 : [POSLoggerLevel.error] [2024-03-25 14:47:31.677375] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:31.829168 : [POSLoggerLevel.error] [2024-03-25 14:47:31.829168] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:32.093941 : [POSLoggerLevel.error] [2024-03-25 14:47:32.093941] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:32.248936 : [POSLoggerLevel.error] [2024-03-25 14:47:32.247937] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:33.167240 : [POSLoggerLevel.error] [2024-03-25 14:47:33.167240] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:34.155492 : [POSLoggerLevel.error] [2024-03-25 14:47:34.155492] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:35.154466 : [POSLoggerLevel.error] [2024-03-25 14:47:35.154466] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:47:36.152145 : [POSLoggerLevel.error] [2024-03-25 14:47:36.151143] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/api/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:09.465089 : Closing previous api...
+2024-03-25 14:48:09.640002 : Closing previous api...
+2024-03-25 14:48:09.676510 : loading config from .env completed
+2024-03-25 14:48:09.676510 : SERVER: https://spar-pos-api.24x7retail.com/api/
+2024-03-25 14:48:09.676510 : LOCAL: http://localhost:71/api/
+2024-03-25 14:48:09.676510 : POS_IMAGE: https://spar-media-api.24x7retail.com/
+2024-03-25 14:48:09.676510 : LOYALTY: http://localhost:72/api/
+2024-03-25 14:48:09.676510 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 14:48:09.676510 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 14:48:09.677516 : SAAS: false
+2024-03-25 14:48:09.677516 : PASSWORD: ADMIN
+2024-03-25 14:48:09.677516 : DUAL_SCREEN: 
+2024-03-25 14:48:09.677516 : ENABLE_POLL_DISPLAY: true
+2024-03-25 14:48:09.677516 : SCREEN_WIDTH: 1024.0
+2024-03-25 14:48:09.677516 : SCREEN_HEIGHT: 768.0
+2024-03-25 14:48:09.677516 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 14:48:09.677516 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 14:48:09.677516 : PRINTER_NAME: POS-80C
+2024-03-25 14:48:09.677516 : FONT_A_LENGTH: 48
+2024-03-25 14:48:09.677516 : FONT_B_LENGTH: 64
+2024-03-25 14:48:11.132538 : loading config from .env completed
+2024-03-25 14:48:11.132538 : SERVER: https://spar-pos-api.24x7retail.com/api/
+2024-03-25 14:48:11.132538 : LOCAL: http://localhost:71/api/
+2024-03-25 14:48:11.132538 : POS_IMAGE: https://spar-media-api.24x7retail.com/
+2024-03-25 14:48:11.132538 : LOYALTY: http://localhost:72/api/
+2024-03-25 14:48:11.132538 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 14:48:11.133538 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 14:48:11.133538 : SAAS: false
+2024-03-25 14:48:11.133538 : PASSWORD: ADMIN
+2024-03-25 14:48:11.133538 : DUAL_SCREEN: 
+2024-03-25 14:48:11.133538 : ENABLE_POLL_DISPLAY: true
+2024-03-25 14:48:11.133538 : SCREEN_WIDTH: 1024.0
+2024-03-25 14:48:11.133538 : SCREEN_HEIGHT: 768.0
+2024-03-25 14:48:11.133538 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 14:48:11.133538 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 14:48:11.133538 : PRINTER_NAME: POS-80C
+2024-03-25 14:48:11.133538 : FONT_A_LENGTH: 48
+2024-03-25 14:48:11.133538 : FONT_B_LENGTH: 64
+2024-03-25 14:48:11.270357 : []
+2024-03-25 14:48:11.270357 : []
+2024-03-25 14:48:12.272973 : Exception
+2024-03-25 14:48:41.220834 : loading config from .env completed
+2024-03-25 14:48:41.220834 : SERVER: https://spar-pos-api.24x7retail.com/api/
+2024-03-25 14:48:41.220834 : LOCAL: http://localhost:71/api/
+2024-03-25 14:48:41.220834 : POS_IMAGE: https://spar-media-api.24x7retail.com/
+2024-03-25 14:48:41.220834 : LOYALTY: http://localhost:72/api/
+2024-03-25 14:48:41.220834 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-03-25 14:48:41.220834 : WEB_SOCKET: ws://localhost:71/ws
+2024-03-25 14:48:41.220834 : SAAS: false
+2024-03-25 14:48:41.220834 : PASSWORD: ADMIN
+2024-03-25 14:48:41.220834 : DUAL_SCREEN: 
+2024-03-25 14:48:41.220834 : ENABLE_POLL_DISPLAY: true
+2024-03-25 14:48:41.220834 : SCREEN_WIDTH: 1024.0
+2024-03-25 14:48:41.220834 : SCREEN_HEIGHT: 768.0
+2024-03-25 14:48:41.220834 : SINGLE_SWIPE_ACTIVE: true
+2024-03-25 14:48:41.220834 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-03-25 14:48:41.220834 : PRINTER_NAME: POS-80C
+2024-03-25 14:48:41.222332 : FONT_A_LENGTH: 48
+2024-03-25 14:48:41.222332 : FONT_B_LENGTH: 64
+2024-03-25 14:48:43.349051 : Closing CrystalReport...
+2024-03-25 14:48:43.357525 : [POSLoggerLevel.error] [2024-03-25 14:48:43.356058] [Windows] [Debug] ProcessException: The filename, directory name, or volume label syntax is incorrect.
+
+  Command: cmd.exe /c CrystalReport.exe
+2024-03-25 14:48:43.358531 : [POSLoggerLevel.error] [2024-03-25 14:48:43.357525] [Windows] [Debug] #0      _ProcessImpl._start (dart:io-patch/process_patch.dart:402:33)
+#1      Process.start (dart:io-patch/process_patch.dart:38:20)
+#2      _runNonInteractiveProcess (dart:io-patch/process_patch.dart:579:18)
+#3      Process.run (dart:io-patch/process_patch.dart:49:12)
+#4      _LoginViewState.validatePassword (package:checkout/views/authentication/login_view.dart:574:35)
+<asynchronous suspension>
+
+2024-03-25 14:48:45.872813 : usb serial port issue : Null check operator used on a null value
+2024-03-25 14:48:46.681536 : [POSLoggerLevel.error] [2024-03-25 14:48:46.680536] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:46.847628 : [POSLoggerLevel.error] [2024-03-25 14:48:46.847628] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:47.023666 : [POSLoggerLevel.error] [2024-03-25 14:48:47.022668] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:47.163769 : [POSLoggerLevel.error] [2024-03-25 14:48:47.162775] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:47.329954 : [POSLoggerLevel.error] [2024-03-25 14:48:47.329954] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:50.486918 : [POSLoggerLevel.error] [2024-03-25 14:48:50.485918] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:50.679312 : [POSLoggerLevel.error] [2024-03-25 14:48:50.679312] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:50.816997 : [POSLoggerLevel.error] [2024-03-25 14:48:50.816997] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:50.954233 : [POSLoggerLevel.error] [2024-03-25 14:48:50.953239] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:51.081517 : [POSLoggerLevel.error] [2024-03-25 14:48:51.080517] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:51.234025 : [POSLoggerLevel.error] [2024-03-25 14:48:51.234025] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:51.384999 : [POSLoggerLevel.error] [2024-03-25 14:48:51.384999] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:52.283688 : [POSLoggerLevel.error] [2024-03-25 14:48:52.283688] [Windows] [Debug] A RenderFlex overflowed by 46 pixels on the right.
+2024-03-25 14:48:54.530709 : [POSLoggerLevel.error] [2024-03-25 14:48:54.530709] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:55.136562 : [POSLoggerLevel.error] [2024-03-25 14:48:55.136562] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:55.415027 : [POSLoggerLevel.error] [2024-03-25 14:48:55.415027] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:56.135854 : [POSLoggerLevel.error] [2024-03-25 14:48:56.135854] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:56.358105 : [POSLoggerLevel.error] [2024-03-25 14:48:56.357096] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:56.730493 : [POSLoggerLevel.error] [2024-03-25 14:48:56.729501] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:56.888105 : usb serial port issue : Null check operator used on a null value
+2024-03-25 14:48:57.087876 : [POSLoggerLevel.error] [2024-03-25 14:48:57.087876] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:58.119120 : [POSLoggerLevel.error] [2024-03-25 14:48:58.118120] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:48:59.141261 : [POSLoggerLevel.error] [2024-03-25 14:48:59.141261] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:00.146478 : [POSLoggerLevel.error] [2024-03-25 14:49:00.146478] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:01.143803 : [POSLoggerLevel.error] [2024-03-25 14:49:01.143803] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:02.148391 : [POSLoggerLevel.error] [2024-03-25 14:49:02.148391] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:03.135413 : [POSLoggerLevel.error] [2024-03-25 14:49:03.135413] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:04.149505 : [POSLoggerLevel.error] [2024-03-25 14:49:04.149505] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:05.137338 : [POSLoggerLevel.error] [2024-03-25 14:49:05.136338] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:06.141063 : [POSLoggerLevel.error] [2024-03-25 14:49:06.140054] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:07.147042 : [POSLoggerLevel.error] [2024-03-25 14:49:07.147042] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:08.150495 : [POSLoggerLevel.error] [2024-03-25 14:49:08.150495] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:09.151365 : [POSLoggerLevel.error] [2024-03-25 14:49:09.150366] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:10.153288 : [POSLoggerLevel.error] [2024-03-25 14:49:10.153288] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:11.159219 : [POSLoggerLevel.error] [2024-03-25 14:49:11.159219] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:12.156215 : [POSLoggerLevel.error] [2024-03-25 14:49:12.156215] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:13.159538 : [POSLoggerLevel.error] [2024-03-25 14:49:13.158033] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:14.150667 : [POSLoggerLevel.error] [2024-03-25 14:49:14.150667] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:15.159694 : [POSLoggerLevel.error] [2024-03-25 14:49:15.159694] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:16.165564 : [POSLoggerLevel.error] [2024-03-25 14:49:16.165564] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:17.167425 : [POSLoggerLevel.error] [2024-03-25 14:49:17.167425] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:18.149919 : [POSLoggerLevel.error] [2024-03-25 14:49:18.149919] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:19.182689 : [POSLoggerLevel.error] [2024-03-25 14:49:19.182689] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:20.150541 : [POSLoggerLevel.error] [2024-03-25 14:49:20.149523] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:24.147470 : [POSLoggerLevel.error] [2024-03-25 14:49:24.147470] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:25.169264 : [POSLoggerLevel.error] [2024-03-25 14:49:25.166094] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:25.421352 : [POSLoggerLevel.error] [2024-03-25 14:49:25.421352] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:35.152926 : [POSLoggerLevel.error] [2024-03-25 14:49:35.152926] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:36.141439 : [POSLoggerLevel.error] [2024-03-25 14:49:36.141439] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:37.142311 : [POSLoggerLevel.error] [2024-03-25 14:49:37.142311] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:38.148678 : [POSLoggerLevel.error] [2024-03-25 14:49:38.148678] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:39.141512 : [POSLoggerLevel.error] [2024-03-25 14:49:39.141512] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:40.164674 : [POSLoggerLevel.error] [2024-03-25 14:49:40.163666] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:41.128176 : [POSLoggerLevel.error] [2024-03-25 14:49:41.127176] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:42.137092 : [POSLoggerLevel.error] [2024-03-25 14:49:42.137092] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:43.136827 : [POSLoggerLevel.error] [2024-03-25 14:49:43.136827] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:44.145156 : [POSLoggerLevel.error] [2024-03-25 14:49:44.145156] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:45.142378 : [POSLoggerLevel.error] [2024-03-25 14:49:45.142378] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:46.197207 : [POSLoggerLevel.error] [2024-03-25 14:49:46.197207] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:47.146442 : [POSLoggerLevel.error] [2024-03-25 14:49:47.145441] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:48.400066 : [POSLoggerLevel.error] [2024-03-25 14:49:48.400066] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:49.140808 : [POSLoggerLevel.error] [2024-03-25 14:49:49.140808] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:50.140091 : [POSLoggerLevel.error] [2024-03-25 14:49:50.140091] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:51.135936 : [POSLoggerLevel.error] [2024-03-25 14:49:51.135936] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:52.145872 : [POSLoggerLevel.error] [2024-03-25 14:49:52.145872] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:53.138163 : [POSLoggerLevel.error] [2024-03-25 14:49:53.138163] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:54.130460 : [POSLoggerLevel.error] [2024-03-25 14:49:54.130460] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:55.139653 : [POSLoggerLevel.error] [2024-03-25 14:49:55.139653] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:56.138779 : [POSLoggerLevel.error] [2024-03-25 14:49:56.138779] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:57.133441 : [POSLoggerLevel.error] [2024-03-25 14:49:57.133441] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:58.135482 : [POSLoggerLevel.error] [2024-03-25 14:49:58.135482] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:49:59.136765 : [POSLoggerLevel.error] [2024-03-25 14:49:59.135759] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:00.146782 : [POSLoggerLevel.error] [2024-03-25 14:50:00.146782] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:01.137639 : [POSLoggerLevel.error] [2024-03-25 14:50:01.136640] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:02.136141 : [POSLoggerLevel.error] [2024-03-25 14:50:02.136141] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:03.133290 : [POSLoggerLevel.error] [2024-03-25 14:50:03.132289] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:04.135854 : [POSLoggerLevel.error] [2024-03-25 14:50:04.135854] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:05.137113 : [POSLoggerLevel.error] [2024-03-25 14:50:05.137113] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:06.139912 : [POSLoggerLevel.error] [2024-03-25 14:50:06.139912] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:07.138565 : [POSLoggerLevel.error] [2024-03-25 14:50:07.137541] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:08.139270 : [POSLoggerLevel.error] [2024-03-25 14:50:08.139270] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:09.135040 : [POSLoggerLevel.error] [2024-03-25 14:50:09.135040] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:10.136030 : [POSLoggerLevel.error] [2024-03-25 14:50:10.136030] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:11.150921 : [POSLoggerLevel.error] [2024-03-25 14:50:11.150921] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:12.133160 : [POSLoggerLevel.error] [2024-03-25 14:50:12.133160] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:13.152986 : [POSLoggerLevel.error] [2024-03-25 14:50:13.152986] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:14.136226 : [POSLoggerLevel.error] [2024-03-25 14:50:14.136226] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:14.638856 : [POSLoggerLevel.error] [2024-03-25 14:50:14.638856] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:14.786111 : [POSLoggerLevel.error] [2024-03-25 14:50:14.786111] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:14.923112 : [POSLoggerLevel.error] [2024-03-25 14:50:14.922112] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:15.064530 : [POSLoggerLevel.error] [2024-03-25 14:50:15.064530] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:15.232273 : [POSLoggerLevel.error] [2024-03-25 14:50:15.231270] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:15.378117 : [POSLoggerLevel.error] [2024-03-25 14:50:15.378117] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:15.520500 : [POSLoggerLevel.error] [2024-03-25 14:50:15.520500] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:15.654301 : [POSLoggerLevel.error] [2024-03-25 14:50:15.654301] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:15.671175 : [POSLoggerLevel.error] [2024-03-25 14:50:15.669169] [Windows] [Debug] Don't have a permission to perform this action
+2024-03-25 14:50:15.841691 : [POSLoggerLevel.error] [2024-03-25 14:50:15.841691] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:15.982877 : [POSLoggerLevel.error] [2024-03-25 14:50:15.982877] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:16.150104 : [POSLoggerLevel.error] [2024-03-25 14:50:16.150104] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:16.338959 : [POSLoggerLevel.error] [2024-03-25 14:50:16.337958] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:16.483072 : [POSLoggerLevel.error] [2024-03-25 14:50:16.483072] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:16.745507 : [POSLoggerLevel.error] [2024-03-25 14:50:16.745507] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:16.882393 : [POSLoggerLevel.error] [2024-03-25 14:50:16.882393] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:17.029255 : [POSLoggerLevel.error] [2024-03-25 14:50:17.029255] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:17.163050 : [POSLoggerLevel.error] [2024-03-25 14:50:17.162047] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:17.455816 : [POSLoggerLevel.error] [2024-03-25 14:50:17.454804] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:17.620127 : [POSLoggerLevel.error] [2024-03-25 14:50:17.620127] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:17.763204 : [POSLoggerLevel.error] [2024-03-25 14:50:17.762201] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:17.901704 : [POSLoggerLevel.error] [2024-03-25 14:50:17.901704] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:18.131268 : [POSLoggerLevel.error] [2024-03-25 14:50:18.131268] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:19.001536 : [POSLoggerLevel.error] [2024-03-25 14:50:19.001536] [Windows] [Debug] #0      ApiClient.call (package:checkout/components/api
+client.dart:169:36)
+<asynchronous suspension>
+#1      ApiClient.generateBackendToken (package:checkout/components/api_client.dart:210:36)
+<asynchronous suspension>
+#2      ApiClient.call (package:checkout/components/api_client.dart:51:24)
+<asynchronous suspension>
+#3      MyAlertController.myRemoteProcess (package:checkout/controllers/my_alert_controller.dart:32:30)
+<asynchronous suspension>
+#4      _ApprovalAlertState.myAlertProcess (package:checkout/views/authentication/approval_screen.dart:55:39)
+<asynchronous suspension>
+
+2024-03-25 14:50:19.135386 : [POSLoggerLevel.error] [2024-03-25 14:50:19.135386] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:20.129997 : [POSLoggerLevel.error] [2024-03-25 14:50:20.129997] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:20.891892 : [POSLoggerLevel.error] [2024-03-25 14:50:20.890893] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:21.031764 : [POSLoggerLevel.error] [2024-03-25 14:50:21.031764] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:21.179209 : [POSLoggerLevel.error] [2024-03-25 14:50:21.178208] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:21.327765 : [POSLoggerLevel.error] [2024-03-25 14:50:21.327765] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:22.111510 : [POSLoggerLevel.error] [2024-03-25 14:50:22.111510] [Windows] [Debug] Don't have a permission to perform this action
+2024-03-25 14:50:22.161481 : [POSLoggerLevel.error] [2024-03-25 14:50:22.161481] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:22.311089 : [POSLoggerLevel.error] [2024-03-25 14:50:22.311089] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:22.491338 : [POSLoggerLevel.error] [2024-03-25 14:50:22.491338] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:22.718310 : [POSLoggerLevel.error] [2024-03-25 14:50:22.718310] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:22.861198 : [POSLoggerLevel.error] [2024-03-25 14:50:22.861198] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:22.898853 : [POSLoggerLevel.error] [2024-03-25 14:50:22.897844] [Windows] [Debug] #0      ApiClient.call (package:checkout/components/api
+client.dart:169:36)
+<asynchronous suspension>
+#1      ApiClient.generateBackendToken (package:checkout/components/api_client.dart:210:36)
+<asynchronous suspension>
+#2      ApiClient.call (package:checkout/components/api_client.dart:51:24)
+<asynchronous suspension>
+#3      MyAlertController.myRemoteProcess (package:checkout/controllers/my_alert_controller.dart:32:30)
+<asynchronous suspension>
+#4      _ApprovalAlertState.myAlertProcess (package:checkout/views/authentication/approval_screen.dart:55:39)
+<asynchronous suspension>
+
+2024-03-25 14:50:23.178397 : [POSLoggerLevel.error] [2024-03-25 14:50:23.140475] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:23.420293 : [POSLoggerLevel.error] [2024-03-25 14:50:23.420293] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:23.559763 : [POSLoggerLevel.error] [2024-03-25 14:50:23.557313] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:23.690196 : [POSLoggerLevel.error] [2024-03-25 14:50:23.689197] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:24.130846 : [POSLoggerLevel.error] [2024-03-25 14:50:24.130846] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:24.869664 : [POSLoggerLevel.error] [2024-03-25 14:50:24.869664] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:25.142864 : [POSLoggerLevel.error] [2024-03-25 14:50:25.141875] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:25.474326 : [POSLoggerLevel.error] [2024-03-25 14:50:25.474326] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:25.735967 : [POSLoggerLevel.error] [2024-03-25 14:50:25.735967] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:25.991740 : [POSLoggerLevel.error] [2024-03-25 14:50:25.991740] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:26.142798 : [POSLoggerLevel.error] [2024-03-25 14:50:26.142798] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:26.276663 : [POSLoggerLevel.error] [2024-03-25 14:50:26.276663] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:26.406293 : [POSLoggerLevel.error] [2024-03-25 14:50:26.406293] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:26.542764 : [POSLoggerLevel.error] [2024-03-25 14:50:26.542764] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:27.133291 : [POSLoggerLevel.error] [2024-03-25 14:50:27.133291] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:27.740669 : [POSLoggerLevel.error] [2024-03-25 14:50:27.739667] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:28.080730 : [POSLoggerLevel.error] [2024-03-25 14:50:28.080730] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:28.241031 : [POSLoggerLevel.error] [2024-03-25 14:50:28.240032] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:28.387638 : [POSLoggerLevel.error] [2024-03-25 14:50:28.387638] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:28.527639 : [POSLoggerLevel.error] [2024-03-25 14:50:28.526638] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:28.843884 : [POSLoggerLevel.error] [2024-03-25 14:50:28.843884] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:28.981281 : [POSLoggerLevel.error] [2024-03-25 14:50:28.981281] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:29.121305 : [POSLoggerLevel.error] [2024-03-25 14:50:29.121305] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:29.269576 : [POSLoggerLevel.error] [2024-03-25 14:50:29.268580] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:29.417296 : [POSLoggerLevel.error] [2024-03-25 14:50:29.417296] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:29.543740 : [POSLoggerLevel.error] [2024-03-25 14:50:29.542753] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:29.678425 : [POSLoggerLevel.error] [2024-03-25 14:50:29.678425] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:29.826608 : [POSLoggerLevel.error] [2024-03-25 14:50:29.825607] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:29.970245 : [POSLoggerLevel.error] [2024-03-25 14:50:29.970245] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:30.123847 : [POSLoggerLevel.error] [2024-03-25 14:50:30.123847] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:30.267520 : [POSLoggerLevel.error] [2024-03-25 14:50:30.267520] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:30.398640 : [POSLoggerLevel.error] [2024-03-25 14:50:30.398640] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png
+2024-03-25 14:50:31.131557 : [POSLoggerLevel.error] [2024-03-25 14:50:31.131557] [Windows] [Debug] HttpException: Invalid statusCode: 404, uri = https://spar-media-api.24x7retail.com/b8df8ee02c472ff22ff9c98278be9cd16d0403078796fb3f24a54da36e83df4f/images/user/IN.png

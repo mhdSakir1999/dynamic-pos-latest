@@ -782,6 +782,11 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                     ],
                   );
                 final location = myList[index - 1];
+                try {
+                  var x = location.iplUSELL?.thousandsSeparator();
+                } catch (e) {
+                  print(e);
+                }
                 return Column(
                   children: [
                     Row(
@@ -799,9 +804,7 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                         Expanded(
                             child: Text(
                           (location.iplUSELL?.thousandsSeparator() ?? "0.00")
-                              .toString()
-                              .parseDouble()
-                              .thousandsSeparator(),
+                              .toString(),
                           textAlign: TextAlign.center,
                         )),
                       ],

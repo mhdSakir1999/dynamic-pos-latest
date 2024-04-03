@@ -870,6 +870,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
       await POSPriceCalculator().addItemToCart(
           myProduct!, qty, context, null, null, null,
           secondApiCall: true, successToast: false);
+      bool isMinus = qty < 0;
       if (myProduct.returnBottleCode != null &&
           myProduct.returnBottleCode!.isNotEmpty) {
         List<String> returnBottleCodes =
@@ -888,7 +889,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
             context: context!,
             builder: (context) {
               return ReturnBottleSelectionView(
-                  returnProResList: returnProResList);
+                  returnProResList: returnProResList, isMinus: isMinus,);
             },
           );
         }

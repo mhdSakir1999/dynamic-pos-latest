@@ -1,0 +1,351 @@
+2024-04-02 14:12:32.709939 : Closing previous api...
+2024-04-02 14:12:32.903414 : Closing previous api...
+2024-04-02 14:12:32.963353 : loading config from .env completed
+2024-04-02 14:12:32.963353 : SERVER: http://localhost:71/api/
+2024-04-02 14:12:32.963353 : LOCAL: http://localhost:71/api/
+2024-04-02 14:12:32.963353 : POS_IMAGE: https://spar-media-api.24x7retail.com/
+2024-04-02 14:12:32.963353 : LOYALTY: http://localhost:72/api/
+2024-04-02 14:12:32.963353 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-04-02 14:12:32.963353 : WEB_SOCKET: ws://localhost:71/ws
+2024-04-02 14:12:32.963353 : SAAS: false
+2024-04-02 14:12:32.963353 : PASSWORD: ADMIN
+2024-04-02 14:12:32.963353 : DUAL_SCREEN: 
+2024-04-02 14:12:32.963353 : ENABLE_POLL_DISPLAY: true
+2024-04-02 14:12:32.963353 : SCREEN_WIDTH: 1024.0
+2024-04-02 14:12:32.963353 : SCREEN_HEIGHT: 768.0
+2024-04-02 14:12:32.963353 : SINGLE_SWIPE_ACTIVE: true
+2024-04-02 14:12:32.963353 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-04-02 14:12:32.963353 : PRINTER_NAME: POS-80C
+2024-04-02 14:12:32.963353 : FONT_A_LENGTH: 42
+2024-04-02 14:12:32.963353 : FONT_B_LENGTH: 56
+2024-04-02 14:12:35.213738 : [POSLoggerLevel.error] [2024-04-02 14:12:35.212740] [Windows] [Debug] #0      _AssertionError._doThrowNew (dart:core-patch/errors_patch.dart:51:61)
+#1      _Assert
+onError._throwNew (dart:core-patch/errors_patch.dart:40:5)
+#2      Easy
+oading._show (package:flutter_easyloading/src/easy_loading.dart:425:7)
+#3      EasyLoading.showError (package:flutter_easyloading/src/easy_loading.dart:339:22)
+#4      ApiClient.call (package:checkout/components/api_client.dart:187:19)
+<asynchronous suspension>
+#5      SharedPreferenceController.getConfigLocal (package:checkout/controllers/config/shared_preference_controller.dart:601:19)
+<asynchronous suspension>
+#6      main.<anonymous closure> (package:checkout/main.dart:46:5)
+<asynchronous suspension>
+
+2024-04-02 14:12:35.221234 : loading config from .env completed
+2024-04-02 14:12:35.221234 : SERVER: http://localhost:71/api/
+2024-04-02 14:12:35.221234 : LOCAL: http://localhost:71/api/
+2024-04-02 14:12:35.221234 : POS_IMAGE: https://spar-media-api.24x7retail.com/
+2024-04-02 14:12:35.221234 : LOYALTY: http://localhost:72/api/
+2024-04-02 14:12:35.221234 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-04-02 14:12:35.221234 : WEB_SOCKET: ws://localhost:71/ws
+2024-04-02 14:12:35.221234 : SAAS: false
+2024-04-02 14:12:35.221234 : PASSWORD: ADMIN
+2024-04-02 14:12:35.221234 : DUAL_SCREEN: 
+2024-04-02 14:12:35.221234 : ENABLE_POLL_DISPLAY: true
+2024-04-02 14:12:35.221234 : SCREEN_WIDTH: 1024.0
+2024-04-02 14:12:35.221234 : SCREEN_HEIGHT: 768.0
+2024-04-02 14:12:35.221234 : SINGLE_SWIPE_ACTIVE: true
+2024-04-02 14:12:35.222229 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-04-02 14:12:35.222229 : PRINTER_NAME: POS-80C
+2024-04-02 14:12:35.222229 : FONT_A_LENGTH: 42
+2024-04-02 14:12:35.222229 : FONT_B_LENGTH: 56
+2024-04-02 14:12:35.414418 : []
+2024-04-02 14:12:35.414418 : []2024-04-02 14:12:36.799619 : Exception
+2024-04-02 14:12:38.113311 : [POSLoggerLevel.error] [2024-04-02 14:12:38.113311] [Windows] [Debug] You are not connected to internet
+2024-04-02 14:13:08.406283 : loading config from .env completed
+2024-04-02 14:13:08.406283 : SERVER: http://localhost:71/api/
+2024-04-02 14:13:08.406283 : LOCAL: http://localhost:71/api/
+2024-04-02 14:13:08.406283 : POS_IMAGE: https://spar-media-api.24x7retail.com/
+2024-04-02 14:13:08.406283 : LOYALTY: http://localhost:72/api/
+2024-04-02 14:13:08.406283 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-04-02 14:13:08.406283 : WEB_SOCKET: ws://localhost:71/ws
+2024-04-02 14:13:08.406283 : SAAS: false
+2024-04-02 14:13:08.406283 : PASSWORD: ADMIN
+2024-04-02 14:13:08.406283 : DUAL_SCREEN: 
+2024-04-02 14:13:08.406283 : ENABLE_POLL_DISPLAY: true
+2024-04-02 14:13:08.406283 : SCREEN_WIDTH: 1024.0
+2024-04-02 14:13:08.406283 : SCREEN_HEIGHT: 768.0
+2024-04-02 14:13:08.406283 : SINGLE_SWIPE_ACTIVE: true
+2024-04-02 14:13:08.406283 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-04-02 14:13:08.406283 : PRINTER_NAME: POS-80C
+2024-04-02 14:13:08.406283 : FONT_A_LENGTH: 42
+2024-04-02 14:13:08.407281 : FONT_B_LENGTH: 56
+2024-04-02 14:13:10.478018 : Closing CrystalReport...
+2024-04-02 14:13:10.485987 : [POSLoggerLevel.error] [2024-04-02 14:13:10.484991] [Windows] [Debug] #0      _ProcessImpl._start (dart:io-patch/process_patch.dart:402:33)
+#1      Process.start (dart:io-patch/process_patch.dart:
+8:20)
+#2      _runNonInteractiveProcess (dart:io-patch/process_patch.dart:579:18)
+#3      Process.run (dart:io-patch/process_patch.dart:49:12)
+#4      _LoginViewState.validatePassword (package:checkout/views/authentication/login_view.dart:574:35)
+<asynchronous suspension>
+
+2024-04-02 14:13:13.015871 : usb serial port issue : Null check operator used on a null value
+2024-04-02 14:13:21.600953 : usb serial port issue : Null check operator used on a null value
+2024-04-02 14:13:25.551316 : usb serial port issue : Null check operator used on a null value
+bug] cargillsss is not defined module
+2024-04-02 14:13:25.842341 : [POSLoggerLevel.error] [2024-04-02 14:13:25.842341] [Windows] [Debug] A RenderFlex overflowed by 9.3 pixels on the right.
+2024-04-02 14:13:26.506279 : [POSLoggerLevel.error] [2024-04-02 14:13:26.506279] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:13:26.818236 : [POSLoggerLevel.error] [2024-04-02 14:13:26.817240] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:13:27.110261 : [POSLoggerLevel.error] [2024-04-02 14:13:27.110261] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:13:27.735505 : [POSLoggerLevel.error] [2024-04-02 14:13:27.735505] [Windows] [Debug] A RenderFlex overflowed by 38 pixels on the right.
+2024-04-02 14:14:44.784087 : [POSLoggerLevel.error] [2024-04-02 14:14:44.784087] [Windows] [Debug] A RenderFlex overflowed by 38 pixels on the right.
+2024-04-02 14:14:58.020244 : [POSLoggerLevel.error] [2024-04-02 14:14:58.020244] [Windows] [Debug] A RenderFlex overflowed by 9.3 pixels on the right.
+2024-04-02 14:14:58.932197 : [POSLoggerLevel.error] [2024-04-02 14:14:58.932197] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:14:59.265492 : [POSLoggerLevel.error] [2024-04-02 14:14:59.265492] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:14:59.768564 : [POSLoggerLevel.error] [2024-04-02 14:14:59.768564] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:14:59.848999 : [POSLoggerLevel.error] [2024-04-02 14:14:59.848999] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:14:59.944359 : [POSLoggerLevel.error] [2024-04-02 14:14:59.944359] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:00.559126 : [POSLoggerLevel.error] [2024-04-02 14:15:00.558153] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:07.077893 : [POSLoggerLevel.error] [2024-04-02 14:15:07.076916] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:07.414273 : [POSLoggerLevel.error] [2024-04-02 14:15:07.413277] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:09.699091 : [POSLoggerLevel.error] [2024-04-02 14:15:09.698093] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:18.369810 : [POSLoggerLevel.error] [2024-04-02 14:15:18.369810] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:18.514336 : [POSLoggerLevel.error] [2024-04-02 14:15:18.514336] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:18.974876 : [POSLoggerLevel.error] [2024-04-02 14:15:18.973865] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:58.575506 : [POSLoggerLevel.error] [2024-04-02 14:15:58.575506] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:58.893129 : [POSLoggerLevel.error] [2024-04-02 14:15:58.893129] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:59.195713 : [POSLoggerLevel.error] [2024-04-02 14:15:59.195713] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:15:59.923535 : [POSLoggerLevel.error] [2024-04-02 14:15:59.921454] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:16:03.154997 : [POSLoggerLevel.error] [2024-04-02 14:16:03.154997] [Windows] [Debug] A RenderFlex overflowed by 38 pixels on the right.
+2024-04-02 14:16:27.226524 : [POSLoggerLevel.error] [2024-04-02 14:16:27.226524] [Windows] [Debug] A RenderFlex overflowed by 9.3 pixels on the right.
+2024-04-02 14:16:45.173325 : [POSLoggerLevel.error] [2024-04-02 14:16:45.173325] [Windows] [Debug] A RenderFlex overflowed by 38 pixels on the right.
+2024-04-02 14:17:24.303026 : [POSLoggerLevel.error] [2024-04-02 14:17:24.303026] [Windows] [Debug] A RenderFlex overflowed by 9.3 pixels on the right.
+2024-04-02 14:17:25.092036 : [POSLoggerLevel.error] [2024-04-02 14:17:25.092036] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:17:25.425622 : [POSLoggerLevel.error] [2024-04-02 14:17:25.425622] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:17:25.864282 : [POSLoggerLevel.error] [2024-04-02 14:17:25.864282] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:18:01.558269 : [POSLoggerLevel.error] [2024-04-02 14:18:01.558269] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:18:01.888851 : [POSLoggerLevel.error] [2024-04-02 14:18:01.888851] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:18:02.208304 : [POSLoggerLevel.error] [2024-04-02 14:18:02.200373] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:18:02.380058 : [POSLoggerLevel.error] [2024-04-02 14:18:02.380058] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:18:02.544123 : [POSLoggerLevel.error] [2024-04-02 14:18:02.544123] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:18:03.120440 : [POSLoggerLevel.error] [2024-04-02 14:18:03.120440] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:18:10.207046 : [POSLoggerLevel.error] [2024-04-02 14:18:10.201967] [Windows] [Debug] A RenderFlex overflowed by 38 pixels on the right.
+ion attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:18:10.263121 : [POSLoggerLevel.error] [2024-04-02 14:18:10.263121] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:18:10.706055 : [POSLoggerLevel.error] [2024-04-02 14:18:10.706055] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:19:10.330975 : [POSLoggerLevel.error] [2024-04-02 14:19:10.330975] [Windows] [Debug] A RenderFlex overflowed by 9.3 pixels on the right.
+2024-04-02 14:19:11.487985 : [POSLoggerLevel.error] [2024-04-02 14:19:11.487985] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:19:11.811603 : [POSLoggerLevel.error] [2024-04-02 14:19:11.811603] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:19:12.190896 : [POSLoggerLevel.error] [2024-04-02 14:19:12.190896] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:29:12.579008 : [POSLoggerLevel.error] [2024-04-02 14:29:12.576995] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:29:12.893571 : [POSLoggerLevel.error] [2024-04-02 14:29:12.891575] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:29:13.555815 : [POSLoggerLevel.error] [2024-04-02 14:29:13.554817] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:29:22.630810 : usb serial port issue : Null check operator used on a null value
+2024-04-02 14:29:23.059764 : [POSLoggerLevel.error] [2024-04-02 14:29:23.058775] [Windows] [Debug] A FocusNode was used after being disposed.
+Once you have called dispose() on a FocusNode, it can no longer be used.
+2024-04-02 14:29:23.591610 : [POSLoggerLevel.error] [2024-04-02 14:29:23.590613] [Windows] [Debug] type 'String' is not a subtype of type 'int' of 'index'
+ackag
+:checkout/controllers/payment_mode_controller.d
+rt:16:19)
+<asynchronous suspension>
+#1      PayModeBloc.getPayModeList (package:checkout/bloc/paymode_bloc.dart:21:17)
+
+asynchro
+ous su
+
+ension>
+
+ion>
+
+2024-04-02 14:29:28.535277 : Closing previous api...
+2024-04-02 14:29:29.543580 : Closing previous api...
+2024-04-02 14:35:41.077083 : Closing previous api...
+2024-04-02 14:35:41.739343 : Closing previous api...
+2024-04-02 14:35:41.920911 : loading config from .env completed
+2024-04-02 14:35:41.920911 : SERVER: http://localhost:71/api/
+2024-04-02 14:35:41.920911 : LOCAL: http://localhost:71/api/
+2024-04-02 14:35:41.921820 : POS_IMAGE: https://spar-media-api.24x7retail.com/
+2024-04-02 14:35:41.921820 : LOYALTY: http://localhost:72/api/
+2024-04-02 14:35:41.921820 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-04-02 14:35:41.921820 : WEB_SOCKET: ws://localhost:71/ws
+2024-04-02 14:35:41.921820 : SAAS: false
+2024-04-02 14:35:41.921820 : PASSWORD: ADMIN
+2024-04-02 14:35:41.921820 : DUAL_SCREEN: 
+2024-04-02 14:35:41.921820 : ENABLE_POLL_DISPLAY: true
+2024-04-02 14:35:41.921820 : SCREEN_WIDTH: 1024.0
+2024-04-02 14:35:41.921820 : SCREEN_HEIGHT: 768.0
+2024-04-02 14:35:41.921820 : SINGLE_SWIPE_ACTIVE: true
+2024-04-02 14:35:41.921820 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-04-02 14:35:41.921820 : PRINTER_NAME: POS-80C
+2024-04-02 14:35:41.921820 : FONT_A_LENGTH: 42
+2024-04-02 14:35:41.921820 : FONT_B_LENGTH: 56
+2024-04-02 14:35:44.610301 : [POSLoggerLevel.error] [2024-04-02 14:35:44.608727] [Windows] [Debug] #0      _AssertionError._doThrowNew (dart:core-patch/errors_patch.dart:51:61)
+#1      _Assert
+onError._throwNew (dart:core-patch/errors_patch.dart:40:5)
+#2      Easy
+oading._show (package:flutter_easyloading/src/easy_loading.dart:425:7)
+#3      EasyLoading.showError (package:flutter_easyloading/src/easy_loading.dart:339:22)
+#4      ApiClient.call (package:checkout/components/api_client.dart:187:19)
+<asynchronous suspension>
+#5      SharedPreferenceController.getConfigLocal (package:checkout/controllers/config/shared_preference_controller.dart:601:19)
+<asynchronous suspension>
+#6      main.<anonymous closure> (package:checkout/main.dart:46:5)
+<asynchronous suspension>
+
+2024-04-02 14:35:44.629507 : loading config from .env completed
+2024-04-02 14:35:44.629507 : SERVER: http://localhost:71/api/
+2024-04-02 14:35:44.629507 : LOCAL: http://localhost:71/api/
+2024-04-02 14:35:44.629507 : POS_IMAGE: https://spar-media-api.24x7retail.com/
+2024-04-02 14:35:44.629507 : LOYALTY: http://localhost:72/api/
+2024-04-02 14:35:44.629507 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-04-02 14:35:44.629507 : WEB_SOCKET: ws://localhost:71/ws
+2024-04-02 14:35:44.629507 : SAAS: false
+2024-04-02 14:35:44.629507 : PASSWORD: ADMIN
+2024-04-02 14:35:44.629507 : DUAL_SCREEN: 
+2024-04-02 14:35:44.629507 : ENABLE_POLL_DISPLAY: true
+2024-04-02 14:35:44.629507 : SCREEN_WIDTH: 1024.0
+2024-04-02 14:35:44.629507 : SCREEN_HEIGHT: 768.0
+2024-04-02 14:35:44.629507 : SINGLE_SWIPE_ACTIVE: true
+2024-04-02 14:35:44.629507 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-04-02 14:35:44.629507 : PRINTER_NAME: POS-80C
+2024-04-02 14:35:44.629507 : FONT_A_LENGTH: 42
+2024-04-02 14:35:44.629507 : FONT_B_LENGTH: 56
+2024-04-02 14:35:45.165869 : []
+2024-04-02 14:35:45.165869 : []
+2024-04-02 14:35:49.565956 : Exception
+2024-04-02 14:36:32.579193 : loading config from .env completed
+2024-04-02 14:36:32.579193 : SERVER: http://localhost:71/api/
+2024-04-02 14:36:32.579193 : LOCAL: http://localhost:71/api/
+2024-04-02 14:36:32.579193 : POS_IMAGE: https://spar-media-api.24x7retail.com/
+2024-04-02 14:36:32.579193 : LOYALTY: http://localhost:72/api/
+2024-04-02 14:36:32.579193 : LOYALTY_IMAGE: https://gammamedia.24x7retail.com/
+2024-04-02 14:36:32.579193 : WEB_SOCKET: ws://localhost:71/ws
+2024-04-02 14:36:32.579193 : SAAS: false
+2024-04-02 14:36:32.579193 : PASSWORD: ADMIN
+2024-04-02 14:36:32.579193 : DUAL_SCREEN: 
+2024-04-02 14:36:32.579193 : ENABLE_POLL_DISPLAY: true
+2024-04-02 14:36:32.579193 : SCREEN_WIDTH: 1024.0
+2024-04-02 14:36:32.579193 : SCREEN_HEIGHT: 768.0
+2024-04-02 14:36:32.579193 : SINGLE_SWIPE_ACTIVE: true
+2024-04-02 14:36:32.579193 : LOCAL_PRINT_TEMPLATES_PATH: C:/checkout/LOCAL_PRINT
+2024-04-02 14:36:32.579193 : PRINTER_NAME: POS-80C
+2024-04-02 14:36:32.579193 : FONT_A_LENGTH: 42
+2024-04-02 14:36:32.579193 : FONT_B_LENGTH: 56
+2024-04-02 14:36:35.992807 : Closing CrystalReport...
+2024-04-02 14:36:35.999401 : [POSLoggerLevel.error] [2024-04-02 14:36:35.998396] [Windows] [Debug] ProcessException: The filename, directory name, or volume label syntax is incorrect.
+
+  Command: cmd.exe /c CrystalReport.exe
+2024-04-02 14:36:36.000398 : [POSLoggerLevel.error] [2024-04-02 14:36:35.999401] [Windows] [Debug] #0      _ProcessImpl._start (dart:io-patch/process_patch.dart:402:33)
+#1      Process.start (dart:io-patch/process_patch.dart:38:20)
+#2      _runNonInteractiveProcess (dart:io-patch/process_patch.dart:579:18)
+#3      Process.run (dart:io-patch/process_patch.dart:49:12)
+#4      _LoginViewState.validatePassword (package:checkout/views/authentication/login_view.dart:574:35)
+<asynchronous suspension>
+
+2024-04-02 14:36:38.535248 : usb serial port issue : Null check operator used on a null value
+2024-04-02 14:36:46.693496 : usb serial port issue : Null check operator used on a null value
+2024-04-02 14:36:51.737855 : [POSLoggerLevel.error] [2024-04-02 14:36:51.736870] [Windows] [D
+bug] A RenderFlex overflowed by 9.3 p
+xels on the right.
+2024-04-02 14:36:52.031213 : [POSLoggerLevel.error] [2024-04-02 14:36:52.030217] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:36:52.323310 : [POSLoggerLevel.error] [2024-04-02 14:36:52.323310] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:36:52.638347 : [POSLoggerLevel.error] [2024-04-02 14:36:52.637355] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:37:05.412411 : [POSLoggerLevel.error] [2024-04-02 14:37:05.412411] [Windows] [Debug] A RenderFlex overflowed by 38 pixels on the right.
+ion attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:37:05.451296 : [POSLoggerLevel.error] [2024-04-02 14:37:05.451296] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:37:05.901775 : [POSLoggerLevel.error] [2024-04-02 14:37:05.900777] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:37:23.898151 : [POSLoggerLevel.error] [2024-04-02 14:37:23.898151] [Windows] [Debug] A RenderFlex overflowed by 9.3 pixels on the right.
+2024-04-02 14:37:26.244165 : [POSLoggerLevel.error] [2024-04-02 14:37:26.244165] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:37:26.570800 : [POSLoggerLevel.error] [2024-04-02 14:37:26.569843] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:37:27.006196 : [POSLoggerLevel.error] [2024-04-02 14:37:27.005199] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:42:25.667732 : [POSLoggerLevel.error] [2024-04-02 14:42:25.666735] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:42:26.022348 : [POSLoggerLevel.error] [2024-04-02 14:42:26.022348] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.
+2024-04-02 14:42:27.011790 : [POSLoggerLevel.error] [2024-04-02 14:42:27.010625] [Windows] [Debug] The Scrollbar's ScrollController has no ScrollPosition attached.
+A Scrollbar cannot be painted without a ScrollPosition.
+The Scrollbar attempted to use the PrimaryScrollController. This ScrollController should be associated with the ScrollView that the Scrollbar is being applied to.When ScrollView.scrollDirection is Axis.vertical on mobile platforms will automatically use the PrimaryScrollController if the user has not provided a ScrollController. To use the PrimaryScrollController explicitly, set ScrollView.primary to true for the Scrollable widget.

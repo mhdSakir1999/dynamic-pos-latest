@@ -14,8 +14,7 @@ extension doubleExtension on double {
 
   String thousandsSeparator() {
     NumberFormat numberFormat = NumberFormat.currency(
-        decimalDigits: POSConfig().setup?.amountDecimalPoints ?? 2,
-        symbol: ' ');
+        decimalDigits: POSConfig().setup?.amountDecimalPoints ?? 2, symbol: '');
     return numberFormat.format(this);
   }
 

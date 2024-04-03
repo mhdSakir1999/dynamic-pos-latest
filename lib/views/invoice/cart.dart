@@ -893,10 +893,13 @@ class _CartState extends State<Cart> {
 
       //  add to cart
       if (res != null) {
-        await calculator.addItemToCart(res, qty, context, resList.prices,
-            resList.proPrices, resList.proTax,
+        CartModel? addedItem = await calculator.addItemToCart(res, qty, context,
+            resList.prices, resList.proPrices, resList.proTax,
             secondApiCall: true, scaleBarcode: isScaleBarcode);
-        if (res.returnBottleCode != null && res.returnBottleCode!.isNotEmpty) {
+        bool isMinus = qty < 0;
+        if (res.returnBottleCode != null &&
+            res.returnBottleCode!.isNotEmpty &&
+            addedItem != null) {
           List<String> returnBottleCodes =
               res.returnBottleCode!.split(',') ?? [];
           List<ProductResult?> returnProResList = [];
@@ -915,7 +918,9 @@ class _CartState extends State<Cart> {
               context: context!,
               builder: (context) {
                 return ReturnBottleSelectionView(
-                    returnProResList: returnProResList);
+                  returnProResList: returnProResList,
+                  isMinus: isMinus,
+                );
               },
             );
             // ProductResult? returnProRes =

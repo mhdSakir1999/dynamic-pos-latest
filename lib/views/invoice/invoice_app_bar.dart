@@ -429,9 +429,12 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
   }
 
   Widget buildInvoiceInfo(bool serverConnection) {
-    final space1 = SizedBox(
-      width: 15.w,
-    );
+    final space1 =
+        SizedBox(width: MediaQuery.of(context).size.width * 0.008 //15.w,
+            );
+    final space2 =
+        SizedBox(width: MediaQuery.of(context).size.width * 0.013 //15.w,
+            );
     String terminalId = POSConfig().terminalId;
     String location = POSConfig().setupLocationName;
     Color iconColor = CurrentTheme.primaryLightColor!;
@@ -458,7 +461,8 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Spacer(),
+                    // Spacer(),
+                    space2,
                     Tooltip(
                       message: tooltip,
                       child: Icon(
@@ -478,7 +482,8 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                     ),
-                    Spacer(),
+                    // Spacer(),
+                    space2,
                     Icon(
                       FontAwesome5.clipboard,
                       color: iconColor,
@@ -497,22 +502,27 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                     ),
-                    Spacer(),
+                    // Spacer(),
+                    space2,
                     Icon(
                       FontAwesome5Solid.map_marker_alt,
                       color: iconColor,
                     ),
                     space1,
-                    Tooltip(
-                      message: "Location",
-                      child: Text(
-                        location,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: fontSize),
-                        overflow: TextOverflow.ellipsis,
+                    Expanded(
+                      child: Tooltip(
+                        message: "Location: $location",
+                        child: Text(
+                          location,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: fontSize),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
-                    Spacer(),
+                    // Spacer(),
+                    space2,
                     IconButton(
                       onPressed: () {
                         if (Platform.isWindows) {

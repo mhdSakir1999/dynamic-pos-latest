@@ -1569,6 +1569,21 @@ class _PaymentViewState extends State<PaymentView> {
       dueBalanceEditingController.clear();
       return;
     }
+    if (payButton.pHQRPAY == true) {
+      if (POSConfig().singleSwipeActive) {
+        EcrResponse? ecrResponse =
+            await singleSwipeAlert(false, balanceDue, true);
+        if (ecrResponse == null)
+          print("Switchiing to manual mode");
+        else {
+          if (ecrResponse.ecrCard != null)
+            cartBloc.addNewReference(ecrResponse.ecrCard!);
+          formatCardNoFromEcr(ecrResponse.ecrCard?.strTxnCardBin ?? '', '****');
+          dueBalanceEditingController.text = balanceDue.toStringAsFixed(2);
+          handleCalculation();
+        }
+      }
+    }
   }
 
   Future showTutorial(bool show) async {
@@ -1660,7 +1675,7 @@ class _PaymentViewState extends State<PaymentView> {
               if (payButton.pDPHCODE == 'CRC' &&
                   POSConfig().singleSwipeActive) {
                 EcrResponse? ecrResponse =
-                    await singleSwipeAlert(false, balanceDue);
+                    await singleSwipeAlert(false, balanceDue, false);
                 if (ecrResponse == null)
                   print("Switchiing to manual mode");
                 else {
@@ -1688,7 +1703,7 @@ class _PaymentViewState extends State<PaymentView> {
 
 //Single Swipe Alert dialog box
   Future<EcrResponse?> singleSwipeAlert(
-      bool doBinRequest, double payAmount) async {
+      bool doBinRequest, double payAmount, bool qrPay) async {
     EcrResponse? ecr;
     final TextEditingController amountEditingController =
         TextEditingController();
@@ -1760,92 +1775,100 @@ class _PaymentViewState extends State<PaymentView> {
                                 child: IconButton(
                                   padding: const EdgeInsets.all(0),
                                   color: Colors.black,
-                                  onPressed: () async {
-                                    if (!RegExp(r'^\d+\.?\d{0,2}?$').hasMatch(
-                                        amountEditingController.text)) {
-                                      EasyLoading.showError(
-                                          'wrong_format'.tr());
-                                      return;
-                                    }
-                                    if (double.parse(
-                                            amountEditingController.text) >
-                                        balanceDue) {
-                                      EasyLoading.showError(
-                                          'payment_view.no_overpay'.tr());
-                                      return;
-                                    }
-                                    //Call ECR Integration
-                                    final ecrAmount =
-                                        amountEditingController.text.toDouble();
-                                    if (ecrAmount == 0) return;
+                                  onPressed: qrPay
+                                      ? null
+                                      : () async {
+                                          if (!RegExp(r'^\d+\.?\d{0,2}?$')
+                                              .hasMatch(amountEditingController
+                                                  .text)) {
+                                            EasyLoading.showError(
+                                                'wrong_format'.tr());
+                                            return;
+                                          }
+                                          if (double.parse(
+                                                  amountEditingController
+                                                      .text) >
+                                              balanceDue) {
+                                            EasyLoading.showError(
+                                                'payment_view.no_overpay'.tr());
+                                            return;
+                                          }
+                                          //Call ECR Integration
+                                          final ecrAmount =
+                                              amountEditingController.text
+                                                  .toDouble();
+                                          if (ecrAmount == 0) return;
 
-                                    bool validBin = true;
-                                    try {
-                                      final requiredBins =
-                                          cartBloc.specificPayMode?.cardBin ??
-                                              [];
-                                      String refString = '';
-                                      // bin request & validation for crc promotion related payments
-                                      if (requiredBins.length > 0) {
-                                        EasyLoading.show(
-                                            status: 'please_wait'.tr());
-                                        final EcrResponse? ecrBin =
-                                            await EcrController().binRequest();
-                                        EasyLoading.dismiss();
-                                        if (ecrBin?.success == true) {
-                                          EasyLoading.showInfo(
-                                              "Successfully fetch the card details");
-                                          _ecr = true;
-                                          formatCardNoFromEcr(
-                                              ecrBin?.ecrCard?.strTxnCardBin ??
-                                                  '',
-                                              '****');
-                                          _ecrTimer();
-                                          if (mounted) {
-                                            setState(() {});
+                                          bool validBin = true;
+                                          try {
+                                            final requiredBins = cartBloc
+                                                    .specificPayMode?.cardBin ??
+                                                [];
+                                            String refString = '';
+                                            // bin request & validation for crc promotion related payments
+                                            if (requiredBins.length > 0) {
+                                              EasyLoading.show(
+                                                  status: 'please_wait'.tr());
+                                              final EcrResponse? ecrBin =
+                                                  await EcrController()
+                                                      .binRequest();
+                                              EasyLoading.dismiss();
+                                              if (ecrBin?.success == true) {
+                                                EasyLoading.showInfo(
+                                                    "Successfully fetch the card details");
+                                                _ecr = true;
+                                                formatCardNoFromEcr(
+                                                    ecrBin?.ecrCard
+                                                            ?.strTxnCardBin ??
+                                                        '',
+                                                    '****');
+                                                _ecrTimer();
+                                                if (mounted) {
+                                                  setState(() {});
+                                                }
+                                                validBin = _checkCardBin(
+                                                    detailsEditingController
+                                                        .text);
+                                                if (validBin) {
+                                                  refString = ecrBin?.ecrCard
+                                                          ?.strBinRef ??
+                                                      '';
+                                                }
+                                              } else {
+                                                EasyLoading.showInfo(
+                                                    "Something error happens when fetching the card details");
+                                                return;
+                                              }
+                                            }
+                                            if (validBin) {
+                                              EasyLoading.show(
+                                                  status: 'please_wait'.tr());
+                                              if (requiredBins.length == 0) {
+                                                ecr = await EcrController()
+                                                    .doSale(ecrAmount!,
+                                                        refNo: refString);
+                                              } else {
+                                                ecr = await EcrController()
+                                                    .binSaleRequest(ecrAmount!,
+                                                        refNo: refString);
+                                              }
+                                              // _ecr = false;
+                                              // _ecrTimeOut = 60;
+                                              // _timer?.cancel();
+                                              EasyLoading.dismiss();
+                                            } else {
+                                              return;
+                                            }
+                                            if (ecr != null) {
+                                              dueBalanceEditingController.text =
+                                                  ecrAmount.toString();
+                                              Navigator.pop(context);
+                                              return;
+                                            }
+                                          } catch (e) {
+                                            print('An error occurred: $e');
                                           }
-                                          validBin = _checkCardBin(
-                                              detailsEditingController.text);
-                                          if (validBin) {
-                                            refString =
-                                                ecrBin?.ecrCard?.strBinRef ??
-                                                    '';
-                                          }
-                                        } else {
-                                          EasyLoading.showInfo(
-                                              "Something error happens when fetching the card details");
-                                          return;
-                                        }
-                                      }
-                                      if (validBin) {
-                                        EasyLoading.show(
-                                            status: 'please_wait'.tr());
-                                        if (requiredBins.length == 0) {
-                                          ecr = await EcrController().doSale(
-                                              ecrAmount!,
-                                              refNo: refString);
-                                        } else {
-                                          ecr = await EcrController()
-                                              .binSaleRequest(ecrAmount!,
-                                                  refNo: refString);
-                                        }
-                                        // _ecr = false;
-                                        // _ecrTimeOut = 60;
-                                        // _timer?.cancel();
-                                        EasyLoading.dismiss();
-                                      } else {
-                                        return;
-                                      }
-                                      if (ecr != null) {
-                                        dueBalanceEditingController.text =
-                                            ecrAmount.toString();
-                                        Navigator.pop(context);
-                                        return;
-                                      }
-                                    } catch (e) {
-                                      print('An error occurred: $e');
-                                    }
-                                  },
+                                        },
                                   icon: Image.asset("assets/images/Swipe.png"),
                                 ),
                               ),
@@ -1868,9 +1891,45 @@ class _PaymentViewState extends State<PaymentView> {
                                     ]),
                                 child: IconButton(
                                   padding: const EdgeInsets.all(0),
-                                  onPressed: () {
-                                    // Action for button 2
-                                  },
+                                  onPressed: !qrPay
+                                      ? null
+                                      : () async {
+                                          // Action for button 2
+                                          if (!RegExp(r'^\d+\.?\d{0,2}?$')
+                                              .hasMatch(amountEditingController
+                                                  .text)) {
+                                            EasyLoading.showError(
+                                                'wrong_format'.tr());
+                                            return;
+                                          }
+                                          if (double.parse(
+                                                  amountEditingController
+                                                      .text) >
+                                              balanceDue) {
+                                            EasyLoading.showError(
+                                                'payment_view.no_overpay'.tr());
+                                            return;
+                                          }
+                                          //Call ECR Integration
+                                          final ecrAmount =
+                                              amountEditingController.text
+                                                  .toDouble();
+                                          if (ecrAmount == 0) return;
+                                          try {
+                                            EasyLoading.show(
+                                                status: 'please_wait'.tr());
+                                            ecr = await EcrController()
+                                                .QrSaleRequest(ecrAmount!,
+                                                    refNo: '');
+                                            EasyLoading.dismiss();
+                                            if (ecr != null) {
+                                              Navigator.pop(context);
+                                              return;
+                                            }
+                                          } catch (e) {
+                                            print('An error occurred: $e');
+                                          }
+                                        },
                                   icon: Image.asset("assets/images/Scanme.png"),
                                 ),
                               ),

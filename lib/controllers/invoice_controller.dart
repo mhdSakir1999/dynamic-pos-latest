@@ -353,8 +353,9 @@ class InvoiceController {
       "INV_DETAILS": cartList,
       "PAYMENTS": invoiced ? payments : [],
       "MEMBER_CODE": customerBloc.currentCustomer?.cMCODE ?? "",
-      "INVOICE_NO":
-          invoiced ? cartSummary.invoiceNo : 'HOLD${cartSummary.invoiceNo}',
+      "INVOICE_NO": invoiced
+          ? cartSummary.invoiceNo
+          : 'HOLD_${cartSummary.invoiceNo + '_' + DateTime.now().millisecondsSinceEpoch.toString().substring(6)}',
       "NET_AMOUNT": netAmt,
       "GROSS_AMOUNT": grossAmt,
       "PAY_AMOUNT": payAmt,
