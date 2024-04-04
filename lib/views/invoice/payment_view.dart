@@ -1072,7 +1072,9 @@ class _PaymentViewState extends State<PaymentView> {
             ),
           ),
         ),
-        Expanded(child: Scrollbar(child: buildPaymentButtonList())),
+        Expanded(
+            child: Scrollbar(
+                controller: payModeScroll, child: buildPaymentButtonList())),
         Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
@@ -1432,6 +1434,7 @@ class _PaymentViewState extends State<PaymentView> {
     return buildPaymentButtonDetailList();
   }
 
+  ScrollController payModeScroll = ScrollController();
   Widget buildPaymentButtonHeaderList() {
     final config = POSConfig();
     return Container(
@@ -1442,6 +1445,7 @@ class _PaymentViewState extends State<PaymentView> {
             List<PayModeHeader> dynamicButtonList =
                 snapshot.data?.payModes ?? [];
             return ResponsiveGridList(
+              controller: payModeScroll,
               scroll: true,
               desiredItemWidth: config.paymentDynamicButtonWidth.w,
               children: dynamicButtonList.map((payButton) {

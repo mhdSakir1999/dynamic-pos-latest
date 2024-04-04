@@ -302,6 +302,9 @@ class SharedPreferenceController {
       POSConfig().allowLocalMode =
           dotenv.env['ALLOW_LOCAL_MODE'] == 'true' ?? false;
       print('ALLOW_LOCAL_MODE: ${POSConfig().allowLocalMode}');
+      POSConfig().allow_sync_bills =
+          dotenv.env['ALLOW_AUTO_INVOICE_SYNC'] == 'true' ?? true;
+      print('ALLOW_AUTO_BILL_SYNC: ${POSConfig().allow_sync_bills}');
       POSConfig().local = dotenv.env['LOCAL'] ?? '';
       print('LOCAL: ${POSConfig().local}');
       POSConfig().posImageServer = dotenv.env['POS_IMAGE'] ?? '';

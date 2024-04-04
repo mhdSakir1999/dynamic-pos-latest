@@ -116,7 +116,7 @@ class _LandingViewState extends State<LandingView> {
   /* By dinuka 2022/08/03 */
   initFunctions() async {
     await getPromotions();
-    if (POSConfig().allowLocalMode) await uploadBillData();
+    if (POSConfig().allowLocalMode && POSConfig().allow_sync_bills) await uploadBillData();
   }
 
   final authController = AuthController();

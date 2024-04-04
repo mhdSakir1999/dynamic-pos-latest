@@ -858,13 +858,17 @@ class _CartState extends State<Cart> {
 
         if (POSConfig().setup?.setuPSCALEDIGIT != null) {
           int digit = POSConfig().setup!.setuPSCALEDIGIT!;
-          //quantity = split.last.substring(0, (split.last).length - digit).toDouble();
-          split.last = split.last.substring(0, (split.last).length - digit);
-          split.last = split.last.substring(0, (split.last).length - 3) +
-              '.' +
-              split.last.substring(
-                  split.last.substring(0, (split.last).length - 3).length);
-          quantity = split.last.toDouble();
+          try {
+            //quantity = split.last.substring(0, (split.last).length - digit).toDouble();
+            split.last = split.last.substring(0, (split.last).length - digit);
+            split.last = split.last.substring(0, (split.last).length - 3) +
+                '.' +
+                split.last.substring(
+                    split.last.substring(0, (split.last).length - 3).length);
+            quantity = split.last.toDouble();
+          } catch (e) {
+            return;
+          }
         } else {
           quantity = split.last.toDouble();
         }

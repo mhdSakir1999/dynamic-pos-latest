@@ -29,6 +29,7 @@ class POSConfig {
   Setup? setup;
   ClientLicense? clientLicense;
   bool allowLocalMode = true;
+  bool allow_sync_bills = true;
 
   //can display the virtual keyboard
   bool touchKeyboardEnabled = true;

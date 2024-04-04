@@ -915,7 +915,9 @@ class POSPriceCalculator {
 
   //TODO: Multiple Price
   Future<double> multiplePriceAlert(BuildContext context, double sellingPrice,
-      List<ProductPriceChanges> prices, Product prod) async {
+      List<ProductPriceChanges> multiplePrices, Product prod) async {
+    List<ProductPriceChanges> prices = [];
+    prices.addAll(multiplePrices.reversed.toList());
     _multiplePriceEditingController.clear();
     final double? price = await showDialog(
       context: context,
