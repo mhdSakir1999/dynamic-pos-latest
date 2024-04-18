@@ -618,8 +618,8 @@ class PromotionController {
         //item.promoDiscAmt = discAmt;
         item.promoDiscAmt = (discAmt * item.unitQty);
         item.promoDiscValue = item.promoDiscAmt;
-        item.amount = (item.unitQty * item.selling) -
-            ((item.promoDiscAmt ?? 0) * item.unitQty);
+        item.amount =
+            (item.unitQty * item.selling) - ((item.promoDiscAmt ?? 0));
         item.promoCode = promoCode;
         item.promoDesc = promoName;
         //totalLineDiscount += discAmt;
@@ -636,8 +636,8 @@ class PromotionController {
         //Apply promo disc
         item.promoDiscAmt = (discAmt * item.unitQty);
         item.promoDiscValue = item.promoDiscAmt;
-        item.amount = (item.unitQty * item.selling) -
-            ((item.promoDiscAmt ?? 0) * item.unitQty);
+        item.amount =
+            (item.unitQty * item.selling) - ((item.promoDiscAmt ?? 0));
         promoRemainQty -= item.unitQty;
         item.promoCode = promoCode;
         item.promoDesc = promoName;
