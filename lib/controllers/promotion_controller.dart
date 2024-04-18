@@ -606,7 +606,7 @@ class PromotionController {
       required double discAmt,
       required String promoCode,
       required String promoName,
-      required PromotionPriceModeSKU PriceModeSKUList}) {
+      required PromotionPriceModeSKU priceModeSKUList}) {
     double promoRemainQty = validQty;
     CartModel item;
     for (String key in keyList) {
@@ -1813,14 +1813,26 @@ class PromotionController {
         summarizedTotalValue += priceModeCartItemList.fold(
             0, (sum, element) => sum + element.amount);
         keyList.addAll(priceModeCartItemList.map((e) => e.key));
-        cartList = await applyPromoPriceModeDiscAmt(
-            cartList: cartList,
-            keyList: keyList,
-            discAmt: priceModeItem.discAmt,
-            PriceModeSKUList: priceModeItem,
-            promoCode: (promotion.prOCODE ?? ''),
-            promoName: (promotion.prODESC ?? ''),
-            validQty: 0);
+
+        if (priceModeItem.discAmt > 0) {
+          cartList = await applyPromoPriceModeDiscAmt(
+              cartList: cartList,
+              keyList: keyList,
+              discAmt: priceModeItem.discAmt,
+              priceModeSKUList: priceModeItem,
+              promoCode: (promotion.prOCODE ?? ''),
+              promoName: (promotion.prODESC ?? ''),
+              validQty: 0);
+        } else if (priceModeItem.discPer > 0) {
+          cartList = await applyPromoDiscPer(
+              cartList: cartList,
+              keyList: keyList,
+              discPer: priceModeItem.discPer,
+              promoCode: (promotion.prOCODE ?? ''),
+              promoName: (promotion.prODESC ?? ''),
+              validQty: 0,
+              checkSKUWiseValidQty: false);
+        }
         keyList = [];
         summarizedTotalQty = 0;
         summarizedTotalValue = 0;
