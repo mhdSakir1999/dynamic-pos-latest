@@ -820,6 +820,7 @@ class PromotionController {
     // }
     double summarizedTotalQty = 0;
     double summarizedTotalValue = 0;
+    List<String> cartKeyList = [];
 
     if (promotion.pGINCLACT && !promotion.pGINCLACTCOMBINATION) {
       for (PromotionIncludeExcludeSku includeItem
@@ -835,6 +836,7 @@ class PromotionController {
         //get the total amount of valid items
         summarizedTotalValue +=
             includeCartItemList.fold(0, (sum, element) => sum + element.amount);
+        cartKeyList.addAll(includeCartItemList.map((e) => e.key));
       }
     }
     final payModesPromoList = await getSpecificPayMode(promoCode);
@@ -852,7 +854,9 @@ class PromotionController {
           isCouponPromo: false,
           couponNo: '',
           promoEligibleValue: 0,
-          uniqueCoupon: promotion.proCOUPONTYPE == 1 ? true : false);
+          uniqueCoupon: promotion.proCOUPONTYPE == 1 ? true : false,
+          applyPromoItemWise: false,
+          keyList: []);
       selectablePayModePromoList.add(payModePromo);
     } else {
       //going through pay mode list
@@ -866,6 +870,9 @@ class PromotionController {
         for (var cartItem in cartList) {
           if (_validForPromotion(cartItem, promoDetailsRes)) {
             applicableBillValue += cartItem.amount;
+            if (!promotion.pGINCLACT) {
+              cartKeyList.add(cartItem.key);
+            }
           }
         }
         if (promotion.pGINCLACT) {
@@ -925,7 +932,9 @@ class PromotionController {
               isCouponPromo: false,
               couponNo: '',
               promoEligibleValue: applicableBillValue,
-              uniqueCoupon: promotion.proCOUPONTYPE == 1 ? true : false);
+              uniqueCoupon: promotion.proCOUPONTYPE == 1 ? true : false,
+              applyPromoItemWise: false,
+              keyList: []);
           selectablePayModePromoList.add(payModePromo);
         } else {
           discountAmount = applicableBillValue * discPer / 100;
@@ -942,7 +951,9 @@ class PromotionController {
               isCouponPromo: false,
               couponNo: '',
               promoEligibleValue: applicableBillValue,
-              uniqueCoupon: promotion.proCOUPONTYPE == 1 ? true : false);
+              uniqueCoupon: promotion.proCOUPONTYPE == 1 ? true : false,
+              applyPromoItemWise: maxVal >= 9999999.0 ? true : false,
+              keyList: cartKeyList);
           selectablePayModePromoList.add(payModePromo);
         }
       }
@@ -1028,7 +1039,9 @@ class PromotionController {
         pdCode: '',
         phCode: '',
         promoEligibleValue: applicableBillValue,
-        uniqueCoupon: promotion.proCOUPONTYPE == 1 ? true : false);
+        uniqueCoupon: promotion.proCOUPONTYPE == 1 ? true : false,
+        applyPromoItemWise: false,
+        keyList: []);
 
     selectableCouponPromos.add(payModePromo);
 
@@ -1473,32 +1486,47 @@ class PromotionController {
       //clear paymode promotions if already applied
       cartBloc.reversePaymentModePromo(selectablePayMode.code);
       //Add line level promotion discount to the cart summary
-      _calculator.applyPromotions(
-          cartList, totalBillDiscount, totalLineDiscount, billDiscPromo);
+      if (!selectablePayMode.applyPromoItemWise)
+        _calculator.applyPromotions(
+            cartList, totalBillDiscount, totalLineDiscount, billDiscPromo);
 
       //check whether the Cash back coupon offer or discount offer or coupon redeem offer
       if (selectablePayMode.cashBackCoupons.isEmpty &&
           !selectablePayMode.isCouponPromo) {
         //Discount offer
-        //add discount amount to link promo pay mode
-        cartBloc.addSpecificPayMode(selectablePayMode);
-        final payModeList = payModeBloc.payModeResult?.payModes ?? [];
-        int index =
-            payModeList.indexWhere((element) => element.pHLINKPROMO == true);
-        if (index != -1) {
-          final String phCode = payModeList[index].pHCODE ?? '';
-          final String phdesc = payModeList[index].pHDESC ?? '';
-          cartBloc.addPayment(PaidModel(
-              selectablePayMode.amount,
-              selectablePayMode.amount,
-              false,
-              phCode,
-              phCode,
-              selectablePayMode.code,
-              null,
-              null,
-              phdesc,
-              phdesc));
+        if (!selectablePayMode.applyPromoItemWise) {
+          //add discount amount to link promo pay mode
+          cartBloc.addSpecificPayMode(selectablePayMode);
+          final payModeList = payModeBloc.payModeResult?.payModes ?? [];
+          int index =
+              payModeList.indexWhere((element) => element.pHLINKPROMO == true);
+          if (index != -1) {
+            final String phCode = payModeList[index].pHCODE ?? '';
+            final String phdesc = payModeList[index].pHDESC ?? '';
+            cartBloc.addPayment(PaidModel(
+                selectablePayMode.amount,
+                selectablePayMode.amount,
+                false,
+                phCode,
+                phCode,
+                selectablePayMode.code,
+                null,
+                null,
+                phdesc,
+                phdesc));
+          }
+        } else {
+          cartBloc.addSpecificPayMode(selectablePayMode);
+          cartList = applyPromoDiscPer(
+              cartList: cartList,
+              keyList: selectablePayMode.keyList,
+              validQty: 0,
+              discPer: selectablePayMode.discPre,
+              promoCode: selectablePayMode.code,
+              promoName: selectablePayMode.desc,
+              checkSKUWiseValidQty: false);
+          _calculator.applyPromotions(cartList, totalBillDiscount,
+              this.totalLineDiscount, billDiscPromo);
         }
         cartBloc.addBillPromotionToSummary(
             selectablePayMode.discPre, selectablePayMode.code);
