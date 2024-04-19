@@ -6,6 +6,7 @@
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
+import 'package:checkout/controllers/promotion_controller.dart';
 import 'package:checkout/models/enum/special_function_config.dart';
 import 'package:checkout/models/pos/gift_voucher_result.dart';
 import 'package:checkout/models/pos_config.dart';
@@ -225,6 +226,33 @@ class _SpecialFunctionsState extends State<SpecialFunctions> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Container(
+                      width: containerWidth,
+                      child: ElevatedButton(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
+                          child: Text('tool_tip.promo_refresh'.tr()),
+                        ),
+                        onPressed: () async {
+                          EasyLoading.show(status: 'please_wait'.tr());
+                          var res = await PromotionController(context)
+                              .getPromotions();
+                          EasyLoading.dismiss();
+                          res?.success == true
+                              ? EasyLoading.showSuccess(
+                                  'invoice.promo_loaded'.tr())
+                              : EasyLoading.showError(
+                                  'No new promotions available');
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
                   ],
                 )
               ],
@@ -372,9 +400,9 @@ class _SpecialFunctionsState extends State<SpecialFunctions> {
                         }
                       }
                     } else {
-                      for(var element in giftVouchersList){
-                        await POSPriceCalculator().addGv(element, 1, context,permission: false);
-
+                      for (var element in giftVouchersList) {
+                        await POSPriceCalculator()
+                            .addGv(element, 1, context, permission: false);
                       }
                       Navigator.pop(context);
                       Navigator.pop(context);
@@ -410,7 +438,8 @@ class _SpecialFunctionsState extends State<SpecialFunctions> {
                 actions: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: POSConfig().primaryDarkGrayColor.toColor()),
+                        backgroundColor:
+                            POSConfig().primaryDarkGrayColor.toColor()),
                     onPressed: () async {
                       Navigator.pop(context);
                     },

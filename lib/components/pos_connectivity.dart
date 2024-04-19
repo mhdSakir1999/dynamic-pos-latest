@@ -104,7 +104,7 @@ class POSConnectivity {
                               }
                               if (!hasPermission) {
                                 Navigator.pop(context);
-                                Future.delayed(Duration(seconds: 5), () {
+                                Future.delayed(Duration(seconds: 10), () {
                                   startListen();
                                 });
                               } else {

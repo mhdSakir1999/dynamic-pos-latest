@@ -40,6 +40,7 @@ import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/cart_summary_model.dart';
 import 'package:checkout/models/pos/ecr_response.dart';
 import 'package:checkout/models/pos/gift_voucher_result.dart';
+import 'package:checkout/models/pos/invoice_save_res.dart';
 import 'package:checkout/models/pos/payment_mode.dart';
 import 'package:checkout/models/pos/card_details_result.dart';
 import 'package:checkout/models/pos/paid_model.dart';
@@ -785,7 +786,7 @@ class _PaymentViewState extends State<PaymentView> {
     String pdDesc = selectedPayModeDetail?.pDDESC ?? phDesc;
     final tot = cartBloc.cartSummary?.subTotal ?? 0;
 
-    if (phCode == 'CSH' && temp < 0) {
+    if (/* phCode == 'CSH' && */ temp < 0) {
       entered = entered + temp;
     }
     if (POSConfig().dualScreenWebsite != "")
@@ -1229,14 +1230,19 @@ class _PaymentViewState extends State<PaymentView> {
       }
 
       EasyLoading.show(status: 'please_wait'.tr());
-      final res = await InvoiceController().billClose(
-          invoiced: true,
-          context: context,
-          otp: _otpCode,
-          referenceNo: _referenceNumber,
-          changeAmt: balanceDue * -1,
-          payAmt: paid,
-          burnedPoints: _burnedPoints);
+      var res;
+      if (!POSConfig().trainingMode) {
+        res = await InvoiceController().billClose(
+            invoiced: true,
+            context: context,
+            otp: _otpCode,
+            referenceNo: _referenceNumber,
+            changeAmt: balanceDue * -1,
+            payAmt: paid,
+            burnedPoints: _burnedPoints);
+      } else {
+        res = InvoiceSaveRes(true, 0, '');
+      }
       //navigate back and clear all
       EasyLoading.dismiss();
       setState(() {
@@ -1244,92 +1250,94 @@ class _PaymentViewState extends State<PaymentView> {
       });
 
       if (res.success) {
-        if (POSConfig().dualScreenWebsite != "")
-          DualScreenController().completeInvoice(
-              paid.toDouble(), balanceDue.toDouble(), balanceDue.toDouble(), 0);
+        if (!POSConfig().trainingMode) {
+          if (POSConfig().dualScreenWebsite != "")
+            DualScreenController().completeInvoice(paid.toDouble(),
+                balanceDue.toDouble(), balanceDue.toDouble(), 0);
 
-        String invoice = cartBloc.cartSummary?.invoiceNo ?? "";
-        String latestInvoiceNumber = invoice;
-        String lastInvNo = await InvoiceController().getInvoiceNo();
+          String invoice = cartBloc.cartSummary?.invoiceNo ?? "";
+          String latestInvoiceNumber = invoice;
+          String lastInvNo = await InvoiceController().getInvoiceNo();
 
-        String lastInvPrefix = lastInvNo.substring(0, 6);
-        String lastInvSuffix = lastInvNo.substring(6);
+          String lastInvPrefix = lastInvNo.substring(0, 6);
+          String lastInvSuffix = lastInvNo.substring(6);
 
-        int lengthOfSuffixInt =
-            (int.parse(lastInvSuffix) - 1).toString().length;
-        int zeroLength = 6 - lengthOfSuffixInt;
+          int lengthOfSuffixInt =
+              (int.parse(lastInvSuffix) - 1).toString().length;
+          int zeroLength = 6 - lengthOfSuffixInt;
 
-        if (int.parse(invoice) < int.parse(lastInvNo)) {
-          latestInvoiceNumber = lastInvPrefix +
-              ('0' * zeroLength) +
-              (int.parse(lastInvSuffix) - 1).toString();
-        }
-        InvoiceController().setInvoiceNo(latestInvoiceNumber);
-        LastInvoiceDetails lastInvoice = LastInvoiceDetails(
-            invoiceNo: invoice,
-            billAmount: subTotal.toStringAsFixed(2),
-            dueAmount: balanceDue.toStringAsFixed(2),
-            paidAmount: paid.toStringAsFixed(2));
-        cartBloc.updateLastInvoice(lastInvoice);
-
-        //print invoice
-
-        final customerEmail = customerBloc.currentCustomer?.cMEMAIL ?? '';
-        final ebillActive = customerBloc.currentCustomer?.cMEBILL ?? false;
-
-        bool canPrint = true;
-        if (ebillActive && customerEmail.isNotEmpty) {
-          if (await sendEbillAlert(invoice)) {
-            canPrint = false;
+          if (int.parse(invoice) < int.parse(lastInvNo)) {
+            latestInvoiceNumber = lastInvPrefix +
+                ('0' * zeroLength) +
+                (int.parse(lastInvSuffix) - 1).toString();
           }
-        }
+          InvoiceController().setInvoiceNo(latestInvoiceNumber);
+          LastInvoiceDetails lastInvoice = LastInvoiceDetails(
+              invoiceNo: invoice,
+              billAmount: subTotal.toStringAsFixed(2),
+              dueAmount: balanceDue.toStringAsFixed(2),
+              paidAmount: paid.toStringAsFixed(2));
+          cartBloc.updateLastInvoice(lastInvoice);
 
-        if (canPrint) {
-          try {
-            double loyaltyPoints = 0;
-            final String customerCode =
-                customerBloc.currentCustomer?.cMCODE ?? '';
-            if (customerCode.isNotEmpty &&
-                customerBloc.currentCustomer?.cMLOYALTY == true) {
-              var customerRes =
-                  await LoyaltyController().getLoyaltySummary(customerCode);
-              loyaltyPoints = customerRes?.pOINTSUMMARY ?? 0;
+          //print invoice
+
+          final customerEmail = customerBloc.currentCustomer?.cMEMAIL ?? '';
+          final ebillActive = customerBloc.currentCustomer?.cMEBILL ?? false;
+
+          bool canPrint = true;
+          if (ebillActive && customerEmail.isNotEmpty) {
+            if (await sendEbillAlert(invoice)) {
+              canPrint = false;
             }
+          }
 
-            if (customerBloc.currentCustomer?.taxRegNo != '' &&
-                customerBloc.currentCustomer?.taxRegNo != null) {
-              final bool? canPrintTaxBill = await showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text(
-                      'invoice.tax_bill_print_title'.tr(),
-                      textAlign: TextAlign.center,
-                    ),
-                    content: Text('invoice.tax_bill_print_content'.tr()),
-                    actions: [
-                      AlertDialogButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          text: 'invoice.tax_bill_print_yes'.tr()),
-                      AlertDialogButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          text: 'invoice.tax_bill_print_no'.tr()),
-                    ],
-                  );
-                },
-              );
-              if (canPrintTaxBill ?? false)
-                await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
-                    true, res.resReturn);
-              else
+          if (canPrint) {
+            try {
+              double loyaltyPoints = 0;
+              final String customerCode =
+                  customerBloc.currentCustomer?.cMCODE ?? '';
+              if (customerCode.isNotEmpty &&
+                  customerBloc.currentCustomer?.cMLOYALTY == true) {
+                var customerRes =
+                    await LoyaltyController().getLoyaltySummary(customerCode);
+                loyaltyPoints = customerRes?.pOINTSUMMARY ?? 0;
+              }
+
+              if (customerBloc.currentCustomer?.taxRegNo != '' &&
+                  customerBloc.currentCustomer?.taxRegNo != null) {
+                final bool? canPrintTaxBill = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(
+                        'invoice.tax_bill_print_title'.tr(),
+                        textAlign: TextAlign.center,
+                      ),
+                      content: Text('invoice.tax_bill_print_content'.tr()),
+                      actions: [
+                        AlertDialogButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            text: 'invoice.tax_bill_print_yes'.tr()),
+                        AlertDialogButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            text: 'invoice.tax_bill_print_no'.tr()),
+                      ],
+                    );
+                  },
+                );
+                if (canPrintTaxBill ?? false)
+                  await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
+                      true, res.resReturn);
+                else
+                  await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
+                      false, res.resReturn);
+              } else {
                 await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
                     false, res.resReturn);
-            } else {
-              await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
-                  false, res.resReturn);
+              }
+            } catch (e) {
+              EasyLoading.showError('easy_loading.cant_print_inv'.tr());
             }
-          } catch (e) {
-            EasyLoading.showError('easy_loading.cant_print_inv'.tr());
           }
         }
         cartBloc.context = context;

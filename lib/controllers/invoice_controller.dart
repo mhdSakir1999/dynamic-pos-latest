@@ -301,11 +301,12 @@ class InvoiceController {
               }
               lineNo++;
               e.lineNo = lineNo;
-              grossAmt += (e.unitQty * e.selling).toDouble();
               if (e.itemVoid == false) {
+                grossAmt += (e.unitQty * e.selling).toDouble();
                 lineDiscPer += (e.discPer ?? 0) + (e.promoDiscPre ?? 0);
                 lineDiscAmt += e.discAmt ?? 0 + (e.promoDiscAmt ?? 0);
               }
+
               Map<String, dynamic> map = e.toMap();
               map['LINE_REMARK'] = '';
               return map;

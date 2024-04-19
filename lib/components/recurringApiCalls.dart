@@ -25,7 +25,7 @@ class RecurringApiCalls {
 
   listenPhysicalCash() {
     handlePhysicalCash();
-    maxCashTimer = Timer.periodic(Duration(minutes: 5), (timer) {
+    maxCashTimer = Timer.periodic(Duration(minutes: 10), (timer) {
       handlePhysicalCash();
     });
   }

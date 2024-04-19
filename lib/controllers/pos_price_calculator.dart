@@ -698,6 +698,8 @@ class POSPriceCalculator {
       for (int j = 0; j < returnProducts.length; j++) {
         double disAmt = 0;
         double disPre = 0;
+        double promoDiscAmt = 0;
+        double promoDiscPer = 0;
         final cartList = cartBloc.currentCart ?? {};
         final founded = cartList.values.toList().indexWhere((element) =>
             element.proCode == product.pLUCODE &&
@@ -713,6 +715,8 @@ class POSPriceCalculator {
         if (minus) {
           disAmt = returnProducts[j]?.discAmt ?? 0;
           disPre = returnProducts[j]?.discPer ?? 0;
+          promoDiscAmt = returnProducts[j]?.promoDiscAmt ?? 0;
+          promoDiscPer = returnProducts[j]?.promoDiscPre ?? 0;
           discReason = returnProducts[j]?.discountReason ?? '';
         }
         final billDisc = cartSummary.discPer ?? 0;
@@ -761,7 +765,11 @@ class POSPriceCalculator {
             priceMode: strPriceMode,
             allowMinus: product.allowMinus,
             varientEnabled: product.varientEnable,
-            batchEnabled: product.batchEnable)
+            batchEnabled: product.batchEnable,
+            promoDiscAmt: -1 *
+                (promoDiscAmt / returnProducts[j]!.unitQty) *
+                addedQty.abs(),
+            promoDiscPre: promoDiscPer)
           ..proTax = proTax ?? [];
         int lineNo = cartList.length;
         model.lineNo = lineNo + 1;

@@ -110,6 +110,7 @@ class _SettingViewState extends State<SettingView> {
   bool cartBatchItem = POSConfig().cartBatchItem;
   bool reportBasedInvoice = POSConfig().reportBasedInvoice;
   bool ecr = POSConfig().ecr;
+  bool isTraining = POSConfig().trainingMode;
   final passwordController = TextEditingController();
 
   //keyboard colors
@@ -180,6 +181,17 @@ class _SettingViewState extends State<SettingView> {
                     buildCartButtonConfig()),
                 buildItemCard("settings.payment_settings".tr(),
                     buildCartPaymentButtonConfig()),
+                // buildItemCard(
+                //   'Training Mode',
+                //   buildSwitch(
+                //       title: 'Training Mode',
+                //       value: isTraining,
+                //       onChanged: (bool val) {
+                //         setState(() {
+                //           isTraining = val;
+                //         });
+                //       }),
+                // ),
                 SizedBox(
                   height: 5,
                 ),
@@ -948,7 +960,8 @@ class _SettingViewState extends State<SettingView> {
       ..posKeyBoardVoidColor = posKeyBoardVoidColor.hex
       ..posKeyBoardVoidTxtColor = posKeyBoardVoidTxtColor.hex
       ..posKeyBoardExactColor = posKeyBoardExactColor.hex
-      ..posKeyBoardExactTxtColor = posKeyBoardExactTxtColor.hex;
+      ..posKeyBoardExactTxtColor = posKeyBoardExactTxtColor.hex
+      ..trainingMode = isTraining;
 
     SharedPreferenceController controller = SharedPreferenceController();
     await controller.saveConfig(posConfig);

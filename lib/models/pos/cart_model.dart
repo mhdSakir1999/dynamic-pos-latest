@@ -132,8 +132,8 @@ class CartModel {
           POSConfig().posImageServer + "images/products/${map['prO_CODE']}.png"
       ..promoBillDiscPre =
           map['promO_BILL_DISC_PRE']?.toString().parseDouble() ?? 0
-      ..promoDiscAmt = map['promO_DISC_AMT']?.toString().parseDouble() ?? 0
-      ..promoDiscPre = map['promO_DISC_PRE']?.toString().parseDouble() ?? 0
+      ..promoDiscAmt = map['promO_DISCAMT']?.toString().parseDouble() ?? 0
+      ..promoDiscPre = map['promO_DISCPER']?.toString().parseDouble() ?? 0
       ..promoFreeQty = map['promO_FREE_ITEM_QTY']?.toString().parseDouble() ?? 0
       ..promoCode = map['promO_CODE']?.toString() ?? ""
       ..promoDesc = map["promO_DESC"]?.toString() ?? ''
@@ -262,7 +262,9 @@ class CartModel {
       this.varientEnabled,
       this.userAllowedMinus,
       this.allowMinus,
-      this.dateTime});
+      this.dateTime,
+      this.promoDiscAmt,
+      this.promoDiscPre});
 
   Map<String, dynamic> toMap() {
     return {

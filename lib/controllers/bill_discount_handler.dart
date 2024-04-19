@@ -138,7 +138,14 @@ class BillDiscountHandler {
       }
     });
     cartSummary.discPer = 0;
-    cartSummary.subTotal = cartSummary.subTotal - currentTotal + newTotal;
+    //  cartSummary.subTotal = cartSummary.subTotal - currentTotal + newTotal; // wrong
+
+    cartSummary.subTotal = 0;
+    for (var c in _currentCartList) {
+      if (c.itemVoid != true) {
+        cartSummary.subTotal += c.amount;
+      }
+    }
     cartBloc.updateCartSummary(cartSummary);
     await InvoiceController().updateTempCartSummary(cartSummary);
   }
