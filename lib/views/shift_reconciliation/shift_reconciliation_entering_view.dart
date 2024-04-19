@@ -193,6 +193,7 @@ class _ShiftReconciliationEntryViewState
         children: [
           Expanded(
             child: ResponsiveGridList(
+              controller: scrollController,
               scroll: true,
               desiredItemWidth: config.paymentDynamicButtonWidth.w,
               children: list.map((payButton) {
@@ -530,12 +531,44 @@ class _ShiftReconciliationEntryViewState
                           padding: EdgeInsets.all(5.r),
                           child: TextField(
                             onTap: () {
+                              int findAt = getListIndex();
+
+                              if (findAt != -1) {
+                                // set the entered value
+                                this
+                                    .denominationsList[findAt]
+                                    .denominations[selectedDenominationIndex]
+                                    .count = controllerList[
+                                        selectedDenominationIndex]
+                                    .text
+                                    .parseDouble()
+                                    .toInt();
+                              }
+
+                              if (mounted) setState(() {});
                               if (mounted)
                                 setState(() {
                                   selectedDenominationIndex = index;
                                 });
                             },
                             focusNode: focusNodeList[index],
+                            onChanged: (value) {
+                              int findAt = getListIndex();
+
+                              if (findAt != -1) {
+                                // set the entered value
+                                this
+                                    .denominationsList[findAt]
+                                    .denominations[selectedDenominationIndex]
+                                    .count = controllerList[
+                                        selectedDenominationIndex]
+                                    .text
+                                    .parseDouble()
+                                    .toInt();
+                              }
+
+                              if (mounted) setState(() {});
+                            },
                             onEditingComplete: () {
                               handleEnteredDenominationValue();
                             },

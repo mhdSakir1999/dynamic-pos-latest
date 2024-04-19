@@ -10,6 +10,7 @@ import 'package:checkout/controllers/permission_controller.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
 import 'package:checkout/models/pos/logged_user_result.dart';
 import 'package:checkout/models/pos/permission_approval_status.dart';
+import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
 import 'package:checkout/views/authentication/approval_screen.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +43,9 @@ class SpecialPermissionHandler {
 
   Future _writeToAuditLog(
       String permission, String type, String user, String refCode) async {
-    AuditLogController().updateAuditLog(
-        permission, type, refCode, 'Automatically permission approved. ', user);
+    if (!POSConfig().trainingMode)
+      AuditLogController().updateAuditLog(permission, type, refCode,
+          'Automatically permission approved. ', user);
   }
 
   bool hasPermissionInList(List<UserPermissions> list, String permissionCode,

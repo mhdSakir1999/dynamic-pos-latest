@@ -38,18 +38,42 @@ class POSBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        _announcement(),
-        _showSubscriptionMessage(),
-        Expanded(
-          child: StreamBuilder(
-            stream: lockScreenBloc.lockScreenStream,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return buildView(snapshot.data ?? false);
-            },
-          ),
+        Column(
+          children: [
+            _announcement(),
+            _showSubscriptionMessage(),
+            Expanded(
+              child: StreamBuilder(
+                stream: lockScreenBloc.lockScreenStream,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  return buildView(snapshot.data ?? false);
+                },
+              ),
+            ),
+          ],
         ),
+        if (POSConfig().trainingMode)
+          Positioned(
+              right: 10,
+              top: 10,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.circle_rounded,
+                    color: const Color.fromARGB(255, 245, 221, 11),
+                    size: 12,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    'Training Mode',
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  )
+                ],
+              ))
       ],
     );
   }

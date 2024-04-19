@@ -116,7 +116,8 @@ class _LandingViewState extends State<LandingView> {
   /* By dinuka 2022/08/03 */
   initFunctions() async {
     await getPromotions();
-    if (POSConfig().allowLocalMode && POSConfig().allow_sync_bills) await uploadBillData();
+    if (POSConfig().allowLocalMode && POSConfig().allow_sync_bills)
+      await uploadBillData();
   }
 
   final authController = AuthController();
@@ -484,6 +485,7 @@ class _LandingViewState extends State<LandingView> {
                     landingHelper.validateSignOn();
                 }
                 if (POSConfig().localMode != true &&
+                    !POSConfig().trainingMode &&
                     value.logicalKey == LogicalKeyboardKey.f3) {
                   landingHelper.userSignOff();
                 }
@@ -491,14 +493,17 @@ class _LandingViewState extends State<LandingView> {
                   _goToInvoice();
                 }
                 if (POSConfig().localMode != true &&
+                    !POSConfig().trainingMode &&
                     value.logicalKey == LogicalKeyboardKey.f5) {
                   dayEnd();
                 }
                 if (POSConfig().localMode != true &&
+                    !POSConfig().trainingMode &&
                     value.logicalKey == LogicalKeyboardKey.f6) {
                   landingHelper.managerSignOff(context, activeManagerSignOff);
                 }
                 if (POSConfig().localMode != true &&
+                    !POSConfig().trainingMode &&
                     value.logicalKey == LogicalKeyboardKey.f7) {
                   landingHelper.spotCheck();
                 }
@@ -596,7 +601,8 @@ class _LandingViewState extends State<LandingView> {
                           "landing_view.sign_on".tr(),
                           textAlign: TextAlign.center,
                         ),
-                        onPressed: POSConfig().localMode == true
+                        onPressed: (POSConfig().localMode == true ||
+                                POSConfig().trainingMode)
                             ? null
                             : () {
                                 if (isEOD_Pending == true) {
@@ -621,7 +627,8 @@ class _LandingViewState extends State<LandingView> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   activeSignOff ? activeColor : deActiveColor),
-                          onPressed: POSConfig().localMode == true
+                          onPressed: (POSConfig().localMode == true ||
+                                  POSConfig().trainingMode)
                               ? null
                               : () {
                                   landingHelper.userSignOff();
@@ -662,8 +669,10 @@ class _LandingViewState extends State<LandingView> {
                               "landing_view.day_end".tr(),
                               textAlign: TextAlign.center,
                             ),
-                            onPressed:
-                                POSConfig().localMode == true ? null : dayEnd),
+                            onPressed: (POSConfig().localMode == true ||
+                                    POSConfig().trainingMode)
+                                ? null
+                                : dayEnd),
                       ),
                       landingButton(
                         child: ElevatedButton(
@@ -675,7 +684,8 @@ class _LandingViewState extends State<LandingView> {
                             "landing_view.manager_sign_off".tr(),
                             textAlign: TextAlign.center,
                           ),
-                          onPressed: POSConfig().localMode == true
+                          onPressed: (POSConfig().localMode == true ||
+                                  POSConfig().trainingMode)
                               ? null
                               : () {
                                   landingHelper.managerSignOff(
@@ -693,7 +703,8 @@ class _LandingViewState extends State<LandingView> {
                             "landing_view.spot_check".tr(),
                             textAlign: TextAlign.center,
                           ),
-                          onPressed: POSConfig().localMode == true
+                          onPressed: (POSConfig().localMode == true ||
+                                  POSConfig().trainingMode)
                               ? null
                               : () {
                                   landingHelper.spotCheck();

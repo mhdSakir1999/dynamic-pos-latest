@@ -27,6 +27,7 @@ import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/loyalty_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/product_controller.dart';
@@ -449,6 +450,7 @@ class _CartState extends State<Cart> {
                           child: Padding(
                             padding: const EdgeInsets.only(right: 20),
                             child: SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
                                 controller: scrollController,
                                 child: buildCartList()),
                           ))),
@@ -678,26 +680,26 @@ class _CartState extends State<Cart> {
                         //                                   .tr(),
                         //                           child: IconButton(
                         //                               onPressed: () async {
-                        //                                 EasyLoading.show(
-                        //                                     status: 'please_wait'
-                        //                                         .tr());
-                        //                                 var res =
-                        //                                     await PromotionController(
-                        //                                             context)
-                        //                                         .getPromotions();
-                        //                                 EasyLoading.dismiss();
-                        //                                 res?.success == true
-                        //                                     ? EasyLoading.showSuccess(
-                        //                                         'invoice.promo_loaded'
-                        //                                             .tr())
-                        //                                     : EasyLoading.showError(
-                        //                                         'No new promotions available');
-                        //                                 setState(() {
-                        //                                   focusNode
-                        //                                       .requestFocus();
-                        //                                   itemCodeFocus
-                        //                                       .requestFocus();
-                        //                                 });
+                        // EasyLoading.show(
+                        //     status: 'please_wait'
+                        //         .tr());
+                        // var res =
+                        //     await PromotionController(
+                        //             context)
+                        //         .getPromotions();
+                        // EasyLoading.dismiss();
+                        // res?.success == true
+                        //     ? EasyLoading.showSuccess(
+                        //         'invoice.promo_loaded'
+                        //             .tr())
+                        //     : EasyLoading.showError(
+                        //         'No new promotions available');
+                        // setState(() {
+                        //   focusNode
+                        //       .requestFocus();
+                        //   itemCodeFocus
+                        //       .requestFocus();
+                        // });
                         //                               },
                         //                               icon: Icon(
                         //                                 Icons.refresh_rounded,
@@ -2800,13 +2802,29 @@ class _CartState extends State<Cart> {
         cartBloc.updateLastInvoice(lastInvoice);
         await cartBloc.resetCart();
 
-        //print invoice
-        await PrintController().printHandler(
-            invoice,
-            PrintController()
-                .printInvoice(invoice, invRes.earnedPoints, 0, false, null),
-            context);
+        // print invoice
+        // await PrintController().printHandler(
+        //     invoice,
+        //     PrintController()
+        //         .printInvoice(invoice, invRes.earnedPoints, 0, false, null),
+        //     context);
 
+        if (POSConfig.crystalPath != '') {
+          await PrintController().printHandler(
+              invoice,
+              PrintController()
+                  .printInvoice(invoice, invRes.earnedPoints, 0, false, null),
+              context);
+        } else {
+          POSConfig.localPrintData = invRes.resReturn ?? '';
+          var stopwatch = Stopwatch();
+
+          stopwatch.start();
+          POSManualPrint().printInvoice(
+              data: invRes.resReturn!, points: invRes.earnedPoints);
+          stopwatch.stop();
+          print(stopwatch.elapsed.toString());
+        }
         // await PrintController().printHandler(
         //     invoice, PrintController().printExchangeVoucher(invoice), context);
       }

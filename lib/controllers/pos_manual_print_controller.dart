@@ -659,9 +659,9 @@ class POSManualPrint {
         if (node.name.local == "text") {
           //the substracted values are the lengths of the labels
           // we can either pass direct string or regExp
-          value = value.replaceAll("{lineNo}", "${addSpacesBack(lineNo, 2)}");
+          value = value.replaceAll("{lineNo}", "${addSpacesBack(lineNo, 3)}");
           value = value.replaceAll("{item_desc}",
-              "${addSpacesBack(proDesc, variableMaxLength - 3)}");
+              "${addSpacesBack(proDesc, variableMaxLength - 4)}");
           value = value.replaceAll("{address}", '$address');
           value = value.replaceAll("{email}", '$email');
           value = value.replaceAll("{number}", '$phone');
