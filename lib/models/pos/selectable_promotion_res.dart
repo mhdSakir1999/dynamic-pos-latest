@@ -20,6 +20,8 @@ class SelectablePaymentModeWisePromotions {
   late String couponNo;
   final bool uniqueCoupon;
   final double promoEligibleValue;
+  final bool applyPromoItemWise;
+  final List<String> keyList;
 
   SelectablePaymentModeWisePromotions(
       {required this.code,
@@ -33,7 +35,9 @@ class SelectablePaymentModeWisePromotions {
       required this.isCouponPromo,
       required this.couponNo,
       required this.uniqueCoupon,
-      required this.promoEligibleValue});
+      required this.promoEligibleValue,
+      required this.applyPromoItemWise,
+      required this.keyList});
 
   final double discPre;
 }
