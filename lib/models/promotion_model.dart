@@ -94,6 +94,7 @@ class Promotion {
   late int proCOUPONTYPE;
   late int pGPRICEMODE;
   late String? prOPRICEMODE;
+  late int pGCOMBOTYPE;
 
   Promotion({
     this.prOCODE,
@@ -178,6 +179,7 @@ class Promotion {
     proCOUPONTYPE = (json['prO_COUPON_TYPE']);
     pGPRICEMODE = (json['pG_PRICE_MODE']);
     prOPRICEMODE = json['prO_PRICEMODE'];
+    pGCOMBOTYPE = (json['pG_COMBOTYPE']);
   }
 
   bool intToBool(dynamic value) {

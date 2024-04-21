@@ -1915,24 +1915,76 @@ class PromotionController {
         keyList.addAll(includeCartItemList.map((e) => e.key));
         includeCartItemList1.addAll(includeCartItemList);
       }
-      //Compairing valid include items in the cart (includeCartItemList) with the include items (promoDetailsRes?.includeItems) and get a distinct list of bundles
-      List<dynamic> distinctListOfBundles = includeCartItemList1
-          .expand((CartModel) => (promoDetailsRes?.includeItems ?? [])
-              .where((PromotionIncludeExcludeSku) =>
-                  CartModel.proCode == PromotionIncludeExcludeSku.pluCode)
-              .map((PromotionIncludeExcludeSku) =>
-                  PromotionIncludeExcludeSku.bundleCode))
-          .toSet()
-          .toList();
-      summarizedTotalQty = distinctListOfBundles.length.toDouble();
-      cartList = await _chackWithPromoDetailCombinations(
-          cartList: cartList,
-          keyList: keyList,
-          promoDetailsRes: promoDetailsRes,
-          promotion: promotion,
-          promotionDetailsList: promotionDetailsList,
-          summarizedTotalQty: summarizedTotalQty,
-          summarizedTotalValue: summarizedTotalValue);
+
+      if (promotion.pGCOMBOTYPE == 0) {
+        //Compairing valid include items in the cart (includeCartItemList) with the include items (promoDetailsRes?.includeItems) and get a distinct list of bundles
+        List<dynamic> distinctListOfBundles = includeCartItemList1
+            .expand((CartModel) => (promoDetailsRes?.includeItems ?? [])
+                .where((PromotionIncludeExcludeSku) =>
+                    CartModel.proCode == PromotionIncludeExcludeSku.pluCode)
+                .map((PromotionIncludeExcludeSku) =>
+                    PromotionIncludeExcludeSku.bundleCode))
+            .toSet()
+            .toList();
+        summarizedTotalQty = distinctListOfBundles.length.toDouble();
+        cartList = await _chackWithPromoDetailCombinations(
+            cartList: cartList,
+            keyList: keyList,
+            promoDetailsRes: promoDetailsRes,
+            promotion: promotion,
+            promotionDetailsList: promotionDetailsList,
+            summarizedTotalQty: summarizedTotalQty,
+            summarizedTotalValue: summarizedTotalValue);
+      } else {
+        //Handle Combo Promotion with Include bundle combinations
+        // List<MapEntry<String, int>> distinctListOfBundlesCombo =
+        //     includeCartItemList1
+        //         .expand((CartModel) => (promoDetailsRes?.includeItems ?? [])
+        //             .where((PromotionIncludeExcludeSku) =>
+        //                 CartModel.proCode == PromotionIncludeExcludeSku.pluCode)
+        //             .map((PromotionIncludeExcludeSku) =>
+        //                 PromotionIncludeExcludeSku.bundleCode))
+        //         .fold<Map<String, int>>({}, (Map<String, int> map, bundleCode) {
+        //           map[bundleCode] = (map[bundleCode] ?? 0) + 1;
+        //           return map;
+        //         })
+        //         .entries
+        //         .toList();
+        List<MapEntry<String, double>> distinctListOfBundlesCombo =
+            includeCartItemList1
+                .expand((CartModel cartModel) =>
+                    (promoDetailsRes?.includeItems ?? [])
+                        .where((PromotionIncludeExcludeSku promoItem) =>
+                            cartModel.proCode == promoItem.pluCode)
+                        .map((PromotionIncludeExcludeSku promoItem) => {
+                              'bundleCode': promoItem.bundleCode,
+                              'qty': cartModel.unitQty
+                            }))
+                .fold<Map<String, double>>({}, (Map<String, double> map, item) {
+                  String bundleCode = item['bundleCode'].toString();
+                  double qty = double.parse(item['qty'].toString());
+                  map[bundleCode] = (map[bundleCode] ?? 0) + qty;
+                  return map;
+                })
+                .entries
+                .toList();
+
+        double minCount = distinctListOfBundlesCombo
+            .map((entry) => entry.value)
+            .reduce((value, element) => value < element ? value : element);
+        summarizedTotalQty = distinctListOfBundlesCombo.length.toDouble();
+        cartList = await _chackWithPromoDetailCombinations(
+            cartList: cartList,
+            keyList: keyList,
+            promoDetailsRes: promoDetailsRes,
+            promotion: promotion,
+            promotionDetailsList: promotionDetailsList,
+            summarizedTotalQty: summarizedTotalQty,
+            summarizedTotalValue: summarizedTotalValue,
+            discAmtIncreament: (minCount).toInt());
+      }
+      //summarizedTotalQty = distinctListOfBundles.length.toDouble();
+
       keyList = [];
       summarizedTotalQty = 0;
       summarizedTotalValue = 0;
@@ -2027,7 +2079,8 @@ class PromotionController {
       required Promotion promotion,
       required double summarizedTotalQty,
       required double summarizedTotalValue,
-      String offerBundleCode = ""}) async {
+      String offerBundleCode = "",
+      int discAmtIncreament = 1}) async {
     for (PromotionDetailsList promoDet in promotionDetailsList) {
       if ((promoDet.proDMINQTY ?? 0) != 0 && (promoDet.proDMAXQTY ?? 0) != 0) {
         if ((promoDet.proDMINQTY ?? 0) <= summarizedTotalQty &&
@@ -2040,7 +2093,8 @@ class PromotionController {
               promotion: promotion,
               promoDet: promoDet,
               keyList: keyList,
-              promoEligibleValue: summarizedTotalValue);
+              promoEligibleValue: summarizedTotalValue,
+              discAmtIncreament: discAmtIncreament);
         }
       } else if ((promoDet.proDMINVAL ?? 0) != 0 &&
           (promoDet.proDMAXVAL ?? 0) != 0) {
@@ -2052,7 +2106,8 @@ class PromotionController {
               promotion: promotion,
               promoDet: promoDet,
               keyList: keyList,
-              promoEligibleValue: summarizedTotalValue);
+              promoEligibleValue: summarizedTotalValue,
+              discAmtIncreament: discAmtIncreament);
         } else if (promotion.pGEXCLUDEINCLUSIVE &&
             (promoDet.proDMINVAL ?? 0) <=
                 cartBloc.cartSummary!.subTotal - summarizedTotalValue &&
@@ -2063,7 +2118,8 @@ class PromotionController {
               promotion: promotion,
               promoDet: promoDet,
               keyList: keyList,
-              promoEligibleValue: summarizedTotalValue);
+              promoEligibleValue: summarizedTotalValue,
+              discAmtIncreament: discAmtIncreament);
         }
       }
     }
@@ -2075,7 +2131,8 @@ class PromotionController {
       required List<String> keyList,
       required Promotion promotion,
       required PromotionDetailsList promoDet,
-      required double promoEligibleValue}) async {
+      required double promoEligibleValue,
+      required discAmtIncreament}) async {
     if (promotion.pGDISCPERACT) {
       cartList = applyPromoDiscPer(
           cartList: cartList,
@@ -2101,7 +2158,7 @@ class PromotionController {
           cartList: cartList,
           keyList: keyList,
           validQty: promoDet.proDVALIDQTY ?? 0,
-          discAmt: promoDet.proDDISCAMT ?? 0,
+          discAmt: (promoDet.proDDISCAMT ?? 0) * discAmtIncreament,
           promoCode: promoDet.prOCODE ?? '',
           promoName: promoDet.prODESC ?? '',
           promoOfferedAmt: promoEligibleValue);
