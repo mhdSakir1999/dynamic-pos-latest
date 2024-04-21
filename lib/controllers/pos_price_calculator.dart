@@ -421,15 +421,20 @@ class POSPriceCalculator {
       //   }
       // }
 
+      // new change by sakir -- setting the costPrice related to selected multiplePrice
       if (multiplePrices.length > 0 && canPopUpMultiplePrice) {
         // add the current price to multiple price array
         multiplePrices.add(ProductPriceChanges(
             pRSPRICE: product.sELLINGPRICE, pRDATE: 'Current Price'));
-        double sprice = 0;
+        ProductPriceChanges? sprice;
         sprice = await multiplePriceAlert(
             context, product.sELLINGPRICE ?? 0, multiplePrices, product);
-        if (sprice == 0) return null;
-        selling = sprice;
+        if (sprice == null) return null;
+        selling = sprice.pRSPRICE!;
+        product.cost = sprice.pRCPRICE ?? product.cost;
+
+        // product.sELLINGPRICE = sprice.pRSPRICE;
+        // product.avgCost = sprice.pRCPRICE ?? product.avgCost;
       }
     }
 
@@ -700,6 +705,8 @@ class POSPriceCalculator {
         double disPre = 0;
         double promoDiscAmt = 0;
         double promoDiscPer = 0;
+        double netDiscAmt = 0;
+        double netDiscPer = 0;
         final cartList = cartBloc.currentCart ?? {};
         final founded = cartList.values.toList().indexWhere((element) =>
             element.proCode == product.pLUCODE &&
@@ -715,6 +722,8 @@ class POSPriceCalculator {
         if (minus) {
           disAmt = returnProducts[j]?.discAmt ?? 0;
           disPre = returnProducts[j]?.discPer ?? 0;
+          netDiscAmt = returnProducts[j]?.billDiscAmt ?? 0;
+          netDiscPer = returnProducts[j]?.billDiscPer ?? 0;
           promoDiscAmt = returnProducts[j]?.promoDiscAmt ?? 0;
           promoDiscPer = returnProducts[j]?.promoDiscPre ?? 0;
           discReason = returnProducts[j]?.discountReason ?? '';
@@ -729,8 +738,18 @@ class POSPriceCalculator {
             ? qty
             : -1 * returnProducts[j]!.unitQty;
 
-        cartSummary.subTotal += (lineAmounts[j] - billDiscAmt);
+        // handling the product with net disc
+        if (netDiscPer != 0) {
+          var tempDiscAmt = lineAmounts[j] * netDiscPer / 100;
+          lineAmounts[j] -= tempDiscAmt;
+          disPre += netDiscPer;
+          netDiscPer = 0;
+        }
+        // else if (netDiscAmt != 0) {
+        //   var tempDiscAmt = (netDiscAmt / returnProducts[j]!.unitQty) / qty;
+        // }
 
+        cartSummary.subTotal += (lineAmounts[j] - billDiscAmt);
         final model = CartModel(
             setUpLocation: POSConfig().setupLocation,
             posDesc: product.pLUPOSDESC ?? "",
@@ -744,9 +763,11 @@ class POSPriceCalculator {
             proCost: product.cost ?? 0,
             proAvgCost: product.avgCost ?? 0,
             itemVoid: false,
-            discAmt: (disAmt / returnProducts[j]!.unitQty) * addedQty * -1,
+            discAmt:
+                (disAmt / returnProducts[j]!.unitQty) * addedQty.abs() * -1,
             discPer: disPre,
-            billDiscPer: blAllowDiscount ? cartSummary.discPer : 0,
+            billDiscPer: 0, //blAllowDiscount ? cartSummary.discPer : 0,
+            billDiscAmt: 0,
             unitQty: addedQty, // qty,
             discountReason: discReason,
             maxDiscAmt: product.maxDiscAmt,
@@ -922,12 +943,15 @@ class POSPriceCalculator {
   }
 
   //TODO: Multiple Price
-  Future<double> multiplePriceAlert(BuildContext context, double sellingPrice,
-      List<ProductPriceChanges> multiplePrices, Product prod) async {
+  Future<ProductPriceChanges?> multiplePriceAlert(
+      BuildContext context,
+      double sellingPrice,
+      List<ProductPriceChanges> multiplePrices,
+      Product prod) async {
     List<ProductPriceChanges> prices = [];
     prices.addAll(multiplePrices.reversed.toList());
     _multiplePriceEditingController.clear();
-    final double? price = await showDialog(
+    final dynamic price = await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
@@ -977,7 +1001,8 @@ class POSPriceCalculator {
 
                     // do the selection
                     if (index <= prices.length + 1) {
-                      Navigator.pop(context, prices[index - 1].pRSPRICE);
+                      // Navigator.pop(context, prices[index - 1].pRSPRICE);
+                      Navigator.pop(context, prices[index - 1]);
                     }
                   },
                   focusNode: FocusNode(),
@@ -986,7 +1011,8 @@ class POSPriceCalculator {
                     itemBuilder: (context, index) {
                       return ListTile(
                         onTap: () =>
-                            Navigator.pop(context, prices[index].pRSPRICE),
+                            // Navigator.pop(context, prices[index].pRSPRICE),
+                            Navigator.pop(context, prices[index]),
                         title: Row(
                           children: <Widget>[
                             Text(
@@ -1021,7 +1047,12 @@ class POSPriceCalculator {
         ),
       ),
     );
-    return price ?? sellingPrice;
+
+    if (price == 0) {
+      return null;
+    }
+    // return price ?? sellingPrice;
+    return price ?? prices.first;
   }
 
   void onEnterMultiplePrice(List<ProductPriceChanges> prices,
@@ -1031,9 +1062,11 @@ class POSPriceCalculator {
     int index = prices.indexWhere((element) => element.pRSPRICE == entered);
     _multiplePriceEditingController.clear();
     if (index != -1) {
-      Navigator.pop(context, entered);
+      // Navigator.pop(context, entered);
+      Navigator.pop(context, prices[index]);
       if (isPosKeyboard) {
-        Navigator.pop(context, entered);
+        // Navigator.pop(context, entered);
+        Navigator.pop(context, prices[index]);
       }
     } else {
       EasyLoading.showError('invoice.invalid_price'.tr());

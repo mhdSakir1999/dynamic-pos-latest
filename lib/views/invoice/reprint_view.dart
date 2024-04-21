@@ -9,6 +9,7 @@ import 'dart:async';
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
+import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_warning_alert.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
@@ -37,6 +38,7 @@ class _ReprintViewState extends State<ReprintView> {
   final scrollController = ScrollController();
   late List<InvoiceHeader> headers;
   bool clicked = false;
+  KeyBoardController keyBoardController = KeyBoardController();
 
   @override
   void initState() {
@@ -64,10 +66,17 @@ class _ReprintViewState extends State<ReprintView> {
                 child: Container(
                   child: TextField(
                     onChanged: (value) {
-                      if (value.length <= 1 && mounted)
+                      if (value.length >= 1 && mounted)
                         setState(() {
                           headers = widget.headers;
                         });
+                    },
+                    onTap: () {
+                      keyBoardController.init(context);
+                      keyBoardController.showBottomDPKeyBoard(searchController,
+                          onEnter: () {
+                        search();
+                      }, buildContext: context);
                     },
                     onEditingComplete: search,
                     autofocus: true,
