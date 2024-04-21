@@ -7,6 +7,7 @@
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
+import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_warning_alert.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/models/pos/invoice_header_result.dart';
@@ -33,6 +34,7 @@ class _BillCancellationViewState extends State<BillCancellationView> {
   late List<InvoiceHeader> headers;
   bool clicked = false;
   ScrollController scrollController = ScrollController();
+  KeyBoardController keyBoardController = KeyBoardController();
   @override
   void initState() {
     super.initState();
@@ -63,6 +65,13 @@ class _BillCancellationViewState extends State<BillCancellationView> {
                         setState(() {
                           headers = widget.headers;
                         });
+                    },
+                    onTap: () {
+                      keyBoardController.init(context);
+                      keyBoardController.showBottomDPKeyBoard(searchController,
+                          onEnter: () {
+                        search();
+                      }, buildContext: context);
                     },
                     onEditingComplete: search,
                     autofocus: true,

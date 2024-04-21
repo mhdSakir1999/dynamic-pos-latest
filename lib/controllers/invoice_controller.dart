@@ -403,7 +403,7 @@ class InvoiceController {
         successCode: 200);
 
     if (hasExVoucher) {
-      ApiClient.call(
+      var resp = await ApiClient.call(
           "print/exchange_voucher/${cartSummary.invoiceNo}?reportPrint=${POSConfig().reportBasedInvoice}",
           ApiMethod.GET,
           local: true);

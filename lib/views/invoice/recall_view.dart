@@ -7,6 +7,7 @@
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
+import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/models/pos/hold_header_result.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class _RecallViewState extends State<RecallView> {
   final searchController = TextEditingController();
   late List<HoldInvoiceHeaders> headers;
   bool clicked = false;
+  KeyBoardController keyBoardController = KeyBoardController();
   @override
   void initState() {
     super.initState();
@@ -57,6 +59,13 @@ class _RecallViewState extends State<RecallView> {
                         setState(() {
                           headers = widget.headers;
                         });
+                    },
+                    onTap: () {
+                      keyBoardController.init(context);
+                      keyBoardController.showBottomDPKeyBoard(searchController,
+                          onEnter: () {
+                        search();
+                      }, buildContext: context);
                     },
                     onEditingComplete: search,
                     autofocus: true,
