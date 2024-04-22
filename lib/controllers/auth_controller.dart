@@ -198,7 +198,8 @@ class AuthController {
         formData: FormData.fromMap(
           {
             "username": userHed?.uSERHEDUSERCODE,
-            "terminal_id": POSConfig().terminalId
+            "terminal_id": POSConfig().terminalId,
+            
           },
         ),
         successCode: 200,

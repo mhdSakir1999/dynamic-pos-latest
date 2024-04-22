@@ -392,6 +392,7 @@ class POSPriceCalculator {
           strPriceMode = proPrices[fixedPriceIndex].prMCODE ?? '';
           blAllowLoyalty = proPrices[fixedPriceIndex].allowLoyalty ?? true;
           blAllowDiscount = proPrices[fixedPriceIndex].allowDiscount ?? true;
+          fixedPriceApplied = true;
         } else {
           ProPrice proPrice = proPrices.first;
           blAllowLoyalty = proPrice.allowLoyalty ?? true;
@@ -399,15 +400,17 @@ class POSPriceCalculator {
           blAllowDiscount = proPrice.allowDiscount ?? true;
           if (proPrice.pplUDISCPER != null && proPrice.pplUDISCPER != 0) {
             selling = selling - (selling * (proPrice.pplUDISCPER ?? 0) / 100.0);
+            fixedPriceApplied = true;
           } else if (proPrice.pplUDISCAMT != null &&
               proPrice.pplUDISCAMT != 0) {
             selling = selling - (proPrice.pplUDISCAMT ?? 0);
+            fixedPriceApplied = true;
           } else if (proPrice.pplUFIXPRICE != null &&
               proPrice.pplUFIXPRICE != 0) {
             selling = proPrice.pplUFIXPRICE ?? 0;
+            fixedPriceApplied = true;
           }
         }
-        fixedPriceApplied = true;
       }
     }
 
@@ -630,7 +633,7 @@ class POSPriceCalculator {
           setUpLocation: POSConfig().setupLocation,
           posDesc: product.pLUPOSDESC ?? "",
           proSelling: product.sELLINGPRICE ?? 0,
-          noDisc: product.pLUNODISC ?? true,
+          noDisc: fixedPriceApplied ? true : product.pLUNODISC ?? true,
           scanBarcode: product.sCANCODE ?? "",
           proCode: product.pLUCODE ?? "",
           stockCode: product.pLUSTOCKCODE ?? "",
@@ -703,6 +706,7 @@ class POSPriceCalculator {
       }
       return null;
     } else {
+      List<CartModel?>? cartedItems = [];
       // This block is exclusive for product returns
       for (int j = 0; j < returnProducts.length; j++) {
         double disAmt = 0;
@@ -814,9 +818,11 @@ class POSPriceCalculator {
           controller.updateTempCartSummary(cartSummary);
           if (successToast) {
             EasyLoading.showSuccess("easy_loading.item_add".tr());
-            return model;
+            // return model;
+            cartedItems.add(model);
           }
-          return model;
+          // return model;
+          cartedItems.add(model);
         } else {
           cartSummary.subTotal -= lineAmounts[j];
           if (!alreadyAdded && !minus) {
@@ -827,6 +833,7 @@ class POSPriceCalculator {
           }
           cartBloc.updateCartSummary(cartSummary);
         }
+        return cartedItems == [] ? null : cartedItems.first;
       }
       return null;
     }

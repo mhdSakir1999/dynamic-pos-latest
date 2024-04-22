@@ -194,7 +194,8 @@
     "invalid_promotion_card_bin_subtitle": "The entered credit card number is not applicable for this promotion",
     "card_not_entered": "Enter a valid card number",
     "card_not_entered_title": "Enter a valid card number",
-    "no_overpay": "Over pay not allowed"
+    "no_overpay": "Over pay not allowed",
+    "pay_amount_reached": "No due amount available to pay !!!"
   },
   "product_view": {
     "search_text": "Enter search text ( Searching by Description )",

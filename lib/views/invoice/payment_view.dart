@@ -807,6 +807,7 @@ class _PaymentViewState extends State<PaymentView> {
         selectedPayModeDetail?.pDRATE,
         phDesc,
         pdDesc,
+        frAmount: dueBalanceEditingController.text.parseDouble(),
         isGv: selectedPayModeHeader?.isGv ?? false,
         pointRate: selectedPayModeHeader?.pointRate ?? 0));
     dueBalanceEditingController.clear();
@@ -818,6 +819,9 @@ class _PaymentViewState extends State<PaymentView> {
       selectedPayModeDetail = null;
       selectedPayModeHeader = null;
     }
+
+    // should reset the current rate
+    currentRate = 1.0;
     if (mounted) setState(() {});
   }
 
@@ -1489,6 +1493,13 @@ class _PaymentViewState extends State<PaymentView> {
   }
 
   Future<void> onPayModeHeadClick(PayModeHeader payButton) async {
+    // resetting current rate first for safety   : we encountered issue when did payments after a foriegn currency payment
+    currentRate = 1.0;
+
+    if (balanceDue <= 0) {
+      EasyLoading.showError('payment_view.pay_amount_reached'.tr());
+      return;
+    }
     _textMask = null;
     POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
         "${payButton.pHDESC}(${payButton.pHCODE}) button pressed"));

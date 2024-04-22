@@ -16,6 +16,7 @@ class PaidModel {
   late String phCode;
   late String refNo;
   late bool isGv;
+  double? frAmount;
   DateTime? selectedDate;
   double? rate;
   late double pointRate;
@@ -34,7 +35,8 @@ class PaidModel {
       this.phDesc,
       this.pdDesc,
       {this.isGv = false,
-      this.pointRate = 0});
+      this.pointRate = 0,
+      this.frAmount});
 
   PaidModel.fromMap(Map<String, dynamic> map) {
     final tempDate = map['date_time'];
@@ -61,6 +63,7 @@ class PaidModel {
     pointRate = map['point_rate']?.toString().parseDouble() ?? 0;
     phDesc = map['ph_desc'];
     pdDesc = map['pd_desc'];
+    frAmount = map['framount'] ?? 0;
 
     // return new PaidModel(
     //   paidDateTime: map['paidDateTime'] as DateTime,
@@ -88,6 +91,7 @@ class PaidModel {
       'point_rate': this.pointRate.toDouble(),
       'pd_desc': this.pdDesc,
       'ph_desc': this.phDesc,
+      'framount': this.frAmount
     };
   }
 }

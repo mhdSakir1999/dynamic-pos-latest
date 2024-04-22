@@ -213,160 +213,172 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
         CurrentTheme.bodyText2!.copyWith(color: CurrentTheme.primaryLightColor);
     bool smallDevice = ScreenUtil().screenWidth < 600;
     return InkWell(
-      onTap: () async {
-        focusNode.requestFocus();
-        showGeneralDialog(
-            context: context,
-            transitionDuration: const Duration(milliseconds: 200),
-            barrierDismissible: true,
-            barrierLabel: '',
-            transitionBuilder: (context, a, b, _) => RawKeyboardListener(
-                  focusNode: focusNode,
-                  onKey: (value) async {
-                    if (value is RawKeyDownEvent) {
-                      if (value.physicalKey == PhysicalKeyboardKey.keyV) {
-                        LoyaltySummary? res;
-                        bool permission = await hasPermission("A");
-                        //ask
+      onTap: widget.hideCustomer
+          ? null
+          : () async {
+              focusNode.requestFocus();
+              showGeneralDialog(
+                  context: context,
+                  transitionDuration: const Duration(milliseconds: 200),
+                  barrierDismissible: true,
+                  barrierLabel: '',
+                  transitionBuilder: (context, a, b, _) => RawKeyboardListener(
+                        focusNode: focusNode,
+                        onKey: (value) async {
+                          if (value is RawKeyDownEvent) {
+                            if (value.physicalKey == PhysicalKeyboardKey.keyV) {
+                              LoyaltySummary? res;
+                              bool permission = await hasPermission("A");
+                              //ask
 
-                        if (permission) {
-                          EasyLoading.show(status: 'please_wait'.tr());
-                          res = await LoyaltyController()
-                              .getLoyaltySummary(customer.cMCODE ?? "");
-                          EasyLoading.dismiss();
+                              if (permission) {
+                                EasyLoading.show(status: 'please_wait'.tr());
+                                res = await LoyaltyController()
+                                    .getLoyaltySummary(customer.cMCODE ?? "");
+                                EasyLoading.dismiss();
 
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) {
-                              return CustomerProfile(
-                                customer,
-                                loyaltySummary: res,
-                              );
-                            },
-                          );
-                          Navigator.pop(
-                              context); //closing the showdialog box at the end
-                        }
-                      }
-                      if (value.physicalKey == PhysicalKeyboardKey.keyN) {
-                        Navigator.pop(context);
-                      }
-                      if (value.physicalKey == PhysicalKeyboardKey.keyY) {
-                        Navigator.pop(context);
-                        var cartSum = cartBloc.cartSummary;
-                        if (cartSum != null) {
-                          cartSum.customerCode = '';
-                          cartBloc.updateCartSummary(cartSum);
-                        }
-                        customerBloc.changeCurrentCustomer(null);
-                        CustomerController().showCustomerPicker(context);
-                      }
-                    }
-                  },
-                  child: Transform.scale(
-                    scale: a.value,
-                    child: AlertDialog(
-                        title: Text('general_dialog.handle_cust'.tr()),
-                        content: Text('general_dialog.handle_cust_desc'.tr()),
-                        actions: [
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: POSConfig()
-                                      .primaryDarkGrayColor
-                                      .toColor()),
-                              onPressed: () async {
-                                LoyaltySummary? res;
-                                bool permission = await hasPermission("A");
-                                //ask
+                                await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomerProfile(
+                                      customer,
+                                      loyaltySummary: res,
+                                    );
+                                  },
+                                );
+                                Navigator.pop(
+                                    context); //closing the showdialog box at the end
+                              }
+                            }
+                            if (value.physicalKey == PhysicalKeyboardKey.keyN) {
+                              Navigator.pop(context);
+                            }
+                            if (value.physicalKey == PhysicalKeyboardKey.keyY) {
+                              Navigator.pop(context);
+                              var cartSum = cartBloc.cartSummary;
+                              if (cartSum != null) {
+                                cartSum.customerCode = '';
+                                cartBloc.updateCartSummary(cartSum);
+                              }
+                              customerBloc.changeCurrentCustomer(null);
+                              CustomerController().showCustomerPicker(context);
+                            }
+                          }
+                        },
+                        child: Transform.scale(
+                          scale: a.value,
+                          child: AlertDialog(
+                              title: Text('general_dialog.handle_cust'.tr()),
+                              content:
+                                  Text('general_dialog.handle_cust_desc'.tr()),
+                              actions: [
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: POSConfig()
+                                            .primaryDarkGrayColor
+                                            .toColor()),
+                                    onPressed: () async {
+                                      LoyaltySummary? res;
+                                      bool permission =
+                                          await hasPermission("A");
+                                      //ask
 
-                                if (permission) {
-                                  EasyLoading.show(status: 'please_wait'.tr());
-                                  res = await LoyaltyController()
-                                      .getLoyaltySummary(customer.cMCODE ?? "");
-                                  EasyLoading.dismiss();
+                                      if (permission) {
+                                        EasyLoading.show(
+                                            status: 'please_wait'.tr());
+                                        res = await LoyaltyController()
+                                            .getLoyaltySummary(
+                                                customer.cMCODE ?? "");
+                                        EasyLoading.dismiss();
 
-                                  await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    context: context,
-                                    builder: (context) {
-                                      return CustomerProfile(
-                                        customer,
-                                        loyaltySummary: res,
-                                      );
+                                        await showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (context) {
+                                            return CustomerProfile(
+                                              customer,
+                                              loyaltySummary: res,
+                                            );
+                                          },
+                                        );
+                                        Navigator.pop(
+                                            context); //closing the showdialog box at the end
+                                      }
                                     },
-                                  );
-                                  Navigator.pop(
-                                      context); //closing the showdialog box at the end
-                                }
-                              },
-                              child: RichText(
-                                  text: TextSpan(text: '', children: [
-                                TextSpan(
-                                    text: 'general_dialog.view_profile'
-                                        .tr()
-                                        .substring(0, 1),
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline)),
-                                TextSpan(
-                                    text: 'general_dialog.view_profile'
-                                        .tr()
-                                        .substring(1))
-                              ]))),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: POSConfig()
-                                      .primaryDarkGrayColor
-                                      .toColor()),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: RichText(
-                                  text: TextSpan(text: '', children: [
-                                TextSpan(
-                                    text: 'general_dialog.no'
-                                        .tr()
-                                        .substring(0, 1),
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline)),
-                                TextSpan(
-                                    text: 'general_dialog.no'.tr().substring(1))
-                              ]))),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: POSConfig()
-                                      .primaryDarkGrayColor
-                                      .toColor()),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                var cartSum = cartBloc.cartSummary;
-                                if (cartSum != null) {
-                                  cartSum.customerCode = '';
-                                  cartBloc.updateCartSummary(cartSum);
-                                }
-                                customerBloc.changeCurrentCustomer(null);
-                                CustomerController()
-                                    .showCustomerPicker(context);
-                              },
-                              child: RichText(
-                                  text: TextSpan(text: '', children: [
-                                TextSpan(
-                                    text: 'general_dialog.yes'
-                                        .tr()
-                                        .substring(0, 1),
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline)),
-                                TextSpan(
-                                    text:
-                                        'general_dialog.yes'.tr().substring(1))
-                              ])))
-                        ]),
-                  ),
-                ),
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return SizedBox();
-            });
-      },
+                                    child: RichText(
+                                        text: TextSpan(text: '', children: [
+                                      TextSpan(
+                                          text: 'general_dialog.view_profile'
+                                              .tr()
+                                              .substring(0, 1),
+                                          style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline)),
+                                      TextSpan(
+                                          text: 'general_dialog.view_profile'
+                                              .tr()
+                                              .substring(1))
+                                    ]))),
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: POSConfig()
+                                            .primaryDarkGrayColor
+                                            .toColor()),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: RichText(
+                                        text: TextSpan(text: '', children: [
+                                      TextSpan(
+                                          text: 'general_dialog.no'
+                                              .tr()
+                                              .substring(0, 1),
+                                          style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline)),
+                                      TextSpan(
+                                          text: 'general_dialog.no'
+                                              .tr()
+                                              .substring(1))
+                                    ]))),
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: POSConfig()
+                                            .primaryDarkGrayColor
+                                            .toColor()),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      var cartSum = cartBloc.cartSummary;
+                                      if (cartSum != null) {
+                                        cartSum.customerCode = '';
+                                        cartBloc.updateCartSummary(cartSum);
+                                      }
+                                      customerBloc.changeCurrentCustomer(null);
+                                      CustomerController()
+                                          .showCustomerPicker(context);
+                                    },
+                                    child: RichText(
+                                        text: TextSpan(text: '', children: [
+                                      TextSpan(
+                                          text: 'general_dialog.yes'
+                                              .tr()
+                                              .substring(0, 1),
+                                          style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline)),
+                                      TextSpan(
+                                          text: 'general_dialog.yes'
+                                              .tr()
+                                              .substring(1))
+                                    ])))
+                              ]),
+                        ),
+                      ),
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return SizedBox();
+                  });
+            },
       child: smallDevice
           ? Column(
               children: [

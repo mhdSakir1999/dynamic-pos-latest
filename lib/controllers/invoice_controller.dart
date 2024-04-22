@@ -327,7 +327,8 @@ class InvoiceController {
     final userDetails = userBloc.userDetails!;
     final double netAmt = cartSummary.subTotal;
     final double dueAmt = 0;
-
+//--------------------------------------------------------------------------------------------------------------------------------
+    /// validation by: [TM.Sakir]
     // Adding a validation for check whether the net amount and pro detail amounts are tallying
     double calculatedDetNet = 0;
     for (var pro in cartBloc.currentCart!.values.toList()) {
@@ -359,7 +360,7 @@ class InvoiceController {
       EasyLoading.showError('Net amount calculation error');
       return InvoiceSaveRes(false, 0, null);
     }
-
+//--------------------------------------------------------------------------------------------------------------------------------
     String cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "UnAuthorized";
     String tempCashier =
         userBloc.currentUser?.uSERHEDUSERCODE ?? "UnAuthorized";

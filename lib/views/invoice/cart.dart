@@ -109,6 +109,8 @@ class _CartState extends State<Cart> {
   int _tempIndex = 0;
   bool activeDynamicButton = true;
 
+  bool payButtonPressed = false;
+
   late SerialPort port;
   @override
   void initState() {
@@ -806,7 +808,7 @@ class _CartState extends State<Cart> {
         calculator.voidItem(selected, context);
         selectedCartItem = null;
       }
-      scrollToBottom();
+      // scrollToBottom();
       itemCodeFocus.requestFocus();
       if (mounted) setState(() {});
     }
@@ -1752,7 +1754,7 @@ class _CartState extends State<Cart> {
     return StreamBuilder<Map<String, CartModel>>(
         stream: cartBloc.currentCartSnapshot,
         builder: (context, AsyncSnapshot<Map<String, CartModel>> snapshot) {
-          scrollToBottom();
+          // scrollToBottom();
           final map = snapshot.data;
           int length = 0;
           if (map != null) {
@@ -2426,6 +2428,10 @@ class _CartState extends State<Cart> {
                         backgroundColor:
                             POSConfig().primaryDarkGrayColor.toColor()),
                     onPressed: () {
+                      // if (!payButtonPressed) {
+                      //   payButtonPressed = true;
+                      //   billClose();
+                      // }
                       billClose();
                       itemCodeFocus.requestFocus();
                     },

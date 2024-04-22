@@ -78,3 +78,6 @@
 
 2024-02-02 : removed some api calls (await AuthController().getUserPermissionListByUserCode(user); // getting user permission list) and get the userpermission data from [userBloc.userDetails?.userRights;]
 changed places: discount_handler(line 130), bill_discount_handler(line 152), customer_helper(line 21), cart_dynamic_button_function (line 539)
+
+
+2024-04-22 : discount related fixes, net amount check before save the bill, due amount display error fix when promotion applied, scale barcode related implementation (for spar: hardcoded using #), added a flag to cart model if fixed price is applied

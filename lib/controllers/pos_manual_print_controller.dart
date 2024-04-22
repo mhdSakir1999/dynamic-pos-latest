@@ -705,7 +705,7 @@ class POSManualPrint {
           value = value.replaceAll(
               "{payment_desc}", addSpacesBack("$payment_desc", 20));
           value = value.replaceAll(
-              "{payment_refCode}", addSpacesBack("$payment_refCode", 4));
+              "{payment_refCode}", addSpacesBack("$payment_refCode", 7));
           value = value.replaceAll(
               "{paymentAmount}",
               addSpacesFront("${formatWithCommas(paymentAmount)}",
@@ -1011,16 +1011,31 @@ class POSManualPrint {
                         .substring(8);
               }
             } else {
-              payment_desc = invPayModeDet.firstWhere(
-                    (element) => element['PD_CODE'] == payMode['INVPAY_PDCODE'],
-                    orElse: () => null,
-                  )?['PD_DESC'] ??
-                  'UNKNOWN';
+              payment_desc = (payMode['INVPAY_PHCODE'] == 'FCR')
+                  ? (invPayModeDet.firstWhere(
+                            (element) =>
+                                element['PD_CODE'] == payMode['INVPAY_PDCODE'],
+                            orElse: () => null,
+                          )?['PD_DESC'] +
+                          ' (${payMode['INVPAY_SL_VS_FC']} LKR)' ??
+                      'UNKNOWN')
+                  : (invPayModeDet.firstWhere(
+                        (element) =>
+                            element['PD_CODE'] == payMode['INVPAY_PDCODE'],
+                        orElse: () => null,
+                      )?['PD_DESC'] ??
+                      'UNKNOWN');
               if (payMode['INVPAY_PHCODE'] == 'CRC') {
-                payment_refCode = payMode['INVPAY_REFNO']
-                    .split('-')[3]; // 1111-11**-****-1111  last  digits
+                payment_refCode = '***' +
+                    payMode['INVPAY_REFNO']
+                        .split('-')[3]; // 1111-11**-****-1111  last  digits
               } else if (payMode['INVPAY_PHCODE'] == 'CSH') {
                 payment_refCode = '';
+                triggerCashDrawer = true;
+              } else if (payMode['INVPAY_PHCODE'] == 'FCR') {
+                payment_refCode = payMode['INVPAY_FRAMOUNT'] == null
+                    ? ''
+                    : (payMode['INVPAY_FRAMOUNT']).toStringAsFixed(2);
                 triggerCashDrawer = true;
               }
             }
