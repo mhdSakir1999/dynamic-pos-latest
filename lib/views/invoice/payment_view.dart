@@ -196,6 +196,7 @@ class _PaymentViewState extends State<PaymentView> {
     if (POSConfig().dualScreenWebsite != "")
       DualScreenController()
           .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
+    dueBalanceEditingController.text = balanceDue.toStringAsFixed(2);
     if (mounted) setState(() {});
   }
 
@@ -222,6 +223,7 @@ class _PaymentViewState extends State<PaymentView> {
 
     if (mounted) setState(() {});
     loadPaidData();
+
     Future.delayed(
       Duration(seconds: 1),
     ).then((value) {

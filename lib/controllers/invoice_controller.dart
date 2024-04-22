@@ -328,6 +328,38 @@ class InvoiceController {
     final double netAmt = cartSummary.subTotal;
     final double dueAmt = 0;
 
+    // Adding a validation for check whether the net amount and pro detail amounts are tallying
+    double calculatedDetNet = 0;
+    for (var pro in cartBloc.currentCart!.values.toList()) {
+      // double tempBillDisc = 0;
+      // if (pro.billDiscPer != null || pro.billDiscPer != 0) {
+      //   tempBillDisc = (pro.unitQty * pro.selling).toDouble() *
+      //       (pro.billDiscPer ?? 0) /
+      //       100;
+      // }
+      // calculatedDetNet += pro.amount - tempBillDisc;
+
+      double tempBillDisc =
+          (pro.unitQty * pro.selling) * (pro.billDiscPer ?? 0) / 100;
+      double tempLineDiscAmt = pro.discAmt ?? 0;
+      double tempLineDiscPer =
+          (pro.unitQty * pro.selling) * (pro.discPer ?? 0) / 100;
+      double tempPromoDiscPer =
+          (pro.unitQty * pro.selling) * (pro.promoDiscPre ?? 0) / 100;
+      double tempPromoDiscAmt = pro.promoDiscAmt ?? 0;
+
+      calculatedDetNet += (pro.unitQty * pro.selling) -
+          (tempBillDisc +
+              tempLineDiscAmt +
+              tempLineDiscPer +
+              tempPromoDiscPer +
+              tempPromoDiscAmt);
+    }
+    if (netAmt != calculatedDetNet) {
+      EasyLoading.showError('Net amount calculation error');
+      return InvoiceSaveRes(false, 0, null);
+    }
+
     String cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "UnAuthorized";
     String tempCashier =
         userBloc.currentUser?.uSERHEDUSERCODE ?? "UnAuthorized";
@@ -472,9 +504,11 @@ class InvoiceController {
   }
 
   /// get hold cart headers
+  /// new change: instead of sending cashier, now we are passing loc code
   Future<List<HoldInvoiceHeaders>> getHoldHeaders() async {
-    final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
-    final res = await ApiClient.call("invoice/hold/$cashier", ApiMethod.GET,
+    // final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+    final res = await ApiClient.call(
+        "invoice/hold/${POSConfig().locCode}", ApiMethod.GET,
         errorToast: false);
 
     if (res?.data == null || res?.data == '')

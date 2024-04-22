@@ -377,6 +377,8 @@ class POSPriceCalculator {
       canPopUpMultiplePrice = false;
     }
 
+    bool fixedPriceApplied = false;
+
     /// going through pro price
     if (proPrices != null) {
       if (proPrices.length > 0) {
@@ -405,6 +407,7 @@ class POSPriceCalculator {
             selling = proPrice.pplUFIXPRICE ?? 0;
           }
         }
+        fixedPriceApplied = true;
       }
     }
 
@@ -658,7 +661,8 @@ class POSPriceCalculator {
           varientEnabled: product.varientEnable,
           batchEnabled: product.batchEnable,
           allowMinus: product.allowMinus,
-          userAllowedMinus: allowMinusRes)
+          userAllowedMinus: allowMinusRes,
+          fixedPriceApplied: fixedPriceApplied)
         ..proTax = proTax ?? [];
       int lineNo = cartList.length;
       model.lineNo = lineNo + 1;
@@ -1969,7 +1973,7 @@ class POSPriceCalculator {
                                                   flex: 3,
                                                   child: Text(
                                                       cartItems[index]
-                                                          .proSelling
+                                                          .selling
                                                           .toStringAsFixed(2),
                                                       style: TextStyle(
                                                           fontWeight:

@@ -139,6 +139,11 @@ class CartDynamicButtonFunction {
           .tr(namedArgs: {'type': 'Amount-Wise'}));
       return;
     }
+    if ((cart.billDiscAmt ?? 0) > 0 || (cart.billDiscPer ?? 0) > 0) {
+      EasyLoading.showError(
+          'Net discount is applied.\nCannot apply line discounts');
+      return;
+    }
     showModalBottomSheet(
       isScrollControlled: true,
       useRootNavigator: true,
@@ -382,6 +387,11 @@ class CartDynamicButtonFunction {
     if (context == null) {
       POSLoggerController.addNewLog(POSLogger(
           POSLoggerLevel.error, "Field 'context' has not been initialized."));
+      return;
+    }
+    if (cartBloc.currentCart!.length <= 0) {
+      EasyLoading.showError(
+          'Please add product/s to the cart first to apply discounts');
       return;
     }
     // bool hasPermission = false;

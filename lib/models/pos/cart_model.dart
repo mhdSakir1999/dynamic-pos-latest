@@ -78,6 +78,8 @@ class CartModel {
   List<PromotionFreeItemDetails> promoFreeItems = [];
   List<PromotionFreeGVs> promoFreeGVs = [];
 
+  bool? fixedPriceApplied = false;
+
   factory CartModel.fromMap(Map<String, dynamic> map) {
     List<dynamic> dyPromoFreeItems = [];
     List<PromotionFreeGVs> dyPromoFreeGVs = [];
@@ -264,7 +266,8 @@ class CartModel {
       this.allowMinus,
       this.dateTime,
       this.promoDiscAmt,
-      this.promoDiscPre});
+      this.promoDiscPre,
+      this.fixedPriceApplied = false});
 
   Map<String, dynamic> toMap() {
     return {

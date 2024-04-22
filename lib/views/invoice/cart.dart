@@ -860,16 +860,18 @@ class _CartState extends State<Cart> {
 
         if (POSConfig().setup?.setuPSCALEDIGIT != null) {
           int digit = POSConfig().setup!.setuPSCALEDIGIT!;
-          try {
-            //quantity = split.last.substring(0, (split.last).length - digit).toDouble();
-            split.last = split.last.substring(0, (split.last).length - digit);
-            split.last = split.last.substring(0, (split.last).length - 3) +
-                '.' +
-                split.last.substring(
-                    split.last.substring(0, (split.last).length - 3).length);
-            quantity = split.last.toDouble();
-          } catch (e) {
-            return;
+          if (scaleSymbol != '#') {
+            try {
+              //quantity = split.last.substring(0, (split.last).length - digit).toDouble();
+              split.last = split.last.substring(0, (split.last).length - digit);
+              split.last = split.last.substring(0, (split.last).length - 3) +
+                  '.' +
+                  split.last.substring(
+                      split.last.substring(0, (split.last).length - 3).length);
+              quantity = split.last.toDouble();
+            } catch (e) {
+              return;
+            }
           }
         } else {
           quantity = split.last.toDouble();
@@ -886,6 +888,7 @@ class _CartState extends State<Cart> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     double fontSize = 20.sp;
+    String tempItemCode = itemCodeEditingController.text;
     itemCodeEditingController.clear();
     Product? res;
     if (resList != null &&
@@ -899,6 +902,28 @@ class _CartState extends State<Cart> {
 
       //  add to cart
       if (res != null) {
+        // new change: spar barcode handling
+        // getting product type (weighted or piece) then qty handling from barcode
+        if (!tempItemCode.contains(symbol) &&
+            tempItemCode.contains('#') &&
+            (POSConfig().setup!.setuPSCALESYMBOL ?? '') == '#') {
+          String fullQty = '';
+          String deci = '';
+          String qtyCode = tempItemCode.split('#').last;
+
+          if (res.pluDecimal == true) {
+            int digit = POSConfig().setup!.setuPSCALEDIGIT!;
+
+            fullQty = qtyCode.substring(0, (qtyCode).length - digit);
+            deci =
+                qtyCode.substring((qtyCode).length - digit, (qtyCode).length);
+            qtyCode = fullQty + '.' + deci;
+            qty = qtyCode.toDouble() ?? 0;
+          } else {
+            qty = qtyCode.toDouble() ?? 0;
+          }
+        }
+
         CartModel? addedItem = await calculator.addItemToCart(res, qty, context,
             resList.prices, resList.proPrices, resList.proTax,
             secondApiCall: true, scaleBarcode: isScaleBarcode);
