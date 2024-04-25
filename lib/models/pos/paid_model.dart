@@ -36,7 +36,7 @@ class PaidModel {
       this.pdDesc,
       {this.isGv = false,
       this.pointRate = 0,
-      this.frAmount});
+      this.frAmount = 0});
 
   PaidModel.fromMap(Map<String, dynamic> map) {
     final tempDate = map['date_time'];
@@ -79,19 +79,27 @@ class PaidModel {
   Map<String, dynamic> toMap() {
     return {
       'paid_amount': this.paidAmount.toDouble(),
-      'date_time': this.paidDateTime.toString(),
+      'date_time': DateFormat('yyyy-MM-ddTHH:mm:ss.000').format(this
+          .paidDateTime
+          .toString()
+          .parseDateTime()), //this.paidDateTime.toString(),
       'amount': this.amount.toDouble(),
       'canceled': this.canceled,
       'pd_code': this.pdCode,
       'ph_code': this.phCode,
       'ref_no': this.refNo,
       'is_gv': this.isGv,
-      'date': this.selectedDate?.toString(),
+      'date': selectedDate == null
+          ? null
+          : DateFormat('yyyy-MM-ddTHH:mm:ss.000').format(this
+              .selectedDate!
+              .toString()
+              .parseDateTime()), //this.selectedDate?.toString(),
       'rate': this.rate?.toDouble(),
       'point_rate': this.pointRate.toDouble(),
       'pd_desc': this.pdDesc,
       'ph_desc': this.phDesc,
-      'framount': this.frAmount
+      'framount': this.frAmount ?? 0
     };
   }
 }

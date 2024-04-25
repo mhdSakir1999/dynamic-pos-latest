@@ -766,6 +766,18 @@ class _PaymentViewState extends State<PaymentView> {
       showCardNoNotEnteredErrorDialog();
       return;
     }
+
+    // not allowing to pay from exact same crc multiple time (more than once)
+    if (cartBloc.paidList != null && cartBloc.paidList!.length > 0) {
+      for (var paid in cartBloc.paidList!) {
+        if (selectedPayModeHeader?.pHCODE == 'CRC' &&
+            detailsEditingController.text == paid.refNo) {
+          EasyLoading.showError('payment_view.duplicate_card'.tr());
+          return;
+        }
+      }
+    }
+
     if (cantGo) {
       POSLoggerController.addNewLog(POSLogger(
           POSLoggerLevel.error, "Date field required for proceed the payment"));

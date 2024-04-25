@@ -383,6 +383,9 @@ class POSManualPrint {
       mng_cshPhysical = signOffHeadDet['SOH_CASHPHYSICAL'] ?? 0;
       mng_cshVariance = mng_cshPhysical - mng_calcCashAmt;
 
+      await LogWriter()
+          .saveLogsToFile('ERROR_LOG_', [signoffPayDetails.toString()]);
+
       await writeMngSignBytes(
           childNodes: childNodes,
           cshdeno: denominationDet,
@@ -1505,7 +1508,8 @@ class POSManualPrint {
           if (label == 'manual_hr') {
             value = '-' * variableMaxLength;
           }
-
+          await LogWriter()
+              .saveLogsToFile('ERROR_LOG_', ['Printing mngData: $value']);
           bytes += generator.text(value,
               styles: PosStyles(
                   align: alignment,

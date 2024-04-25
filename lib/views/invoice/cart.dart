@@ -222,7 +222,12 @@ class _CartState extends State<Cart> {
                 if (value is RawKeyDownEvent) {
                   if (!value.isShiftPressed &&
                       value.physicalKey == PhysicalKeyboardKey.numpadAdd) {
-                    billClose();
+                    if (!payButtonPressed) {
+                      payButtonPressed = true;
+                      await billClose();
+                      payButtonPressed = false;
+                    }
+                    // billClose();
 
                     focusNode.requestFocus();
                     itemCodeFocus.requestFocus();
@@ -811,6 +816,7 @@ class _CartState extends State<Cart> {
       // scrollToBottom();
       itemCodeFocus.requestFocus();
       if (mounted) setState(() {});
+      
     }
   }
 
@@ -849,6 +855,10 @@ class _CartState extends State<Cart> {
       final split = code.split(symbol);
       code = split.last;
       qty = double.tryParse(split.first) ?? 1;
+      if (qty == 0) {
+        EasyLoading.showError('Invalid quantity... \ncannot add zero quantity');
+        return;
+      }
       qtyController.text = qty.toString();
     } else if (POSConfig().setup?.setuPSCALESYMBOL != null) {
       // check if the . is available or not (scale barcode separator)
@@ -946,6 +956,7 @@ class _CartState extends State<Cart> {
           }
           if (returnProResList.isNotEmpty) {
             await showModalBottomSheet(
+              enableDrag: false,
               isScrollControlled: true,
               useRootNavigator: true,
               context: context!,
@@ -2427,12 +2438,14 @@ class _CartState extends State<Cart> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor:
                             POSConfig().primaryDarkGrayColor.toColor()),
-                    onPressed: () {
-                      // if (!payButtonPressed) {
-                      //   payButtonPressed = true;
-                      //   billClose();
-                      // }
-                      billClose();
+                    onPressed: () async {
+                      if (!payButtonPressed) {
+                        payButtonPressed = true;
+                        await billClose();
+                        payButtonPressed = false;
+                      }
+                      // billClose();
+
                       itemCodeFocus.requestFocus();
                     },
                     child: Text("invoice.bill_close".tr())))
@@ -2440,7 +2453,7 @@ class _CartState extends State<Cart> {
     );
   }
 
-  void billClose() async {
+  Future<void> billClose() async {
     POSLoggerController.addNewLog(
         POSLogger(POSLoggerLevel.info, "pay & complete button pressed"));
     final route = PaymentView.routeName;
@@ -2675,6 +2688,7 @@ class _CartState extends State<Cart> {
     );
     setState(() {
       focus = true;
+      payButtonPressed = false;
     });
   }
 

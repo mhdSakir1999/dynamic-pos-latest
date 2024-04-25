@@ -282,7 +282,9 @@ class LandingHelper {
       // check ongoing order
       bool tempInvoice = await InvoiceController().hasTempInvoice();
       bool holdInvoice =
-          (await InvoiceController().getHoldHeaders()).length > 0;
+          (await InvoiceController().getHoldHeaders(isSignOffCheck: 1))
+                  .length >
+              0;
       final bool byPassHoldInv = SpecialPermissionHandler(context: _context)
           .hasPermission(
               permissionCode: PermissionCode.bypassHoldInvAtSignOff,

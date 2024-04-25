@@ -186,6 +186,7 @@
     "maximum_exceed_subtitle": "You can only pay {amount} using this payment mode",
     "earn_loyalty": "Do you want to earn {module} for this transaction?",
     "duplicate": "You cannot duplicate this type of payment mode",
+    "duplicate_card": "The entered credit card is already used",
     "credit_limit_exceed": "Credit Limit Exceed",
     "credit_limit_exceed_content": "Do you want to override the maximum credit limit({credit_limit}) for this customer?",
     "server_connection_confirmation": "Do you want to change connection to server mode?",

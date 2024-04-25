@@ -330,14 +330,14 @@ class _LandingViewState extends State<LandingView> {
                           POSConfig.denominations;
                       List<POSDenominationDetail> denominationDet =
                           POSConfig.denominationDet;
-                      await POSManualPrint()
-                          .printInvoice(data: data, points: 0.0);
+                      // await POSManualPrint()
+                      //     .printInvoice(data: data, points: 0.0);
                       // await POSManualPrint().printSignSlip(
                       //     data: '', slipType: 'signoff', float: 100);
-                      // await POSManualPrint().printManagerSlip(
-                      //     data: data,
-                      //     denominations: denominations,
-                      //     denominationDet: denominationDet);
+                      await POSManualPrint().printManagerSlip(
+                          data: data,
+                          denominations: denominations,
+                          denominationDet: denominationDet);
 
                       // recurringApiCalls.listenPhysicalCash();
                     },

@@ -884,12 +884,15 @@ class _WeightedItemViewState extends State<WeightedItemView> {
         }
         if (returnProResList.isNotEmpty) {
           await showModalBottomSheet(
+            enableDrag: false,
             isScrollControlled: true,
             useRootNavigator: true,
             context: context!,
             builder: (context) {
               return ReturnBottleSelectionView(
-                  returnProResList: returnProResList, isMinus: isMinus,);
+                returnProResList: returnProResList,
+                isMinus: isMinus,
+              );
             },
           );
         }

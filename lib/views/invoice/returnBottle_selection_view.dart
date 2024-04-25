@@ -136,9 +136,9 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                   SizedBox(
                     width: 8.w,
                   ),
-                  GoBackIconButton(
-                    onPressed: handleBack,
-                  ),
+                  // GoBackIconButton(
+                  //   onPressed: handleBack,
+                  // ),
                   SizedBox(
                     width: 8.w,
                   ),
@@ -150,13 +150,13 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                   ),
                 ],
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.only(top: 10, bottom: 10)),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('exit'))
+              // ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //         padding: EdgeInsets.only(top: 10, bottom: 10)),
+              //     onPressed: () {
+              //       Navigator.pop(context);
+              //     },
+              //     child: Text('exit'))
             ],
           ),
         )),

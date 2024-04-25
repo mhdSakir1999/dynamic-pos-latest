@@ -427,20 +427,22 @@ class _CashInOutViewState extends State<CashInOutView> {
       ..key = "";
 
     Map<String, dynamic> res = await CashInOutController().saveCashInOut(
-        cashIn: widget.cashIn,
-        cart: cartModel,
-        paidModel: PaidModel(
-            amount,
-            amount,
-            false,
-            selectedPayModeHeader?.pHCODE ?? "",
-            selectedPayModeHeader?.pHCODE ?? "",
-            "",
-            null,
-            0,
-            selectedPayModeHeader?.pHDESC ?? "",
-            selectedPayModeHeader?.pHDESC ?? ""),
-        invoice: invoiceNo);
+      cashIn: widget.cashIn,
+      cart: cartModel,
+      paidModel: PaidModel(
+          amount,
+          amount,
+          false,
+          selectedPayModeHeader?.pHCODE ?? "",
+          selectedPayModeHeader?.pHCODE ?? "",
+          "",
+          null,
+          0,
+          selectedPayModeHeader?.pHDESC ?? "",
+          selectedPayModeHeader?.pHDESC ?? "",
+          frAmount: 0),
+      invoice: invoiceNo,
+    );
     //
     if (res['status'] == true) {
       if (POSConfig.crystalPath != '') {

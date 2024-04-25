@@ -12,6 +12,7 @@ import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/components/api_client.dart';
 import 'package:checkout/components/ext_loyalty/ext_module_helper.dart';
 import 'package:checkout/controllers/customer_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
@@ -330,36 +331,48 @@ class InvoiceController {
 //--------------------------------------------------------------------------------------------------------------------------------
     /// validation by: [TM.Sakir]
     // Adding a validation for check whether the net amount and pro detail amounts are tallying
-    double calculatedDetNet = 0;
-    for (var pro in cartBloc.currentCart!.values.toList()) {
-      // double tempBillDisc = 0;
-      // if (pro.billDiscPer != null || pro.billDiscPer != 0) {
-      //   tempBillDisc = (pro.unitQty * pro.selling).toDouble() *
-      //       (pro.billDiscPer ?? 0) /
-      //       100;
-      // }
-      // calculatedDetNet += pro.amount - tempBillDisc;
+    // double calculatedDetNet = 0;
+    // for (var pro in cartBloc.currentCart!.values.toList()) {
+    //   // double tempBillDisc = 0;
+    //   // if (pro.billDiscPer != null || pro.billDiscPer != 0) {
+    //   //   tempBillDisc = (pro.unitQty * pro.selling).toDouble() *
+    //   //       (pro.billDiscPer ?? 0) /
+    //   //       100;
+    //   // }
+    //   // calculatedDetNet += pro.amount - tempBillDisc;
 
-      double tempBillDisc =
-          (pro.unitQty * pro.selling) * (pro.billDiscPer ?? 0) / 100;
-      double tempLineDiscAmt = pro.discAmt ?? 0;
-      double tempLineDiscPer =
-          (pro.unitQty * pro.selling) * (pro.discPer ?? 0) / 100;
-      double tempPromoDiscPer =
-          (pro.unitQty * pro.selling) * (pro.promoDiscPre ?? 0) / 100;
-      double tempPromoDiscAmt = pro.promoDiscAmt ?? 0;
+    //   if (pro.itemVoid != true) {
+    //     double tempBillDisc =
+    //         (pro.unitQty * pro.selling) * (pro.billDiscPer ?? 0) / 100;
+    //     double tempLineDiscAmt = pro.discAmt ?? 0;
+    //     double tempLineDiscPer =
+    //         (pro.unitQty * pro.selling) * (pro.discPer ?? 0) / 100;
+    //     double tempPromoDiscPer =
+    //         (pro.unitQty * pro.selling) * (pro.promoDiscPre ?? 0) / 100;
+    //     double tempPromoDiscAmt = pro.promoDiscAmt ?? 0;
 
-      calculatedDetNet += (pro.unitQty * pro.selling) -
-          (tempBillDisc +
-              tempLineDiscAmt +
-              tempLineDiscPer +
-              tempPromoDiscPer +
-              tempPromoDiscAmt);
-    }
-    if (netAmt != calculatedDetNet) {
-      EasyLoading.showError('Net amount calculation error');
-      return InvoiceSaveRes(false, 0, null);
-    }
+    //     calculatedDetNet += (pro.unitQty * pro.selling) -
+    //         (tempBillDisc +
+    //             tempLineDiscAmt +
+    //             tempLineDiscPer +
+    //             tempPromoDiscPer +
+    //             tempPromoDiscAmt);
+    //   }
+    // }
+    // if (netAmt != calculatedDetNet) {
+    //   EasyLoading.showError('Net amount calculation error');
+    //   return InvoiceSaveRes(false, 0, null);
+    // }
+    // if (cartBloc.paidList != null && cartBloc.paidList != []) {
+    //   double tempPaidTotal = 0;
+    //   for (var paid in cartBloc.paidList!) {
+    //     tempPaidTotal += paid.paidAmount;
+    //   }
+    //   if (netAmt != tempPaidTotal) {
+    //     EasyLoading.showError('Paid amount calculation error');
+    //     return InvoiceSaveRes(false, 0, null);
+    //   }
+    // }
 //--------------------------------------------------------------------------------------------------------------------------------
     String cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "UnAuthorized";
     String tempCashier =
@@ -428,6 +441,15 @@ class InvoiceController {
       'REDEEMED_COUPONS':
           cartBloc.redeemedCoupon?.map((e) => e.toMap()).toList() ?? [],
     };
+
+    // saving our sending data to log files
+    List<String> result = [
+      '--------------------Invoice map data (sending to \'invoice/save endpoint\'--------------------------------)'
+    ];
+    temp.forEach((key, value) {
+      result.add('$key: $value');
+    });
+    await LogWriter().saveLogsToFile('API_Log_', result);
 
     final res = await ApiClient.call(
         invoiced ? "invoice/save" : 'invoice/hold_invoice',
@@ -506,10 +528,12 @@ class InvoiceController {
 
   /// get hold cart headers
   /// new change: instead of sending cashier, now we are passing loc code
-  Future<List<HoldInvoiceHeaders>> getHoldHeaders() async {
-    // final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+  Future<List<HoldInvoiceHeaders>> getHoldHeaders(
+      {int isSignOffCheck = 0}) async {
+    final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
     final res = await ApiClient.call(
-        "invoice/hold/${POSConfig().locCode}", ApiMethod.GET,
+        "invoice/hold/$cashier/${POSConfig().locCode}/$isSignOffCheck",
+        ApiMethod.GET,
         errorToast: false);
 
     if (res?.data == null || res?.data == '')

@@ -880,6 +880,10 @@ class _ProductSearchViewState extends State<ProductSearchView> {
   /// -------------------------------------------------------------------------------------------------
   Future<void> _addQtyToCart() async {
     String text = qtyEditingController.text;
+    if (text == '0') {
+      EasyLoading.showError('Invalid Quantity...\ncannot add zero quantity');
+      return;
+    }
     double qty = 1;
 
     var size = MediaQuery.of(context).size;

@@ -833,9 +833,8 @@ class POSPriceCalculator {
           }
           cartBloc.updateCartSummary(cartSummary);
         }
-        return cartedItems == [] ? null : cartedItems.first;
       }
-      return null;
+      return cartedItems == [] ? null : cartedItems.first;
     }
   }
 
@@ -1702,6 +1701,10 @@ class POSPriceCalculator {
       final split = code.split(symbol);
       code = split.last;
       qty = double.tryParse(split.first) ?? 1;
+      if (qty == 0) {
+        EasyLoading.showError('Invalid quantity... \ncannot add zero quantity');
+        return null;
+      }
     } else if (POSConfig().setup?.setuPSCALESYMBOL != null) {
       // check if the . is available or not
       String scaleSymbol = POSConfig().setup!.setuPSCALESYMBOL!;
