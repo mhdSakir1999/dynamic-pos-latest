@@ -681,11 +681,25 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                                             refCode: DateTime
                                                                     .now()
                                                                 .toIso8601String());
-                                                if (res.success != true) return;
+                                                if (res.success != true) {
+                                                  _selectedGroup =
+                                                      _selectedGroup;
+                                                  customerGroupEditingController
+                                                          .text =
+                                                      _selectedGroup?.cGDESC ??
+                                                          "";
+                                                } else {
+                                                  customerGroupEditingController
+                                                          .text =
+                                                      value?.cGDESC ?? "";
+                                                  _selectedGroup = value;
+                                                }
+                                                ;
+                                              } else {
+                                                customerGroupEditingController
+                                                    .text = value?.cGDESC ?? "";
+                                                _selectedGroup = value;
                                               }
-                                              customerGroupEditingController
-                                                  .text = value?.cGDESC ?? "";
-                                              _selectedGroup = value;
 
                                               setState(() {});
                                             },

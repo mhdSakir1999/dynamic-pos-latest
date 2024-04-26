@@ -326,6 +326,217 @@ class _LandingViewState extends State<LandingView> {
                 AlertDialogButton(
                     onPressed: () async {
                       String data = POSConfig.localPrintData;
+
+                      data = ''' {
+    "SignOffHeader": [
+        {
+            "SOH_DATE": "2024-04-25T00:00:00",
+            "SOH_TIME": "1900-01-01T06:53:00",
+            "SOH_LOCATION": "00009",
+            "SOH_USER": "3861",
+            "SOH_STATION": "001",
+            "SOH_SHIFT": 1.0,
+            "SOH_SIGNONDATE": "2024-04-25T00:00:00",
+            "SOH_SIGNONTIME": "1900-01-01T06:53:00",
+            "SOH_INVCOUNT": 242.0,
+            "SOH_CANINVCOUNT": 0.0,
+            "SOH_STARTINVNO": "010901000001",
+            "SOH_ENDINVNO": "010901000242",
+            "SOH_BILLNETTOTAL": 722444.6300,
+            "SOH_REFUNDTOTAL": -1135.0000,
+            "SOH_DISCTOTAL": 14508.8800,
+            "SOH_TOTHOLDBILLS": 0.0,
+            "SOH_OPBALANCE": 15000.0000,
+            "SOH_DTTRANSFER": false,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false,
+            "SOH_REPRINTCOUNT": 10.0,
+            "SOH_RECEIPTS": 100.00,
+            "SOH_WITHDRAWALS": 91025.00,
+            "SOH_ACTUALREFUNDS": -1135.00,
+            "SOH_BKOFFDATE": "2024-04-25T22:16:17.47",
+            "SOH_CASHSALE": 439252.94,
+            "SOH_CASHCALCULATED": 348327.94,
+            "SOH_CASHPHYSICAL": 257227.00,
+            "SOH_RECEIPTS_OTHER": 0.00,
+            "GLBATCHNO": null,
+            "SOH_DOCNO": "2024-04-25/00009-3861-001-1"
+        }
+    ],
+    "SignOffDetails": [
+        {
+            "SOD_DATE": "2024-04-25T00:00:00",
+            "SOD_TIME": "1900-01-01T06:53:00",
+            "SOD_LOCATION": "00009",
+            "SOD_USER": "3861",
+            "SOD_STATION": "001",
+            "SOD_SHIFT": 1.0,
+            "SOD_PAYCODE": "CRC",
+            "SOD_PAYDETCODE": "AMEX",
+            "SOD_SYSAMT": 35630.4900,
+            "SOD_PHYAMT": 35630.4900,
+            "SOD_VARAMT": 0.0000,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false,
+            "PH_DESC": "Credit Card"
+        },
+        {
+            "SOD_DATE": "2024-04-25T00:00:00",
+            "SOD_TIME": "1900-01-01T06:53:00",
+            "SOD_LOCATION": "00009",
+            "SOD_USER": "3861",
+            "SOD_STATION": "001",
+            "SOD_SHIFT": 1.0,
+            "SOD_PAYCODE": "CRC",
+            "SOD_PAYDETCODE": "MASTER",
+            "SOD_SYSAMT": 43006.1900,
+            "SOD_PHYAMT": 66009.2800,
+            "SOD_VARAMT": 23003.0900,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false,
+            "PH_DESC": "Credit Card"
+        },
+        {
+            "SOD_DATE": "2024-04-25T00:00:00",
+            "SOD_TIME": "1900-01-01T06:53:00",
+            "SOD_LOCATION": "00009",
+            "SOD_USER": "3861",
+            "SOD_STATION": "001",
+            "SOD_SHIFT": 1.0,
+            "SOD_PAYCODE": "EWL",
+            "SOD_PAYDETCODE": "SOL",
+            "SOD_SYSAMT": 5058.8500,
+            "SOD_PHYAMT": 0.0000,
+            "SOD_VARAMT": -5058.8500,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false,
+            "PH_DESC": "EWallet"
+        },
+        {
+            "SOD_DATE": "2024-04-25T00:00:00",
+            "SOD_TIME": "1900-01-01T06:53:00",
+            "SOD_LOCATION": "00009",
+            "SOD_USER": "3861",
+            "SOD_STATION": "001",
+            "SOD_SHIFT": 1.0,
+            "SOD_PAYCODE": "CRC",
+            "SOD_PAYDETCODE": "VISA",
+            "SOD_SYSAMT": 282072.7900,
+            "SOD_PHYAMT": 270399.0700,
+            "SOD_VARAMT": -11673.7200,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false,
+            "PH_DESC": "Credit Card"
+        },
+        {
+            "SOD_DATE": "2024-04-25T00:00:00",
+            "SOD_TIME": "1900-01-01T06:53:00",
+            "SOD_LOCATION": "00009",
+            "SOD_USER": "3861",
+            "SOD_STATION": "001",
+            "SOD_SHIFT": 1.0,
+            "SOD_PAYCODE": "CSH",
+            "SOD_PAYDETCODE": "CSH",
+            "SOD_SYSAMT": 439252.9400,
+            "SOD_PHYAMT": 257227.0000,
+            "SOD_VARAMT": -182025.9400,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false,
+            "PH_DESC": "Cash"
+        }
+    ],
+    "Denominations": [
+        {
+            "DE_DATE": "2024-04-25T00:00:00",
+            "DE_TIME": "1900-01-01T06:53:00",
+            "DE_LOCATION": "00009",
+            "DE_USER": "3861",
+            "DE_STATION": "001",
+            "DE_SHIFT": 1.0,
+            "DE_DENCODE": "1",
+            "DE_DENPHYAMT": 255000.0000,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false
+        },
+        {
+            "DE_DATE": "2024-04-25T00:00:00",
+            "DE_TIME": "1900-01-01T06:53:00",
+            "DE_LOCATION": "00009",
+            "DE_USER": "3861",
+            "DE_STATION": "001",
+            "DE_SHIFT": 1.0,
+            "DE_DENCODE": "11",
+            "DE_DENPHYAMT": 2.0000,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false
+        },
+        {
+            "DE_DATE": "2024-04-25T00:00:00",
+            "DE_TIME": "1900-01-01T06:53:00",
+            "DE_LOCATION": "00009",
+            "DE_USER": "3861",
+            "DE_STATION": "001",
+            "DE_SHIFT": 1.0,
+            "DE_DENCODE": "3",
+            "DE_DENPHYAMT": 2000.0000,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false
+        },
+        {
+            "DE_DATE": "2024-04-25T00:00:00",
+            "DE_TIME": "1900-01-01T06:53:00",
+            "DE_LOCATION": "00009",
+            "DE_USER": "3861",
+            "DE_STATION": "001",
+            "DE_SHIFT": 1.0,
+            "DE_DENCODE": "5",
+            "DE_DENPHYAMT": 200.0000,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false
+        },
+        {
+            "DE_DATE": "2024-04-25T00:00:00",
+            "DE_TIME": "1900-01-01T06:53:00",
+            "DE_LOCATION": "00009",
+            "DE_USER": "3861",
+            "DE_STATION": "001",
+            "DE_SHIFT": 1.0,
+            "DE_DENCODE": "7",
+            "DE_DENPHYAMT": 20.0000,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false
+        },
+        {
+            "DE_DATE": "2024-04-25T00:00:00",
+            "DE_TIME": "1900-01-01T06:53:00",
+            "DE_LOCATION": "00009",
+            "DE_USER": "3861",
+            "DE_STATION": "001",
+            "DE_SHIFT": 1.0,
+            "DE_DENCODE": "9",
+            "DE_DENPHYAMT": 5.0000,
+            "DTRANS": false,
+            "DTPROCESS": false,
+            "DTSPROCESS": false
+        }
+    ],
+    "Table3": [
+        {
+            "error": null
+        }
+    ]
+} ''';
                       List<POSDenominationModel> denominations =
                           POSConfig.denominations;
                       List<POSDenominationDetail> denominationDet =

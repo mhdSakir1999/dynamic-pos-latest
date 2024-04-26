@@ -1693,6 +1693,7 @@ class PromotionController {
         cartBloc.addPromoFreeTickets(selectablePayMode.cashBackCoupons);
       }
     }
+    POSPriceCalculator().taxCalculation();
   }
 
   Future<bool> validateCoupon(

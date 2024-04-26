@@ -282,8 +282,7 @@ class LandingHelper {
       // check ongoing order
       bool tempInvoice = await InvoiceController().hasTempInvoice();
       bool holdInvoice =
-          (await InvoiceController().getHoldHeaders(isSignOffCheck: 1))
-                  .length >
+          (await InvoiceController().getHoldHeaders(isSignOffCheck: 1)).length >
               0;
       final bool byPassHoldInv = SpecialPermissionHandler(context: _context)
           .hasPermission(
@@ -673,6 +672,39 @@ class LandingHelper {
 
           temp.add(val);
         });
+
+        // this is for opening the cash drawer
+        SpecialPermissionHandler handler =
+            SpecialPermissionHandler(context: context!);
+        String code = PermissionCode.openCashDrawer;
+        String type = "A";
+        String refCode = "Drawer open";
+        bool permissionStatus = handler.hasPermission(
+            permissionCode: code, accessType: type, refCode: refCode);
+        if (!permissionStatus) {
+          bool success = (await handler.askForPermission(
+                  accessType: type, permissionCode: code, refCode: refCode))
+              .success;
+          // if (!success) return;
+          if (success) {
+            if (POSConfig.crystalPath != '') {
+              PrintController()
+                  .printHandler("", PrintController().openDrawer(), context);
+            } else {
+              POSManualPrint().openDrawer();
+            }
+          } else {
+            EasyLoading.showError(
+                'You don\'t have permission for opening the cash drawer');
+          }
+        } else {
+          if (POSConfig.crystalPath != '') {
+            PrintController()
+                .printHandler("", PrintController().openDrawer(), context);
+          } else {
+            POSManualPrint().openDrawer();
+          }
+        }
 
         Navigator.push(
             _context,

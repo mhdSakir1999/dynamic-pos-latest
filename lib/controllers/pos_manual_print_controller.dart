@@ -1646,7 +1646,11 @@ class POSManualPrint {
           List<xml.XmlNode> paymentchildNodes = node.children;
           if (signoffPayDetails.length != 0) {
             for (int j = 0; j < signoffPayDetails.length; j++) {
-              sod_payType = signoffPayDetails[j]['PH_DESC'];
+              sod_payType = ((signoffPayDetails[j]['SOD_PAYDETCODE'] == null ||
+                          signoffPayDetails[j]['SOD_PAYDETCODE'] == '')
+                      ? signoffPayDetails[j]['PH_DESC']
+                      : signoffPayDetails[j]['SOD_PAYDETCODE']) ??
+                  'UNKNOWN';
               sod_sysAmt = signoffPayDetails[j]['SOD_SYSAMT'] ?? 0;
               sod_phyAmt = signoffPayDetails[j]['SOD_PHYAMT'] ?? 0;
               sod_variance = signoffPayDetails[j]['SOD_VARAMT'];

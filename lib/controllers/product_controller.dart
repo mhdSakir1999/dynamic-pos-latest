@@ -92,7 +92,7 @@ class ProductController {
 
   Future<List<LocationStocks>> getLocationWiseStock(String code) async {
     final res = await ApiClient.call("products/stock/$code", ApiMethod.GET,
-        overrideUrl: '${POSConfig().setup?.centralPOSServer}/api/');
+        overrideUrl: '${POSConfig().setup?.centralPOSServer}');
     if (res == null || res.data == null || res.statusCode != 200) return [];
     return LocationWiseStockResult.fromJson(res.data).stocks ?? [];
   }
