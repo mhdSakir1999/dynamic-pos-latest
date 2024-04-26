@@ -1825,7 +1825,8 @@ class _PaymentViewState extends State<PaymentView> {
                                           if (double.parse(
                                                   amountEditingController
                                                       .text) >
-                                              balanceDue) {
+                                              double.parse(balanceDue
+                                                  .toStringAsFixed(2))) {
                                             EasyLoading.showError(
                                                 'payment_view.no_overpay'.tr());
                                             return;

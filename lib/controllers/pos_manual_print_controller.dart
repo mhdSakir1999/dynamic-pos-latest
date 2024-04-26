@@ -1482,19 +1482,30 @@ class POSManualPrint {
               addSpacesBack("${formatWithCommas(mng_cshPhysical)}", 17));
           value = value.replaceAll("{mng_cshVariance}",
               addSpacesBack("${formatWithCommas(mng_cshVariance)}", 17));
-          value = value.replaceAll(
-              "{csh_deno_desc}", addSpacesBack("$cashDenominationDesc", 17));
-          value = value.replaceAll(
-              "{csh_deno_count}", addSpacesBack("$deno_count", 9));
-          value = value.replaceAll(
-              "{csh_deno_amt}",
-              addSpacesFront("${formatWithCommas(deno_multiply_amt)}",
-                  variableMaxLength - 27));
+          if (variableMaxLength > 42) {
+            value = value.replaceAll(
+                "{csh_deno_desc}", addSpacesBack("$cashDenominationDesc", 17));
+            value = value.replaceAll(
+                "{csh_deno_count}", addSpacesBack("$deno_count", 9));
+            value = value.replaceAll(
+                "{csh_deno_amt}",
+                addSpacesFront("${formatWithCommas(deno_multiply_amt)}",
+                    variableMaxLength - 27));
+          } else {
+            value = value.replaceAll(
+                "{csh_deno_desc}", addSpacesBack("$cashDenominationDesc", 8));
+            value = value.replaceAll(
+                "{csh_deno_count}", addSpacesBack("$deno_count", 8));
+            value = value.replaceAll(
+                "{csh_deno_amt}",
+                addSpacesFront("${formatWithCommas(deno_multiply_amt)}",
+                    variableMaxLength - 17));
+          }
           value = value.replaceAll(
               "{tot_csh_declaration}",
               addSpacesFront("${formatWithCommas(tot_csh_declaration)}",
                   variableMaxLength - 25));
-          if (font == 'B') {
+          if (font == 'B' && variableMaxLength > 50) {
             value = value.replaceAll("{sod_payType}",
                 addSpacesBack("$sod_payType", variableMaxLength - 43));
             value = value.replaceAll("{sod_sysAmt}",
@@ -1503,6 +1514,15 @@ class POSManualPrint {
                 addSpacesFront("${formatWithCommas(sod_phyAmt)}", 14));
             value = value.replaceAll("{sod_variance}",
                 addSpacesFront("${formatWithCommas(sod_variance)}", 15));
+          } else if (variableMaxLength <= 50) {
+            value = value.replaceAll("{sod_payType}",
+                addSpacesBack("$sod_payType", variableMaxLength - 34));
+            value = value.replaceAll(
+                "{sod_sysAmt}", addSpacesFront("$sod_sysAmt", 12));
+            value = value.replaceAll(
+                "{sod_phyAmt}", addSpacesFront("$sod_phyAmt", 12));
+            value = value.replaceAll(
+                "{sod_variance}", addSpacesFront("$sod_variance", 10));
           }
 
           if (label == 'manual_hr') {
