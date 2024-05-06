@@ -49,6 +49,7 @@ class PayModeHeader {
   bool? pHLOCALMODE;
   bool? pHLINKADVANCE;
   bool? pHQRPAY;
+  bool? pHCASHINOUT;
   List<PayModeDetails>? pDDETAILSLIST;
 
   PayModeHeader(
@@ -62,6 +63,7 @@ class PayModeHeader {
       this.pHLOCALMODE,
       this.pHLINKADVANCE,
       this.pHQRPAY,
+      this.pHCASHINOUT,
       this.pDDETAILSLIST});
 
   PayModeHeader.fromJson(Map<String, dynamic> json) {
@@ -87,6 +89,7 @@ class PayModeHeader {
     pointRate = json['pH_POINTSPER']?.toString().parseDouble() ?? 0;
     pHLINKADVANCE = json['pH_LINKADVANCE']?.toString().parseBool() ?? false;
     pHQRPAY = json['pH_QRPAY']?.toString().parseBool() ?? false;
+    pHCASHINOUT = json['pH_CASHINOUT'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

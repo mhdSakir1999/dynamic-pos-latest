@@ -16,6 +16,7 @@ import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
+import 'package:checkout/models/pos/card_details_result.dart';
 import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/cash_in_out_result.dart';
 import 'package:checkout/models/pos/paid_model.dart';
@@ -29,6 +30,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:checkout/extension/extensions.dart';
@@ -51,10 +53,14 @@ class CashInOutView extends StatefulWidget {
 
 class _CashInOutViewState extends State<CashInOutView> {
   final TextEditingController amountEditingController = TextEditingController();
+  final TextEditingController detailsEditingController =
+      TextEditingController();
   final TextEditingController remarkEditingController = TextEditingController();
   final amountFocus = FocusNode();
+  final detailsFocusNode = FocusNode();
   final remarkFocus = FocusNode();
   PayModeHeader? selectedPayModeHeader;
+  PayModeDetails? selectedPayModeDetail;
   CashInOutType? selectedCashInOutType;
   final Color selectedColor = CurrentTheme.backgroundColor!;
   String invoiceNo = "";
@@ -193,12 +199,23 @@ class _CashInOutViewState extends State<CashInOutView> {
               // }, buildContext: context);
               // remarkFocus.requestFocus();
               // });
+              if (selectedPayModeDetail != null &&
+                  (selectedPayModeDetail?.pdMask ?? '').isNotEmpty) {
+                detailsFocusNode.requestFocus();
+              } else {
+                remarkFocus.requestFocus();
+              }
             },
             onTap: () async {
               await KeyBoardController().showBottomDPKeyBoard(
                   amountEditingController, onEnter: () async {
                 KeyBoardController().dismiss();
-                remarkFocus.requestFocus();
+                if (selectedPayModeDetail != null &&
+                    (selectedPayModeDetail?.pdMask ?? '').isNotEmpty) {
+                  detailsFocusNode.requestFocus();
+                } else {
+                  remarkFocus.requestFocus();
+                }
                 // setState(() {
                 await KeyBoardController()
                     .showBottomDPKeyBoard(remarkEditingController, onEnter: () {
@@ -216,6 +233,7 @@ class _CashInOutViewState extends State<CashInOutView> {
                 filled: true, hintText: "cash_in_out_view.amount".tr()),
           ),
         ),
+        maskField(),
         SizedBox(
           height: 8.h,
         ),
@@ -251,9 +269,15 @@ class _CashInOutViewState extends State<CashInOutView> {
         SizedBox(
           height: 8.h,
         ),
-        Expanded(child: buildPaymentButtonHeaderList()),
+        Expanded(child: buildPaymentButtonList()),
       ],
     );
+  }
+
+  Widget buildPaymentButtonList() {
+    if ((selectedPayModeHeader?.pDDETAILSLIST?.length ?? 0) == 0)
+      return buildPaymentButtonHeaderList();
+    return buildPaymentButtonDetailList();
   }
 
   Widget buildCashInOutButtonList() {
@@ -285,26 +309,44 @@ class _CashInOutViewState extends State<CashInOutView> {
           stream: payModeBloc.payModeSnapshot,
           builder: (context, AsyncSnapshot<PayModeResult?> snapshot) {
             if (!snapshot.hasData) return Container();
-            List<PayModeHeader> dynamicButtonList =
-                snapshot.data?.payModes ?? [];
+            // List<PayModeHeader> dynamicButtonList = snapshot.data?.payModes
+            //         ?.where((element) =>
+            //             element.pHCODE == 'CSH' || element.pHCODE == 'CRC')
+            //         .toList() ??
+            //     [];
+            List<PayModeHeader> dynamicButtonList = [];
+            if (widget.cashIn == true) {
+              dynamicButtonList = snapshot.data?.payModes
+                      ?.where((element) => element.pHCASHINOUT == true)
+                      .toList() ??
+                  [];
+            } else {
+              dynamicButtonList = snapshot.data?.payModes
+                      ?.where((element) =>
+                          element.pHCASHINOUT == true &&
+                          (element.pHCODE == 'CSH' || element.pHCODE == 'FCR'))
+                      .toList() ??
+                  [];
+            }
             return ResponsiveGridList(
               scroll: true,
               desiredItemWidth: config.paymentDynamicButtonWidth.w,
               children: dynamicButtonList.map((payButton) {
-                bool disabled = payButton.pHCODE != "CSH";
+                // bool disabled =
+                //     payButton.pHCODE != "CSH" && payButton.pHCODE != "CRC";
                 bool selected =
                     selectedPayModeHeader?.pHCODE == payButton.pHCODE;
-                if (disabled) return Container();
+                // if (disabled) return SizedBox.shrink();
                 return PayButton(
                   code: payButton.pHCODE ?? "",
                   desc: payButton.pHDESC ?? "",
-                  color: disabled
+                  color: false
                       ? POSConfig().primaryDarkGrayColor.toColor()
                       : selected
                           ? selectedColor
                           : CurrentTheme.primaryColor,
                   onPressed: () {
-                    if (disabled) return;
+                    // if (disabled) return;
                     POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
                         "${payButton.pHDESC}(${payButton.pHCODE}) button pressed"));
                     selectedPayModeHeader = selected ? null : payButton;
@@ -317,6 +359,102 @@ class _CashInOutViewState extends State<CashInOutView> {
     );
   }
 
+  Widget buildPaymentButtonDetailList() {
+    var buttonList = selectedPayModeHeader?.pDDETAILSLIST ?? [];
+    if (selectedPayModeDetail == null) {
+      final index =
+          buttonList.indexWhere((element) => element.pDCODE == "go_back");
+      if (index == -1)
+        buttonList.add(PayModeDetails(
+            pDCODE: "go_back", pDDESC: "payment_view.go_back".tr()));
+    }
+
+    final config = POSConfig();
+    return Container(
+      child: ResponsiveGridList(
+        scroll: true,
+        desiredItemWidth: config.paymentDynamicButtonWidth.w,
+        children: buttonList.map((payButton) {
+          Color? color = payButton.pDPHCODE == selectedPayModeHeader?.pHCODE &&
+                  payButton.pDCODE == selectedPayModeDetail?.pDCODE
+              ? CurrentTheme.accentColor
+              : CurrentTheme.primaryColor;
+
+          return PayButton(
+            code: payButton.pDCODE ?? "",
+            desc: payButton.pDDESC ?? "",
+            color: color,
+            onPressed: () async {
+              POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
+                  "${payButton.pDDESC}(${payButton.pDCODE}) button pressed"));
+
+              if (payButton.pDCODE == "go_back") {
+                selectedPayModeDetail = null;
+                selectedPayModeHeader = null;
+              } else {
+                selectedPayModeDetail = payButton;
+              }
+              if (mounted) setState(() {});
+            },
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget maskField() {
+    if (selectedPayModeDetail == null)
+      return SizedBox.shrink();
+    else {
+      final detail = selectedPayModeDetail!;
+      if ((detail.pdMask ?? '').isEmpty) {
+        return SizedBox.shrink();
+      }
+
+      final mask = detail.pdMask;
+      var maskFormatter = new MaskTextInputFormatter(
+          mask: mask, filter: {"0": RegExp(r'[0-9]')});
+
+      return Padding(
+        padding: EdgeInsets.only(top: 8.h),
+        child: TextFormField(
+          onEditingComplete: () {
+            matchResult(detailsEditingController.text);
+            remarkFocus.requestFocus();
+          },
+          focusNode: detailsFocusNode,
+          decoration: InputDecoration(
+            filled: true,
+            hintText: mask,
+          ),
+          onChanged: (value) {
+            detailsEditingController.selection = TextSelection.fromPosition(
+                TextPosition(offset: detailsEditingController.text.length));
+          },
+          controller: detailsEditingController,
+          inputFormatters: [maskFormatter],
+        ),
+      );
+    }
+  }
+
+  void matchResult(String text) {
+    String formatted = text.replaceAll("-", "");
+
+    if (formatted.length > 6) {
+      formatted = formatted.substring(0, 6);
+    }
+    final list = payModeBloc.cardDetailsList;
+    int index = list
+        .indexWhere((CardDetails element) => element.crDSTRING == formatted);
+    if (index == -1) return null;
+    final card = list[index];
+    print('entered card details: ${card.crDHEDDESC} - ${card.crDPROVIDER}');
+    setState(() {
+      // enteredCard = card;
+      detailsEditingController.text = text;
+    });
+  }
   // Widget buildPaymentButtonDetailList() {
   //   var buttonList = selectedPayModeHeader?.pDDETAILSLIST ?? [];
   //   if (selectedPayModeDetail == null) {
@@ -337,15 +475,14 @@ class _CashInOutViewState extends State<CashInOutView> {
   //           code: payButton.pDCODE ?? "",
   //           desc: payButton.pDDESC ?? "",
   //           onPressed: () {
-  //             POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
-  //                 "${payButton.pDDESC}(${payButton.pDCODE}) button pressed"));
-  //
-  //
-  //             if (payButton.pDCODE == "go_back") {
-  //               selectedPayModeDetail = null;
-  //               selectedPayModeHeader = null;
-  //             }
-  //             if (mounted) setState(() {});
+  // POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
+  //     "${payButton.pDDESC}(${payButton.pDCODE}) button pressed"));
+
+  // if (payButton.pDCODE == "go_back") {
+  //   selectedPayModeDetail = null;
+  //   selectedPayModeHeader = null;
+  // }
+  // if (mounted) setState(() {});
   //           },
   //         );
   //       }).toList(),
@@ -369,7 +506,7 @@ class _CashInOutViewState extends State<CashInOutView> {
     //validation process
 
     // check cash type first
-    if (selectedPayModeHeader == null) {
+    if (selectedPayModeHeader == null && selectedPayModeDetail == null) {
       showAlert("pay_mode_required");
       return;
     }
@@ -386,6 +523,21 @@ class _CashInOutViewState extends State<CashInOutView> {
       return;
     }
 
+    // if (selectedPayModeDetail != null &&
+    //     (detailsEditingController.text ?? '').isEmpty) {
+    //   showAlert("payment_details_required");
+    //   return;
+    // }
+
+    if ((selectedPayModeDetail?.pdMask ?? '') != '' &&
+        (detailsEditingController.text == '' ||
+            detailsEditingController.text.length !=
+                selectedPayModeDetail?.pdMask?.length)) {
+      POSLoggerController.addNewLog(
+          POSLogger(POSLoggerLevel.error, "Enter a valid card number"));
+      showCardNoNotEnteredErrorDialog();
+      return;
+    }
     // if it is the advanced payment then the remark field is mendetory
     if (selectedCashInOutType?.rWADVANCE == 1 &&
         remarkEditingController.text.isEmpty) {
@@ -433,12 +585,12 @@ class _CashInOutViewState extends State<CashInOutView> {
           amount,
           amount,
           false,
+          selectedPayModeDetail?.pDCODE ?? selectedPayModeHeader?.pHCODE ?? "",
           selectedPayModeHeader?.pHCODE ?? "",
-          selectedPayModeHeader?.pHCODE ?? "",
-          "",
+          selectedPayModeDetail?.pdMask ?? "",
           null,
-          0,
-          selectedPayModeHeader?.pHDESC ?? "",
+          selectedPayModeDetail?.pDRATE ?? 0,
+          selectedPayModeDetail?.pDDESC ?? selectedPayModeHeader?.pHDESC ?? "",
           selectedPayModeHeader?.pHDESC ?? "",
           frAmount: 0),
       invoice: invoiceNo,
@@ -468,6 +620,28 @@ class _CashInOutViewState extends State<CashInOutView> {
     } else {
       EasyLoading.showError('Something went wrong');
     }
+  }
+
+  void showCardNoNotEnteredErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => POSErrorAlert(
+          title: "payment_view.card_not_entered_title".tr(),
+          subtitle: "payment_view.card_not_entered".tr(),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: POSConfig().primaryDarkGrayColor.toColor()),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                "over_pay_error.okay".tr(),
+                style: Theme.of(context).dialogTheme.contentTextStyle,
+              ),
+            )
+          ]),
+    );
   }
 
   void showAlert(String key) {

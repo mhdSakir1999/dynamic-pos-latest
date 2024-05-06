@@ -7,6 +7,7 @@ import 'dart:convert';
 //import 'dart:html';
 import 'dart:io';
 
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
@@ -117,6 +118,29 @@ class LoyaltyApiClient {
           break;
       }
       final result = response.data;
+
+      var logger = LogWriter.logger;
+      try {
+        logger.d('API Call: ${method.toString()} \nURL: $uri');
+        logger.d('Status Code: ${response.statusCode}');
+        logger.d('Response Body: ${response.data.toString()}');
+        await LogWriter().saveLogsToFile('API_Log_', [
+          'API Call: ${method.toString()} \nURL: $uri',
+          'Status Code: ${response.statusCode}',
+          'Response Body: ${response.data.toString()}',
+        ]);
+      } catch (e) {
+        logger.d('API Call: ${method.toString()} \nURL: $uri');
+        logger.d('Status Code: ${response.statusCode}');
+        logger.d('Response Body: ${response.data.toString()}');
+        logger.d('API Call Error: ${e.toString()}');
+        await LogWriter().saveLogsToFile('API_Log_', [
+          'API Call: ${method.toString()} \nURL: $uri',
+          'Status Code: ${response.statusCode}',
+          'Response Body: ${response.data.toString()}',
+          'API Call Error: ${e.toString()}'
+        ]);
+      }
 
       POSLoggerController.addNewLog(POSLogger(
           POSLoggerLevel.apiInfo, "Status Code: ${response.statusCode}"));

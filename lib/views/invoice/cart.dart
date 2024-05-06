@@ -514,6 +514,27 @@ class _CartState extends State<Cart> {
                           },
                           decoration: InputDecoration(
                               prefixIcon: Icon(Icons.search),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  if (itemCodeEditingController
+                                      .text.isNotEmpty) {
+                                    var currentPosition =
+                                        itemCodeEditingController
+                                            .selection.baseOffset;
+                                    itemCodeEditingController
+                                        .text = itemCodeEditingController.text
+                                            .substring(0, currentPosition - 1) +
+                                        itemCodeEditingController.text
+                                            .substring(currentPosition);
+                                    itemCodeEditingController.selection =
+                                        TextSelection.fromPosition(TextPosition(
+                                            offset: currentPosition - 1));
+                                  }
+
+                                  itemCodeFocus.requestFocus();
+                                },
+                                icon: Icon(Icons.backspace_outlined),
+                              ),
                               filled: true,
                               hintText: "invoice.search".tr()),
                         ),
@@ -522,7 +543,8 @@ class _CartState extends State<Cart> {
                         // margin: EdgeInsets.all(5),
                         // width: MediaQuery.of(context).size.width * 0.03,
                         child: Tooltip(
-                          message: '', // 'general_dialog.sales_assistant'.tr(),
+                          message: 'tool_tip.sales_assistant'
+                              .tr(), // 'general_dialog.sales_assistant'.tr(),
                           child: Padding(
                             padding: EdgeInsets.zero,
                             // EdgeInsets.only(
@@ -816,7 +838,6 @@ class _CartState extends State<Cart> {
       // scrollToBottom();
       itemCodeFocus.requestFocus();
       if (mounted) setState(() {});
-      
     }
   }
 
@@ -1360,6 +1381,7 @@ class _CartState extends State<Cart> {
     if (code.isEmpty) {
       _gvError('gv_error.empty'.tr());
     } else {
+      proCodeEntered = false;
       final GiftVoucherResult? voucherRes =
           await GiftVoucherController().getGiftVoucherById(code);
       //  if this is invalid one lets show message
@@ -1424,6 +1446,10 @@ class _CartState extends State<Cart> {
     }
     if (gvMode) {
       await _handleGiftVoucher();
+      setState(() {
+        proCodeEntered = false;
+        itemCodeFocus.requestFocus();
+      });
     } else {
       await _handleProductSearch();
       setState(() {
@@ -1987,8 +2013,8 @@ class _CartState extends State<Cart> {
     final zero = 0;
     if ((cartModel.discPer ?? zero) > zero) {
       discountText = "${cartModel.discPer?.toStringAsFixed(2)}%";
-    } else if ((cartModel.discAmt ?? zero) > zero) {
-      discountText = "Rs. ${cartModel.discAmt?.toStringAsFixed(2)}";
+    } else if ((cartModel.discAmt ?? zero) != zero) {
+      discountText = "Rs. ${cartModel.discAmt?.abs().toStringAsFixed(2)}";
     } else if ((cartModel.billDiscPer ?? zero) > zero) {
       discountText = "${cartModel.billDiscPer?.toStringAsFixed(2)}%";
     }
@@ -2587,6 +2613,8 @@ class _CartState extends State<Cart> {
     if (totalAmount <= zero) {
       EasyLoading.dismiss();
       _exchangeVoucher(totalAmount);
+      payButtonPressed = false;
+      active = true;
       return;
     }
 

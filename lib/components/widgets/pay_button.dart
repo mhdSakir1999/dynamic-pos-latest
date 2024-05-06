@@ -52,19 +52,23 @@ class PayButton extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
+              // maxLines: 1,
+              // overflow: TextOverflow.fade,
             ),
             Spacer(),
-            Container(
-                width: config.paymentDynamicButtonHeight * 0.8.h,
-                height: config.paymentDynamicButtonHeight * 0.8.h,
-                child: CachedNetworkImage(
-                  imageUrl:
-                      "${POSConfig().posImageServer}images/pay_modes/${code.toLowerCase()}.png",
-                  httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                  errorWidget: (context, url, error) {
-                    return SizedBox.shrink();
-                  },
-                )),
+            Expanded(
+              child: Container(
+                  width: config.paymentDynamicButtonHeight * 0.8.h,
+                  height: config.paymentDynamicButtonHeight * 0.8.h,
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "${POSConfig().posImageServer}images/pay_modes/${code.toLowerCase()}.png",
+                    httpHeaders: {'Access-Control-Allow-Origin': '*'},
+                    errorWidget: (context, url, error) {
+                      return SizedBox.shrink();
+                    },
+                  )),
+            ),
             SizedBox(
               width: 15.w,
             ),

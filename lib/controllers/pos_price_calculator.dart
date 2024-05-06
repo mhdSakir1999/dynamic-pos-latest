@@ -1944,6 +1944,21 @@ class POSPriceCalculator {
                                             //   Navigator.pop(context,
                                             //       selectedProductIndexes);
                                             // }
+                                            setState(() {
+                                              isSelected[index] =
+                                                  !isSelected[index];
+                                            });
+                                            if (isSelected[index] == true) {
+                                              selectedProductIndexes.add(index);
+                                            } else {
+                                              selectedProductIndexes
+                                                  .remove(index);
+                                            }
+
+                                            setState(
+                                              () {},
+                                            );
+                                            print(selectedProductIndexes);
                                           },
                                           child: SizedBox(
                                             height: height * 0.08,
@@ -2157,8 +2172,15 @@ class POSPriceCalculator {
                               width: 20,
                             ),
                             AlertDialogButton(
-                                onPressed: () => Navigator.pop(
-                                    context, selectedProductIndexes),
+                                onPressed: () {
+                                  if (selectedProductIndexes.isEmpty) {
+                                    EasyLoading.showError(
+                                        'No product/s selected for return');
+                                  } else {
+                                    Navigator.pop(
+                                        context, selectedProductIndexes);
+                                  }
+                                },
                                 text: 'return_sales.continue'.tr()),
                           ],
                         ),

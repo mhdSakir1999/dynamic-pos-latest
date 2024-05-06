@@ -6,6 +6,7 @@
  */
 
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:checkout/components/recurringApiCalls.dart';
 import 'package:checkout/controllers/config/shared_preference_controller.dart';
@@ -167,6 +168,7 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       builder: (buildContext, child) {
         return MaterialApp(
+          scrollBehavior: ScrollBehaviour(),
           onGenerateRoute: POSRouter.generateRoute,
           title: '24x7Retail | POS',
           localizationsDelegates: context.localizationDelegates,
@@ -333,4 +335,16 @@ class _RestartWidgetState extends State<RestartWidget> {
       child: widget.child,
     );
   }
+}
+
+// making all the listview builders scrollable for windows touch screens
+// without this class - we have needed to use scrollbars
+class ScrollBehaviour extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.stylus
+      };
 }

@@ -115,7 +115,7 @@ class LandingHelper {
     }
   }
 
-  validateSignOn() async {
+  validateSignOn(BuildContext context) async {
     POSLoggerController.addNewLog(
         POSLogger(POSLoggerLevel.info, "${userBloc.signOnStatus}"));
 
@@ -149,6 +149,39 @@ class LandingHelper {
       await _authController
           .checkUsername(userBloc.currentUser?.uSERHEDUSERCODE ?? "");
 
+      // this is for opening the cash drawer for do denomination calculations
+      SpecialPermissionHandler handler =
+          SpecialPermissionHandler(context: context!);
+      String code = PermissionCode.openCashDrawer;
+      String type = "A";
+      String refCode = "Drawer open";
+      bool permissionStatus = handler.hasPermission(
+          permissionCode: code, accessType: type, refCode: refCode);
+      if (!permissionStatus) {
+        bool success = (await handler.askForPermission(
+                accessType: type, permissionCode: code, refCode: refCode))
+            .success;
+        // if (!success) return;
+        if (success) {
+          if (POSConfig.crystalPath != '') {
+            PrintController()
+                .printHandler("", PrintController().openDrawer(), context);
+          } else {
+            POSManualPrint().openDrawer();
+          }
+        } else {
+          EasyLoading.showError(
+              'You don\'t have permission for opening the cash drawer');
+        }
+      } else {
+        if (POSConfig.crystalPath != '') {
+          PrintController()
+              .printHandler("", PrintController().openDrawer(), context);
+        } else {
+          POSManualPrint().openDrawer();
+        }
+      }
+
       // do the sign on
       String routeName = OpenFloatScreen.routeName;
       POSLoggerController.addNewLog(
@@ -176,7 +209,15 @@ class LandingHelper {
     _alertController.showLockAlert("not_sign_in", true);
   }
 
-  userSignOff() {
+  userSignOff() async {
+    //doing a invoice sync before we do sign-off
+    EasyLoading.show(status: 'please_wait'.tr(), dismissOnTap: true);
+    var result = await InvoiceController().uploadBillData();
+    if (result != null) {
+      EasyLoading.dismiss();
+      EasyLoading.showToast(result['message']);
+    }
+
     alertFocusNode.requestFocus();
     showDialog(
         context: _context,
@@ -673,9 +714,9 @@ class LandingHelper {
           temp.add(val);
         });
 
-        // this is for opening the cash drawer
+        // this is for opening the cash drawer for do denomination calculations
         SpecialPermissionHandler handler =
-            SpecialPermissionHandler(context: context!);
+            SpecialPermissionHandler(context: context);
         String code = PermissionCode.openCashDrawer;
         String type = "A";
         String refCode = "Drawer open";

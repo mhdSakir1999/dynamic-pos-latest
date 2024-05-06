@@ -4,6 +4,8 @@
  * Created At: 5/19/21, 3:43 PM
  */
 
+import 'dart:convert';
+
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/customer_bloc.dart';
 import 'package:checkout/bloc/customer_coupons_bloc.dart';
@@ -30,6 +32,7 @@ import 'package:checkout/models/pos_config.dart';
 
 import 'package:checkout/extension/extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -446,6 +449,11 @@ class InvoiceController {
     List<String> result = [
       '--------------------Invoice map data (sending to \'invoice/save endpoint\'--------------------------------)'
     ];
+    await LogWriter().saveLogsToFile('API_Log_', [
+      '####################################################################',
+      jsonEncode(temp),
+      '####################################################################'
+    ]);
     temp.forEach((key, value) {
       result.add('$key: $value');
     });
@@ -510,7 +518,8 @@ class InvoiceController {
           earnedLoyaltyPoints, customerBloc.currentCustomer?.cMNAME ?? '');
     }
 
-    return InvoiceSaveRes(success, earnedLoyaltyPoints, resReturn);
+    return InvoiceSaveRes(
+        success, earnedLoyaltyPoints, kDebugMode ? '{}' : resReturn);
   }
 
   // clear the temp payments

@@ -14,7 +14,8 @@ class GiftVoucherController {
   late String _url;
 
   GiftVoucherController() {
-    _url = '${POSConfig().setup?.centralPOSServer}/api/';
+    _url =
+        '${POSConfig().setup?.centralPOSServer?.replaceFirst('/api/', '')}/api/';
   }
   Future<GiftVoucherResult?> getGiftVoucherById(String id) async {
     EasyLoading.show(

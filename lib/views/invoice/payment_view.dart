@@ -5,6 +5,7 @@
  */
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:checkout/bloc/cart_bloc.dart';
@@ -186,10 +187,10 @@ class _PaymentViewState extends State<PaymentView> {
 
     final list = cartBloc.paidList ?? [];
     list.forEach((element) {
-      paid += element.paidAmount;
+      paid += double.parse(element.paidAmount.toStringAsFixed(2) ?? '0');
     });
     subTotal = cartBloc.cartSummary?.subTotal ?? 0;
-    balanceDue = subTotal - paid;
+    balanceDue = double.parse((subTotal - paid).toStringAsFixed(2) ?? '0');
     if (list.length != 0) {
       loaded = true;
     }
@@ -722,6 +723,11 @@ class _PaymentViewState extends State<PaymentView> {
     double temp = balanceDue - entered;
 
     temp = double.parse(temp.toStringAsFixed(2));
+
+    // if (temp < 0 && temp <= 0.1) {
+    //   temp = 0;
+    // }
+
     if (!(selectedPayModeHeader?.pHOVERPAY ?? false) && temp < 0) {
       showOverPayErrorDialog();
       return;
@@ -1269,6 +1275,80 @@ class _PaymentViewState extends State<PaymentView> {
 
       if (res.success) {
         if (!POSConfig().trainingMode) {
+          if (res?.resReturn == null ||
+              res.resReturn == '' ||
+              res.resReturn == '{}') {
+            final invDataCheckRes = await ApiClient.call(
+                "invoice/get_invoice_det/${cartBloc.cartSummary?.invoiceNo ?? ""}/${POSConfig().locCode}/INV",
+                // "invoice/get_invoice_det/010910000020/${POSConfig().locCode}/INV",
+                ApiMethod.GET,
+                successCode: 200);
+            if (invDataCheckRes == null ||
+                invDataCheckRes.data['success'] != true ||
+                invDataCheckRes.data['res'] == null) {
+              EasyLoading.showError(
+                  'Invoice not saved... try saving the invoice again !!!');
+              return;
+            } else {
+              var det;
+              try {
+                det =
+                    jsonDecode((invDataCheckRes.data?['res'] ?? "").toString());
+              } catch (e) {
+                det = {"T_TBLINVHEADER": []};
+              }
+              if ((det?['T_TBLINVHEADER'] ?? []).isEmpty) {
+                // EasyLoading.showError(
+                //     'Invoice not saved... try saving the invoice again !!!');
+                final bool? retry = await showDialog<bool>(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => POSErrorAlert(
+                            title: "Invoice save failed",
+                            subtitle:
+                                "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
+                            actions: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: POSConfig()
+                                        .primaryDarkGrayColor
+                                        .toColor()),
+                                onPressed: () {
+                                  Navigator.pop(context, true);
+                                },
+                                child: Text(
+                                  'Retry',
+                                  style: Theme.of(context)
+                                      .dialogTheme
+                                      .contentTextStyle,
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: POSConfig()
+                                        .primaryDarkGrayColor
+                                        .toColor()),
+                                onPressed: () {
+                                  Navigator.pop(context, false);
+                                },
+                                child: Text(
+                                  'Cancel',
+                                  style: Theme.of(context)
+                                      .dialogTheme
+                                      .contentTextStyle,
+                                ),
+                              ),
+                            ]));
+                if (retry != true) {
+                  return;
+                } else {
+                  await billClose();
+                  return;
+                }
+              }
+            }
+          }
+
           if (POSConfig().dualScreenWebsite != "")
             DualScreenController().completeInvoice(paid.toDouble(),
                 balanceDue.toDouble(), balanceDue.toDouble(), 0);

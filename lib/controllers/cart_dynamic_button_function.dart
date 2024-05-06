@@ -134,7 +134,7 @@ class CartDynamicButtonFunction {
           .tr(namedArgs: {'type': 'Percentage-Wise'}));
       return;
     }
-    if (discountPercentage && cart.discAmt != 0) {
+    if (!discountPercentage && cart.discAmt != 0) {
       EasyLoading.showError('line_discount_entry_view.already_added'
           .tr(namedArgs: {'type': 'Amount-Wise'}));
       return;

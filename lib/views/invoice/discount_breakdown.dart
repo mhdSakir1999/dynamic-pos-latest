@@ -134,7 +134,7 @@ class _DiscountBreakdownState extends State<DiscountBreakdown> {
   Widget _discountListItem(CartModel item) {
     TextStyle style1 =
         CurrentTheme.bodyText2!.copyWith(color: CurrentTheme.primaryLightColor);
-    TextStyle style2 = CurrentTheme.bodyText1!
+    TextStyle style2 = CurrentTheme.bodyText2!
         .copyWith(color: Colors.greenAccent, fontWeight: FontWeight.bold);
     return Row(
       children: [

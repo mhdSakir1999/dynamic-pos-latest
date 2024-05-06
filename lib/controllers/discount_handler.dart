@@ -107,7 +107,11 @@ class DiscountHandler {
       if (per > 0) {
         exactLineAmount = cart.amount.toDouble();
       }
-      cart.discAmt = discountVal.toString().parseDouble();
+      // if it is a returned item then we should save disc amount as - value
+      cart.discAmt = (cart.discAmt ?? 0) +
+          (cart.amount >= 0
+              ? discountVal.toString().parseDouble()
+              : -1 * discountVal.toString().parseDouble());
     }
     cart.billDiscPer = 0;
 
