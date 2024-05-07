@@ -519,7 +519,7 @@ class InvoiceController {
     }
 
     return InvoiceSaveRes(
-        success, earnedLoyaltyPoints, kDebugMode ? '{}' : resReturn);
+        success, earnedLoyaltyPoints, /* kDebugMode ? '{}' : */ resReturn);
   }
 
   // clear the temp payments

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
  * Author: Shalika Ashan & TM.Sakir
@@ -51,7 +53,6 @@ import 'package:checkout/views/invoice/payment_view.dart';
 import 'package:checkout/views/invoice/product_search_view.dart';
 import 'package:checkout/views/invoice/returnBottle_selection_view.dart';
 import 'package:checkout/views/invoice/variant_detail_view.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -201,7 +201,7 @@ class POSManualPrint {
           }
         }
       }
-
+      
       // Location table items
       loc_det = det['M_TBLLOCATIONS']
           .firstWhere((element) => element['LOC_CODE'] == loc_code);
@@ -251,6 +251,12 @@ class POSManualPrint {
       await LogWriter()
           .saveLogsToFile('ERROR_LOG_', ['Finished writing the invoice...']);
 
+
+      // cash drawer will not be triggered if it is not a cash related bill and is a reprint bill
+      if (triggerCashDrawer && !reprint && !cancel) {
+        bytes += generator.drawer();
+      }
+
       // Cutting the paper
       bytes += generator.cut();
 
@@ -277,9 +283,7 @@ class POSManualPrint {
           print(e);
         }
       }
-      if (triggerCashDrawer) {
-        bytes += generator.drawer();
-      }
+      
       // Sending esc commands to printer
       final sendToPrint = await usb_esc_printer_windows.sendPrintRequest(
           bytes, printerName); //[POS-80C,EPSON TM-T88V Receipt]

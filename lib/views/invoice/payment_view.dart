@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
  * Author: Shalika Ashan & TM.Sakir
@@ -1278,17 +1280,61 @@ class _PaymentViewState extends State<PaymentView> {
           if (res?.resReturn == null ||
               res.resReturn == '' ||
               res.resReturn == '{}') {
+            EasyLoading.show(status: 'please_wait'.tr());
             final invDataCheckRes = await ApiClient.call(
                 "invoice/get_invoice_det/${cartBloc.cartSummary?.invoiceNo ?? ""}/${POSConfig().locCode}/INV",
-                // "invoice/get_invoice_det/010910000020/${POSConfig().locCode}/INV",
+                // "invoice/get_invoice_det/010910000025/${POSConfig().locCode}/INV",
                 ApiMethod.GET,
                 successCode: 200);
+            EasyLoading.dismiss();
             if (invDataCheckRes == null ||
                 invDataCheckRes.data['success'] != true ||
                 invDataCheckRes.data['res'] == null) {
-              EasyLoading.showError(
-                  'Invoice not saved... try saving the invoice again !!!');
-              return;
+              final bool? retry = await showDialog<bool>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => POSErrorAlert(
+                          title: 'easy_loading.cant_save_inv'.tr(),
+                          subtitle:
+                              "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
+                          actions: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: POSConfig()
+                                      .primaryDarkGrayColor
+                                      .toColor()),
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                              },
+                              child: Text(
+                                'Retry',
+                                style: Theme.of(context)
+                                    .dialogTheme
+                                    .contentTextStyle,
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: POSConfig()
+                                      .primaryDarkGrayColor
+                                      .toColor()),
+                              onPressed: () {
+                                Navigator.pop(context, false);
+                              },
+                              child: Text(
+                                'Cancel',
+                                style: Theme.of(context)
+                                    .dialogTheme
+                                    .contentTextStyle,
+                              ),
+                            ),
+                          ]));
+              if (retry != true) {
+                return;
+              } else {
+                await billClose();
+                return;
+              }
             } else {
               var det;
               try {
@@ -1304,7 +1350,7 @@ class _PaymentViewState extends State<PaymentView> {
                     context: context,
                     barrierDismissible: false,
                     builder: (context) => POSErrorAlert(
-                            title: "Invoice save failed",
+                            title: 'easy_loading.cant_save_inv'.tr(),
                             subtitle:
                                 "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
                             actions: [
@@ -1340,11 +1386,14 @@ class _PaymentViewState extends State<PaymentView> {
                               ),
                             ]));
                 if (retry != true) {
+                  EasyLoading.showError('easy_loading.cant_save_inv'.tr());
                   return;
                 } else {
                   await billClose();
                   return;
                 }
+              }else{
+                res.resReturn = invDataCheckRes.data?['res'].toString() ?? '';
               }
             }
           }
