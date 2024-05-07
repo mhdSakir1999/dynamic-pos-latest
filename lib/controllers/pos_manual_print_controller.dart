@@ -244,6 +244,11 @@ class POSManualPrint {
 
       promoSummary = det['T_TBLINVFREEISSUES'] ?? [];
 
+      int indexOfCSHPayment = invPayment.isEmpty ? -1 : invPayment.lastIndexWhere((element) => element['INVPAY_PHCODE'] == 'CSH' || element['INVPAY_PHCODE'] == 'FCR');
+      if(indexOfCSHPayment != -1 && !reprint && !cancel){
+        bytes += generator.drawer();
+      }
+
       await LogWriter()
           .saveLogsToFile('ERROR_LOG_', ['Start writing the invoice...']);
       await writeInvoiceBytes(
@@ -252,10 +257,11 @@ class POSManualPrint {
           .saveLogsToFile('ERROR_LOG_', ['Finished writing the invoice...']);
 
 
+      // this is moved before printing bill details
       // cash drawer will not be triggered if it is not a cash related bill and is a reprint bill
-      if (triggerCashDrawer && !reprint && !cancel) {
-        bytes += generator.drawer();
-      }
+      // if (triggerCashDrawer && !reprint && !cancel) {
+      //   bytes += generator.drawer();
+      // }
 
       // Cutting the paper
       bytes += generator.cut();
