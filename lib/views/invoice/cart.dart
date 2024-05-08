@@ -980,6 +980,7 @@ class _CartState extends State<Cart> {
             await showModalBottomSheet(
               enableDrag: false,
               isScrollControlled: true,
+              isDismissible: false,
               useRootNavigator: true,
               context: context!,
               builder: (context) {

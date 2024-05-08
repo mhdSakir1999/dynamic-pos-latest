@@ -43,7 +43,7 @@ class ReturnBottleSelectionView extends StatefulWidget {
 }
 
 class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
-  TextEditingController editingController = TextEditingController();
+  TextEditingController editingController = TextEditingController(text: '1');
   FocusNode textFocus = FocusNode();
   bool quickSearch = false;
   Groups? selectedGroup;
@@ -581,7 +581,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
           decoration: InputDecoration(
             filled: true,
             hintText:
-                "weighted_item.${quickSearch ? "select_bottle" : "qty"}".tr(),
+                "weighted_item.${quickSearch ? "select_bottle".tr() : "1"}",
             prefixIcon: Icon(Icons.search),
           ),
         ),
