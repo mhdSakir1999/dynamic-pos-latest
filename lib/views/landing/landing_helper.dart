@@ -150,37 +150,45 @@ class LandingHelper {
           .checkUsername(userBloc.currentUser?.uSERHEDUSERCODE ?? "");
 
       // this is for opening the cash drawer for do denomination calculations
-      SpecialPermissionHandler handler =
-          SpecialPermissionHandler(context: context!);
-      String code = PermissionCode.openCashDrawer;
-      String type = "A";
-      String refCode = "Drawer open";
-      bool permissionStatus = handler.hasPermission(
-          permissionCode: code, accessType: type, refCode: refCode);
-      if (!permissionStatus) {
-        bool success = (await handler.askForPermission(
-                accessType: type, permissionCode: code, refCode: refCode))
-            .success;
-        // if (!success) return;
-        if (success) {
-          if (POSConfig.crystalPath != '') {
-            PrintController()
-                .printHandler("", PrintController().openDrawer(), context);
-          } else {
-            POSManualPrint().openDrawer();
-          }
-        } else {
-          EasyLoading.showError(
-              'You don\'t have permission for opening the cash drawer');
-        }
+      if (POSConfig.crystalPath != '') {
+        PrintController()
+            .printHandler("", PrintController().openDrawer(), context);
       } else {
-        if (POSConfig.crystalPath != '') {
-          PrintController()
-              .printHandler("", PrintController().openDrawer(), context);
-        } else {
-          POSManualPrint().openDrawer();
-        }
+        POSManualPrint().openDrawer();
       }
+
+      // sir ask me to remove asking permission for drawer open here
+      // SpecialPermissionHandler handler =
+      //     SpecialPermissionHandler(context: context!);
+      // String code = PermissionCode.openCashDrawer;
+      // String type = "A";
+      // String refCode = "Drawer open";
+      // bool permissionStatus = handler.hasPermission(
+      //     permissionCode: code, accessType: type, refCode: refCode);
+      // if (!permissionStatus) {
+      //   bool success = (await handler.askForPermission(
+      //           accessType: type, permissionCode: code, refCode: refCode))
+      //       .success;
+      //   // if (!success) return;
+      //   if (success) {
+      //     if (POSConfig.crystalPath != '') {
+      //       PrintController()
+      //           .printHandler("", PrintController().openDrawer(), context);
+      //     } else {
+      //       POSManualPrint().openDrawer();
+      //     }
+      //   } else {
+      //     EasyLoading.showError(
+      //         'You don\'t have permission for opening the cash drawer');
+      //   }
+      // } else {
+      //   if (POSConfig.crystalPath != '') {
+      //     PrintController()
+      //         .printHandler("", PrintController().openDrawer(), context);
+      //   } else {
+      //     POSManualPrint().openDrawer();
+      //   }
+      // }
 
       // do the sign on
       String routeName = OpenFloatScreen.routeName;

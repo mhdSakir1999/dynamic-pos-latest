@@ -82,16 +82,16 @@ class DiscountHandler {
     }
 
     //If User Max discount % is less than the offered discount %
-    if (enteredDiscount > maxDiscountPre) {
-      bool hasPermission =
-          await hasOverridePermission(user, cart, context, enteredDiscount);
-      if (hasPermission) {
-        alreadyOverride = true;
-        discountVal = enteredDiscount;
-      } else {
-        return 0;
-      }
-    }
+    // if (enteredDiscount > maxDiscountPre) {
+    //   bool hasPermission =
+    //       await hasOverridePermission(user, cart, context, enteredDiscount);
+    //   if (hasPermission) {
+    //     alreadyOverride = true;
+    //     discountVal = enteredDiscount;
+    //   } else {
+    //     return 0;
+    //   }
+    // }
 
     print(maxDiscountPre);
     discountVal = enteredDiscount;
