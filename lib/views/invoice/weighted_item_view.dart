@@ -892,6 +892,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
               return ReturnBottleSelectionView(
                 returnProResList: returnProResList,
                 isMinus: isMinus,
+                defaultQty: qty ?? 1,
               );
             },
           );

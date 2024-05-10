@@ -1392,7 +1392,7 @@ class _PaymentViewState extends State<PaymentView> {
                   await billClose();
                   return;
                 }
-              }else{
+              } else {
                 res.resReturn = invDataCheckRes.data?['res'].toString() ?? '';
               }
             }

@@ -958,8 +958,14 @@ class _CartState extends State<Cart> {
           }
         }
 
-        CartModel? addedItem = await calculator.addItemToCart(res, qty, context,
-            resList.prices, resList.proPrices, resList.proTax,
+        // empty bottles can't be sell directly which means it can only be sold along with liquir products.
+        // so, even if the cashier type + qty for empty bottle, I consider it as a return scenario.
+        if (res.isEmptyBottle == true) {
+          qty = -1 * qty.abs();
+        }
+
+        List<CartModel?>? addedItem = await calculator.addItemToCart(res, qty,
+            context, resList.prices, resList.proPrices, resList.proTax,
             secondApiCall: true, scaleBarcode: isScaleBarcode);
         bool isMinus = qty < 0;
         if (res.returnBottleCode != null &&
@@ -977,19 +983,24 @@ class _CartState extends State<Cart> {
             }
           }
           if (returnProResList.isNotEmpty) {
-            await showModalBottomSheet(
-              enableDrag: false,
-              isScrollControlled: true,
-              isDismissible: false,
-              useRootNavigator: true,
-              context: context!,
-              builder: (context) {
-                return ReturnBottleSelectionView(
-                  returnProResList: returnProResList,
-                  isMinus: isMinus,
-                );
-              },
-            );
+            // qty = 0;
+            for (var item in addedItem) {
+              // qty += item?.unitQty ?? 0;
+              await showModalBottomSheet(
+                enableDrag: false,
+                isScrollControlled: true,
+                isDismissible: false,
+                useRootNavigator: true,
+                context: context!,
+                builder: (context) {
+                  return ReturnBottleSelectionView(
+                    returnProResList: returnProResList,
+                    isMinus: isMinus,
+                    defaultQty: item?.unitQty ?? 1,
+                  );
+                },
+              );
+            }
             // ProductResult? returnProRes =
             // await showGeneralDialog(
             //     context: context,

@@ -33,9 +33,13 @@ import '../../controllers/keyboard_controller.dart';
 class ReturnBottleSelectionView extends StatefulWidget {
   final List<ProductResult?> returnProResList;
   final bool isMinus;
+  final double defaultQty;
 
   ReturnBottleSelectionView(
-      {Key? key, required this.returnProResList, required this.isMinus})
+      {Key? key,
+      required this.returnProResList,
+      required this.isMinus,
+      required this.defaultQty})
       : super(key: key);
   @override
   _ReturnBottleSelectionViewState createState() =>
@@ -60,15 +64,17 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
   @override
   void initState() {
     super.initState();
+    editingController.text = widget.defaultQty.toStringAsFixed(0);
+    qty = widget.defaultQty;
     Future.delayed(Duration(seconds: 1)).then((value) {
       if (mounted)
         setState(() {
           active = true;
         });
     });
-    editingController.addListener(() {
-      handleTxtValueChange();
-    });
+    // editingController.addListener(() {
+    //   handleTxtValueChange();
+    // });
     // quickSearch = false;
     for (var proRes in widget.returnProResList) {
       if (proRes!.product!.isNotEmpty) {
@@ -561,6 +567,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
             child: buildCartList()),
         lineSpace(),
         TextField(
+          enabled: false,
           autofocus: true,
           focusNode: textFocus,
           controller: editingController,
@@ -580,8 +587,9 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
           },
           decoration: InputDecoration(
             filled: true,
-            hintText:
-                "weighted_item.${quickSearch ? "select_bottle".tr() : "1"}",
+            hintText: quickSearch
+                ? "weighted_item.${"select_bottle".tr()}"
+                : "${widget.defaultQty}",
             prefixIcon: Icon(Icons.search),
           ),
         ),
@@ -678,32 +686,32 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                 ),
               ],
             ),
-            Positioned(
-              right: 40.w,
-              bottom: 10.h,
-              child: Row(
-                children: [
-                  IconButton(
-                      onPressed: decrementQty,
-                      icon: Icon(
-                        FontAwesome.minus_circle,
-                      ),
-                      iconSize: 40.r,
-                      color: Colors.redAccent),
-                  SizedBox(
-                    width: 15.w,
-                  ),
-                  IconButton(
-                    onPressed: incrementQty,
-                    icon: Icon(
-                      FontAwesome.plus_circle,
-                    ),
-                    iconSize: 40.r,
-                    color: Colors.greenAccent,
-                  ),
-                ],
-              ),
-            )
+            // Positioned(
+            //   right: 40.w,
+            //   bottom: 10.h,
+            //   child: Row(
+            //     children: [
+            //       IconButton(
+            //           onPressed: decrementQty,
+            //           icon: Icon(
+            //             FontAwesome.minus_circle,
+            //           ),
+            //           iconSize: 40.r,
+            //           color: Colors.redAccent),
+            //       SizedBox(
+            //         width: 15.w,
+            //       ),
+            //       IconButton(
+            //         onPressed: incrementQty,
+            //         icon: Icon(
+            //           FontAwesome.plus_circle,
+            //         ),
+            //         iconSize: 40.r,
+            //         color: Colors.greenAccent,
+            //       ),
+            //     ],
+            //   ),
+            // )
           ],
         ),
       ),
@@ -753,6 +761,10 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
     // } else {
     //   addItem();
     // }
+    if (selectedProduct == null) {
+      EasyLoading.showError('Please Select a product');
+      return;
+    }
     addItem();
     Navigator.pop(context);
   }
@@ -780,9 +792,9 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
     //   return;
     // }
 
-    if (selectedProduct == null)
+    if (selectedProduct == null) {
       return;
-    else {
+    } else {
       var myProduct = selectedProduct;
       // if (!quickSearch) {
       //   myProduct = (await ProductController()
@@ -797,7 +809,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
           TextEditingController(text: qty.toString());
       double newqty = 1;
       if (widget.isMinus == true) {
-        qty = -1 * qty;
+        qty = -1 * qty.abs();
       }
       await POSPriceCalculator().addItemToCart(
           myProduct!, qty, context, null, null, null,

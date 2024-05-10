@@ -13,10 +13,12 @@ import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
 import 'package:checkout/controllers/product_controller.dart';
 import 'package:checkout/controllers/usb_serial_controller.dart';
+import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/location_wise_stock_result.dart';
 import 'package:checkout/models/pos/product_result.dart';
 import 'package:checkout/models/pos/variant_result.dart';
 import 'package:checkout/models/pos_config.dart';
+import 'package:checkout/views/invoice/returnBottle_selection_view.dart';
 import 'package:checkout/views/invoice/variant_selection_view.dart';
 
 import 'package:flutter/material.dart';
@@ -48,6 +50,7 @@ class _ProductSearchViewState extends State<ProductSearchView> {
   TextEditingController qtyEditingController = TextEditingController();
   TextEditingController locationSearchController = TextEditingController();
   ScrollController scrollController = ScrollController();
+  final POSPriceCalculator calculator = POSPriceCalculator();
   int _selectedIndex = -1;
   List<Product> productList = [];
   Product? selectedProduct;
@@ -901,8 +904,20 @@ class _ProductSearchViewState extends State<ProductSearchView> {
         .searchProductByBarcode(selectedProduct?.pLUCODE ?? '', qty.toDouble());
     EasyLoading.dismiss();
     if (productRes?.product == null) return;
-    await POSPriceCalculator().addItemToCart(productRes!.product!.first, qty,
-        context, productRes.prices, productRes.proPrices, productRes.proTax,
+
+    // empty bottles can't be sell directly which means it can only be sold along with liquir products.
+    // so, even if the cashier type + qty for empty bottle, I consider it as a return scenario.
+    if (productRes?.product!.first.isEmptyBottle == true) {
+      qty = -1 * qty.abs();
+    }
+
+    List<CartModel?>? addedItem = await POSPriceCalculator().addItemToCart(
+        productRes!.product!.first,
+        qty,
+        context,
+        productRes.prices,
+        productRes.proPrices,
+        productRes.proTax,
         secondApiCall: true);
 
 // Poll Display
@@ -916,162 +931,193 @@ class _ProductSearchViewState extends State<ProductSearchView> {
     }
 //===========================================================================================================================================
 
-    if (productRes.product?.first.returnBottleCode != null &&
-        productRes.product!.first.returnBottleCode!.isNotEmpty) {
-      EasyLoading.show(status: 'please_wait'.tr());
-      var returnProRes = await POSPriceCalculator()
-          .searchProduct(productRes.product!.first.returnBottleCode!);
-      EasyLoading.dismiss();
-      if (returnProRes != null &&
-          returnProRes.product != null &&
-          returnProRes.product?.length != 0) {
-        await showGeneralDialog(
-            context: context,
-            transitionDuration: const Duration(milliseconds: 200),
-            barrierDismissible: false,
-            barrierLabel: '',
-            transitionBuilder: (context, a, b, _) => Transform.scale(
-                scale: a.value,
-                child: AlertDialog(
-                  title: Center(
-                      child: Text('general_dialog.empty_bottle_hed'.tr())),
-                  content: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 30),
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 100.r,
-                                child: CachedNetworkImage(
-                                  httpHeaders: {
-                                    'Access-Control-Allow-Origin': '*'
-                                  },
-                                  imageUrl: (POSConfig().posImageServer +
-                                      "images/products/" +
-                                      returnProRes.product!.first.pLUCODE! +
-                                      '.png'),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
-                                          'assets/images/empty_bottle.png'),
-                                  imageBuilder: (context, image) {
-                                    return Card(
-                                      elevation: 5,
-                                      color: CurrentTheme.primaryColor,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(POSConfig()
-                                              .rounderBorderRadiusBottomLeft),
-                                          bottomRight: Radius.circular(POSConfig()
-                                              .rounderBorderRadiusBottomRight),
-                                          topLeft: Radius.circular(POSConfig()
-                                              .rounderBorderRadiusTopLeft),
-                                          topRight: Radius.circular(POSConfig()
-                                              .rounderBorderRadiusTopRight),
-                                        ),
-                                        child: Image(
-                                          image: image,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                    "${returnProRes.product!.first.pLUCODE} \n${returnProRes.product!.first.pLUPOSDESC}"),
-                              )
-                            ],
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(child: Text('Quantity:')),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            SizedBox(
-                              width: size.width * 0.2,
-                              child: TextField(
-                                controller: qtyController,
-                                keyboardType: TextInputType.number,
-                                onTap: () {
-                                  qtyController.clear();
-                                  KeyBoardController().init(context);
-                                  KeyBoardController().showBottomDPKeyBoard(
-                                      qtyController, onEnter: () async {
-                                    newqty = double.parse(qtyController.text);
-                                    KeyBoardController().dismiss();
-
-                                    //  add to cart
-                                    await POSPriceCalculator().addItemToCart(
-                                      returnProRes.product!.first,
-                                      newqty,
-                                      context,
-                                      returnProRes.prices,
-                                      returnProRes.proPrices,
-                                      returnProRes.proTax,
-                                      secondApiCall: true,
-                                    );
-                                    Navigator.pop(context);
-                                  });
-                                },
-                                onEditingComplete: () {
-                                  newqty = double.parse(qtyController.text);
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                    onPressed: () async {
-                                      //  add to cart
-                                      await POSPriceCalculator().addItemToCart(
-                                        returnProRes.product!.first,
-                                        newqty,
-                                        context,
-                                        returnProRes.prices,
-                                        returnProRes.proPrices,
-                                        returnProRes.proTax,
-                                        secondApiCall: true,
-                                      );
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('Add')),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                        'general_dialog.empty_bottle_cancel'
-                                            .tr())),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )),
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return SizedBox();
-            });
+    bool isMinus = qty < 0;
+    if (productRes?.product!.first.returnBottleCode != null &&
+        productRes.product!.first.returnBottleCode!.isNotEmpty &&
+        addedItem != null) {
+      List<String> returnBottleCodes =
+          productRes.product!.first.returnBottleCode!.split(',') ?? [];
+      List<ProductResult?> returnProResList = [];
+      for (String code in returnBottleCodes) {
+        var res = await calculator.searchProduct(code);
+        if (res != null && res.product != null && res.product?.length != 0) {
+          returnProResList.add(res);
+        }
+      }
+      if (returnProResList.isNotEmpty) {
+        await showModalBottomSheet(
+          enableDrag: false,
+          isScrollControlled: true,
+          isDismissible: false,
+          useRootNavigator: true,
+          context: context!,
+          builder: (context) {
+            return ReturnBottleSelectionView(
+              returnProResList: returnProResList,
+              isMinus: isMinus,
+              defaultQty: qty ?? 1,
+            );
+          },
+        );
       }
     }
+
+    // if (productRes.product?.first.returnBottleCode != null &&
+    //     productRes.product!.first.returnBottleCode!.isNotEmpty) {
+    //   EasyLoading.show(status: 'please_wait'.tr());
+    //   var returnProRes = await POSPriceCalculator()
+    //       .searchProduct(productRes.product!.first.returnBottleCode!);
+    //   EasyLoading.dismiss();
+    //   if (returnProRes != null &&
+    //       returnProRes.product != null &&
+    //       returnProRes.product?.length != 0) {
+    //     await showGeneralDialog(
+    //         context: context,
+    //         transitionDuration: const Duration(milliseconds: 200),
+    //         barrierDismissible: false,
+    //         barrierLabel: '',
+    //         transitionBuilder: (context, a, b, _) => Transform.scale(
+    //             scale: a.value,
+    //             child: AlertDialog(
+    //               title: Center(
+    //                   child: Text('general_dialog.empty_bottle_hed'.tr())),
+    //               content: Container(
+    //                 child: Column(
+    //                   mainAxisSize: MainAxisSize.min,
+    //                   children: [
+    //                     Padding(
+    //                       padding: const EdgeInsets.only(top: 10.0, bottom: 30),
+    //                       child: Row(
+    //                         children: [
+    //                           Container(
+    //                             height: 100.r,
+    //                             child: CachedNetworkImage(
+    //                               httpHeaders: {
+    //                                 'Access-Control-Allow-Origin': '*'
+    //                               },
+    //                               imageUrl: (POSConfig().posImageServer +
+    //                                   "images/products/" +
+    //                                   returnProRes.product!.first.pLUCODE! +
+    //                                   '.png'),
+    //                               errorWidget: (context, url, error) =>
+    //                                   Image.asset(
+    //                                       'assets/images/empty_bottle.png'),
+    //                               imageBuilder: (context, image) {
+    //                                 return Card(
+    //                                   elevation: 5,
+    //                                   color: CurrentTheme.primaryColor,
+    //                                   child: ClipRRect(
+    //                                     borderRadius: BorderRadius.only(
+    //                                       bottomLeft: Radius.circular(POSConfig()
+    //                                           .rounderBorderRadiusBottomLeft),
+    //                                       bottomRight: Radius.circular(POSConfig()
+    //                                           .rounderBorderRadiusBottomRight),
+    //                                       topLeft: Radius.circular(POSConfig()
+    //                                           .rounderBorderRadiusTopLeft),
+    //                                       topRight: Radius.circular(POSConfig()
+    //                                           .rounderBorderRadiusTopRight),
+    //                                     ),
+    //                                     child: Image(
+    //                                       image: image,
+    //                                       fit: BoxFit.contain,
+    //                                     ),
+    //                                   ),
+    //                                 );
+    //                               },
+    //                             ),
+    //                           ),
+    //                           Padding(
+    //                             padding: const EdgeInsets.only(left: 8.0),
+    //                             child: Text(
+    //                                 "${returnProRes.product!.first.pLUCODE} \n${returnProRes.product!.first.pLUPOSDESC}"),
+    //                           )
+    //                         ],
+    //                       ),
+    //                     ),
+    //                     Row(
+    //                       children: [
+    //                         SizedBox(child: Text('Quantity:')),
+    //                         SizedBox(
+    //                           width: 10,
+    //                         ),
+    //                         SizedBox(
+    //                           width: size.width * 0.2,
+    //                           child: TextField(
+    //                             controller: qtyController,
+    //                             keyboardType: TextInputType.number,
+    //                             onTap: () {
+    //                               qtyController.clear();
+    //                               KeyBoardController().init(context);
+    //                               KeyBoardController().showBottomDPKeyBoard(
+    //                                   qtyController, onEnter: () async {
+    //                                 newqty = double.parse(qtyController.text);
+    //                                 KeyBoardController().dismiss();
+
+    //                                 //  add to cart
+    //                                 await POSPriceCalculator().addItemToCart(
+    //                                   returnProRes.product!.first,
+    //                                   newqty,
+    //                                   context,
+    //                                   returnProRes.prices,
+    //                                   returnProRes.proPrices,
+    //                                   returnProRes.proTax,
+    //                                   secondApiCall: true,
+    //                                 );
+    //                                 Navigator.pop(context);
+    //                               });
+    //                             },
+    //                             onEditingComplete: () {
+    //                               newqty = double.parse(qtyController.text);
+    //                             },
+    //                           ),
+    //                         )
+    //                       ],
+    //                     ),
+    //                     Padding(
+    //                       padding: const EdgeInsets.only(top: 16.0),
+    //                       child: Row(
+    //                         mainAxisAlignment: MainAxisAlignment.center,
+    //                         children: [
+    //                           Padding(
+    //                             padding: const EdgeInsets.all(8.0),
+    //                             child: ElevatedButton(
+    //                                 onPressed: () async {
+    //                                   //  add to cart
+    //                                   await POSPriceCalculator().addItemToCart(
+    //                                     returnProRes.product!.first,
+    //                                     newqty,
+    //                                     context,
+    //                                     returnProRes.prices,
+    //                                     returnProRes.proPrices,
+    //                                     returnProRes.proTax,
+    //                                     secondApiCall: true,
+    //                                   );
+    //                                   Navigator.pop(context);
+    //                                 },
+    //                                 child: Text('Add')),
+    //                           ),
+    //                           Padding(
+    //                             padding: const EdgeInsets.all(8.0),
+    //                             child: ElevatedButton(
+    //                                 onPressed: () {
+    //                                   Navigator.pop(context);
+    //                                 },
+    //                                 child: Text(
+    //                                     'general_dialog.empty_bottle_cancel'
+    //                                         .tr())),
+    //                           )
+    //                         ],
+    //                       ),
+    //                     )
+    //                   ],
+    //                 ),
+    //               ),
+    //             )),
+    //         pageBuilder: (context, animation, secondaryAnimation) {
+    //           return SizedBox();
+    //         });
+    //   }
+    // }
     Navigator.pop(context);
   }
 

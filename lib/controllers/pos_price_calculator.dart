@@ -233,7 +233,7 @@ class POSPriceCalculator {
   }
 
   //Add Items to the list (Cart)
-  Future<CartModel?> addItemToCart(
+  Future<List<CartModel?>?> addItemToCart(
       Product product,
       double qty,
       BuildContext context,
@@ -505,77 +505,80 @@ class POSPriceCalculator {
     if (!minus) {
       cartSummary.qty += qty;
     } else {
-      SpecialPermissionHandler handler =
-          SpecialPermissionHandler(context: context);
-      String code = PermissionCode.salesReturn;
-      String type = "A";
-      bool permissionStatus =
-          handler.hasPermission(permissionCode: code, accessType: type);
-      if (!permissionStatus) {
-        String refCode = (cartBloc.cartSummary?.invoiceNo ?? "") +
-            "@" +
-            (product.pLUCODE ?? "") +
-            "@" +
-            qty.toDouble().toString();
-        bool success = (await handler.askForPermission(
-                accessType: type, permissionCode: code, refCode: refCode))
-            .success;
-        permissionStatus = success;
-        if (!success) return null;
-      }
-      if (permissionStatus) {
-        // get the current item return count from storage
-        var returnItems = (cartBloc.currentCart?.values.map((e) {
-              if (e.stockCode == product.pLUSTOCKCODE &&
-                  e.itemVoid != true &&
-                  e.unitQty < 0) {
-                return e.unitQty;
-              } else
-                return 0.0;
-            }).toList() ??
-            []);
-        double returnItemsQty = 0;
-        if (returnItems.isNotEmpty) {
-          returnItemsQty =
-              returnItems.reduce((value, element) => value + element);
+      if (product.isEmptyBottle != true) {
+        SpecialPermissionHandler handler =
+            SpecialPermissionHandler(context: context);
+        String code = PermissionCode.salesReturn;
+        String type = "A";
+        bool permissionStatus =
+            handler.hasPermission(permissionCode: code, accessType: type);
+        if (!permissionStatus) {
+          String refCode = (cartBloc.cartSummary?.invoiceNo ?? "") +
+              "@" +
+              (product.pLUCODE ?? "") +
+              "@" +
+              qty.toDouble().toString();
+          bool success = (await handler.askForPermission(
+                  accessType: type, permissionCode: code, refCode: refCode))
+              .success;
+          permissionStatus = success;
+          if (!success) return null;
         }
-        Map<String, dynamic> salesReturn = await _showSalesReturnDialog(
-            context, product.pLUSTOCKCODE ?? '', returnItemsQty + qty, qty);
-
-        if (salesReturn['continue'] == 'continue') {
-          // var res = await showInvoice(context);
-          cartSummary.refNo = salesReturn['refInvNo'];
-          lineRemark.add(salesReturn['refInvNo']);
-          lineAmounts = salesReturn['amounts'];
-          sellings = salesReturn['sellings'];
-          returnProducts = salesReturn['returnProducts']; //new change
-        } else if (salesReturn['continue'] == 'continue_without_inv') {
-          //check for permissions to SKIP ORIGINAL INVOICE WHEN RETURN ITEMS
-          SpecialPermissionHandler handler =
-              SpecialPermissionHandler(context: context);
-          bool permissionStatus = handler.hasPermission(
-              permissionCode: PermissionCode.skipOrgInvInTReturns,
-              accessType: 'A');
-          if (!permissionStatus) {
-            String refCode = (cartBloc.cartSummary?.invoiceNo ?? "") +
-                "@" +
-                (product.pLUCODE ?? "") +
-                "@" +
-                qty.toDouble().toString();
-            bool success = (await handler.askForPermission(
-                    accessType: 'A',
-                    permissionCode: PermissionCode.skipOrgInvInTReturns,
-                    refCode: refCode))
-                .success;
-            permissionStatus = success;
-            if (!success) return null;
+        if (permissionStatus) {
+          // get the current item return count from storage
+          var returnItems = (cartBloc.currentCart?.values.map((e) {
+                if (e.stockCode == product.pLUSTOCKCODE &&
+                    e.itemVoid != true &&
+                    e.unitQty < 0) {
+                  return e.unitQty;
+                } else
+                  return 0.0;
+              }).toList() ??
+              []);
+          double returnItemsQty = 0;
+          if (returnItems.isNotEmpty) {
+            returnItemsQty =
+                returnItems.reduce((value, element) => value + element);
           }
-        } else {
-          return null;
+          Map<String, dynamic> salesReturn = await _showSalesReturnDialog(
+              context, product.pLUSTOCKCODE ?? '', returnItemsQty + qty, qty);
+
+          if (salesReturn['continue'] == 'continue') {
+            // var res = await showInvoice(context);
+            cartSummary.refNo = salesReturn['refInvNo'];
+            lineRemark.add(salesReturn['refInvNo']);
+            lineAmounts = salesReturn['amounts'];
+            sellings = salesReturn['sellings'];
+            returnProducts = salesReturn['returnProducts']; //new change
+          } else if (salesReturn['continue'] == 'continue_without_inv') {
+            //check for permissions to SKIP ORIGINAL INVOICE WHEN RETURN ITEMS
+            SpecialPermissionHandler handler =
+                SpecialPermissionHandler(context: context);
+            bool permissionStatus = handler.hasPermission(
+                permissionCode: PermissionCode.skipOrgInvInTReturns,
+                accessType: 'A');
+            if (!permissionStatus) {
+              String refCode = (cartBloc.cartSummary?.invoiceNo ?? "") +
+                  "@" +
+                  (product.pLUCODE ?? "") +
+                  "@" +
+                  qty.toDouble().toString();
+              bool success = (await handler.askForPermission(
+                      accessType: 'A',
+                      permissionCode: PermissionCode.skipOrgInvInTReturns,
+                      refCode: refCode))
+                  .success;
+              permissionStatus = success;
+              if (!success) return null;
+            }
+          } else {
+            return null;
+          }
         }
       }
     }
 
+    List<CartModel?>? cartedItems = [];
     if (returnProducts.length == 0 &&
         lineAmounts.length == 0 &&
         sellings.length == 0) {
@@ -690,9 +693,11 @@ class POSPriceCalculator {
         controller.updateTempCartSummary(cartSummary);
         if (successToast) {
           EasyLoading.showSuccess("easy_loading.item_add".tr());
-          return model;
+
+          // return model;
         }
-        return model;
+        cartedItems.add(model);
+        // return model;
       } else {
         //revert the current calculations
         cartSummary.subTotal -= lineAmount;
@@ -704,9 +709,9 @@ class POSPriceCalculator {
         }
         cartBloc.updateCartSummary(cartSummary);
       }
-      return null;
+      // return null;
+      return cartedItems == [] ? null : cartedItems;
     } else {
-      List<CartModel?>? cartedItems = [];
       // This block is exclusive for product returns
       for (int j = 0; j < returnProducts.length; j++) {
         double disAmt = 0;
@@ -819,7 +824,7 @@ class POSPriceCalculator {
           if (successToast) {
             EasyLoading.showSuccess("easy_loading.item_add".tr());
             // return model;
-            cartedItems.add(model);
+            // cartedItems.add(model);
           }
           // return model;
           cartedItems.add(model);
@@ -834,7 +839,8 @@ class POSPriceCalculator {
           cartBloc.updateCartSummary(cartSummary);
         }
       }
-      return cartedItems == [] ? null : cartedItems.first;
+      // return cartedItems == [] ? null : cartedItems.first;
+      return cartedItems == [] ? null : cartedItems;
     }
   }
 
@@ -1512,8 +1518,8 @@ class POSPriceCalculator {
               res.prices, res.proPrices, res.proTax,
               secondApiCall: false, successToast: true);
           //set 100 discounts
-          if (cartItem != null) {
-            add100Discount(cartItem, promoCode, promoDesc, originalItem);
+          if (cartItem != null && cartItem.isNotEmpty) {
+            add100Discount(cartItem.first!, promoCode, promoDesc, originalItem);
           }
         }
       } else {

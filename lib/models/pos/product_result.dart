@@ -93,6 +93,7 @@ class Product {
   String? returnBottleCode;
   bool? varientEnable;
   bool? batchEnable;
+  bool? isEmptyBottle;
 
   Product(
       {this.sCANCODE,
@@ -106,7 +107,8 @@ class Product {
       this.pluDecimal,
       this.sIH,
       this.returnBottleCode,
-      this.varientEnable});
+      this.varientEnable,
+      this.isEmptyBottle = false});
 
   Product.fromJson(Map<String, dynamic> json) {
     String tempImage = json['imagE_PATH']?.toString() ?? "";
@@ -146,6 +148,7 @@ class Product {
     returnBottleCode = json['plU_RETURN'];
     varientEnable = json['plU_VARIANTANABLE'];
     batchEnable = json['plU_BATCHENABLE'];
+    isEmptyBottle = json['plU_EMPTY'] == 1 ? true : false;
   }
 
   Map<String, dynamic> toJson() {

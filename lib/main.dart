@@ -96,17 +96,10 @@ void main() async {
 
         if (!kReleaseMode /* || (scWidth == 1 && scHeight == 1) */) {
           final initialSize = Size(scWidth, scHeight);
-          // if (sc_height != 0 && sc_width != 0) {
-          //   //appWindow.minSize = initialSize;
-          //   //appWindow.size = initialSize;
-          //   appWindow.maximize();
-          //   DesktopWindow.setFullScreen(true);
-          // } else {
-          // appWindow.maximize();
-          // DesktopWindow.setFullScreen(true);
-          // }
           appWindow.minSize = initialSize;
           appWindow.size = initialSize;
+          // appWindow.maximize();
+          // DesktopWindow.setFullScreen(true);
         } else {
           if (defaultSize) {
             final initialSize = Size(scWidth, scHeight);

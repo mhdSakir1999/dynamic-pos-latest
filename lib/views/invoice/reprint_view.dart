@@ -101,6 +101,7 @@ class _ReprintViewState extends State<ReprintView> {
                 controller: scrollController,
                 child: DataTable(
                   dataRowMinHeight: 50.r,
+                  dataRowMaxHeight: 75.r,
                   headingRowColor: MaterialStateColor.resolveWith(
                     (states) {
                       return CurrentTheme.primaryColor!;
@@ -157,12 +158,12 @@ class _ReprintViewState extends State<ReprintView> {
               .tr())),
       DataCell(
         Container(
-          child: GestureDetector(
+          child: InkWell(
             onTap: () => onReprintButtonClick(header),
             child: Card(
               color: POSConfig().primaryDarkGrayColor.toColor(),
               child: Container(
-                height: 120.r,
+                height: 70.r,
                 alignment: Alignment.center,
                 padding: EdgeInsets.symmetric(horizontal: 15.r, vertical: 5.r),
                 child: Text(
