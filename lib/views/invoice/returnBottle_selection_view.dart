@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
  * Author: TM.Sakir
@@ -19,9 +21,11 @@ import 'package:checkout/models/pos/cart_summary_model.dart';
 import 'package:checkout/models/pos/product_result.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/views/invoice/invoice_app_bar.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:checkout/extension/extensions.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -560,6 +564,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
   }
 
   Widget buildDefaultRHS() {
+    FocusNode keyboardFocus = FocusNode();
     return Column(
       children: [
         Container(
@@ -568,6 +573,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
         lineSpace(),
         TextField(
           enabled: false,
+          // readOnly: true,
           autofocus: true,
           focusNode: textFocus,
           controller: editingController,
@@ -595,19 +601,31 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
         ),
         lineSpace(),
         Expanded(
-          child: POSKeyBoard(
-            onEnter: () {
-              if (active) handleEnterPress();
-              textFocus.requestFocus();
+          child: RawKeyboardListener(
+            focusNode: keyboardFocus,
+            autofocus: true,
+            onKey: (value) async {
+              if (value is RawKeyDownEvent) {
+                if (value.physicalKey == PhysicalKeyboardKey.enter ||
+                    value.physicalKey == PhysicalKeyboardKey.numpadEnter) {
+                  handleEnterPress();
+                }
+              }
             },
-            onPressed: () {
-              if (active) editingController.clear();
-              textFocus.requestFocus();
-            },
-            isInvoiceScreen: false,
-            clearButton: true,
-            controller: editingController,
-            nextFocusTo: textFocus,
+            child: POSKeyBoard(
+              onEnter: () {
+                if (active) handleEnterPress();
+                textFocus.requestFocus();
+              },
+              onPressed: () {
+                if (active) editingController.clear();
+                textFocus.requestFocus();
+              },
+              isInvoiceScreen: false,
+              clearButton: true,
+              controller: null, // editingController,
+              nextFocusTo: textFocus,
+            ),
           ),
         )
       ],
@@ -755,7 +773,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
   }
 
   /// this method used to handle enter key press event
-  void handleEnterPress() {
+  void handleEnterPress() async {
     // if (quickSearch) {
     //   quickSearchItem();
     // } else {
@@ -765,7 +783,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
       EasyLoading.showError('Please Select a product');
       return;
     }
-    addItem();
+    await addItem();
     Navigator.pop(context);
   }
 

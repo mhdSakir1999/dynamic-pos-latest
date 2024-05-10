@@ -986,6 +986,7 @@ class _CartState extends State<Cart> {
             // qty = 0;
             for (var item in addedItem) {
               // qty += item?.unitQty ?? 0;
+              itemCodeFocus.unfocus();
               await showModalBottomSheet(
                 enableDrag: false,
                 isScrollControlled: true,
@@ -1000,6 +1001,7 @@ class _CartState extends State<Cart> {
                   );
                 },
               );
+              itemCodeFocus.requestFocus();
             }
             // ProductResult? returnProRes =
             // await showGeneralDialog(
