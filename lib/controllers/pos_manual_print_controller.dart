@@ -60,6 +60,7 @@ class POSManualPrint {
   int totalPayments = 0;
   List<PosColumn> posColList = [];
   String lineNo = '->';
+  num incTaxTotal = 0;
 
   String proDesc = 'product_description';
   String stockCode = 'stock_code';
@@ -173,6 +174,7 @@ class POSManualPrint {
       startTime =
           invHed['INVHED_STARTTIME'].split('T')[1] ?? ''; // 1900-01-01T10:06:22
       netAmount = invHed['INVHED_NETAMT'] ?? 0;
+      incTaxTotal = invHed['INVHED_INCTAXAMT'] ?? 0;
       cashier = invHed['INVHED_CASHIER'] ?? '';
       station = invHed['INVHED_STATION'] ?? '';
       endTime = invHed['INVHED_ENDTIME'].split('T')[1] ?? '';
@@ -201,7 +203,7 @@ class POSManualPrint {
           }
         }
       }
-      
+
       // Location table items
       loc_det = det['M_TBLLOCATIONS']
           .firstWhere((element) => element['LOC_CODE'] == loc_code);
@@ -244,8 +246,12 @@ class POSManualPrint {
 
       promoSummary = det['T_TBLINVFREEISSUES'] ?? [];
 
-      int indexOfCSHPayment = invPayment.isEmpty ? -1 : invPayment.lastIndexWhere((element) => element['INVPAY_PHCODE'] == 'CSH' || element['INVPAY_PHCODE'] == 'FCR');
-      if(indexOfCSHPayment != -1 && !reprint && !cancel){
+      int indexOfCSHPayment = invPayment.isEmpty
+          ? -1
+          : invPayment.lastIndexWhere((element) =>
+              element['INVPAY_PHCODE'] == 'CSH' ||
+              element['INVPAY_PHCODE'] == 'FCR');
+      if (indexOfCSHPayment != -1 && !reprint && !cancel) {
         bytes += generator.drawer();
       }
 
@@ -255,7 +261,6 @@ class POSManualPrint {
           childNodes: childNodes, reprint: reprint, cancel: cancel);
       await LogWriter()
           .saveLogsToFile('ERROR_LOG_', ['Finished writing the invoice...']);
-
 
       // this is moved before printing bill details
       // cash drawer will not be triggered if it is not a cash related bill and is a reprint bill
@@ -289,7 +294,7 @@ class POSManualPrint {
           print(e);
         }
       }
-      
+
       // Sending esc commands to printer
       final sendToPrint = await usb_esc_printer_windows.sendPrintRequest(
           bytes, printerName); //[POS-80C,EPSON TM-T88V Receipt]
@@ -705,6 +710,10 @@ class POSManualPrint {
               "{netAmount}",
               addSpacesFront(
                   "${formatWithCommas(netAmount)}", variableMaxLength - 15));
+          value = value.replaceAll(
+              "{incTax}",
+              addSpacesFront(
+                  "${formatWithCommas(incTaxTotal)}", variableMaxLength - 20));
           value = value.replaceAll(
               "{productCount}",
               addSpacesBack(
