@@ -33,7 +33,7 @@ class PermissionCode {
   static const viewLocationWiseStock = 'P01008';
   static const creditSales = 'P00018';
   static const byPassCreditValidation = 'P00155';
-  static const resetPOSScreenWithItems = 'P00153';
+  static const resetPOSScreenWithItems = 'P00153';  // clear()
   static const temporarySignOn = 'P00129';
   static const disconnectedMode = 'P00011';
   static const skipOrgInvInTReturns = 'P00150';

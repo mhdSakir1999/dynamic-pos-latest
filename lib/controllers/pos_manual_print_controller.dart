@@ -201,7 +201,7 @@ class POSManualPrint {
           }
         }
       }
-      
+
       // Location table items
       loc_det = det['M_TBLLOCATIONS']
           .firstWhere((element) => element['LOC_CODE'] == loc_code);
@@ -244,8 +244,12 @@ class POSManualPrint {
 
       promoSummary = det['T_TBLINVFREEISSUES'] ?? [];
 
-      int indexOfCSHPayment = invPayment.isEmpty ? -1 : invPayment.lastIndexWhere((element) => element['INVPAY_PHCODE'] == 'CSH' || element['INVPAY_PHCODE'] == 'FCR');
-      if(indexOfCSHPayment != -1 && !reprint && !cancel){
+      int indexOfCSHPayment = invPayment.isEmpty
+          ? -1
+          : invPayment.lastIndexWhere((element) =>
+              element['INVPAY_PHCODE'] == 'CSH' ||
+              element['INVPAY_PHCODE'] == 'FCR');
+      if (indexOfCSHPayment != -1 && !reprint && !cancel) {
         bytes += generator.drawer();
       }
 
@@ -255,7 +259,6 @@ class POSManualPrint {
           childNodes: childNodes, reprint: reprint, cancel: cancel);
       await LogWriter()
           .saveLogsToFile('ERROR_LOG_', ['Finished writing the invoice...']);
-
 
       // this is moved before printing bill details
       // cash drawer will not be triggered if it is not a cash related bill and is a reprint bill
@@ -289,7 +292,7 @@ class POSManualPrint {
           print(e);
         }
       }
-      
+
       // Sending esc commands to printer
       final sendToPrint = await usb_esc_printer_windows.sendPrintRequest(
           bytes, printerName); //[POS-80C,EPSON TM-T88V Receipt]
@@ -1039,9 +1042,19 @@ class POSManualPrint {
                       )?['PD_DESC'] ??
                       'UNKNOWN');
               if (payMode['INVPAY_PHCODE'] == 'CRC') {
-                payment_refCode = '***' +
-                    payMode['INVPAY_REFNO']
-                        .split('-')[3]; // 1111-11**-****-1111  last  digits
+                // payment_refCode = '***' +
+                //     payMode['INVPAY_REFNO']
+                //         .split('-')[3]; // 1111-11**-****-1111  last  digits
+                if (payMode['INVPAY_REFNO'] == '' ||
+                    (payMode['INVPAY_REFNO']?.length ?? 0) < 4) {
+                  payment_refCode = '***' + payMode['INVPAY_REFNO'];
+                } else {
+                  String tempRef = '***' +
+                      payMode['INVPAY_REFNO']
+                          .toString()
+                          .substring(payMode['INVPAY_REFNO'].length - 4);
+                  payment_refCode = tempRef;
+                }
               } else if (payMode['INVPAY_PHCODE'] == 'CSH') {
                 payment_refCode = '';
                 triggerCashDrawer = true;
