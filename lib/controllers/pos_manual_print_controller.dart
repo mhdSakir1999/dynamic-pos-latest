@@ -60,6 +60,7 @@ class POSManualPrint {
   int totalPayments = 0;
   List<PosColumn> posColList = [];
   String lineNo = '->';
+  num incTaxTotal = 0;
 
   String proDesc = 'product_description';
   String stockCode = 'stock_code';
@@ -173,6 +174,7 @@ class POSManualPrint {
       startTime =
           invHed['INVHED_STARTTIME'].split('T')[1] ?? ''; // 1900-01-01T10:06:22
       netAmount = invHed['INVHED_NETAMT'] ?? 0;
+      incTaxTotal = invHed['INVHED_INCTAXAMT'] ?? 0;
       cashier = invHed['INVHED_CASHIER'] ?? '';
       station = invHed['INVHED_STATION'] ?? '';
       endTime = invHed['INVHED_ENDTIME'].split('T')[1] ?? '';
@@ -708,6 +710,10 @@ class POSManualPrint {
               "{netAmount}",
               addSpacesFront(
                   "${formatWithCommas(netAmount)}", variableMaxLength - 15));
+          value = value.replaceAll(
+              "{incTax}",
+              addSpacesFront(
+                  "${formatWithCommas(incTaxTotal)}", variableMaxLength - 20));
           value = value.replaceAll(
               "{productCount}",
               addSpacesBack(
