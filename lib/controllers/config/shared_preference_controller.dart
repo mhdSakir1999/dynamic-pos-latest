@@ -317,6 +317,9 @@ class SharedPreferenceController {
       print('WEB_SOCKET: ${POSConfig().webSocketUrl}');
       POSConfig().saas = dotenv.env['SAAS'] == 'true' ?? false;
       print('SAAS: ${POSConfig().saas}');
+      POSConfig().auto_cust_popup =
+          dotenv.env['AUTO_CUSTOMER_POPUP'] == 'true' ?? false;
+      print('cust_popup: ${POSConfig().auto_cust_popup}');
       POSConfig().password = dotenv.env['PASSWORD'] ?? '';
       print('PASSWORD: ${POSConfig().password}');
       POSConfig().dualScreenWebsite = dotenv.env['DUAL_SCREEN'] ?? '';

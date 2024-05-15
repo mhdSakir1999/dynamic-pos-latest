@@ -139,7 +139,9 @@ class _CartState extends State<Cart> {
     // _getPortsAndOpen();
 
     /// new chage -- not allowing customer pick in local mode
-    if (!POSConfig().localMode && customerBloc.currentCustomer == null)
+    if (POSConfig().auto_cust_popup &&
+        !POSConfig().localMode &&
+        customerBloc.currentCustomer == null)
       Future.delayed(Duration.zero).then((value) async {
         if (widget.openCustomerEnter == true)
           await CustomerController().showCustomerPicker(context);
@@ -983,26 +985,43 @@ class _CartState extends State<Cart> {
             }
           }
           if (returnProResList.isNotEmpty) {
-            // qty = 0;
-            for (var item in addedItem) {
-              // qty += item?.unitQty ?? 0;
-              itemCodeFocus.unfocus();
-              await showModalBottomSheet(
-                enableDrag: false,
-                isScrollControlled: true,
-                isDismissible: false,
-                useRootNavigator: true,
-                context: context!,
-                builder: (context) {
-                  return ReturnBottleSelectionView(
-                    returnProResList: returnProResList,
-                    isMinus: isMinus,
-                    defaultQty: item?.unitQty ?? 1,
-                  );
-                },
-              );
-              itemCodeFocus.requestFocus();
-            }
+            try {
+              ProductResult bottle = returnProResList.first!;
+              List<CartModel?>? addedBottle = await calculator.addItemToCart(
+                  bottle.product!.first,
+                  qty,
+                  context,
+                  bottle.prices,
+                  bottle.proPrices,
+                  bottle.proTax,
+                  secondApiCall: false,
+                  scaleBarcode: false);
+
+              if (addedBottle == null) {
+                EasyLoading.showError('Cannot add the bottle to the invoice');
+              }
+            } catch (e) {}
+
+            // for (var item in addedItem) {
+            //   // qty += item?.unitQty ?? 0;
+            //   itemCodeFocus.unfocus();
+            //   await showModalBottomSheet(
+            //     enableDrag: false,
+            //     isScrollControlled: true,
+            //     isDismissible: false,
+            //     useRootNavigator: true,
+            //     context: context!,
+            //     builder: (context) {
+            //       return ReturnBottleSelectionView(
+            //         returnProResList: returnProResList,
+            //         isMinus: isMinus,
+            //         defaultQty: item?.unitQty ?? 1,
+            //       );
+            //     },
+            //   );
+            //   itemCodeFocus.requestFocus();
+            // }
+
             // ProductResult? returnProRes =
             // await showGeneralDialog(
             //     context: context,

@@ -30,6 +30,7 @@ class POSConfig {
   ClientLicense? clientLicense;
   bool allowLocalMode = true;
   bool allow_sync_bills = true;
+  bool auto_cust_popup = true;
 
   bool trainingMode = false;
 

@@ -111,6 +111,7 @@ class _SettingViewState extends State<SettingView> {
   bool reportBasedInvoice = POSConfig().reportBasedInvoice;
   bool ecr = POSConfig().ecr;
   bool isTraining = POSConfig().trainingMode;
+  bool auto_cust_popup = POSConfig().auto_cust_popup;
   final passwordController = TextEditingController();
 
   //keyboard colors
@@ -192,6 +193,17 @@ class _SettingViewState extends State<SettingView> {
                 //         });
                 //       }),
                 // ),
+                buildItemCard(
+                  'Customer Popup',
+                  buildSwitch(
+                      title: 'Automatic Customer Popup',
+                      value: auto_cust_popup,
+                      onChanged: (bool val) {
+                        setState(() {
+                          auto_cust_popup = val;
+                        });
+                      }),
+                ),
                 SizedBox(
                   height: 5,
                 ),
@@ -961,7 +973,8 @@ class _SettingViewState extends State<SettingView> {
       ..posKeyBoardVoidTxtColor = posKeyBoardVoidTxtColor.hex
       ..posKeyBoardExactColor = posKeyBoardExactColor.hex
       ..posKeyBoardExactTxtColor = posKeyBoardExactTxtColor.hex
-      ..trainingMode = isTraining;
+      ..trainingMode = isTraining
+      ..auto_cust_popup = auto_cust_popup;
 
     SharedPreferenceController controller = SharedPreferenceController();
     await controller.saveConfig(posConfig);
