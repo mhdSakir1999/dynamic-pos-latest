@@ -3,9 +3,12 @@
  * Author: Shalika Ashan & TM.Sakir
  * Created At: 7/7/21, 3:24 PM
  */
+import 'dart:convert';
+
 import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/components/api_client.dart';
 import 'package:checkout/controllers/auth_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/models/pos/pos_denomination_model.dart';
@@ -52,6 +55,11 @@ class DenominationController {
       "approved_user": approvedUser ?? user?.uSERHEDUSERCODE
     };
     print(map.toString());
+    await LogWriter().saveLogsToFile('API_Log_', [
+      '####################################################################',
+      jsonEncode(map),
+      '####################################################################'
+    ]);
 
     final res = await ApiClient.call("denomination", ApiMethod.POST, data: map);
     await AuthController().checkUsername(
@@ -77,7 +85,7 @@ class DenominationController {
             user?.shiftNo?.toString() ?? "0",
             user?.uSERHEDSIGNONTIME ?? "");
       } else {
-       await POSManualPrint().printManagerSlip(
+        await POSManualPrint().printManagerSlip(
             data: res?.data['data'],
             denominations: denominations,
             denominationDet: denominationDetails);
