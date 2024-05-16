@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan & TM.Sakir
+ * Author: [TM.Sakir] & Shalika Ashan
  * Created At: 7/7/21, 3:24 PM
  */
 import 'dart:convert';
@@ -29,7 +29,7 @@ class DenominationController {
     // going through the list and assigned to the list
     list.forEach((element) {
       element.denominations.forEach((den) {
-        if (den.count > 0) {
+        if ((den.count ?? 0) > 0) {
           denominationDetails.add(den);
         }
       });
@@ -90,6 +90,54 @@ class DenominationController {
             denominations: denominations,
             denominationDet: denominationDetails);
       }
+    }
+  }
+
+//
+  Future<void> reprintManagerSignoff(
+      {required String userId,
+      required String locCode,
+      required String terminalId,
+      required String shiftNo,
+      required String date}) async {
+    EasyLoading.show(status: 'Start Printing...');
+    final map = {
+      "user": userId,
+      "shift_no": shiftNo,
+      "sign_on_date": date,
+      "location": POSConfig().locCode,
+      "terminal_id": terminalId
+    };
+    final res = await ApiClient.call(
+        "denomination/reprint_mngsignoff", ApiMethod.POST,
+        data: map);
+
+    if (res?.statusCode == 200 &&
+        res?.data != null &&
+        res?.data['data'] != null) {
+      try {
+        var json = jsonDecode(res?.data['data'].toString() ?? '');
+
+        List<POSDenominationDetail> denoDets = List.generate(
+            json['Denominations']?.length,
+            (index) =>
+                POSDenominationDetail.fromMap(json['Denominations'][index]));
+        List<POSDenominationModel> denominations = [];
+
+        await POSManualPrint().printManagerSlip(
+            data: res?.data['data'],
+            denominations: denominations,
+            denominationDet: denoDets);
+        EasyLoading.dismiss();
+        EasyLoading.showSuccess('Print Success');
+      } catch (e) {
+        print(e.toString());
+        EasyLoading.dismiss();
+        EasyLoading.showError('Cannot Proceed The Printing Process !!!');
+      }
+    } else {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Record Not Found !!!');
     }
   }
 }

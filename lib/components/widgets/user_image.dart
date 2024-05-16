@@ -14,16 +14,15 @@ import 'package:flutter/material.dart';
 class UserImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String user = userBloc.currentUser?.uSERHEDPICTURE??"";
-    if(user.isEmpty){
+    String user = userBloc.currentUser?.uSERHEDPICTURE ?? "";
+    if (user.isEmpty) {
       user = 'default.png';
     }
     user = '${POSConfig().posImageServer}images/user/$user';
     return Card(
-      elevation: 5,
+        elevation: 5,
         shape: CircleBorder(),
-        child: CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(user)));
+        child: CircleAvatar(backgroundImage: CachedNetworkImageProvider(user)));
     // return Image.asset("assets/images/default_male.png");
   }
 }
@@ -47,12 +46,12 @@ class CustomerImage extends StatelessWidget {
   }
 
   ImageProvider buildUserImage() {
-    print(POSConfig().loyaltyServerImage + (imagePath??''));
+    print(POSConfig().loyaltyServerImage + (imagePath ?? ''));
     if (imagePath == null || imagePath?.isNotEmpty != true)
       return AssetImage("assets/images/default_male.png");
     else
       return CachedNetworkImageProvider(
-          POSConfig().loyaltyServerImage + (imagePath??''),
+          POSConfig().loyaltyServerImage + (imagePath ?? ''),
           //POSConfig().posImageServer + (imagePath ?? ""),
           headers: {'Access-Control-Allow-Origin': '*'});
   }

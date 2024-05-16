@@ -1658,9 +1658,9 @@ class POSManualPrint {
           List<xml.XmlNode> denominationchildNodes = node.children;
           if (cshdeno.length != 0) {
             for (int j = 0; j < cshdeno.length; j++) {
-              cashDenominationDesc = cshdeno[j].value.toStringAsFixed(0);
-              deno_count = cshdeno[j].count;
-              deno_value = cshdeno[j].value;
+              cashDenominationDesc = cshdeno[j].value!.toStringAsFixed(0);
+              deno_count = cshdeno[j].count!;
+              deno_value = cshdeno[j].value!;
               deno_multiply_amt = deno_count * deno_value;
               tot_csh_declaration += deno_multiply_amt;
 

@@ -20,7 +20,9 @@ import 'package:checkout/components/recurringApiCalls.dart';
 import 'package:checkout/controllers/auth_controller.dart';
 import 'package:checkout/controllers/backup_controller.dart';
 import 'package:checkout/controllers/config/shared_preference_controller.dart';
+import 'package:checkout/controllers/denomination_controller.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
+import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/local_storage_controller.dart';
 import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
@@ -39,6 +41,8 @@ import 'package:checkout/models/pos_logger.dart';
 import 'package:checkout/views/authentication/exit_screen.dart';
 import 'package:checkout/views/landing/landing_alert_controller.dart';
 import 'package:checkout/views/landing/landing_helper.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -142,12 +146,22 @@ class _LandingViewState extends State<LandingView> {
             ),
             Positioned(
               right: 5,
-              child: IconButton(
-                  onPressed: () => _showSpecialOptions(context),
-                  icon: Icon(
-                    Icons.sync,
-                    color: Colors.green,
-                  )),
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () => _rePrintDialog(context),
+                      icon: Icon(
+                        Icons.print_outlined,
+                        color: Colors.green,
+                      )),
+                  IconButton(
+                      onPressed: () => _showSpecialOptions(context),
+                      icon: Icon(
+                        Icons.sync,
+                        color: Colors.green,
+                      )),
+                ],
+              ),
             )
           ],
         ));
@@ -334,10 +348,17 @@ class _LandingViewState extends State<LandingView> {
                       //     .printInvoice(data: data, points: 0.0);
                       // await POSManualPrint().printSignSlip(
                       //     data: '', slipType: 'signoff', float: 100);
-                      await POSManualPrint().printManagerSlip(
-                          data: data,
-                          denominations: denominations,
-                          denominationDet: denominationDet);
+                      // await POSManualPrint().printManagerSlip(
+                      //     data: data,
+                      //     denominations: denominations,
+                      //     denominationDet: denominationDet);
+
+                      await DenominationController().reprintManagerSignoff(
+                          userId: '4626',
+                          locCode: '00016',
+                          terminalId: '005',
+                          shiftNo: '2',
+                          date: "2024-05-15 00:00:00.000");
 
                       // recurringApiCalls.listenPhysicalCash();
                     },
@@ -347,6 +368,328 @@ class _LandingViewState extends State<LandingView> {
           ),
         );
       },
+    );
+  }
+
+  TextEditingController userCtrl = TextEditingController();
+  TextEditingController locCtrl = TextEditingController();
+  TextEditingController shiftCtrl = TextEditingController();
+  TextEditingController stationCtrl = TextEditingController();
+  TextEditingController dateCtrl = TextEditingController();
+  FocusNode userFocus = FocusNode();
+  FocusNode locFocus = FocusNode();
+  FocusNode shiftFocus = FocusNode();
+  FocusNode stationFocus = FocusNode();
+
+  List<FocusNode> nodes = [];
+  FocusNode dateFocus = FocusNode();
+  Future<void> _rePrintDialog(BuildContext context) async {
+    nodes = [userFocus, locFocus, stationFocus, shiftFocus];
+    final now = DateTime.now();
+    final containerWidth = POSConfig().containerSize.w;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Manager-Signoff Re-Print', textAlign: TextAlign.center),
+          content: SizedBox(
+            width: ScreenUtil().screenWidth * 0.6,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                        width: containerWidth * 1.5,
+                        child: Row(
+                          children: [
+                            labelElement('Cashier Id'),
+                            textElement(
+                              '',
+                              14,
+                              userCtrl,
+                              focusNode: userFocus,
+                              onTap: () {
+                                KeyBoardController().dismiss();
+                                KeyBoardController().init(context);
+                                KeyBoardController().showBottomDPKeyBoard(
+                                    userCtrl, onEnter: () {
+                                  KeyBoardController().dismiss();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: containerWidth * 1.5,
+                        child: Row(
+                          children: [
+                            labelElement('Location Code'),
+                            textElement(
+                              '',
+                              14,
+                              locCtrl,
+                              focusNode: locFocus,
+                              onTap: () {
+                                KeyBoardController().dismiss();
+                                KeyBoardController().init(context);
+                                KeyBoardController()
+                                    .showBottomDPKeyBoard(locCtrl, onEnter: () {
+                                  KeyBoardController().dismiss();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: containerWidth * 1.5,
+                        child: Row(
+                          children: [
+                            labelElement('Terminal Number'),
+                            textElement(
+                              '',
+                              14,
+                              stationCtrl,
+                              focusNode: stationFocus,
+                              onTap: () {
+                                KeyBoardController().dismiss();
+                                KeyBoardController().init(context);
+                                KeyBoardController().showBottomDPKeyBoard(
+                                    stationCtrl, onEnter: () {
+                                  KeyBoardController().dismiss();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: containerWidth * 1.5,
+                        child: Row(
+                          children: [
+                            labelElement('Shift Number'),
+                            textElement(
+                              '',
+                              14,
+                              shiftCtrl,
+                              focusNode: shiftFocus,
+                              onTap: () {
+                                KeyBoardController().dismiss();
+                                KeyBoardController().init(context);
+                                KeyBoardController().showBottomDPKeyBoard(
+                                    userCtrl, onEnter: () {
+                                  KeyBoardController().dismiss();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: containerWidth * 1.5,
+                        child: Row(
+                          children: [
+                            labelElement('Sign-On Date'),
+                            wrapper(
+                              width: 5.5,
+                              child: Theme(
+                                data: CurrentTheme.themeData!.copyWith(
+                                  textButtonTheme: TextButtonThemeData(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: CurrentTheme
+                                          .primaryLightColor, // button text color
+                                    ),
+                                  ),
+                                ),
+                                child: DateTimeField(
+                                  controller: dateCtrl,
+                                  enabled: true,
+                                  format: DateFormat("yyyy-MM-dd"),
+                                  focusNode: dateFocus,
+                                  initialValue: dateCtrl.text.isEmpty
+                                      ? DateTime.now()
+                                      : DateFormat("yyyy-MM-dd")
+                                          .parse(dateCtrl.text),
+                                  style: TextStyle(
+                                      color: CurrentTheme.primaryColor,
+                                      fontSize: 14.sp),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 15),
+                                  ),
+                                  onShowPicker: (context, currentValue) async {
+                                    final date = await showDatePicker(
+                                        context: context,
+                                        firstDate: DateTime(1900),
+                                        initialDate:
+                                            currentValue ?? DateTime.now(),
+                                        locale: EasyLocalization.of(context)!
+                                            .locale,
+                                        lastDate: DateTime.now());
+                                    if (date != null)
+                                      dateCtrl.text =
+                                          DateFormat("yyyy-MM-dd").format(date);
+                                    setState(() {});
+                                    return date;
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        elevation: 5,
+                        child: Container(
+                          child: IconButton(
+                              onPressed: () async {
+                                if (userCtrl.text.isEmpty) {
+                                  EasyLoading.showError(
+                                      'Cashier Id is required');
+                                  return;
+                                }
+                                if (locCtrl.text.isEmpty) {
+                                  EasyLoading.showError(
+                                      'Location code is required');
+                                  return;
+                                }
+                                if (shiftCtrl.text.isEmpty) {
+                                  EasyLoading.showError(
+                                      'Shift number is required');
+                                  return;
+                                }
+                                if (stationCtrl.text.isEmpty) {
+                                  EasyLoading.showError(
+                                      'Terminal Id is required');
+                                  return;
+                                }
+                                if (dateCtrl.text.isEmpty) {
+                                  EasyLoading.showError(
+                                      'Sign-on Date is required');
+                                  return;
+                                }
+                                await DenominationController()
+                                    .reprintManagerSignoff(
+                                        userId: userCtrl.text,
+                                        locCode: locCtrl.text,
+                                        terminalId: stationCtrl.text,
+                                        shiftNo: shiftCtrl.text,
+                                        date: dateCtrl.text);
+                              },
+                              icon: Icon(
+                                Icons.print,
+                              )),
+                        ),
+                      ),
+                      Text(
+                        'Print Slip',
+                        style: CurrentTheme.bodyText2!.copyWith(
+                            color: CurrentTheme.primaryDarkColor,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget textElement(
+      String text, double width, TextEditingController controller,
+      {bool disabled = false,
+      FocusNode? focusNode,
+      StringToFunc? validator,
+      VoidCallback? onTap,
+      List<TextInputFormatter>? inputFormatter}) {
+    return wrapper(
+      width: width * 0.75,
+      child: TextFormField(
+        onTap: onTap,
+        validator: validator,
+        focusNode: focusNode,
+        readOnly: disabled,
+        textAlign: TextAlign.left,
+        inputFormatters: inputFormatter,
+        enabled: true,
+        style: CurrentTheme.bodyText2!
+            .copyWith(color: CurrentTheme.primaryColor, fontSize: 20.sp),
+        controller: controller,
+        textInputAction: TextInputAction.next,
+        onChanged: (String value) {
+          if (mounted) setState(() {});
+        },
+        onEditingComplete: () {
+          if (nodes.indexWhere((element) => element == focusNode) < 4) {
+            int index = nodes.indexWhere((element) => element == focusNode);
+            focusNode?.unfocus();
+            nodes[index + 1].requestFocus();
+          } else {
+            int index = nodes.indexWhere((element) => element == focusNode);
+            focusNode?.unfocus();
+            dateFocus.requestFocus();
+          }
+        },
+        decoration: InputDecoration(
+          filled: true,
+          hintText: text,
+          alignLabelWithHint: true,
+          isDense: true,
+          contentPadding: EdgeInsets.all(10),
+        ),
+      ),
+    );
+  }
+
+  Widget wrapper({required Widget child, required double width}) {
+    final containerWidth = POSConfig().containerSize.w;
+    return Container(
+      width: containerWidth * width / 14,
+      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 10.w),
+      child: child,
+    );
+  }
+
+  Container labelElement(text) {
+    final containerWidth = POSConfig().containerSize.w;
+    return Container(
+      width: (containerWidth) * 3.5 / 12,
+      child: Card(
+        color: CurrentTheme.primaryColor,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 20.w),
+          child: Text(
+            text,
+            style: CurrentTheme.bodyText2!.copyWith(
+                color: CurrentTheme.primaryLightColor,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold),
+            textAlign: TextAlign.left,
+          ),
+        ),
+      ),
     );
   }
 

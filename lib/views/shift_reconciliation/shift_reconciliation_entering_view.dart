@@ -513,7 +513,7 @@ class _ShiftReconciliationEntryViewState
                   }
 
                   final denomination = denominationList[index];
-                  final denoVal = denomination.value.toStringAsFixed(2);
+                  final denoVal = denomination.value!.toStringAsFixed(2);
                   return Card(
                     color: CurrentTheme.primaryColor,
                     child: Row(
@@ -522,7 +522,7 @@ class _ShiftReconciliationEntryViewState
                           width: 15.r,
                         ),
                         Text(
-                          "$denoVal * ${denomination.count} = ${denomination.value * denomination.count}",
+                          "$denoVal * ${denomination.count} = ${denomination.value! * denomination.count!}",
                           style: CurrentTheme.headline6,
                         ),
                         Spacer(),
@@ -661,7 +661,7 @@ class _ShiftReconciliationEntryViewState
     this.denominationsList.forEach((e) {
       bool isCash = (e.detailCode == "CSH");
       double denoCount = 0;
-      e.denominations.forEach((ee) => (denoCount += (ee.count) * (ee.value)));
+      e.denominations.forEach((ee) => (denoCount += (ee.count!) * (ee.value!)));
       double total = e.totalValue.toString().parseDouble();
       if (isCash) {
         cash += (denoCount.toString().parseDouble()) + total;

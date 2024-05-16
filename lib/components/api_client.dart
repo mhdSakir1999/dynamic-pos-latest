@@ -87,6 +87,12 @@ class ApiClient {
               POSLogger(POSLoggerLevel.apiInfo, "Raw Data: $data"));
         options.headers?.putIfAbsent(
             HttpHeaders.contentTypeHeader, () => "application/json");
+
+        await LogWriter().saveLogsToFile('API_Log_', [
+          '================== API REQUEST DATA FOR {$uri}======================',
+          tempFormData,
+          '===================================================================='
+        ]);
       }
 
       Response response;

@@ -24,10 +24,10 @@ class POSDenominationModel {
 }
 
 class POSDenominationDetail {
-  String mainCode;
-  String denominationCode;
-  int count;
-  double value;
+  String? mainCode;
+  String? denominationCode;
+  int? count;
+  double? value;
 
   POSDenominationDetail(
       this.mainCode, this.denominationCode, this.count, this.value);
@@ -39,5 +39,14 @@ class POSDenominationDetail {
       'd_count': this.count,
       'd_value': this.value,
     };
+  }
+
+  POSDenominationDetail.fromMap(Map json) {
+    // return new POSDenominationDetail(mainCode = 'CSH',
+    //     denominationCode = json[''], count = json[''], value = json['']);
+    this.mainCode = 'CSH';
+    this.denominationCode = json['DE_DENCODE'] ?? 'N/A';
+    this.count = int.tryParse(json['DE_DENCODE'] ?? '0');
+    this.value = (json['DE_DENPHYAMT'] ?? 0) / (count == 0 ? 1 : count);
   }
 }
