@@ -22,7 +22,19 @@ class UserImage extends StatelessWidget {
     return Card(
         elevation: 5,
         shape: CircleBorder(),
-        child: CircleAvatar(backgroundImage: CachedNetworkImageProvider(user)));
+        child: ClipOval(
+          child: CachedNetworkImage(
+            imageUrl: user,
+            fit: BoxFit.cover,
+            errorWidget: (context, url, error) => Image.asset(
+              "assets/images/default_male.png",
+              fit: BoxFit.cover,
+            ),
+          ),
+        )
+        // CircleAvatar(backgroundImage: CachedNetworkImageProvider(user))
+
+        );
     // return Image.asset("assets/images/default_male.png");
   }
 }
