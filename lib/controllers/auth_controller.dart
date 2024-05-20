@@ -199,7 +199,6 @@ class AuthController {
           {
             "username": userHed?.uSERHEDUSERCODE,
             "terminal_id": POSConfig().terminalId,
-            
           },
         ),
         successCode: 200,

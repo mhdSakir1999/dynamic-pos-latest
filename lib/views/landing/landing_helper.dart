@@ -115,6 +115,7 @@ class LandingHelper {
     }
   }
 
+  FocusNode errorFocusNode = new FocusNode();
   validateSignOn(BuildContext context) async {
     // this is necessary, because if the cashier do signoff,mng signoff and remain in the landing page, he can be able to signon and increase the shift number
     // without validating whether the current user, signon to the different terminal with different shift.
@@ -132,9 +133,33 @@ class LandingHelper {
       //  check for the terminal sign on process
       String? terminalId = alreadySignedOnToTerminal();
       if (terminalId != null) {
-        _alertController.showErrorAlert(
-            "This user (${userBloc.currentUser?.uSERHEDUSERCODE}) is currently doing a shift on terminal $terminalId \nSo, login again with new cashier Id");
-        return;
+        await showDialog(
+            context: context,
+            builder: (context) => POSErrorAlert(
+                    title: "Shift Ongoing Alert",
+                    subtitle:
+                        "The logged user: (${userBloc.currentUser?.uSERHEDUSERCODE}) is currently doing a shift on terminal $terminalId \nSo, login again with new cashier Id",
+                    actions: [
+                      RawKeyboardListener(
+                        focusNode: errorFocusNode,
+                        autofocus: true,
+                        onKey: (value) {
+                          if (value is RawKeyDownEvent) {
+                            if (value.physicalKey ==
+                                    PhysicalKeyboardKey.enter ||
+                                value.physicalKey == PhysicalKeyboardKey.keyO) {
+                              Navigator.pop(context);
+                            }
+                          }
+                        },
+                        child: AlertDialogButton(
+                            onPressed: () => Navigator.pop(context),
+                            text: "Okay"),
+                      )
+                    ])).then((value) {
+          RestartWidget.restartApp(_context);
+          return;
+        });
       }
       //   check  sign off is completed or not
       bool iSignedOff = checkSignOff();
