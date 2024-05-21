@@ -46,7 +46,10 @@ class POSDenominationDetail {
     //     denominationCode = json[''], count = json[''], value = json['']);
     this.mainCode = 'CSH';
     this.denominationCode = json['DE_DENCODE'] ?? 'N/A';
-    this.count = int.tryParse(json['DE_DENCODE'] ?? '0');
-    this.value = (json['DE_DENPHYAMT'] ?? 0) / (count == 0 ? 1 : count);
+    this.value = (json['DEN_DENVALUE'] ?? 0);
+
+    double total = json['DE_DENPHYAMT'] ?? 0;
+    this.count =
+        int.tryParse(((total) / (this.value!)).toStringAsFixed(0) ?? '0');
   }
 }

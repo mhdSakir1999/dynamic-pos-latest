@@ -105,7 +105,7 @@ class DenominationController {
       "user": userId,
       "shift_no": shiftNo,
       "sign_on_date": date,
-      "location": POSConfig().locCode,
+      "location": locCode,
       "terminal_id": terminalId
     };
     final res = await ApiClient.call(
