@@ -571,7 +571,9 @@ DECLARE @openBalance numeric(18,2);
 	
 	SELECT * FROM U_TBLSIGNOFFHEADER where SOH_LOCATION=@setUpLocation and SOH_DATE=@signOndate and SOH_USER=@cashier and SOH_STATION=@terminalId and SOH_SHIFT=@shiftNo
 	SELECT U_TBLSIGNOFFDETAIL.*,PH_DESC FROM U_TBLSIGNOFFDETAIL, M_TBLPAYMODEHEAD where SOD_PAYCODE=PH_CODE and SOD_LOCATION=@setUpLocation and SOD_DATE=@signOndate and SOD_USER=@cashier and SOD_STATION=@terminalId and SOD_SHIFT=@shiftNo
-	select * from U_TBLSIGNOFFDENOMINATIONDET where DE_LOCATION=@setUpLocation and DE_DATE=@signOndate and DE_USER=@cashier and DE_STATION=@terminalId and DE_SHIFT=@shiftNo
+	--select * from U_TBLSIGNOFFDENOMINATIONDET where DE_LOCATION=@setUpLocation and DE_DATE=@signOndate and DE_USER=@cashier and DE_STATION=@terminalId and DE_SHIFT=@shiftNo
+	select h.*, d.DEN_DENVALUE from  (select * from U_TBLSIGNOFFDENOMINATIONDET where DE_LOCATION='00009' and DE_DATE='19/May/2024' and DE_USER='4697' and DE_STATION='003' and DE_SHIFT='2') h 
+	inner join M_TBLPAYDENOMINATIONS d on h.de_dencode = d. den_code
 
 	COMMIT TRAN
 	END TRY
