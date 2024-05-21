@@ -945,20 +945,60 @@ class _ProductSearchViewState extends State<ProductSearchView> {
         }
       }
       if (returnProResList.isNotEmpty) {
-        await showModalBottomSheet(
-          enableDrag: false,
-          isScrollControlled: true,
-          isDismissible: false,
-          useRootNavigator: true,
-          context: context!,
-          builder: (context) {
-            return ReturnBottleSelectionView(
-              returnProResList: returnProResList,
-              isMinus: isMinus,
-              defaultQty: qty ?? 1,
-            );
-          },
-        );
+        try {
+          ProductResult bottle = returnProResList.first!;
+          List<CartModel?>? addedBottle = await calculator.addItemToCart(
+              bottle.product!.first,
+              qty,
+              context,
+              bottle.prices,
+              bottle.proPrices,
+              bottle.proTax,
+              secondApiCall: false,
+              scaleBarcode: false);
+
+          if (addedBottle == null) {
+            EasyLoading.showError('Cannot add the bottle to the invoice');
+          }
+        } catch (e) {}
+
+        // for (var item in addedItem) {
+        //   // qty += item?.unitQty ?? 0;
+        // itemCodeFocus.unfocus();
+        // await showModalBottomSheet(
+        //   enableDrag: false,
+        //   isScrollControlled: true,
+        //   isDismissible: false,
+        //   useRootNavigator: true,
+        //   context: context!,
+        //   builder: (context) {
+        //     return ReturnBottleSelectionView(
+        //       returnProResList: returnProResList,
+        //       isMinus: isMinus,
+        //       defaultQty: item?.unitQty ?? 1,
+        //     );
+        //   },
+        // );
+        // itemCodeFocus.requestFocus();
+        // }
+        if (productRes?.emptyBottles != null &&
+            productRes?.emptyBottles != [] &&
+            !isMinus) {
+          await showModalBottomSheet(
+            enableDrag: false,
+            isScrollControlled: true,
+            isDismissible: false,
+            useRootNavigator: true,
+            context: context!,
+            builder: (context) {
+              return ReturnBottleSelectionView(
+                returnProResList: productRes.emptyBottles!,
+                isMinus: true, // it is always - since it is a return bottle
+                defaultQty: qty ?? 1,
+              );
+            },
+          );
+        }
       }
     }
 

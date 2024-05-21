@@ -4,5 +4,6 @@
         "morning": "*** GOOD MORNING ***                    ",
         "day": "  *** GOOD DAY ***                      ",
         "evening": "*** GOOD EVENING ***                    "
-    }
+    },
+    "scall_barcode_symbol": ""
 }

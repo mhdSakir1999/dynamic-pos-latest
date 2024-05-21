@@ -141,12 +141,17 @@ class _CartState extends State<Cart> {
     /// new chage -- not allowing customer pick in local mode
     if (POSConfig().auto_cust_popup &&
         !POSConfig().localMode &&
-        customerBloc.currentCustomer == null)
+        customerBloc.currentCustomer == null) {
       Future.delayed(Duration.zero).then((value) async {
         if (widget.openCustomerEnter == true)
           await CustomerController().showCustomerPicker(context);
         itemCodeFocus.requestFocus();
       });
+    } else {
+      Future.delayed(Duration.zero).then((value) async {
+        itemCodeFocus.requestFocus();
+      });
+    }
 
     // SchedulerBinding.instance.addPostFrameCallback((_) {
     //   // Perform hit tests or interactions here.5
@@ -896,7 +901,7 @@ class _CartState extends State<Cart> {
 
         if (POSConfig().setup?.setuPSCALEDIGIT != null) {
           int digit = POSConfig().setup!.setuPSCALEDIGIT!;
-          if (scaleSymbol != '#') {
+          if (scaleSymbol != '#' && scaleSymbol != '_') {
             try {
               //quantity = split.last.substring(0, (split.last).length - digit).toDouble();
               split.last = split.last.substring(0, (split.last).length - digit);
@@ -960,6 +965,27 @@ class _CartState extends State<Cart> {
           }
         }
 
+        // scale barcode handeling for OKD -- in here, underscore represents space
+        if (!tempItemCode.contains(symbol) &&
+            tempItemCode.contains(' ') &&
+            (POSConfig().setup!.setuPSCALESYMBOL ?? '') == '_') {
+          String fullQty = '';
+          String deci = '';
+          String qtyCode = tempItemCode.split(' ').last;
+
+          if (res.pluDecimal == true) {
+            int digit = POSConfig().setup!.setuPSCALEDIGIT!;
+
+            fullQty = qtyCode.substring(0, (qtyCode).length - digit);
+            deci =
+                qtyCode.substring((qtyCode).length - digit, (qtyCode).length);
+            qtyCode = fullQty + '.' + deci;
+            qty = qtyCode.toDouble() ?? 0;
+          } else {
+            qty = qtyCode.toDouble() ?? 0;
+          }
+        }
+
         // empty bottles can't be sell directly which means it can only be sold along with liquir products.
         // so, even if the cashier type + qty for empty bottle, I consider it as a return scenario.
         if (res.isEmptyBottle == true) {
@@ -1004,23 +1030,43 @@ class _CartState extends State<Cart> {
 
             // for (var item in addedItem) {
             //   // qty += item?.unitQty ?? 0;
-            //   itemCodeFocus.unfocus();
-            //   await showModalBottomSheet(
-            //     enableDrag: false,
-            //     isScrollControlled: true,
-            //     isDismissible: false,
-            //     useRootNavigator: true,
-            //     context: context!,
-            //     builder: (context) {
-            //       return ReturnBottleSelectionView(
-            //         returnProResList: returnProResList,
-            //         isMinus: isMinus,
-            //         defaultQty: item?.unitQty ?? 1,
-            //       );
-            //     },
-            //   );
-            //   itemCodeFocus.requestFocus();
+            // itemCodeFocus.unfocus();
+            // await showModalBottomSheet(
+            //   enableDrag: false,
+            //   isScrollControlled: true,
+            //   isDismissible: false,
+            //   useRootNavigator: true,
+            //   context: context!,
+            //   builder: (context) {
+            //     return ReturnBottleSelectionView(
+            //       returnProResList: returnProResList,
+            //       isMinus: isMinus,
+            //       defaultQty: item?.unitQty ?? 1,
+            //     );
+            //   },
+            // );
+            // itemCodeFocus.requestFocus();
             // }
+            if (resList?.emptyBottles != null &&
+                resList?.emptyBottles != [] &&
+                !isMinus) {
+              itemCodeFocus.unfocus();
+              await showModalBottomSheet(
+                enableDrag: false,
+                isScrollControlled: true,
+                isDismissible: false,
+                useRootNavigator: true,
+                context: context!,
+                builder: (context) {
+                  return ReturnBottleSelectionView(
+                    returnProResList: resList.emptyBottles!,
+                    isMinus: true, // it is always - since it is a return bottle
+                    defaultQty: qty ?? 1,
+                  );
+                },
+              );
+              itemCodeFocus.requestFocus();
+            }
 
             // ProductResult? returnProRes =
             // await showGeneralDialog(

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/22/21, 10:18 AM
  */
 
@@ -19,22 +19,27 @@ class UserImage extends StatelessWidget {
       user = 'default.png';
     }
     user = '${POSConfig().posImageServer}images/user/$user';
-    return Card(
-        elevation: 5,
-        shape: CircleBorder(),
-        child: ClipOval(
-          child: CachedNetworkImage(
-            imageUrl: user,
-            fit: BoxFit.cover,
-            errorWidget: (context, url, error) => Image.asset(
-              "assets/images/default_male.png",
-              fit: BoxFit.cover,
-            ),
-          ),
-        )
-        // CircleAvatar(backgroundImage: CachedNetworkImageProvider(user))
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Card(
+            elevation: 5,
+            shape: CircleBorder(),
+            child: ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: user,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => Image.asset(
+                  "assets/images/default_male.png",
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
+            // CircleAvatar(backgroundImage: CachedNetworkImageProvider(user))
 
-        );
+            ),
+      ],
+    );
     // return Image.asset("assets/images/default_male.png");
   }
 }

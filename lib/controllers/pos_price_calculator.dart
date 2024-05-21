@@ -1691,6 +1691,7 @@ class POSPriceCalculator {
       element.promoBillDiscPre = 0;
       element.promoCode = '';
       element.promoDesc = '';
+      element.promoDiscValue = 0;
       cartBloc.updateCartUnconditionally(element);
     });
   }

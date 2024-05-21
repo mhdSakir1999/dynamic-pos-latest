@@ -860,6 +860,12 @@ class _WeightedItemViewState extends State<WeightedItemView> {
             .getWeightedProductByID(myProduct!.pLUCODE ?? ''))!['product'];
       }
 
+      // empty bottles can't be sell directly which means it can only be sold along with liquir products.
+      // so, even if the cashier type + qty for empty bottle, I consider it as a return scenario.
+      if (myProduct?.isEmptyBottle == true) {
+        qty = -1 * qty.abs();
+      }
+
       /// new change - adding bottle prices seperately in invoice when buying liquor items [or maybe any other]
       /// Author : [TM.Sakir] at 2023-11-01 11:10 AM
       /// -------------------------------------------------------------------------------------------------
@@ -883,19 +889,57 @@ class _WeightedItemViewState extends State<WeightedItemView> {
           }
         }
         if (returnProResList.isNotEmpty) {
-          await showModalBottomSheet(
-            enableDrag: false,
-            isScrollControlled: true,
-            useRootNavigator: true,
-            context: context!,
-            builder: (context) {
-              return ReturnBottleSelectionView(
-                returnProResList: returnProResList,
-                isMinus: isMinus,
-                defaultQty: qty ?? 1,
-              );
-            },
-          );
+          // await showModalBottomSheet(
+          //   enableDrag: false,
+          //   isScrollControlled: true,
+          //   useRootNavigator: true,
+          //   context: context!,
+          //   builder: (context) {
+          //     return ReturnBottleSelectionView(
+          //       returnProResList: returnProResList,
+          //       isMinus: isMinus,
+          //       defaultQty: qty ?? 1,
+          //     );
+          //   },
+          // );
+          try {
+            ProductResult bottle = returnProResList.first!;
+            List<CartModel?>? addedBottle = await calculator.addItemToCart(
+                bottle.product!.first,
+                qty,
+                context,
+                bottle.prices,
+                bottle.proPrices,
+                bottle.proTax,
+                secondApiCall: false,
+                scaleBarcode: false);
+
+            if (addedBottle == null) {
+              EasyLoading.showError('Cannot add the bottle to the invoice');
+            }
+          } catch (e) {}
+
+          var resList =
+              await calculator.searchProduct(selectedProduct!.pLUCODE!);
+
+          if (resList?.emptyBottles != null &&
+              resList?.emptyBottles != [] &&
+              !isMinus) {
+            await showModalBottomSheet(
+              enableDrag: false,
+              isScrollControlled: true,
+              isDismissible: false,
+              useRootNavigator: true,
+              context: context!,
+              builder: (context) {
+                return ReturnBottleSelectionView(
+                  returnProResList: resList!.emptyBottles!,
+                  isMinus: true, // it is always - since it is a return bottle
+                  defaultQty: qty ?? 1,
+                );
+              },
+            );
+          }
         }
         // var returnProRes = await POSPriceCalculator()
         //     .searchProduct(myProduct.returnBottleCode!);

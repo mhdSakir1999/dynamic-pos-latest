@@ -35,7 +35,7 @@ import 'package:responsive_grid/responsive_grid.dart';
 import '../../controllers/keyboard_controller.dart';
 
 class ReturnBottleSelectionView extends StatefulWidget {
-  final List<ProductResult?> returnProResList;
+  final List<Product> returnProResList;
   final bool isMinus;
   final double defaultQty;
 
@@ -76,14 +76,15 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
           active = true;
         });
     });
-    // editingController.addListener(() {
-    //   handleTxtValueChange();
-    // });
+    editingController.addListener(() {
+      handleTxtValueChange();
+    });
     // quickSearch = false;
     for (var proRes in widget.returnProResList) {
-      if (proRes!.product!.isNotEmpty) {
-        productList.add(proRes!.product!.first);
-      }
+      // if (proRes!.product!.isNotEmpty) {
+      //   productList.add(proRes!.product!.first);
+      // }
+      productList.add(proRes);
     }
     if (productList.isNotEmpty) {
       selectedProduct = productList.first;
@@ -146,9 +147,9 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                   SizedBox(
                     width: 8.w,
                   ),
-                  // GoBackIconButton(
-                  //   onPressed: handleBack,
-                  // ),
+                  GoBackIconButton(
+                    onPressed: handleBack,
+                  ),
                   SizedBox(
                     width: 8.w,
                   ),
@@ -572,7 +573,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
             child: buildCartList()),
         lineSpace(),
         TextField(
-          enabled: false,
+          enabled: true,
           // readOnly: true,
           autofocus: true,
           focusNode: textFocus,
@@ -623,7 +624,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
               },
               isInvoiceScreen: false,
               clearButton: true,
-              controller: null, // editingController,
+              controller: editingController, // editingController,
               nextFocusTo: textFocus,
             ),
           ),
@@ -704,32 +705,32 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                 ),
               ],
             ),
-            // Positioned(
-            //   right: 40.w,
-            //   bottom: 10.h,
-            //   child: Row(
-            //     children: [
-            //       IconButton(
-            //           onPressed: decrementQty,
-            //           icon: Icon(
-            //             FontAwesome.minus_circle,
-            //           ),
-            //           iconSize: 40.r,
-            //           color: Colors.redAccent),
-            //       SizedBox(
-            //         width: 15.w,
-            //       ),
-            //       IconButton(
-            //         onPressed: incrementQty,
-            //         icon: Icon(
-            //           FontAwesome.plus_circle,
-            //         ),
-            //         iconSize: 40.r,
-            //         color: Colors.greenAccent,
-            //       ),
-            //     ],
-            //   ),
-            // )
+            Positioned(
+              right: 40.w,
+              bottom: 10.h,
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: decrementQty,
+                      icon: Icon(
+                        FontAwesome.minus_circle,
+                      ),
+                      iconSize: 40.r,
+                      color: Colors.redAccent),
+                  SizedBox(
+                    width: 15.w,
+                  ),
+                  IconButton(
+                    onPressed: incrementQty,
+                    icon: Icon(
+                      FontAwesome.plus_circle,
+                    ),
+                    iconSize: 40.r,
+                    color: Colors.greenAccent,
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

@@ -80,6 +80,7 @@ class ApiClient {
           POSLoggerController.addNewLog(
               POSLogger(POSLoggerLevel.apiInfo, "FormData: $temp"));
       }
+      print(bearerToken);
       if (data != null) {
         tempFormData = jsonEncode(data);
         if (writeLog)

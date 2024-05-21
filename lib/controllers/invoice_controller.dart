@@ -568,6 +568,18 @@ class InvoiceController {
         element.allowDiscount = true;
       }
 
+      // this is to remove all the promotion related discounts (if it mistakely added)
+      element.promoDiscAmt = 0;
+      element.promoDiscPre = 0;
+      element.promoBillDiscPre = 0;
+      element.promoCode = '';
+      element.promoDesc = '';
+      element.promoDiscValue = 0;
+
+      element.amount = (element.selling * element.unitQty) -
+          ((element.discAmt ?? 0) +
+              (element.selling / 100 * (element.discPer ?? 0)));
+
       CartModel cart = element;
       if (POSConfig().cartBatchItem) {
         cart.key = cart.proCode;

@@ -19,9 +19,10 @@ class ProductResult {
   List<ProductPriceChanges>? prices;
   List<ProPrice>? proPrices;
   List<ProTax>? proTax;
+  List<Product>? emptyBottles;
   String? status;
 
-  ProductResult({this.success, this.product, this.status});
+  ProductResult({this.success, this.product, this.status, this.emptyBottles});
 
   ProductResult.fromJson(Map<String, dynamic> json) {
     success = json['success']?.toString().parseBool() ?? false;
@@ -47,6 +48,11 @@ class ProductResult {
       json['pro_tax'].forEach((v) {
         proTax!.add(new ProTax.fromJson(v));
       });
+    }
+    if (json['return_pros'] != null && json['return_pros'] != []) {
+      emptyBottles = List.generate(json['return_pros'].length,
+              (index) => Product.fromJson(json['return_pros'][index])) ??
+          [];
     }
   }
 

@@ -7,6 +7,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/discount_bloc.dart';
 import 'package:checkout/bloc/group_bloc.dart';
 import 'package:checkout/bloc/notification_bloc.dart';
@@ -148,6 +149,36 @@ class _LandingViewState extends State<LandingView> {
               right: 5,
               child: Row(
                 children: [
+                  IconButton(
+                      onPressed: () async {
+                        if (POSConfig().localMode) {
+                          bool serverRes =
+                              await POSConnectivity().pingToServer();
+                          if (serverRes) {
+                            cartBloc.context = context;
+                            await cartBloc.serverConnectionPopup();
+                            EasyLoading.show(status: 'Please wait...');
+                            payModeBloc.getPayModeList();
+                            payModeBloc.getCardDetails();
+                            discountBloc.getDiscountTypes();
+                            groupBloc.getDepartments();
+                            priceModeBloc.fetchPriceModes();
+                            salesRepBloc.getSalesReps();
+                            initFunctions();
+                            EasyLoading.dismiss();
+                            setState(() {});
+                          }
+                        } else {
+                          EasyLoading.showInfo(
+                              'Server connection already available !!!');
+                          return;
+                        }
+                      },
+                      icon: Icon(
+                        Icons.wifi_find_outlined,
+                        color:
+                            POSConfig().localMode ? Colors.red : Colors.green,
+                      )),
                   IconButton(
                       onPressed: () => _rePrintDialog(context),
                       icon: Icon(
