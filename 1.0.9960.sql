@@ -757,3 +757,191 @@ IF @status IS NULL
 END
 GO
 ----------------------------------------------------------
+
+ALTER PROCEDURE [dbo].[myPOS_DP_GET_RETURN_BOTTLE_PRODUCTS] 
+	@loc varchar(40)
+as 
+BEGIN 
+DECLARE @pluCode varchar(max);
+	DECLARE @posDesc varchar(max);
+	DECLARE @stockCode varchar(max);
+	DECLARE @noDisc bit;
+	DECLARE @active bit;
+	DECLARE @minus bit;
+	DECLARE @pluOpen bit=0;
+	DECLARE @pluDecimal bit=0;
+	DECLARE @sih numeric;
+	DECLARE @selling numeric(18,2);
+	DECLARE @temp int;
+	DECLARE @caseSize numeric;
+	DECLARE @maxDisc numeric;
+	DECLARE @maxDiscAmt numeric;
+	DECLARE @cost numeric;
+	DECLARE @avgCost numeric;
+	DECLARE @pluUnit varchar(50);
+	DECLARE @department varchar(50);
+	DECLARE @subDepartment varchar(50);
+	DECLARE @pluLen int;
+	DECLARE @typeLen int; -- typed pro code length
+	DECLARE @picture varchar(max);
+	DECLARE @imageHash varchar(max);
+	DECLARE @pluPrefix varchar(max);
+	DECLARE @pluCharLen int;
+	DECLARE @createdPluCode varchar(max);
+	DECLARE @maxQty numeric(18,2)
+	DECLARE @maxQtyGrp varchar(50);
+	DECLARE @maxQtyGrpLvl varchar(50);
+	DECLARE @volume numeric(18,2);
+	DECLARE @status varchar(15) = NULL;
+	DECLARE @inventorySearched bit=0;
+	DECLARE @proMasterSearched bit=1;
+	DECLARE @searchCode varchar(max);
+	DECLARE @hasSpecialPrice bit = 0;
+	DECLARE @specialPrice numeric(18,2)= 0;
+	DECLARE @exchangable bit = 1;
+	DECLARE @vendorPlu varchar(15);
+	DECLARE @posactive bit =0;
+	declare @emptyBtCode varchar(20);
+	declare @variantEnable bit=0;
+	DECLARE @motherCode varchar(max);
+	declare @batchEnable bit=0;
+	declare @CompanyVariantEnable bit=0;
+	declare @ActMotherCode varchar(max);
+	declare @isEmptyCode int;
+
+
+	--SELECT IPLU_PRODUCTCODE SCAN_CODE,PLU_CODE,IPLU_DESC  as  PLU_POSDESC,IPLU_PRODUCTCODE as PLU_STOCKCODE,IPLU_ACTIVE as  PLU_ACTIVE,PLU_NODISC as PLU_NODISC, 
+	--		IPLU_SELL SELLING_PRICE,IPLU_SIH AS SIH,PLU_CS as CASE_SIZE,IPLU_COST AS PLU_COST,IPLU_AVGCOST AS PLU_AVGCOST,PLU_UNIT as PLU_UNIT,
+ --           '' PLU_DEPARTMENT,'' PLU_SUB_DEPARTMENT,PLU_PICTURE IMAGE_PATH,PLU_DECIMAL as PLU_DECIMAL,'' as status,PLU_OPEN as PLU_OPEN,PLU_PICTURE_HASH PLU_PICTURE_HASH,
+	--		PLU_MAXDISCPER,PLU_MAXDISCAMT,PLU_MINUSALLOW,0 AS PLU_MAXVOLUME,0 AS PLU_MAXVOLUME_GRP,'' AS PLU_MAXVOLUME_GRPLV,0 AS PLU_VOLUME,
+	--		PLU_EXCHANGABLE,PLU_VENDORPLU,cast(IPLU_ACTIVE as bit) AS PLU_POSACTIVE, PLU_RETURN,cast(0 as bit) PLU_VARIANTANABLE,cast(0 as bit) PLU_BATCHENABLE,isnull(PLU_EMPTY,0) PLU_EMPTY
+ --           FROM M_TBLPROMASTER INNER JOIN M_TBLPROINVENTORY ON PLU_CODE=IPLU_CODE WHERE IPLU_LOCCODE=@loc
+ --           AND IPLU_ACTIVE=1 AND PLU_EMPTY=1
+	SELECT IPLU_PRODUCTCODE SCAN_CODE,PLU_CODE,IPLU_DESC  as  PLU_POSDESC,IPLU_PRODUCTCODE as PLU_STOCKCODE, cast(IPLU_ACTIVE as bit) as  PLU_ACTIVE,cast(PLU_NODISC as bit) as PLU_NODISC, 
+			IPLU_SELL SELLING_PRICE,IPLU_SIH AS SIH,PLU_CS as CASE_SIZE,IPLU_COST AS PLU_COST,IPLU_AVGCOST AS PLU_AVGCOST,PLU_UNIT as PLU_UNIT,
+            '' PLU_DEPARTMENT,'' PLU_SUB_DEPARTMENT,PLU_PICTURE IMAGE_PATH,cast(PLU_DECIMAL as bit) as PLU_DECIMAL,'' as status,cast(PLU_OPEN as bit) as PLU_OPEN,PLU_PICTURE_HASH PLU_PICTURE_HASH,
+			PLU_MAXDISCPER,PLU_MAXDISCAMT,PLU_MINUSALLOW,cast(0 as numeric) AS PLU_MAXVOLUME,'' AS PLU_MAXVOLUME_GRP,'' AS PLU_MAXVOLUME_GRPLV,cast(0 as numeric) AS PLU_VOLUME,
+			PLU_EXCHANGABLE,PLU_VENDORPLU, PLU_POSACTIVE, PLU_RETURN, PLU_VARIANTANABLE, PLU_BATCHENABLE,isnull(PLU_EMPTY,0) PLU_EMPTY
+            FROM M_TBLPROMASTER INNER JOIN M_TBLPROINVENTORY ON PLU_CODE=IPLU_CODE WHERE IPLU_LOCCODE=@loc
+            AND IPLU_ACTIVE=1 AND PLU_EMPTY=1
+
+/*
+ SELECT @pluCode=PLU_CODE,@posDesc = PLU_POSDESC,@active= PLU_ACTIVE,@noDisc=PLU_NODISC,@caseSize=PLU_CS,@pluUnit=PLU_UNIT,@pluOpen = PLU_OPEN,@picture=PLU_PICTURE ,
+ @imageHash=PLU_PICTURE_HASH,@maxDisc=PLU_MAXDISCPER,@maxDiscAmt=PLU_MAXDISCAMT,@pluDecimal = PLU_DECIMAL,@minus=PLU_MINUSALLOW,@maxQty = PLU_ALLOWQTY,@exchangable=PLU_EXCHANGABLE,
+ @vendorPlu=PLU_VENDORPLU,@posactive =PLU_POSACTIVE, @emptyBtCode=PLU_RETURN,@variantEnable=PLU_VARIANTANABLE,@motherCode=PLU_STOCKCODE,@batchEnable=PLU_BATCHENABLE, 
+ @isEmptyCode=PLU_EMPTY
+    FROM M_TBLPROMASTER p 
+    WHERE (plu_empty = 1  AND PLU_RAWITEM=0 AND PLU_ACTIVE=1)
+
+
+IF @status IS NULL
+    BEGIN
+        IF @proMasterSearched = 0
+        BEGIN
+            SELECT @pluCode=PLU_CODE,@active= PLU_ACTIVE,@noDisc=PLU_NODISC,@caseSize=PLU_CS,@pluUnit=PLU_UNIT,@pluOpen = PLU_OPEN,@picture=PLU_PICTURE ,@imageHash=PLU_PICTURE_HASH,@maxDisc=PLU_MAXDISCPER,@maxDiscAmt=PLU_MAXDISCAMT,@pluDecimal = PLU_DECIMAL,@minus=PLU_MINUSALLOW,@maxQty = PLU_ALLOWQTY,@exchangable=PLU_EXCHANGABLE,@vendorPlu=PLU_VENDORPLU,@posactive =PLU_POSACTIVE , @emptyBtCode=PLU_RETURN,@motherCode=PLU_STOCKCODE,@batchEnable=PLU_BATCHENABLE,@variantEnable=PLU_VARIANTANABLE, @isEmptyCode=PLU_EMPTY
+            FROM M_TBLPROMASTER p 
+            WHERE PLU_CODE = @pluCode
+        END
+
+		if @CompanyVariantEnable=1
+		begin
+			set @ActMotherCode = @motherCode+'0000'
+		end
+		else
+		begin
+			set @ActMotherCode = @motherCode
+		end
+
+        -- SELECT PRODUCT VOLUME AND GROUP
+		SELECT @volume=UM_VOLUME FROM M_TBLUNITS u WHERE u.UM_CODE = @pluUnit
+		SELECT @maxQty=a.VL_TOTALCAPACITY,@maxQtyGrp=a.VL_GROUPCODE,@maxQtyGrpLvl=a.VL_GROUPLEVEL FROM U_TBLMAXALLOWED a WHERE a.VL_GROUPCODE = (select GPLU_GROUPCODE3 from M_TBLPROGROUPS where GPLU_CODE=@pluCode) --and a.VL_UOM= @pluUnit
+
+		-- fetech inventory details
+        IF @inventorySearched = 0 
+        BEGIN
+			print('----------')
+            SELECT  @selling=IPLU_SELL,@sih = IPLU_SIH,@plucode = IPLU_CODE,@avgCost = IPLU_AVGCOST,
+            @stockCode=IPLU_PRODUCTCODE,
+			@cost=IPLU_COST,@posDesc = IPLU_DESC,@specialPrice = IPLU_SPECIALPRICE, @posactive=CAST(IPLU_ACTIVE AS BIT)
+            FROM M_TBLPROINVENTORY WHERE IPLU_CODE=@pluCode
+            AND IPLU_LOCCODE=@Loc AND IPLU_ACTIVE=1 
+			print('----------')
+			IF @hasSpecialPrice = 1 
+			BEGIN
+				SET @selling = @specialPrice
+			END
+
+			SELECT @stockCode SCAN_CODE,@pluCode as PLU_CODE,@posDesc  as  PLU_POSDESC,case when @pluCode <> @motherCode then @ActMotherCode else  @stockCode end as PLU_STOCKCODE,@active as  PLU_ACTIVE,@noDisc as PLU_NODISC,@selling as SELLING_PRICE, @sih as SIH,
+			@caseSize as CASE_SIZE,@cost as PLU_COST, @avgCost as PLU_AVGCOST,@pluUnit as PLU_UNIT,@department PLU_DEPARTMENT,@subDepartment PLU_SUB_DEPARTMENT,@picture IMAGE_PATH,@pluDecimal as PLU_DECIMAL,@status as status,@pluOpen as PLU_OPEN,@imageHash PLU_PICTURE_HASH,@maxDisc PLU_MAXDISCPER,@maxDiscAmt PLU_MAXDISCAMT,@minus PLU_MINUSALLOW,@maxQty PLU_MAXVOLUME,@maxQtyGrp PLU_MAXVOLUME_GRP,@maxQtyGrpLvl PLU_MAXVOLUME_GRPLV,@volume PLU_VOLUME,@exchangable PLU_EXCHANGABLE,@vendorPlu PLU_VENDORPLU,@posactive PLU_POSACTIVE, @emptyBtCode PLU_RETURN,@variantEnable PLU_VARIANTANABLE,@batchEnable PLU_BATCHENABLE, isnull(@isEmptyCode,0) PLU_EMPTY
+        END
+
+		IF @inventorySearched = 1
+		BEGIN
+			IF @hasSpecialPrice = 1 
+			BEGIN
+				SET @selling = @specialPrice
+			END
+
+			SELECT @stockCode SCAN_CODE,@pluCode as PLU_CODE,@posDesc  as  PLU_POSDESC,case when @pluCode <> @motherCode then @ActMotherCode else  @stockCode end as PLU_STOCKCODE,@active as  PLU_ACTIVE,@noDisc as PLU_NODISC,@selling as SELLING_PRICE, @sih as SIH,
+			@caseSize as CASE_SIZE,@cost as PLU_COST, @avgCost as PLU_AVGCOST,@pluUnit as PLU_UNIT,@department PLU_DEPARTMENT,@subDepartment PLU_SUB_DEPARTMENT,@picture IMAGE_PATH,@pluDecimal as PLU_DECIMAL,@status as status,@pluOpen as PLU_OPEN,@imageHash PLU_PICTURE_HASH,@maxDisc PLU_MAXDISCPER,@maxDiscAmt PLU_MAXDISCAMT,@minus PLU_MINUSALLOW,@maxQty PLU_MAXVOLUME,@maxQtyGrp PLU_MAXVOLUME_GRP,@maxQtyGrpLvl PLU_MAXVOLUME_GRPLV,@volume PLU_VOLUME,@exchangable PLU_EXCHANGABLE,@vendorPlu PLU_VENDORPLU,@posactive PLU_POSACTIVE, @emptyBtCode PLU_RETURN,@variantEnable PLU_VARIANTANABLE,@batchEnable PLU_BATCHENABLE , isnull(@isEmptyCode,0) PLU_EMPTY
+		END
+		ELSE 
+		BEGIN
+			/*
+			SELECT @stockCode SCAN_CODE,@pluCode as PLU_CODE,IPLU_DESC  as  PLU_POSDESC,IPLU_PRODUCTCODE as PLU_STOCKCODE,@active as  PLU_ACTIVE,@noDisc as PLU_NODISC, 
+			CASE WHEN @hasSpecialPrice = 1 THEN @specialPrice ELSE IPLU_SELL END SELLING_PRICE,IPLU_SIH AS SIH,@caseSize as CASE_SIZE,IPLU_COST AS PLU_COST,IPLU_AVGCOST AS PLU_AVGCOST,@pluUnit as PLU_UNIT,
+            @department PLU_DEPARTMENT,@subDepartment PLU_SUB_DEPARTMENT,@picture IMAGE_PATH,@pluDecimal as PLU_DECIMAL,@status as status,@pluOpen as PLU_OPEN,@imageHash PLU_PICTURE_HASH,
+			@maxDisc PLU_MAXDISCPER,@maxDiscAmt PLU_MAXDISCAMT,@minus PLU_MINUSALLOW,@maxQty PLU_MAXVOLUME,@maxQtyGrp PLU_MAXVOLUME_GRP,@maxQtyGrpLvl PLU_MAXVOLUME_GRPLV,@volume PLU_VOLUME,
+			@exchangable PLU_EXCHANGABLE,@vendorPlu PLU_VENDORPLU,@posactive PLU_POSACTIVE, @emptyBtCode PLU_RETURN
+            FROM M_TBLPROINVENTORY WHERE IPLU_CODE=@pluCode
+            AND IPLU_LOCCODE=@Loc AND IPLU_ACTIVE=1 
+			*/
+			SELECT  @selling=IPLU_SELL,@sih = IPLU_SIH,@plucode = IPLU_CODE,@avgCost = IPLU_AVGCOST,
+            @stockCode=IPLU_PRODUCTCODE,
+			@cost=IPLU_COST,@posDesc = IPLU_DESC,@specialPrice = IPLU_SPECIALPRICE, @posactive=CAST(IPLU_ACTIVE AS BIT)
+            FROM M_TBLPROINVENTORY WHERE IPLU_CODE=@pluCode
+            AND IPLU_LOCCODE=@Loc AND IPLU_ACTIVE=1 
+			
+			print('inventory')
+		END
+
+    END
+
+	ELSE
+	BEGIN
+		if @CompanyVariantEnable=1
+		begin
+			set @ActMotherCode = @motherCode+'0000'
+		end
+		else
+		begin
+			set @ActMotherCode = @motherCode
+		end
+
+		IF @hasSpecialPrice = 1 
+		BEGIN
+			SET @selling = @specialPrice
+		END
+		SELECT @stockCode SCAN_CODE,@pluCode as PLU_CODE,@posDesc  as  PLU_POSDESC,case when @pluCode <> @motherCode then @ActMotherCode else  @stockCode end as PLU_STOCKCODE,@active as  PLU_ACTIVE,@noDisc as PLU_NODISC,@selling as SELLING_PRICE, @sih as SIH,@caseSize as CASE_SIZE,@cost as PLU_COST, @avgCost as PLU_AVGCOST,@pluUnit as PLU_UNIT,@department PLU_DEPARTMENT,@subDepartment PLU_SUB_DEPARTMENT,@picture IMAGE_PATH,@pluDecimal as PLU_DECIMAL,@status as status,@pluOpen as PLU_OPEN,@imageHash PLU_PICTURE_HASH,@maxDisc PLU_MAXDISCPER,@maxDiscAmt PLU_MAXDISCAMT,@minus PLU_MINUSALLOW,@maxQty PLU_MAXVOLUME,@maxQtyGrp PLU_MAXVOLUME_GRP,@maxQtyGrpLvl PLU_MAXVOLUME_GRPLV,@volume PLU_VOLUME,@exchangable PLU_EXCHANGABLE,@vendorPlu PLU_VENDORPLU,@posactive PLU_POSACTIVE, @emptyBtCode PLU_RETURN,@variantEnable PLU_VARIANTANABLE,@batchEnable PLU_BATCHENABLE, isnull(@isEmptyCode,0) PLU_EMPTY
+	END
+
+ --SELECT @stockCode SCAN_CODE,@pluCode as PLU_CODE,@posDesc  as  PLU_POSDESC,case when @pluCode <> @motherCode then @ActMotherCode else  @stockCode end as PLU_STOCKCODE,
+ --@active as  PLU_ACTIVE,@noDisc as PLU_NODISC,@selling as SELLING_PRICE, @sih as SIH,@caseSize as CASE_SIZE,@cost as PLU_COST, @avgCost as PLU_AVGCOST,@pluUnit as PLU_UNIT,
+ --@department PLU_DEPARTMENT,@subDepartment PLU_SUB_DEPARTMENT,@picture IMAGE_PATH,@pluDecimal as PLU_DECIMAL,@status as status,@pluOpen as PLU_OPEN,@imageHash PLU_PICTURE_HASH,
+ --@maxDisc PLU_MAXDISCPER,@maxDiscAmt PLU_MAXDISCAMT,@minus PLU_MINUSALLOW,@maxQty PLU_MAXVOLUME,@maxQtyGrp PLU_MAXVOLUME_GRP,@maxQtyGrpLvl PLU_MAXVOLUME_GRPLV,@volume PLU_VOLUME,
+ --@exchangable PLU_EXCHANGABLE,@vendorPlu PLU_VENDORPLU,@posactive PLU_POSACTIVE, @emptyBtCode PLU_RETURN,@variantEnable PLU_VARIANTANABLE,@batchEnable PLU_BATCHENABLE, 
+ --isnull(@isEmptyCode,0) PLU_EMPTY
+--if @@ROWCOUNT = 0
+--begin
+--SELECT  @selling=IPLU_SELL,@sih = IPLU_SIH,@plucode = IPLU_CODE,@avgCost = IPLU_AVGCOST,
+--                @stockCode=IPLU_PRODUCTCODE,@cost=IPLU_COST ,@posDesc = IPLU_DESC,@specialPrice = IPLU_SPECIALPRICE, @posactive=IPLU_ACTIVE
+--                FROM M_TBLPROINVENTORY inner join M_TBLPROMASTER on IPLU_CODE = PLU_CODE  WHERE 
+--                 IPLU_LOCCODE=@Loc AND IPLU_ACTIVE=1 and PLU_EMPTY = 1
+--end
+
+*/
+END
+GO
+
+
+-------------------------------------------------------------

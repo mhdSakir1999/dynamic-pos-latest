@@ -56,7 +56,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
   bool quickSearch = false;
   Groups? selectedGroup;
   POSConfig config = POSConfig();
-  final desireWidthMultiplier = .25;
+  final desireWidthMultiplier = .5;
   Product? selectedProduct;
   double qty = 0;
   List<Product> productList = [];
