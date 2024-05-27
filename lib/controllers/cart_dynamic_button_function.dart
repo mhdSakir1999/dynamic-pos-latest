@@ -255,7 +255,7 @@ class CartDynamicButtonFunction {
         var res = await InvoiceController()
             .billClose(invoiced: false, context: context!);
 
-        // handle printings
+        // handle printings of a hold bill
         if (res.success == true) {
           POSConfig.localPrintData = res.resReturn!;
           var stopwatch = Stopwatch();
