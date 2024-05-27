@@ -2094,7 +2094,9 @@ class _CartState extends State<Cart> {
     if ((cartModel.discPer ?? zero) > zero) {
       discountText = "${cartModel.discPer?.toStringAsFixed(2)}%";
     } else if ((cartModel.discAmt ?? zero) != zero) {
-      discountText = "Rs. ${cartModel.discAmt?.abs().toStringAsFixed(2)}";
+      // discountText = "Rs. ${cartModel.discAmt?.abs().toStringAsFixed(2)}";
+      discountText =
+          "${POSConfig().currencyCode} ${cartModel.discAmt?.abs().toStringAsFixed(2)}";
     } else if ((cartModel.billDiscPer ?? zero) > zero) {
       discountText = "${cartModel.billDiscPer?.toStringAsFixed(2)}%";
     }

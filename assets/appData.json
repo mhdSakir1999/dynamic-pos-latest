@@ -5,5 +5,6 @@
         "day": "  *** GOOD DAY ***                      ",
         "evening": "*** GOOD EVENING ***                    "
     },
+    "currency_code": "Rs. ",
     "scall_barcode_symbol": ""
 }

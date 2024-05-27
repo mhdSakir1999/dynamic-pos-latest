@@ -6,6 +6,7 @@
 
 import 'package:checkout/bloc/paymode_bloc.dart';
 import 'package:checkout/components/components.dart';
+import 'package:checkout/components/recurringApiCalls.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/components/widgets/pay_button.dart';
 import 'package:checkout/components/widgets/poskeyboard.dart';
@@ -543,6 +544,24 @@ class _CashInOutViewState extends State<CashInOutView> {
         remarkEditingController.text.isEmpty) {
       showAlert("remark_required");
       return;
+    }
+
+    if (!widget.cashIn) {
+      var phyCshRes = await RecurringApiCalls().getCashDetails();
+      if (phyCshRes != null) {
+        double cashSales = phyCshRes[0]['sales'] ?? 0;
+        double cashouts = phyCshRes[0]['cashOuts'] ?? 0;
+        double remainingCash = cashSales - cashouts;
+
+        if (amount > remainingCash) {
+          EasyLoading.showError(
+              'Drawer amount is lower than entered amount\nCannot do cashouts !!!');
+          return;
+        }
+      } else {
+        EasyLoading.showError(
+            'Something error happened when calculating available cash amount !!!');
+      }
     }
 
     // continue the cash in out option

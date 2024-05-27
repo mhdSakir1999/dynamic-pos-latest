@@ -20,6 +20,7 @@ import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supercharged/supercharged.dart';
@@ -382,6 +383,17 @@ class SharedPreferenceController {
     } catch (e) {
       await LogWriter().saveLogsToFile('ERROR_LOG_', [
         'Exception on ENV Reading : ${e.toString()} \nCheck your env and ensure all the variables are there...'
+      ]);
+    }
+    var jsonData;
+    try {
+      String data = await rootBundle.loadString('assets/appData.json');
+      jsonData = jsonDecode(data);
+      POSConfig().currencyCode = jsonData['currency_code'];
+    } catch (e) {
+      jsonData = null;
+      LogWriter().saveLogsToFile('ERROR_LOG_', [
+        'initial conversion failed (appData.json read/conversion) : ' + e.toString()
       ]);
     }
     try {

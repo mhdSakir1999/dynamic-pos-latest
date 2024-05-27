@@ -70,6 +70,7 @@ class POSConfig {
   double screen_height = 0;
   bool default_size = false;
   bool singleSwipeActive = false;
+  String currencyCode = 'Rs.';
 
   // String loyaltyServerLocal = "http://10.1.1.70:72/api/";
   // String loyaltyServer = "http://10.1.1.70:72/api/";

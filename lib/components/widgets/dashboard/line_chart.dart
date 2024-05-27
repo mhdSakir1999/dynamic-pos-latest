@@ -1,4 +1,5 @@
 import 'package:checkout/models/dashboard_model.dart';
+import 'package:checkout/models/pos_config.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,8 @@ class LineChartView extends StatelessWidget {
                 final flSpot = barSpot;
                 double sale = flSpot.y * 1000;
                 return LineTooltipItem(
-                  'Rs. $sale',
+                  // 'Rs. $sale',
+                  '${POSConfig().currencyCode} $sale',
                   TextStyle(
                     color: barSpot.bar.gradient?.colors.first ??
                         barSpot.bar.color ??

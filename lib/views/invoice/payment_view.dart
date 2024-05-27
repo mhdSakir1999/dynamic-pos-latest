@@ -1599,6 +1599,11 @@ class _PaymentViewState extends State<PaymentView> {
             if (!snapshot.hasData) return Container();
             List<PayModeHeader> dynamicButtonList =
                 snapshot.data?.payModes ?? [];
+            // removing payment modes
+            if (POSConfig().localMode == true) {
+              dynamicButtonList
+                  .removeWhere((element) => element.pHLOCALMODE == false);
+            }
             return ResponsiveGridList(
               controller: payModeScroll,
               scroll: true,
@@ -1895,12 +1900,45 @@ class _PaymentViewState extends State<PaymentView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'ECR Intergrator',
+                    'payment_view.ecr_display_name'.tr(),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                       alignment: Alignment.centerRight,
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () async {
+                        String user =
+                            userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+                        String invNo = cartBloc.cartSummary?.invoiceNo ?? "";
+                        String refCode =
+                            '${POSConfig().locCode}-${POSConfig().terminalId}-@$user-$invNo';
+                        bool hasPermission = false;
+                        hasPermission = SpecialPermissionHandler(
+                                context: context)
+                            .hasPermission(
+                                permissionCode: PermissionCode.skipSingleSwipe,
+                                accessType: "A",
+                                refCode: refCode);
+
+                        //if user doesnt have the permission
+                        if (!hasPermission) {
+                          final res =
+                              await SpecialPermissionHandler(context: context)
+                                  .askForPermission(
+                                      permissionCode:
+                                          PermissionCode.skipSingleSwipe,
+                                      accessType: "A",
+                                      refCode: refCode);
+                          hasPermission = res.success;
+                          user = res.user;
+                        }
+                        if (hasPermission) {
+                          Navigator.pop(context);
+                        } else {
+                          // Navigator.pop(context, false);
+                        }
+                      },
+
+                      // Navigator.pop(context),
                       icon: Icon(
                         Icons.close_rounded,
                         color: Colors.white,
