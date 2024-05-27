@@ -244,6 +244,8 @@ class CustomerController {
     EasyLoading.dismiss();
     if (res == null) {
       EasyLoading.showError('customer_search_view.notfound'.tr());
+    } else if (res.cMACTIVE != true) {
+      EasyLoading.showError('Inactive customer');
     } else {
       //get individual customer data
       ExtLoyaltyModuleHelper extModules = ExtLoyaltyModuleHelper();

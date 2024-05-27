@@ -447,7 +447,7 @@ class InvoiceController {
 
     // saving our sending data to log files
     List<String> result = [
-      '--------------------Invoice map data (sending to \'invoice/save endpoint\'--------------------------------)'
+      '--------------------Invoice map data (sending to \'invoice/save endpoint\')--------------------------------'
     ];
     await LogWriter().saveLogsToFile('API_Log_', [
       '####################################################################',
