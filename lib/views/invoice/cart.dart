@@ -842,6 +842,13 @@ class _CartState extends State<Cart> {
       if (dateTime.isAfter(afterLastVoid)) {
         calculator.voidItem(selected, context);
         selectedCartItem = null;
+        var gross = cartBloc.cartSummary?.grossTotal ?? 0;
+        if (POSConfig().enablePollDisplay == 'true') {
+          usbSerial.sendToSerialDisplay(
+              '${usbSerial.addSpacesBack('GROSS AMOUNT', 20)}');
+          usbSerial.sendToSerialDisplay(
+              '${usbSerial.addSpacesFront('${gross}', 20)}');
+        }
       }
       // scrollToBottom();
       itemCodeFocus.requestFocus();
