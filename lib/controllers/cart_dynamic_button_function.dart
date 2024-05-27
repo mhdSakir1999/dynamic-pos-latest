@@ -17,6 +17,7 @@ import 'package:checkout/controllers/pos_price_calculator.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/product_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
+import 'package:checkout/controllers/usb_serial_controller.dart';
 import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/models/pos_config.dart';
@@ -254,6 +255,20 @@ class CartDynamicButtonFunction {
         var res = await InvoiceController()
             .billClose(invoiced: false, context: context!);
 
+        // handle printings
+        if (res.success == true) {
+          POSConfig.localPrintData = res.resReturn!;
+          var stopwatch = Stopwatch();
+
+          stopwatch.start();
+          await POSManualPrint().printInvoice(
+              data: res.resReturn!, points: res.earnedPoints, hold: true);
+          stopwatch.stop();
+          print(stopwatch.elapsed.toString());
+
+          if (POSConfig().enablePollDisplay == 'true')
+            await usbSerial.customTimeMessages();
+        }
         // /// new change by [TM.Sakir] -- initializing new invoice when holding a invoice ----------------------------------------------
         // /// comparing the summaryInvNumber(contains hold bill) with actual inv number from local storage.
         // /// if summaryInv > inv: we are holding the invoice for the first time. so we have to initiate next inv to do invoicing.

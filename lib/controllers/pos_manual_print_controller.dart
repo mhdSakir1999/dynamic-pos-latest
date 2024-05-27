@@ -145,7 +145,8 @@ class POSManualPrint {
       {required String data,
       var points,
       bool reprint = false,
-      bool cancel = false}) async {
+      bool cancel = false,
+      bool hold = false}) async {
     try {
       printerName = POSConfig.printerName;
       File file = File("${POSConfig.localPrintPath}/invoiceTemplate.xml");
@@ -251,7 +252,7 @@ class POSManualPrint {
           : invPayment.lastIndexWhere((element) =>
               element['INVPAY_PHCODE'] == 'CSH' ||
               element['INVPAY_PHCODE'] == 'FCR');
-      if (indexOfCSHPayment != -1 && !reprint && !cancel) {
+      if (indexOfCSHPayment != -1 && !reprint && !cancel && !hold) {
         bytes += generator.drawer();
       }
 
