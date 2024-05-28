@@ -53,10 +53,13 @@ import 'package:checkout/views/invoice/payment_view.dart';
 import 'package:checkout/views/invoice/product_search_view.dart';
 import 'package:checkout/views/invoice/returnBottle_selection_view.dart';
 import 'package:checkout/views/invoice/variant_detail_view.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_grid/responsive_grid.dart';
@@ -91,7 +94,7 @@ class Cart extends StatefulWidget {
   _CartState createState() => _CartState();
 }
 
-class _CartState extends State<Cart> {
+class _CartState extends State<Cart> with TickerProviderStateMixin {
   final itemCodeEditingController = TextEditingController();
   final productController = ProductController();
   final POSPriceCalculator calculator = POSPriceCalculator();
@@ -112,11 +115,17 @@ class _CartState extends State<Cart> {
 
   bool payButtonPressed = false;
 
+  PageController _pageViewController = PageController();
+  late TabController _tabController;
+
+  int _currentPageIndex = 0;
+
   late SerialPort port;
   @override
   void initState() {
     super.initState();
     focusNode.requestFocus();
+    _tabController = TabController(length: 2, vsync: this);
     if ((cartBloc.currentCart?.length ?? 0) > 0) {
       if (POSConfig().dualScreenWebsite != "")
         DualScreenController().setView('invoice');
@@ -170,6 +179,8 @@ class _CartState extends State<Cart> {
     itemCodeFocus.dispose();
     focusNode.dispose();
     customerNode.dispose();
+    _pageViewController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -2375,124 +2386,277 @@ class _CartState extends State<Cart> {
   // This is the dynamic button set
   Widget buildButtonSet() {
     final dynamicButtonList = CartDynamicButtonController().getButtonList();
+    final dynamicButtonList2 = CartDynamicButtonController().getButtonList2();
     final config = POSConfig();
     return Container(
-      child: ResponsiveGridList(
-        scroll: false,
-        desiredItemWidth: config.cartDynamicButtonWidth.w,
-        children: dynamicButtonList.map((posButton) {
-          Color? textColor =
-              posButton.textColor?.toColor() ?? CurrentTheme.primaryDarkColor;
-          if (gvMode && posButton.functionName != 'gv') {
-            textColor = Colors.blueGrey;
-          }
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: _pageViewController,
+                  onPageChanged: _handlePageViewChanged,
+                  children: [
+                    ResponsiveGridList(
+                      scroll: false,
+                      desiredItemWidth: config.cartDynamicButtonWidth.w,
+                      children: dynamicButtonList.map((posButton) {
+                        Color? textColor = posButton.textColor?.toColor() ??
+                            CurrentTheme.primaryDarkColor;
+                        if (gvMode && posButton.functionName != 'gv') {
+                          textColor = Colors.blueGrey;
+                        }
 
-          return Container(
-            margin: EdgeInsets.all(POSConfig().cartDynamicButtonPadding),
-            height: config.cartDynamicButtonHeight.h,
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                bottomLeft:
-                    Radius.circular(config.rounderBorderRadiusBottomLeft),
-                bottomRight:
-                    Radius.circular(config.rounderBorderRadiusBottomRight),
-                topRight: Radius.circular(config.rounderBorderRadiusTopRight),
-                topLeft: Radius.circular(config.rounderBorderRadiusTopLeft),
-              )),
-              color: posButton.buttonNormalColor.toColor(),
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Text(
-                  "functions.${posButton.functionName}".tr(),
-                  style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.bold,
-                      color: textColor),
-                  textAlign: TextAlign.center,
+                        return Container(
+                          margin: EdgeInsets.all(
+                              POSConfig().cartDynamicButtonPadding),
+                          height: config.cartDynamicButtonHeight.h,
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(
+                                  config.rounderBorderRadiusBottomLeft),
+                              bottomRight: Radius.circular(
+                                  config.rounderBorderRadiusBottomRight),
+                              topRight: Radius.circular(
+                                  config.rounderBorderRadiusTopRight),
+                              topLeft: Radius.circular(
+                                  config.rounderBorderRadiusTopLeft),
+                            )),
+                            color: posButton.buttonNormalColor.toColor(),
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                "functions.${posButton.functionName}".tr(),
+                                style: TextStyle(
+                                    fontSize: 24.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            // style: ElevatedButton.styleFrom(
+                            //     primary: posButton.buttonNormalColor.toColor()),
+                            onPressed: () async {
+                              /// new change by [TM.Sakir]
+                              if (POSConfig().localMode == true &&
+                                  posButton.functionName ==
+                                      'special_function') {
+                                EasyLoading.showError(
+                                    'special_functions.cant_open_local'.tr());
+                                return;
+                              }
+
+                              /// if cartBloc.cartSummary has items disabling 'special_function' button
+                              if (cartBloc.cartSummary?.items != 0 &&
+                                  posButton.functionName ==
+                                      'special_function') {
+                                EasyLoading.showError(
+                                    'special_functions.cant_open'.tr());
+                                return;
+                              }
+                              //"cartBloc.cartSummary" to check whether cart is not editable. this is used when backoffice txn is recalled.
+                              if (cartBloc.cartSummary?.editable != true &&
+                                  posButton.functionName != 'clear') {
+                                EasyLoading.showError(
+                                    'backend_invoice_view.item_add_error'.tr());
+                                return;
+                              }
+                              //this is gv mode button
+                              if (posButton.functionName == 'gv') {
+                                //check whether the client has the GV module license
+                                if (POSConfig().clientLicense?.lCMYVOUCHERS !=
+                                        true ||
+                                    POSConfig().expired) {
+                                  ActivationController()
+                                      .showModuleBuy(context, "myVouchers");
+                                  return;
+                                }
+
+                                if (config.localMode) {
+                                  EasyLoading.showError(
+                                      'local_mode_func_disable'.tr());
+                                  return;
+                                }
+                                if (mounted) {
+                                  setState(() {
+                                    //Switch On or Off the GV mode
+                                    gvMode = !gvMode;
+                                  });
+                                }
+                                itemCodeFocus.requestFocus();
+                                return;
+                              }
+
+                              //if gv mode is enabled lets disable others
+                              if (gvMode) {
+                                return;
+                              }
+
+                              CartModel? lastItem;
+                              if (((cartBloc.currentCart?.values ?? [])
+                                      .length) >
+                                  0) {
+                                lastItem = cartBloc.currentCart?.values.last;
+                              }
+
+                              final selectedModel = getSelectedItem();
+                              POSLoggerController.addNewLog(POSLogger(
+                                  POSLoggerLevel.info,
+                                  "${posButton.buttonName}(${posButton.functionName}) button pressed"));
+                              final func = CartDynamicButtonFunction(
+                                  posButton.functionName,
+                                  itemCodeEditingController)
+                                ..context = context;
+                              if (activeDynamicButton) {
+                                if (mounted)
+                                  setState(() {
+                                    activeDynamicButton = false;
+                                  });
+                                await func.handleFunction(
+                                    cart: selectedModel, lastItem: lastItem);
+                                scrollToBottom();
+                                clearSelection();
+                                focusNode.requestFocus();
+                                itemCodeFocus.requestFocus();
+                              }
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    ResponsiveGridList(
+                      scroll: false,
+                      desiredItemWidth: config.cartDynamicButtonWidth.w,
+                      children: dynamicButtonList2.map((posButton) {
+                        Color? textColor = posButton.textColor?.toColor() ??
+                            CurrentTheme.primaryDarkColor;
+                        if (gvMode && posButton.functionName != 'gv') {
+                          textColor = Colors.blueGrey;
+                        }
+
+                        return Container(
+                          margin: EdgeInsets.all(
+                              POSConfig().cartDynamicButtonPadding),
+                          height: config.cartDynamicButtonHeight.h,
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(
+                                  config.rounderBorderRadiusBottomLeft),
+                              bottomRight: Radius.circular(
+                                  config.rounderBorderRadiusBottomRight),
+                              topRight: Radius.circular(
+                                  config.rounderBorderRadiusTopRight),
+                              topLeft: Radius.circular(
+                                  config.rounderBorderRadiusTopLeft),
+                            )),
+                            color: posButton.buttonNormalColor.toColor(),
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                "functions.${posButton.functionName}".tr(),
+                                style: TextStyle(
+                                    fontSize: 24.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            // style: ElevatedButton.styleFrom(
+                            //     primary: posButton.buttonNormalColor.toColor()),
+                            onPressed: () async {
+                              POSLoggerController.addNewLog(POSLogger(
+                                  POSLoggerLevel.info,
+                                  "${posButton.buttonName}(${posButton.functionName}) button pressed"));
+                              final func = CartDynamicButtonFunction(
+                                  posButton.functionName,
+                                  itemCodeEditingController)
+                                ..context = context;
+                              if (activeDynamicButton) {
+                                if (mounted)
+                                  setState(() {
+                                    activeDynamicButton = false;
+                                  });
+                                await func.handleFunction(
+                                    cart: null, lastItem: null);
+                                scrollToBottom();
+                                clearSelection();
+                                focusNode.requestFocus();
+                                itemCodeFocus.requestFocus();
+                              }
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
               ),
-              // style: ElevatedButton.styleFrom(
-              //     primary: posButton.buttonNormalColor.toColor()),
-              onPressed: () async {
-                /// new change by [TM.Sakir]
-                if (POSConfig().localMode == true &&
-                    posButton.functionName == 'special_function') {
-                  EasyLoading.showError(
-                      'special_functions.cant_open_local'.tr());
-                  return;
-                }
-
-                /// if cartBloc.cartSummary has items disabling 'special_function' button
-                if (cartBloc.cartSummary?.items != 0 &&
-                    posButton.functionName == 'special_function') {
-                  EasyLoading.showError('special_functions.cant_open'.tr());
-                  return;
-                }
-                //"cartBloc.cartSummary" to check whether cart is not editable. this is used when backoffice txn is recalled.
-                if (cartBloc.cartSummary?.editable != true &&
-                    posButton.functionName != 'clear') {
-                  EasyLoading.showError(
-                      'backend_invoice_view.item_add_error'.tr());
-                  return;
-                }
-                //this is gv mode button
-                if (posButton.functionName == 'gv') {
-                  //check whether the client has the GV module license
-                  if (POSConfig().clientLicense?.lCMYVOUCHERS != true ||
-                      POSConfig().expired) {
-                    ActivationController().showModuleBuy(context, "myVouchers");
-                    return;
-                  }
-
-                  if (config.localMode) {
-                    EasyLoading.showError('local_mode_func_disable'.tr());
-                    return;
-                  }
-                  if (mounted) {
-                    setState(() {
-                      //Switch On or Off the GV mode
-                      gvMode = !gvMode;
-                    });
-                  }
-                  itemCodeFocus.requestFocus();
-                  return;
-                }
-
-                //if gv mode is enabled lets disable others
-                if (gvMode) {
-                  return;
-                }
-
-                CartModel? lastItem;
-                if (((cartBloc.currentCart?.values ?? []).length) > 0) {
-                  lastItem = cartBloc.currentCart?.values.last;
-                }
-
-                final selectedModel = getSelectedItem();
-                POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
-                    "${posButton.buttonName}(${posButton.functionName}) button pressed"));
-                final func = CartDynamicButtonFunction(
-                    posButton.functionName, itemCodeEditingController)
-                  ..context = context;
-                if (activeDynamicButton) {
-                  if (mounted)
-                    setState(() {
-                      activeDynamicButton = false;
-                    });
-                  await func.handleFunction(
-                      cart: selectedModel, lastItem: lastItem);
-                  scrollToBottom();
-                  clearSelection();
-                  focusNode.requestFocus();
-                  itemCodeFocus.requestFocus();
-                }
-              },
+            ],
+          ),
+          // Positioned(
+          //     left: 0,
+          //     top: 0,
+          //     bottom: 0,
+          //     child: IconButton(
+          //         onPressed: () {}, icon: Icon(Icons.arrow_back_ios))),
+          // Positioned(
+          //     right: 0,
+          //     top: 0,
+          //     bottom: 0,
+          //     child: IconButton(
+          //         onPressed: () {}, icon: Icon(Icons.arrow_forward_ios)))
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: PageIndicator(
+              tabController: _tabController,
+              currentPageIndex: _currentPageIndex,
+              onUpdateCurrentPageIndex: _updateCurrentPageIndex,
+              isOnDesktopAndWeb: _isOnDesktopAndWeb,
             ),
-          );
-        }).toList(),
+          ),
+        ],
       ),
     );
+  }
+
+  void _handlePageViewChanged(int currentPageIndex) {
+    if (!_isOnDesktopAndWeb) {
+      return;
+    }
+    _tabController.index = currentPageIndex;
+    setState(() {
+      _currentPageIndex = currentPageIndex;
+    });
+  }
+
+  void _updateCurrentPageIndex(int index) {
+    _tabController.index = index;
+    _pageViewController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  bool get _isOnDesktopAndWeb {
+    if (kIsWeb) {
+      return true;
+    }
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.macOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
+        return true;
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+      case TargetPlatform.fuchsia:
+        return false;
+    }
   }
 
   void scrollToBottom() async {
@@ -3248,5 +3412,70 @@ class _CartState extends State<Cart> {
         pageBuilder: (context, animation, secondaryAnimation) {
           return SizedBox();
         });
+  }
+}
+
+class PageIndicator extends StatelessWidget {
+  const PageIndicator({
+    super.key,
+    required this.tabController,
+    required this.currentPageIndex,
+    required this.onUpdateCurrentPageIndex,
+    required this.isOnDesktopAndWeb,
+  });
+
+  final int currentPageIndex;
+  final TabController tabController;
+  final void Function(int) onUpdateCurrentPageIndex;
+  final bool isOnDesktopAndWeb;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isOnDesktopAndWeb) {
+      return const SizedBox.shrink();
+    }
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          // IconButton(
+          //   splashRadius: 8.0,
+          //   padding: EdgeInsets.zero,
+          //   onPressed: () {
+          //     if (currentPageIndex == 0) {
+          //       return;
+          //     }
+          //     onUpdateCurrentPageIndex(currentPageIndex - 1);
+          //   },
+          //   icon: const Icon(
+          //     Icons.arrow_left_rounded,
+          //     size: 35.0,
+          //   ),
+          // ),
+          TabPageSelector(
+            controller: tabController,
+            color: colorScheme.surface,
+            selectedColor: colorScheme.secondary,
+          ),
+          // IconButton(
+          //   splashRadius: 8.0,
+          //   padding: EdgeInsets.zero,
+          //   onPressed: () {
+          //     if (currentPageIndex == 2) {
+          //       return;
+          //     }
+          //     onUpdateCurrentPageIndex(currentPageIndex + 1);
+          //   },
+          //   icon: const Icon(
+          //     Icons.arrow_right_rounded,
+          //     size: 35.0,
+          //   ),
+          // ),
+        ],
+      ),
+    );
   }
 }

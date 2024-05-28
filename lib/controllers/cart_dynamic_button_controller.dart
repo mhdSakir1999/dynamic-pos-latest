@@ -33,4 +33,11 @@ class CartDynamicButtonController {
       CartDynamicButton("Cash Out", "cash_out", "#d9d9d9", "#ffffff", false),
     ];
   }
+
+  List<CartDynamicButton> getButtonList2() {
+    return [
+      CartDynamicButton("Payment\nRe-Classsification", "re-classification",
+          "#d9d9d9", "#ffffff", false),
+    ];
+  }
 }

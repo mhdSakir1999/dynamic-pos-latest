@@ -25,6 +25,7 @@ import 'package:checkout/models/pos_logger.dart';
 import 'package:checkout/views/invoice/bill_cancel_view.dart';
 import 'package:checkout/views/invoice/cash_in_out_view.dart';
 import 'package:checkout/views/invoice/discount_entry_view.dart';
+import 'package:checkout/views/invoice/payment_reClassification_view.dart';
 import 'package:checkout/views/invoice/product_search_view.dart';
 import 'package:checkout/views/invoice/recall_view.dart';
 import 'package:checkout/views/invoice/reprint_view.dart';
@@ -562,6 +563,29 @@ class CartDynamicButtonFunction {
       case "drawer_open":
         openDrawer();
         break;
+      case "re-classification":
+        // _specialFunction();
+        reClassification();
+        break;
+    }
+  }
+
+  Future<void> reClassification() async {
+    if (context == null) {
+      POSLoggerController.addNewLog(POSLogger(
+          POSLoggerLevel.error, "Field 'context' has not been initialized."));
+      return;
+    } else {
+      showModalBottomSheet(
+        isDismissible: false,
+        enableDrag: false,
+        isScrollControlled: true,
+        useRootNavigator: true,
+        context: context!,
+        builder: (context) {
+          return PaymentReClassification();
+        },
+      );
     }
   }
 

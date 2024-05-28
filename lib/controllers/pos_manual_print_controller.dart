@@ -149,7 +149,8 @@ class POSManualPrint {
       bool hold = false}) async {
     try {
       printerName = POSConfig.printerName;
-      File file = File("${POSConfig.localPrintPath}/invoiceTemplate.xml");
+      File file = File(
+          "${POSConfig.localPrintPath}/${hold ? 'holdInvoiceTemplate.xml' : 'invoiceTemplate.xml'}");
       if (await file.exists()) {
         xmlContent = await file.readAsString();
       }
@@ -187,7 +188,7 @@ class POSManualPrint {
         printMessage = printMassages.join('\n');
       }
 
-      if (!reprint && !cancel) {
+      if (!reprint && !cancel && !hold) {
         if (det['T_TBLINVPROMOTICKETS'].length != 0) {
           promoTicketsData = det['T_TBLINVPROMOTICKETS'];
         }
