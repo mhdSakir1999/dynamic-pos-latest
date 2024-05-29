@@ -30,8 +30,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:printing/printing.dart';
-import 'package:supercharged/supercharged.dart';
 
 import '../models/loyalty/customer_list_result.dart';
 import '../models/pos/promo_cart_item_dto.dart';

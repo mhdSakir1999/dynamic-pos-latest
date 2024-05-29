@@ -1,10 +1,7 @@
 // ignore_for_file: deprecated_member_use
-
-/*
- * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan & TM.Sakir
- * Created At: 4/27/21, 1:43 PM
- */
+/// Author: [TM.Sakir]
+/// Copyright © 2021 myPOS Software Solutions.  All rights reserved.
+/// Created At: 29/05/2024, 11.20 AM
 
 import 'dart:async';
 import 'dart:convert';
@@ -74,14 +71,19 @@ import '../../models/loyalty/customer_coupons_result.dart';
 import '../../models/pos/permission_code.dart';
 import 'invoice_app_bar.dart';
 
-class PaymentView extends StatefulWidget {
-  static const routeName = "payment_view";
+class ReClassificationPaymentView extends StatefulWidget {
+  static const routeName = "re-classification_payment_view";
 
+  double subTotal;
+
+  ReClassificationPaymentView({super.key, required this.subTotal});
   @override
-  _PaymentViewState createState() => _PaymentViewState();
+  _ReClassificationPaymentViewState createState() =>
+      _ReClassificationPaymentViewState();
 }
 
-class _PaymentViewState extends State<PaymentView> {
+class _ReClassificationPaymentViewState
+    extends State<ReClassificationPaymentView> {
   double height = 60;
   PayModeHeader? selectedPayModeHeader;
   PayModeDetails? selectedPayModeDetail;
@@ -122,29 +124,13 @@ class _PaymentViewState extends State<PaymentView> {
   @override
   void initState() {
     super.initState();
-
     viewListeners();
-    double lineTotal = 0;
-    double absolute = 0;
-    cartBloc.currentCart?.values.forEach((element) {
-      lineTotal += element.amount;
-      absolute += (element.selling * element.unitQty);
-    });
     final payModes = payModeBloc.payModeResult?.payModes ?? [];
     int defaultPayModeIndex =
         payModes.indexWhere((element) => element.defaultPaymentMode == true);
     if (defaultPayModeIndex != -1 && cartBloc.specificPayMode == null) {
       selectedPayModeHeader = payModes[defaultPayModeIndex];
     }
-    saving = absolute - lineTotal;
-
-    if (POSConfig().dualScreenWebsite != "")
-      DualScreenController()
-          .sendPayment(paid.toDouble(), subTotal.toDouble(), saving.toDouble());
-
-    if (POSConfig().enablePollDisplay == 'true')
-      usbSerial.sendToSerialDisplay(
-          'TOTAL AMOUNT        ${usbSerial.addSpacesFront(lineTotal.toStringAsFixed(2), 20)}');
   }
 
   void _ecrTimer() {
@@ -168,8 +154,7 @@ class _PaymentViewState extends State<PaymentView> {
   }
 
   void loadPaidData() {
-//Auto Round off the amount
-    subTotal = cartBloc.cartSummary?.subTotal ?? 0;
+    subTotal = widget.subTotal ?? 0;
     if (POSConfig().setup?.autoRoundOff ?? false == true) {
       double roundOffAmt = subTotal % (POSConfig().setup?.autoRoundoffTo ?? 0);
       if (roundOffAmt > 0) {
@@ -190,7 +175,7 @@ class _PaymentViewState extends State<PaymentView> {
     list.forEach((element) {
       paid += double.parse(element.paidAmount.toStringAsFixed(2) ?? '0');
     });
-    subTotal = cartBloc.cartSummary?.subTotal ?? 0;
+    subTotal = widget.subTotal ?? 0;
     balanceDue = double.parse((subTotal - paid).toStringAsFixed(2) ?? '0');
     if (list.length != 0) {
       loaded = true;
@@ -205,19 +190,8 @@ class _PaymentViewState extends State<PaymentView> {
   bool active = false;
 
   void viewListeners() {
-    // POSPriceCalculator().taxCalculation();
-    // cartBloc.cartSummarySnapshot.listen((event) {
-    // subTotal = event.subTotal;
-    // if (!loaded) balanceDue = event.subTotal;
-    // loaded = true;
-    // if (selectedPayModeHeader?.defaultPaymentMode == true) {
-    //   dueBalanceEditingController.text = balanceDue.toStringAsFixed(2);
-    // }
-
-    // if (mounted) setState(() {});
-    // });
-    subTotal = cartBloc.cartSummary?.subTotal ?? 0;
-    if (!loaded) balanceDue = cartBloc.cartSummary?.subTotal ?? 0;
+    subTotal = widget.subTotal ?? 0;
+    if (!loaded) balanceDue = widget.subTotal ?? 0;
     loaded = true;
     if (selectedPayModeHeader?.defaultPaymentMode != true) {
       dueBalanceEditingController.text = balanceDue.toStringAsFixed(2);
@@ -729,7 +703,7 @@ class _PaymentViewState extends State<PaymentView> {
     //   temp = 0;
     // }
 
-    if (!(selectedPayModeHeader?.pHOVERPAY ?? false) && temp < 0) {
+    if (/* !(selectedPayModeHeader?.pHOVERPAY ?? false) && */ temp < 0) {
       showOverPayErrorDialog();
       return;
     }
@@ -805,7 +779,7 @@ class _PaymentViewState extends State<PaymentView> {
     String pdCode = selectedPayModeDetail?.pDCODE ?? phCode;
     String phDesc = selectedPayModeHeader?.pHDESC ?? "";
     String pdDesc = selectedPayModeDetail?.pDDESC ?? phDesc;
-    final tot = cartBloc.cartSummary?.subTotal ?? 0;
+    final tot = widget.subTotal ?? 0;
 
     if (/* phCode == 'CSH' && */ temp < 0) {
       entered = entered + temp;
@@ -1032,21 +1006,58 @@ class _PaymentViewState extends State<PaymentView> {
       );
   }
 
-  void clearTempPayment() {
-    if (POSConfig().dualScreenWebsite != "")
-      DualScreenController().setView('invoice');
-    if (selectedPayModeHeader == null) {
-      POSPriceCalculator().clearPayments();
-      Navigator.pop(context);
-    } else {
-      calculateToLocal();
-      detailsEditingController.clear();
-      dueBalanceEditingController.clear();
-      setState(() {
-        selectedPayModeHeader = null;
-        selectedPayModeDetail = null;
-      });
+  void clearTempPayment() async {
+    // if (POSConfig().dualScreenWebsite != "")
+    //   DualScreenController().setView('invoice');
+    // if (selectedPayModeHeader == null) {
+    //   POSPriceCalculator().clearPayments();
+    //   Navigator.pop(context);
+    // } else {
+
+    // }
+    if (cartBloc.paidList?.length != 0) {
+      bool? confirm = await showGeneralDialog<bool?>(
+          context: context,
+          transitionDuration: const Duration(milliseconds: 200),
+          barrierDismissible: true,
+          barrierLabel: '',
+          transitionBuilder: (context, a, b, _) => Transform.scale(
+                scale: a.value,
+                child: AlertDialog(
+                    content: Text('Do you want to clear the payments?'),
+                    actions: [
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  POSConfig().primaryDarkGrayColor.toColor()),
+                          onPressed: () {
+                            Navigator.pop(context, false);
+                          },
+                          child: Text('general_dialog.no'.tr())),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  POSConfig().primaryDarkGrayColor.toColor()),
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          child: Text('general_dialog.yes'.tr()))
+                    ]),
+              ),
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return SizedBox();
+          });
+      if (confirm != true) return;
     }
+    cartBloc.clearPayment();
+    calculateToLocal();
+    detailsEditingController.clear();
+    dueBalanceEditingController.clear();
+    setState(() {
+      selectedPayModeHeader = null;
+      selectedPayModeDetail = null;
+    });
+    Navigator.pop(context);
   }
 
   // this is the default lhs in the app
@@ -1109,7 +1120,7 @@ class _PaymentViewState extends State<PaymentView> {
                     backgroundColor:
                         POSConfig().primaryDarkGrayColor.toColor()),
                 onPressed: billClose,
-                child: Text("payment_view.bill_close".tr())))
+                child: Text("Submit")))
       ],
     );
   }
@@ -1162,18 +1173,6 @@ class _PaymentViewState extends State<PaymentView> {
         },
       );
       return;
-    }
-
-    if (customerBloc.currentCustomer?.sendOTP == true) {
-      OTPController otpController = OTPController();
-      final otp = otpController.generateOTP();
-      await SMSController()
-          .sendOTP(customerBloc.currentCustomer?.cMMOBILE ?? '', otp);
-      await otpController.verifyOTP(context);
-      bool verified = otpController.validOtp;
-      if (verified == false) {
-        return;
-      }
     }
 
     if (!billCloseClicked) {
@@ -1255,241 +1254,11 @@ class _PaymentViewState extends State<PaymentView> {
       }
 
       EasyLoading.show(status: 'please_wait'.tr());
-      var res;
-      if (!POSConfig().trainingMode) {
-        res = await InvoiceController().billClose(
-            invoiced: true,
-            context: context,
-            otp: _otpCode,
-            referenceNo: _referenceNumber,
-            changeAmt: balanceDue * -1,
-            payAmt: paid,
-            burnedPoints: _burnedPoints);
-      } else {
-        res = InvoiceSaveRes(true, 0, '');
-      }
-      //navigate back and clear all
+      Navigator.pop(context);
       EasyLoading.dismiss();
       setState(() {
         billCloseClicked = false;
       });
-
-      if (res.success) {
-        if (!POSConfig().trainingMode) {
-          if (res?.resReturn == null ||
-              res.resReturn == '' ||
-              res.resReturn == '{}') {
-            EasyLoading.show(status: 'please_wait'.tr());
-            final invDataCheckRes = await ApiClient.call(
-                "invoice/get_invoice_det/${cartBloc.cartSummary?.invoiceNo ?? ""}/${POSConfig().locCode}/INV",
-                // "invoice/get_invoice_det/010910000025/${POSConfig().locCode}/INV",
-                ApiMethod.GET,
-                successCode: 200);
-            EasyLoading.dismiss();
-            if (invDataCheckRes == null ||
-                invDataCheckRes.data['success'] != true ||
-                invDataCheckRes.data['res'] == null) {
-              final bool? retry = await showDialog<bool>(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => POSErrorAlert(
-                          title: 'easy_loading.cant_save_inv'.tr(),
-                          subtitle:
-                              "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
-                          actions: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: POSConfig()
-                                      .primaryDarkGrayColor
-                                      .toColor()),
-                              onPressed: () {
-                                Navigator.pop(context, true);
-                              },
-                              child: Text(
-                                'Retry',
-                                style: Theme.of(context)
-                                    .dialogTheme
-                                    .contentTextStyle,
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: POSConfig()
-                                      .primaryDarkGrayColor
-                                      .toColor()),
-                              onPressed: () {
-                                Navigator.pop(context, false);
-                              },
-                              child: Text(
-                                'Cancel',
-                                style: Theme.of(context)
-                                    .dialogTheme
-                                    .contentTextStyle,
-                              ),
-                            ),
-                          ]));
-              if (retry != true) {
-                return;
-              } else {
-                await billClose();
-                return;
-              }
-            } else {
-              var det;
-              try {
-                det =
-                    jsonDecode((invDataCheckRes.data?['res'] ?? "").toString());
-              } catch (e) {
-                det = {"T_TBLINVHEADER": []};
-              }
-              if ((det?['T_TBLINVHEADER'] ?? []).isEmpty) {
-                // EasyLoading.showError(
-                //     'Invoice not saved... try saving the invoice again !!!');
-                final bool? retry = await showDialog<bool>(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) => POSErrorAlert(
-                            title: 'easy_loading.cant_save_inv'.tr(),
-                            subtitle:
-                                "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
-                            actions: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: POSConfig()
-                                        .primaryDarkGrayColor
-                                        .toColor()),
-                                onPressed: () {
-                                  Navigator.pop(context, true);
-                                },
-                                child: Text(
-                                  'Retry',
-                                  style: Theme.of(context)
-                                      .dialogTheme
-                                      .contentTextStyle,
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: POSConfig()
-                                        .primaryDarkGrayColor
-                                        .toColor()),
-                                onPressed: () {
-                                  Navigator.pop(context, false);
-                                },
-                                child: Text(
-                                  'Cancel',
-                                  style: Theme.of(context)
-                                      .dialogTheme
-                                      .contentTextStyle,
-                                ),
-                              ),
-                            ]));
-                if (retry != true) {
-                  EasyLoading.showError('easy_loading.cant_save_inv'.tr());
-                  return;
-                } else {
-                  await billClose();
-                  return;
-                }
-              } else {
-                res.resReturn = invDataCheckRes.data?['res'].toString() ?? '';
-              }
-            }
-          }
-
-          if (POSConfig().dualScreenWebsite != "")
-            DualScreenController().completeInvoice(paid.toDouble(),
-                balanceDue.toDouble(), balanceDue.toDouble(), 0);
-
-          String invoice = cartBloc.cartSummary?.invoiceNo ?? "";
-          String latestInvoiceNumber = invoice;
-          String lastInvNo = await InvoiceController().getInvoiceNo();
-
-          String lastInvPrefix = lastInvNo.substring(0, 6);
-          String lastInvSuffix = lastInvNo.substring(6);
-
-          int lengthOfSuffixInt =
-              (int.parse(lastInvSuffix) - 1).toString().length;
-          int zeroLength = 6 - lengthOfSuffixInt;
-
-          if (int.parse(invoice) < int.parse(lastInvNo)) {
-            latestInvoiceNumber = lastInvPrefix +
-                ('0' * zeroLength) +
-                (int.parse(lastInvSuffix) - 1).toString();
-          }
-          InvoiceController().setInvoiceNo(latestInvoiceNumber);
-          LastInvoiceDetails lastInvoice = LastInvoiceDetails(
-              invoiceNo: invoice,
-              billAmount: subTotal.toStringAsFixed(2),
-              dueAmount: balanceDue.toStringAsFixed(2),
-              paidAmount: paid.toStringAsFixed(2));
-          cartBloc.updateLastInvoice(lastInvoice);
-
-          //print invoice
-
-          final customerEmail = customerBloc.currentCustomer?.cMEMAIL ?? '';
-          final ebillActive = customerBloc.currentCustomer?.cMEBILL ?? false;
-
-          bool canPrint = true;
-          if (ebillActive && customerEmail.isNotEmpty) {
-            if (await sendEbillAlert(invoice)) {
-              canPrint = false;
-            }
-          }
-
-          if (canPrint) {
-            try {
-              double loyaltyPoints = 0;
-              final String customerCode =
-                  customerBloc.currentCustomer?.cMCODE ?? '';
-              if (customerCode.isNotEmpty &&
-                  customerBloc.currentCustomer?.cMLOYALTY == true) {
-                var customerRes =
-                    await LoyaltyController().getLoyaltySummary(customerCode);
-                loyaltyPoints = customerRes?.pOINTSUMMARY ?? 0;
-              }
-
-              if (customerBloc.currentCustomer?.taxRegNo != '' &&
-                  customerBloc.currentCustomer?.taxRegNo != null) {
-                final bool? canPrintTaxBill = await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(
-                        'invoice.tax_bill_print_title'.tr(),
-                        textAlign: TextAlign.center,
-                      ),
-                      content: Text('invoice.tax_bill_print_content'.tr()),
-                      actions: [
-                        AlertDialogButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            text: 'invoice.tax_bill_print_yes'.tr()),
-                        AlertDialogButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            text: 'invoice.tax_bill_print_no'.tr()),
-                      ],
-                    );
-                  },
-                );
-                if (canPrintTaxBill ?? false)
-                  await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
-                      true, res.resReturn);
-                else
-                  await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
-                      false, res.resReturn);
-              } else {
-                await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
-                    false, res.resReturn);
-              }
-            } catch (e) {
-              EasyLoading.showError('easy_loading.cant_print_inv'.tr());
-            }
-          }
-        }
-        cartBloc.context = context;
-        await cartBloc.resetCart();
-        Navigator.pushReplacementNamed(context, Cart.routeName);
-      }
     }
   }
 
@@ -2410,60 +2179,11 @@ class _PaymentViewState extends State<PaymentView> {
 
 // this is the default rhs in the app
   Widget buildDefaultRHS() {
-    double totalNetDisc = 0;
-    double totalLineDisc = 0;
-    double netDiscAmount = 0;
-    double lineDiscAmtFromPer = 0;
-    double lineDiscAmtFromAmt = 0;
-    double promoDiscount = (cartBloc.cartSummary?.promoDiscount ?? 0);
-    List<CartModel?> item = [];
-    cartBloc.currentCart?.forEach((key, value) {
-      item.add(value);
-    });
-    for (int i = 0; i < item.length; i++) {
-      if (item.isNotEmpty && (item[i]!.itemVoid! != true)
-          // &&
-          // (item[i]?.billDiscPer != 0 ||
-          //     item[i]?.discPer != 0 ||
-          //     item[i]?.discAmt != 0)
-
-          ) {
-        double grossAmount =
-            (item[i]?.unitQty ?? 0) * (item[i]?.proSelling ?? 0);
-        netDiscAmount = ((item[i]?.billDiscPer ?? 0) * grossAmount) / 100;
-        lineDiscAmtFromPer = ((item[i]?.discPer ?? 0) * grossAmount) / 100;
-        lineDiscAmtFromAmt = (item[i]?.discAmt ?? 0);
-
-        totalNetDisc += netDiscAmount;
-        totalLineDisc += (lineDiscAmtFromPer + lineDiscAmtFromAmt);
-      }
-    }
-
     return Container(
       child: Column(
         children: [
           Row(
             children: [
-              // if (promoDiscount > 0)
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: _showDiscList,
-                        child: buildCard(
-                            "payment_view.discount".tr(),
-                            (totalLineDisc + totalNetDisc + promoDiscount)
-                                .thousandsSeparator(),
-                            color: Colors.green),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                  ],
-                ),
-              ),
               Expanded(
                 child: buildCard("payment_view.sub_total".tr(),
                     subTotal.thousandsSeparator()),
@@ -2476,27 +2196,6 @@ class _PaymentViewState extends State<PaymentView> {
                   "payment_view.foreign_currency".tr(
                       namedArgs: {"frc": selectedPayModeDetail!.pDCODE ?? ""}),
                   (subTotal / currentRate).roundUp()),
-          StreamBuilder<CartSummaryModel>(
-              stream: cartBloc.cartSummarySnapshot,
-              builder: (context, snapshot) {
-                final double taxExc = snapshot.data?.taxExc ?? 0;
-                final double taxInc = snapshot.data?.taxInc ?? 0;
-
-                if (taxExc.toDouble() + taxInc.toDouble() == 0) {
-                  return SizedBox.shrink();
-                }
-
-                /* added comment block t show only the exclusive and NOT Display only tax value */
-                //final double tax = taxExc + taxInc;
-                /* */
-                final double tax = taxExc;
-
-                return GestureDetector(
-                  onTap: _showTax,
-                  child: buildCard(
-                      "payment_view.tax".tr(), tax.thousandsSeparator()),
-                );
-              }),
           GestureDetector(
               onTap: _showPaidList,
               child: buildCard(

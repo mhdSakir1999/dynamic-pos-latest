@@ -12,7 +12,6 @@ import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_warning_alert.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
-import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/models/pos/invoice_header_result.dart';
 import 'package:checkout/models/pos/permission_code.dart';

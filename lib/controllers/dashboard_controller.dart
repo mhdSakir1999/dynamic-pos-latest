@@ -1,4 +1,3 @@
-import 'package:checkout/models/dashboard_model.dart';
 import 'package:dio/dio.dart';
 
 import '../components/api_client.dart';

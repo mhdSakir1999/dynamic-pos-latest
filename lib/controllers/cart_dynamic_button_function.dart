@@ -35,7 +35,6 @@ import 'package:checkout/views/pos_functions/special_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'auth_controller.dart';
 import 'package:supercharged/supercharged.dart';
 
 /// This class will return the function dynamic function for the relevant button
@@ -565,6 +564,10 @@ class CartDynamicButtonFunction {
         break;
       case "re-classification":
         // _specialFunction();
+        if (cartBloc.cartSummary?.items != 0) {
+          EasyLoading.showError('special_functions.cant_open'.tr());
+          return;
+        }
         reClassification();
         break;
     }

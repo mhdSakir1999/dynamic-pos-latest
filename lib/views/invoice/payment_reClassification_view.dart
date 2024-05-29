@@ -1,9 +1,16 @@
+import 'dart:convert';
+
+import 'package:checkout/bloc/cart_bloc.dart';
+import 'package:checkout/components/api_client.dart';
 import 'package:checkout/components/current_theme.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/components/widgets/pos_background.dart';
+import 'package:checkout/controllers/pos_manual_print_controller.dart';
+import 'package:checkout/models/pos/paid_model.dart';
 import 'package:checkout/models/pos_config.dart';
+import 'package:checkout/views/invoice/reClassification_payment_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supercharged/supercharged.dart';
@@ -19,6 +26,18 @@ class PaymentReClassification extends StatefulWidget {
 class _PaymentReClassificationState extends State<PaymentReClassification> {
   TextEditingController invController = TextEditingController();
   FocusNode invFocus = FocusNode();
+  String invDate = '--';
+  num invAmount = 0;
+  String invLoc = '--';
+  String invStation = '--';
+  String invCashier = '--';
+  String invCustomer = '--';
+  String invRemark = '--';
+
+  num invBalance = 0;
+
+  List<PaidModel> payments = [];
+  List<PaidModel> classifiedPayments = [];
 
   @override
   void initState() {
@@ -41,7 +60,64 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (classifiedPayments.isNotEmpty) {
+                          bool? confirm = await showGeneralDialog<bool?>(
+                              context: context,
+                              transitionDuration:
+                                  const Duration(milliseconds: 200),
+                              barrierDismissible: true,
+                              barrierLabel: '',
+                              transitionBuilder: (context, a, b, _) =>
+                                  Transform.scale(
+                                    scale: a.value,
+                                    child: AlertDialog(
+                                        content: Text(
+                                            'Do you want to clear the current re-classified payments?'),
+                                        actions: [
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor: POSConfig()
+                                                      .primaryDarkGrayColor
+                                                      .toColor()),
+                                              onPressed: () {
+                                                Navigator.pop(context, false);
+                                              },
+                                              child: Text(
+                                                  'general_dialog.no'.tr())),
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor: POSConfig()
+                                                      .primaryDarkGrayColor
+                                                      .toColor()),
+                                              onPressed: () {
+                                                Navigator.pop(context, true);
+                                              },
+                                              child: Text(
+                                                  'general_dialog.yes'.tr()))
+                                        ]),
+                                  ),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                return SizedBox();
+                              });
+                          if (confirm != true) return;
+                        }
+                        cartBloc.clearPayment();
+                        await showModalBottomSheet(
+                          isScrollControlled: true,
+                          enableDrag: false,
+                          context: context,
+                          builder: (context) {
+                            return ReClassificationPaymentView(
+                              subTotal: invAmount.toDouble(),
+                            );
+                          },
+                        ).then((value) =>
+                            classifiedPayments = cartBloc.paidList ?? []);
+
+                        setState(() {});
+                      },
                       child: Text('Re-Classify'),
                     ),
                   ),
@@ -58,8 +134,17 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                 ],
               ),
               invDetailCard(),
-              Expanded(flex: 1, child: paymentsCard('OLD PAYMENTS')),
-              Expanded(flex: 1, child: paymentsCard('CLASSIFIED PAYMENTS'))
+              payments.isEmpty
+                  ? SizedBox.shrink()
+                  : Expanded(
+                      flex: 1,
+                      child: paymentsCard('OLD PAYMENTS', payments, true)),
+              classifiedPayments.isEmpty
+                  ? Expanded(child: SizedBox())
+                  : Expanded(
+                      flex: 1,
+                      child: paymentsCard(
+                          'RE-CLASSIFIED PAYMENTS', classifiedPayments, false)),
             ],
           ),
         ),
@@ -67,7 +152,8 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
     );
   }
 
-  Widget paymentsCard(String paymentLabel) {
+  Widget paymentsCard(
+      String paymentLabel, List<PaidModel> payments, bool isOld) {
     var labelStyle = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black);
     final height = MediaQuery.of(context).size.height;
@@ -128,23 +214,38 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
               SizedBox(
                 height: height * 0.001,
               ),
-              paymentList(),
+              paymentList(payments),
               SizedBox(
                 height: height * 0.001,
               ),
+              isOld && invBalance != 0
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                              'Balance Amount  :  ${POSManualPrint().formatWithCommas(invBalance)}',
+                              style: labelStyle)
+                        ],
+                      ),
+                    )
+                  : SizedBox.shrink()
             ],
           ),
         ));
   }
 
-  Widget paymentList() {
+  Widget paymentList(List<PaidModel> payments) {
     final height = MediaQuery.of(context).size.height;
     return Container(
       height: height * 0.15,
       child: ListView.builder(
           physics: BouncingScrollPhysics(),
-          itemCount: 10,
+          itemCount: payments.length,
           itemBuilder: (context, index) {
+            PaidModel current = payments[index];
+            num amount = current.amount;
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -154,35 +255,41 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    paymentRowValue(value: '1', flex: 1),
+                    paymentRowValue(value: (index + 1).toString(), flex: 1),
                     SizedBox(
                       width: 5,
                     ),
-                    paymentRowValue(flex: 2, value: '001'),
+                    paymentRowValue(flex: 2, value: current.phCode),
                     SizedBox(
                       width: 5,
                     ),
-                    paymentRowValue(flex: 3, value: 'Cash Payment'),
+                    paymentRowValue(flex: 3, value: current.phDesc ?? ''),
                     SizedBox(
                       width: 5,
                     ),
-                    paymentRowValue(flex: 2, value: 'CSH'),
+                    paymentRowValue(flex: 2, value: current.pdCode),
                     SizedBox(
                       width: 5,
                     ),
-                    paymentRowValue(flex: 3, value: 'Cash'),
+                    paymentRowValue(flex: 3, value: current.pdDesc ?? ''),
                     SizedBox(
                       width: 5,
                     ),
-                    paymentRowValue(flex: 5, value: '1111-11**-****-1111'),
+                    paymentRowValue(flex: 5, value: current.refNo),
                     SizedBox(
                       width: 5,
                     ),
-                    paymentRowValue(flex: 3, value: '05/12/2024'),
+                    paymentRowValue(
+                        flex: 3,
+                        value: (current.paidDateTime.toString() ?? 'T')
+                            .split(' ')
+                            .first),
                     SizedBox(
                       width: 5,
                     ),
-                    paymentRowValue(flex: 3, value: '12,000.00')
+                    paymentRowValue(
+                        flex: 3,
+                        value: POSManualPrint().formatWithCommas(amount))
                   ],
                 ),
               ),
@@ -226,11 +333,11 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                   children: [
                     invDetailRecords(
                       label: 'Date',
-                      value: '12/05/2024',
+                      value: invDate,
                     ),
                     invDetailRecords(
                       label: 'Invoice Amount',
-                      value: '1500.00',
+                      value: POSManualPrint().formatWithCommas(invAmount),
                     ),
                   ],
                 ),
@@ -239,11 +346,11 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                   children: [
                     invDetailRecords(
                       label: 'Terminal',
-                      value: '003',
+                      value: invStation,
                     ),
                     invDetailRecords(
                       label: 'Cashier',
-                      value: '4097',
+                      value: invCashier,
                     ),
                   ],
                 ),
@@ -252,11 +359,11 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                   children: [
                     invDetailRecords(
                       label: 'Location',
-                      value: '00013',
+                      value: invLoc,
                     ),
                     invDetailRecords(
                       label: 'Customer',
-                      value: 'Mohamed Sakir',
+                      value: invCustomer,
                     ),
                   ],
                 ),
@@ -264,7 +371,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                   children: [
                     invDetailRecords(
                       label: 'Remarks',
-                      value: 'abcdefghijklmnopqrstuvwxyz',
+                      value: invRemark,
                     ),
                   ],
                 ),
@@ -283,7 +390,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
             SizedBox(
               width: 15.r,
             ),
-            GoBackIconButton(),
+            GoBackIconButton(onPressed: () => clearReClassification()),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
               child: Center(
@@ -300,6 +407,12 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
         ),
       ),
     );
+  }
+
+  void clearReClassification() {
+    cartBloc.clearPayment();
+    invController.clear();
+    Navigator.pop(context);
   }
 
   Widget invoiceSearch() {
@@ -345,8 +458,17 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                           focusNode: invFocus,
                           autofocus: true,
                           controller: invController,
-                          onEditingComplete: () {
-                            EasyLoading.showInfo('Processing !!!');
+                          onEditingComplete: () async {
+                            // EasyLoading.showInfo('Processing !!!');
+                            EasyLoading.show(status: 'please_wait'.tr());
+                            bool isFetched = await getInvoicePayments();
+                            if (isFetched) {
+                              setState(() {});
+                            } else {
+                              EasyLoading.showError(
+                                  'Failed to get invoice data !!!');
+                            }
+                            EasyLoading.dismiss();
                           },
                         ),
                       ),
@@ -360,7 +482,17 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                       elevation: 5,
                       child: Container(
                         child: IconButton(
-                            onPressed: () async {},
+                            onPressed: () async {
+                              EasyLoading.show(status: 'please_wait'.tr());
+                              bool isFetched = await getInvoicePayments();
+                              if (isFetched) {
+                                setState(() {});
+                              } else {
+                                EasyLoading.showError(
+                                    'Failed to get invoice data !!!');
+                              }
+                              EasyLoading.dismiss();
+                            },
                             icon: Icon(
                               Icons.search,
                             )),
@@ -374,6 +506,72 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
         ),
       ),
     );
+  }
+
+  Future<bool> getInvoicePayments() async {
+    final invDataCheckRes = await ApiClient.call(
+        "invoice/get_invoice_det/${invController.text}/${POSConfig().locCode}/INV",
+        ApiMethod.GET,
+        successCode: 200);
+
+    if (invDataCheckRes != null &&
+        invDataCheckRes.statusCode == 200 &&
+        invDataCheckRes.data != null &&
+        invDataCheckRes.data['res'] != '') {
+      var det;
+      try {
+        det = jsonDecode((invDataCheckRes.data?['res'] ?? "").toString());
+        var header = det['T_TBLINVHEADER'][0];
+
+        invDate = (header['INVHED_TXNDATE'] ?? '--T').toString().split('T')[0];
+        invAmount = header['INVHED_NETAMT'] ?? 0.00;
+        invCashier = header['INVHED_CASHIER'] ?? '--';
+        invCustomer = header['INVHED_MEMBER'] == ''
+            ? '--'
+            : header['INVHED_MEMBER'] ?? '--';
+        invLoc = (header['INVHED_LOCCODE'] +
+                ' - ' +
+                det['M_TBLLOCATIONS'][0]['LOC_DESC']) ??
+            '--';
+        invStation = header['INVHED_STATION'] ?? '--';
+        invBalance = header['INVHED_CHANGE'] ?? 0;
+        invRemark = det['T_TBLINVLINEREMARKS'].length == 0
+            ? '--'
+            : det['T_TBLINVLINEREMARKS'][0]?['INVREM_LINEREMARKS'] ?? '--';
+      } catch (e) {
+        // return false;
+      }
+      try {
+        var payDet = det['T_TBLINVPAYMENTS'];
+        var payModehead = det['M_TBLPAYMODEHEAD'];
+        var payModeDet = det['M_TBLPAYMODEDET'];
+        payments = [];
+        for (var p in payDet) {
+          String phCode = p['INVPAY_PHCODE'];
+          String phDesc = payModehead
+              .firstWhere((element) => element['PH_CODE'] == phCode)['PH_DESC'];
+          String pdCode = p['INVPAY_PDCODE'];
+          String pdDesc = '--';
+          if (phCode != pdCode) {
+            pdDesc = payModeDet.firstWhere(
+                (element) => element['PD_CODE'] == pdCode)['PD_DESC'];
+          }
+
+          double amount = p['INVPAY_PAIDAMOUNT'] ?? 0;
+          DateTime date = DateTime.parse(p['INVPAY_DETDATE'].toString());
+          String ref =
+              p['INVPAY_REFNO'] == "" ? '--' : p['INVPAY_REFNO'] ?? '--';
+          bool cancelled = p['INVPAY_CANCELD'] ?? false;
+
+          payments.add(PaidModel(amount, amount, cancelled, pdCode, phCode, ref,
+              date, 1, phDesc, pdDesc));
+        }
+        return true;
+      } catch (e) {}
+    } else {
+      return false;
+    }
+    return false;
   }
 }
 

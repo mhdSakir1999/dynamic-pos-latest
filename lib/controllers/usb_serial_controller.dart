@@ -7,9 +7,7 @@ import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:serial_port_win32/serial_port_win32.dart';
-import 'package:supercharged/supercharged.dart';
 
 class UsbSerial {
   static SerialPort? port;

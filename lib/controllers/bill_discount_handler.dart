@@ -14,7 +14,6 @@ import 'package:checkout/models/pos/permission_code.dart';
 
 import 'package:flutter/cupertino.dart';
 
-import 'auth_controller.dart';
 
 ///handle bill discounts
 class BillDiscountHandler {

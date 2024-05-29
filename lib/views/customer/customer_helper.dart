@@ -5,7 +5,6 @@
  */
 
 import 'package:checkout/bloc/user_bloc.dart';
-import 'package:checkout/controllers/auth_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/models/pos/permission_code.dart';
 import 'package:flutter/cupertino.dart';

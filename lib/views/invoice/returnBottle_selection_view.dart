@@ -8,20 +8,17 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:checkout/bloc/cart_bloc.dart';
-import 'package:checkout/bloc/group_bloc.dart';
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/mypos_screen_utils.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/components/widgets/poskeyboard.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
-import 'package:checkout/controllers/product_controller.dart';
 import 'package:checkout/models/pos/GroupResults.dart';
 import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/cart_summary_model.dart';
 import 'package:checkout/models/pos/product_result.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/views/invoice/invoice_app_bar.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:checkout/extension/extensions.dart';

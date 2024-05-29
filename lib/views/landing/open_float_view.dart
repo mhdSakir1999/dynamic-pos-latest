@@ -7,7 +7,6 @@ import 'package:checkout/bloc/keyboard_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/mypos_screen_utils.dart';
-import 'package:checkout/components/widgets/colored_textfield.dart';
 import 'package:checkout/components/widgets/poskeyboard.dart';
 import 'package:checkout/controllers/auth_controller.dart';
 import 'package:checkout/controllers/master_download_controller.dart';

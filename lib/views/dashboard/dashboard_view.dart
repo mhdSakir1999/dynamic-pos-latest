@@ -9,8 +9,6 @@ import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:checkout/components/widgets/pos_background.dart';
-import 'package:checkout/components/widgets/dashboard/bar_chart_2.dart';
-import 'package:checkout/components/widgets/dashboard/line_chart.dart';
 import 'package:checkout/components/widgets/dashboard/pie_chart.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

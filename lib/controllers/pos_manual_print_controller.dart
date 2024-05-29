@@ -798,7 +798,8 @@ class POSManualPrint {
           // if (label == 'promoSummary_heading' && promoSummary.isEmpty) {
           //   continue;
           // }
-
+          await LogWriter()
+              .saveLogsToFile('ERROR_LOG_', ['Printing invData: $value']);
           bytes += generator.text(value,
               styles: PosStyles(
                   align: alignment,

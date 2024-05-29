@@ -5,16 +5,13 @@
  */
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
-import 'package:checkout/controllers/auth_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/discount_type_result.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/extension/extensions.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class DiscountHandler {
   Future<double> manualLineDiscount(
