@@ -297,10 +297,7 @@ class _ReClassificationPaymentViewState
 
   Widget buildBody() {
     return Column(
-      children: [
-        POSInvoiceAppBar(hideCustomer: true),
-        Expanded(child: buildContent())
-      ],
+      children: [Expanded(child: buildContent())],
     );
   }
 
@@ -1611,22 +1608,22 @@ class _ReClassificationPaymentViewState
                 isFocusPayment = false;
                 detailsFocusNode.requestFocus();
               }
-              if (payButton.pDPHCODE == 'CRC' &&
-                  POSConfig().singleSwipeActive) {
-                EcrResponse? ecrResponse =
-                    await singleSwipeAlert(false, balanceDue, false);
-                if (ecrResponse == null)
-                  print("Switchiing to manual mode");
-                else {
-                  if (ecrResponse.ecrCard != null)
-                    cartBloc.addNewReference(ecrResponse.ecrCard!);
-                  formatCardNoFromEcr(
-                      ecrResponse.ecrCard?.strTxnCardBin ?? '', '****');
-                  // dueBalanceEditingController.text =
-                  //     balanceDue.toStringAsFixed(2);
-                  handleCalculation();
-                }
-              }
+              // if (payButton.pDPHCODE == 'CRC' &&
+              //     POSConfig().singleSwipeActive) {
+              //   EcrResponse? ecrResponse =
+              //       await singleSwipeAlert(false, balanceDue, false);
+              //   if (ecrResponse == null)
+              //     print("Switchiing to manual mode");
+              //   else {
+              //     if (ecrResponse.ecrCard != null)
+              //       cartBloc.addNewReference(ecrResponse.ecrCard!);
+              //     formatCardNoFromEcr(
+              //         ecrResponse.ecrCard?.strTxnCardBin ?? '', '****');
+              //     // dueBalanceEditingController.text =
+              //     //     balanceDue.toStringAsFixed(2);
+              //     handleCalculation();
+              //   }
+              // }
               if (mounted) setState(() {});
               /* Customer coupon pop up */
               /* by dinuka 2022/08/19 */

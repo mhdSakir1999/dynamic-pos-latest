@@ -209,9 +209,9 @@ class POSConnectivity {
   Future<bool> pingToServer() async {
     final server = POSConfig().server;
 
-    final beforeReq = DateTime.now();
+    // final beforeReq = DateTime.now();
     bool res = await _checkConnection(server);
-    final afterReq = DateTime.now();
+    // final afterReq = DateTime.now();
     // POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
     //     "Check the connectivity to: $server - Latency: ${afterReq.millisecondsSinceEpoch - beforeReq.millisecondsSinceEpoch}ms"));
     return res;

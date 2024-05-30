@@ -189,13 +189,13 @@ class LoyaltyApiClient {
             errorToast: errorToast,
             localCall: true);
       } else {
-        EasyLoading.showError('ERROR 2 - ' + e.toString(),
-            duration: Duration(seconds: 10),dismissOnTap: true);
+        // EasyLoading.showError('ERROR 2 - ' + e.toString(),
+        //     duration: Duration(seconds: 10),dismissOnTap: true);
         //EasyLoading.showError('Cannot connect to the loyalty server');
       }
     } on Exception catch (e) {
       EasyLoading.showError('ERROR 2 - ' + e.toString(),
-          duration: Duration(seconds: 10),dismissOnTap: true);
+          duration: Duration(seconds: 10), dismissOnTap: true);
       POSLoggerController.addNewLog(
           POSLogger(POSLoggerLevel.apiError, e.toString()));
       POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.apiInfo,

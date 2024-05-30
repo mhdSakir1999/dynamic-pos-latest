@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/components/api_client.dart';
@@ -62,45 +63,8 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (classifiedPayments.isNotEmpty) {
-                          bool? confirm = await showGeneralDialog<bool?>(
-                              context: context,
-                              transitionDuration:
-                                  const Duration(milliseconds: 200),
-                              barrierDismissible: true,
-                              barrierLabel: '',
-                              transitionBuilder: (context, a, b, _) =>
-                                  Transform.scale(
-                                    scale: a.value,
-                                    child: AlertDialog(
-                                        content: Text(
-                                            'Do you want to clear the current re-classified payments?'),
-                                        actions: [
-                                          ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor: POSConfig()
-                                                      .primaryDarkGrayColor
-                                                      .toColor()),
-                                              onPressed: () {
-                                                Navigator.pop(context, false);
-                                              },
-                                              child: Text(
-                                                  'general_dialog.no'.tr())),
-                                          ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor: POSConfig()
-                                                      .primaryDarkGrayColor
-                                                      .toColor()),
-                                              onPressed: () {
-                                                Navigator.pop(context, true);
-                                              },
-                                              child: Text(
-                                                  'general_dialog.yes'.tr()))
-                                        ]),
-                                  ),
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) {
-                                return SizedBox();
-                              });
+                          bool? confirm = await confirmationDialog(context,
+                              'Do you want to clear the current re-classified payments?');
                           if (confirm != true) return;
                         }
                         cartBloc.clearPayment();
@@ -150,6 +114,38 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
         ),
       ),
     );
+  }
+
+  Future<bool?> confirmationDialog(BuildContext context, String content) {
+    return showGeneralDialog<bool?>(
+        context: context,
+        transitionDuration: const Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        transitionBuilder: (context, a, b, _) => Transform.scale(
+              scale: a.value,
+              child: AlertDialog(content: Text(content), actions: [
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            POSConfig().primaryDarkGrayColor.toColor()),
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: Text('general_dialog.no'.tr())),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            POSConfig().primaryDarkGrayColor.toColor()),
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    },
+                    child: Text('general_dialog.yes'.tr()))
+              ]),
+            ),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return SizedBox();
+        });
   }
 
   Widget paymentsCard(
@@ -460,13 +456,29 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                           controller: invController,
                           onEditingComplete: () async {
                             // EasyLoading.showInfo('Processing !!!');
+                            if (classifiedPayments.isNotEmpty) {
+                              bool? confirm = await confirmationDialog(context,
+                                  'Do you want to clear the re-classified payments for the current invoice?');
+                              if (confirm != true) return;
+                            }
                             EasyLoading.show(status: 'please_wait'.tr());
+                            cartBloc.clearPayment();
+                            classifiedPayments.clear();
+                            invDate = '--';
+                            invAmount = 0;
+                            invLoc = '--';
+                            invStation = '--';
+                            invCashier = '--';
+                            invCustomer = '--';
+                            invRemark = '--';
+                            invBalance = 0;
+                            setState(() {});
                             bool isFetched = await getInvoicePayments();
                             if (isFetched) {
                               setState(() {});
                             } else {
                               EasyLoading.showError(
-                                  'Failed to get invoice data !!!');
+                                  'Failed to get invoice data !!!'); 
                             }
                             EasyLoading.dismiss();
                           },
@@ -483,7 +495,24 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                       child: Container(
                         child: IconButton(
                             onPressed: () async {
+                              if (classifiedPayments.isNotEmpty) {
+                                bool? confirm = await confirmationDialog(
+                                    context,
+                                    'Do you want to clear the re-classified payments for the current invoice?');
+                                if (confirm != true) return;
+                              }
                               EasyLoading.show(status: 'please_wait'.tr());
+                              cartBloc.clearPayment();
+                              classifiedPayments.clear();
+                              invDate = '--';
+                              invAmount = 0;
+                              invLoc = '--';
+                              invStation = '--';
+                              invCashier = '--';
+                              invCustomer = '--';
+                              invRemark = '--';
+                              invBalance = 0;
+                              setState(() {});
                               bool isFetched = await getInvoicePayments();
                               if (isFetched) {
                                 setState(() {});
@@ -555,6 +584,8 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
           if (phCode != pdCode) {
             pdDesc = payModeDet.firstWhere(
                 (element) => element['PD_CODE'] == pdCode)['PD_DESC'];
+          } else {
+            pdDesc = phDesc;
           }
 
           double amount = p['INVPAY_PAIDAMOUNT'] ?? 0;
