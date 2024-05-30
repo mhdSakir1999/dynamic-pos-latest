@@ -6,6 +6,7 @@ import 'package:checkout/components/api_client.dart';
 import 'package:checkout/components/current_theme.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/components/widgets/pos_background.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/models/pos/paid_model.dart';
 import 'package:checkout/models/pos_config.dart';
@@ -88,11 +89,98 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (classifiedPayments.isEmpty) {
+                          EasyLoading.showError(
+                              'Do payment re-classification before save !!!');
+                          return;
+                        }
+                        Map<String, dynamic> temp = {
+                          'START_TIME': DateFormat('yyyy-MM-ddTHH:mm:ss.000')
+                              .format(DateTime.parse(invDate)),
+                          "INV_DETAILS": [],
+                          "PAYMENTS":
+                              classifiedPayments.map((e) => e.toMap()).toList(),
+                          "MEMBER_CODE": invCustomer == '--' ? "" : invCustomer,
+                          "INVOICE_NO": invController.text,
+                          "NET_AMOUNT": invAmount,
+                          "GROSS_AMOUNT": invAmount,
+                          "PAY_AMOUNT": invAmount,
+                          "CHANGE_AMOUNT": 0,
+                          "EARNED_POINTS": 0,
+                          "BURNED_POINTS": 0,
+                          "DUE_AMOUNT": 0,
+                          "TERMINAL": POSConfig().terminalId,
+                          "SETUP_LOCATION": POSConfig().setupLocation,
+                          "CASHIER": invCashier,
+                          "TEMP_SIGN_ON": invCashier,
+                          "SHIFT_NO": "",
+                          "SIGN_ON_DATE": "",
+                          "COM_CODE": POSConfig().comCode,
+                          "LOC_CODE": POSConfig().locCode,
+                          "BILL_DISC_PER": 0,
+                          "INVOICED": true,
+                          "LINE_DISC_PER": 0,
+                          "LINE_DISC_AMT": 0,
+                          "PRICE_MODE": "",
+                          'REF_NO': "",
+                          'REF_MODE': "",
+                          'INV_REF': [],
+                          'PRO_TAX': [],
+                          'TAX_INC': 0,
+                          'TAX_EXC': 0,
+                          'PROMO_FREE_ITEMS': [],
+                          'LOYALTY_OUTLET': POSConfig().loyaltyServerOutlet,
+                          'LINE_REMARKS': [],
+                          'PROMO_DISC_PER': 0,
+                          'PROMO_CODE': '',
+                          'FREE_ISSUE': [],
+                          'INV_TICKETS': [],
+                          'REDEEMED_COUPONS': [],
+                        };
+
+                        await LogWriter().saveLogsToFile('API_Log_', [
+                          '####################################################################',
+                          jsonEncode(temp),
+                          '####################################################################'
+                        ]);
+                        final res = await ApiClient.call(
+                            'invoice/reclassification',
+                            ApiMethod
+                                .POST, //invoiced ? "invoice/save" : 'invoice/hold_invoice'
+                            data: temp,
+                            successCode: 200);
+
+                        if (res?.statusCode == 200) {
+                          try {
+                            final resReturn = res?.data?["res"].toString();
+                            if (resReturn == null || resReturn == '') return;
+                            POSConfig.localPrintData = resReturn!;
+                            var stopwatch = Stopwatch();
+
+                            stopwatch.start();
+                            POSManualPrint()
+                                .printInvoice(data: resReturn!, points: 0);
+                            stopwatch.stop();
+                            print(stopwatch.elapsed.toString());
+                            payments = classifiedPayments;
+                            classifiedPayments.clear();
+                            setState(() {});
+                          } catch (e) {
+                            await LogWriter().saveLogsToFile('ERROR_LOG_', [
+                              'Re-Classification save error :' + e.toString()
+                            ]);
+                          }
+                        } else {
+                          EasyLoading.showError(
+                              'Can\'t be able to re-classify the invoice\nPlease try again !!!');
+                          return;
+                        }
+                      },
                       child: Text('Save'),
                       style: ButtonStyle(
                           backgroundColor:
-                              MaterialStatePropertyAll(Colors.green[800])),
+                              WidgetStatePropertyAll(Colors.green[800])),
                     ),
                   )
                 ],
@@ -478,7 +566,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                               setState(() {});
                             } else {
                               EasyLoading.showError(
-                                  'Failed to get invoice data !!!'); 
+                                  'Failed to get invoice data !!!');
                             }
                             EasyLoading.dismiss();
                           },

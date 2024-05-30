@@ -32,7 +32,7 @@ class CurrentTheme {
     themeData = theme;
     primaryColor = theme.primaryColor;
     accentColor = theme.colorScheme.secondary;
-    backgroundColor = theme.colorScheme.background;
+    backgroundColor = theme.colorScheme.surface;
     primaryLightColor = theme.primaryColorLight;
     primaryDarkColor = theme.primaryColorDark;
     headline1 = textTheme.displayLarge;

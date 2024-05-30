@@ -172,7 +172,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             useMaterial3: false,
             colorScheme: ThemeData.light().colorScheme.copyWith(
-                background: POSConfig()
+                surface: POSConfig()
                     .backgroundColor
                     .toColor()), // background: POSConfig().backgroundColor.toColor() --deprecated
             primaryColor: POSConfig().primaryColor.toColor(),
