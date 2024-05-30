@@ -225,9 +225,9 @@ class _ReClassificationPaymentViewState
         }
         return false;
       },
-      child: RawKeyboardListener(
+      child: KeyboardListener(
         autofocus: true,
-        onKey: (value) async {
+        onKeyEvent: (value) async {
           if (value.logicalKey == LogicalKeyboardKey.escape) {
             if (mounted)
               setState(() {
@@ -236,8 +236,8 @@ class _ReClassificationPaymentViewState
                 selectedPayModeDetail = null;
               });
           }
-          if (value is RawKeyDownEvent) {
-            if (!value.isShiftPressed &&
+          if (value is KeyDownEvent) {
+            if (!HardwareKeyboard.instance.isShiftPressed &&
                 value.logicalKey == LogicalKeyboardKey.f5) {
               billClose();
             }
@@ -1133,11 +1133,11 @@ class _ReClassificationPaymentViewState
               subtitle: "due_amount_error.subtitle"
                   .tr(namedArgs: {"due": balanceDue.toStringAsFixed(3)}),
               actions: [
-                RawKeyboardListener(
+                KeyboardListener(
                   focusNode: errorNode,
                   autofocus: true,
-                  onKey: (value) {
-                    if (value is RawKeyDownEvent) {
+                  onKeyEvent: (value) {
+                    if (value is KeyDownEvent) {
                       if (value.physicalKey == PhysicalKeyboardKey.enter ||
                           value.physicalKey == PhysicalKeyboardKey.keyO) {
                         Navigator.pop(context);

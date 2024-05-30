@@ -100,7 +100,8 @@ class BarChartSample2State extends State<BarChartSample2> {
                     maxY: 20,
                     barTouchData: BarTouchData(
                         touchTooltipData: BarTouchTooltipData(
-                          tooltipBgColor: Colors.grey,
+                          // tooltipBgColor: Colors.grey,
+                          getTooltipColor: (group) => Colors.grey,
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
                             String weekDay;
                             switch (group.x.toInt()) {

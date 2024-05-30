@@ -231,10 +231,10 @@ class _LandingViewState extends State<LandingView> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('landing_view.promotion_dialog_tile'.tr()),
-          content: RawKeyboardListener(
+          content: KeyboardListener(
             focusNode: _promoFocusNode,
-            onKey: (event) {
-              if (event is RawKeyDownEvent) {
+            onKeyEvent: (event) {
+              if (event is KeyDownEvent) {
                 if (event.physicalKey == PhysicalKeyboardKey.enter ||
                     event.physicalKey == PhysicalKeyboardKey.keyO) {
                   Navigator.pop(context); // Close the dialog on Enter key press
@@ -834,10 +834,10 @@ class _LandingViewState extends State<LandingView> {
           Color activeColor = POSConfig().primaryColor.toColor();
           Color deActiveColor =
               POSConfig().primaryColor.toColor().withOpacity(0.6);
-          return RawKeyboardListener(
+          return KeyboardListener(
             focusNode: _focusNode,
-            onKey: (value) {
-              if (value is RawKeyDownEvent) {
+            onKeyEvent: (value) {
+              if (value is KeyDownEvent) {
                 if (POSConfig().localMode != true &&
                     value.logicalKey == LogicalKeyboardKey.f1) {
                   Navigator.push(context,
@@ -1255,11 +1255,11 @@ class _LandingViewState extends State<LandingView> {
                     .format(_eodDateTime ?? DateTime.now())
               }),
               actions: [
-                RawKeyboardListener(
+                KeyboardListener(
                   focusNode: _eodFocusNode,
                   autofocus: true,
-                  onKey: (value) {
-                    if (value is RawKeyDownEvent) {
+                  onKeyEvent: (value) {
+                    if (value is KeyDownEvent) {
                       if (value.physicalKey == PhysicalKeyboardKey.keyY) {
                         Navigator.pop(context, _eodDateTime);
                       }
@@ -1271,11 +1271,11 @@ class _LandingViewState extends State<LandingView> {
                       },
                       text: "eod_confirmation.yes".tr()),
                 ),
-                RawKeyboardListener(
+                KeyboardListener(
                   focusNode: _eodFocusNode,
                   autofocus: true,
-                  onKey: (value) async {
-                    if (value is RawKeyDownEvent) {
+                  onKeyEvent: (value) async {
+                    if (value is KeyDownEvent) {
                       if (value.physicalKey == PhysicalKeyboardKey.keyP) {
                         print(POSConfig().setup?.serverTime);
                         print(POSConfig().setup?.setupEndDate);
@@ -1323,11 +1323,11 @@ class _LandingViewState extends State<LandingView> {
                       },
                       text: "eod_confirmation.pick".tr()),
                 ),
-                RawKeyboardListener(
+                KeyboardListener(
                   focusNode: _eodFocusNode,
                   autofocus: true,
-                  onKey: (value) {
-                    if (value is RawKeyDownEvent) {
+                  onKeyEvent: (value) {
+                    if (value is KeyDownEvent) {
                       if (value.physicalKey == PhysicalKeyboardKey.keyN) {
                         Navigator.pop(context, null);
                       }

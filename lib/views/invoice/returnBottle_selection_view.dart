@@ -599,11 +599,11 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
         ),
         lineSpace(),
         Expanded(
-          child: RawKeyboardListener(
+          child: KeyboardListener(
             focusNode: keyboardFocus,
             autofocus: true,
-            onKey: (value) async {
-              if (value is RawKeyDownEvent) {
+            onKeyEvent: (value) async {
+              if (value is KeyDownEvent) {
                 if (value.physicalKey == PhysicalKeyboardKey.enter ||
                     value.physicalKey == PhysicalKeyboardKey.numpadEnter) {
                   handleEnterPress();

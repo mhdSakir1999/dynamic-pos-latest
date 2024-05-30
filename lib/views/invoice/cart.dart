@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
  * Author: Shalika Ashan & TM.Sakir
@@ -232,12 +230,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           if (snapshot.data == true) {
             return child;
           }
-          return RawKeyboardListener(
+          return KeyboardListener(
               autofocus: true,
               focusNode: focusNode,
-              onKey: (value) async {
-                if (value is RawKeyDownEvent) {
-                  if (!value.isShiftPressed &&
+              onKeyEvent: (value) async {
+                if (value is KeyDownEvent) {
+                  if (!HardwareKeyboard.instance.isShiftPressed &&
                       value.physicalKey == PhysicalKeyboardKey.numpadAdd) {
                     if (!payButtonPressed) {
                       payButtonPressed = true;
@@ -249,7 +247,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                     focusNode.requestFocus();
                     itemCodeFocus.requestFocus();
                   }
-                  if (!value.isShiftPressed &&
+                  if (!HardwareKeyboard.instance.isShiftPressed &&
                       value.logicalKey == LogicalKeyboardKey.f12 &&
                       !POSConfig().localMode) {
                     if (customerBloc.currentCustomer == null) {
@@ -259,13 +257,13 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       focusNode.requestFocus();
                     }
                   }
-                  if (!value.isShiftPressed &&
+                  if (!HardwareKeyboard.instance.isShiftPressed &&
                       value.physicalKey == PhysicalKeyboardKey.delete) {
                     await voidItem();
                     focusNode.requestFocus();
                     itemCodeFocus.requestFocus();
                   }
-                  if (value.isControlPressed &&
+                  if (HardwareKeyboard.instance.isControlPressed &&
                       value.physicalKey == PhysicalKeyboardKey.keyA) {
                     final selectedRep;
                     if (cartBloc.currentCart != null &&
@@ -298,22 +296,25 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   /// new change by [TM.Sakir] at 2023-11-14 4:33PM
   /// using keyboard keys to trigger functions
 
-  void _handleKeyEvent(RawKeyDownEvent event) async {
+  void _handleKeyEvent(KeyDownEvent event) async {
     /// new change by [TM.Sakir]
     /// if cartBloc.cartSummary has items disabling 'special_function' button
     if (cartBloc.cartSummary?.items != 0 &&
-        (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f1)) {
+        (!HardwareKeyboard.instance.isShiftPressed &&
+            event.logicalKey == LogicalKeyboardKey.f1)) {
       EasyLoading.showError('special_functions.cant_open'.tr());
       return;
     }
     //"cartBloc.cartSummary" to check whether cart is not editable. this is used when backoffice txn is recalled.
     if (cartBloc.cartSummary?.editable != true &&
-        !(!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f4)) {
+        !(!HardwareKeyboard.instance.isShiftPressed &&
+            event.logicalKey == LogicalKeyboardKey.f4)) {
       EasyLoading.showError('backend_invoice_view.item_add_error'.tr());
       return;
     }
 
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f7) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f7) {
       //check whether the client has the GV module license
       if (POSConfig().clientLicense?.lCMYVOUCHERS != true ||
           POSConfig().expired) {
@@ -345,68 +346,81 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
 
     final selectedModel = getSelectedItem();
 
-    if (!event.isShiftPressed &&
+    if (!HardwareKeyboard.instance.isShiftPressed &&
         event.physicalKey == PhysicalKeyboardKey.insert) {
       doWhenClicked(
           func_name: 'net_disc', cart: selectedModel, lastItem: lastItem);
     }
     if (POSConfig().localMode != true &&
-        !event.isShiftPressed &&
+        !HardwareKeyboard.instance.isShiftPressed &&
         event.logicalKey == LogicalKeyboardKey.f1) {
       doWhenClicked(
           func_name: 'special_function',
           cart: selectedModel,
           lastItem: lastItem);
     }
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f2) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f2) {
       doWhenClicked(
           func_name: 'search', cart: selectedModel, lastItem: lastItem);
     }
-    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f2) {
+    if (HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f2) {
       doWhenClicked(
           func_name: 'categories', cart: selectedModel, lastItem: lastItem);
     }
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f3) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f3) {
       doWhenClicked(
           func_name: 'line_disc_per', cart: selectedModel, lastItem: lastItem);
     }
-    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f3) {
+    if (HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f3) {
       doWhenClicked(
           func_name: 'line_disc_amt', cart: selectedModel, lastItem: lastItem);
     }
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f4) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f4) {
       doWhenClicked(
           func_name: 'clear', cart: selectedModel, lastItem: lastItem);
     }
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f5) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f5) {
       doWhenClicked(
           func_name: 'repeat_plu', cart: selectedModel, lastItem: lastItem);
     }
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f6) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f6) {
       doWhenClicked(func_name: 'hold', cart: selectedModel, lastItem: lastItem);
     }
-    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f6) {
+    if (HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f6) {
       doWhenClicked(
           func_name: 'recall', cart: selectedModel, lastItem: lastItem);
     }
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f8) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f8) {
       doWhenClicked(
           func_name: 'cash_in', cart: selectedModel, lastItem: lastItem);
     }
-    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f8) {
+    if (HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f8) {
       doWhenClicked(
           func_name: 'cash_out', cart: selectedModel, lastItem: lastItem);
     }
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f9) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f9) {
       doWhenClicked(
           func_name: 'bill_cancel', cart: selectedModel, lastItem: lastItem);
     }
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f10) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f10) {
       doWhenClicked(
           func_name: 'drawer_open', cart: selectedModel, lastItem: lastItem);
     }
 
-    if (!event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.f11) {
+    if (!HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.f11) {
       doWhenClicked(
           func_name: 're-print', cart: selectedModel, lastItem: lastItem);
     }
@@ -1008,9 +1022,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           qty = -1 * qty.abs();
         }
 
+        itemCodeFocus.unfocus();
         List<CartModel?>? addedItem = await calculator.addItemToCart(res, qty,
             context, resList.prices, resList.proPrices, resList.proTax,
             secondApiCall: true, scaleBarcode: isScaleBarcode);
+        itemCodeFocus.requestFocus();
+
         bool isMinus = qty < 0;
         if (res.returnBottleCode != null &&
             res.returnBottleCode!.isNotEmpty &&
@@ -3204,9 +3221,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
             content: SizedBox(
               height: ScreenUtil().screenHeight * 0.65,
               width: ScreenUtil().screenWidth * 0.35,
-              child: RawKeyboardListener(
+              child: KeyboardListener(
                 autofocus: true,
-                onKey: (RawKeyEvent value) {
+                onKeyEvent: (KeyEvent value) {
                   if (value.logicalKey == LogicalKeyboardKey.arrowDown) {
                     _tempIndex++;
                     if (_tempIndex >= priceModeList.length) {
@@ -3273,10 +3290,10 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         transitionDuration: const Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
-        transitionBuilder: (context, a, b, _) => RawKeyboardListener(
+        transitionBuilder: (context, a, b, _) => KeyboardListener(
               focusNode: customerNode,
-              onKey: (value) async {
-                if (value is RawKeyDownEvent) {
+              onKeyEvent: (value) async {
+                if (value is KeyDownEvent) {
                   if (value.physicalKey == PhysicalKeyboardKey.keyV) {
                     LoyaltySummary? res;
                     bool permission = await hasPermission("A");

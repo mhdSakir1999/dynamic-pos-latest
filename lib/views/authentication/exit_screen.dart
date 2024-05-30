@@ -32,10 +32,10 @@ class ExitScreen extends StatelessWidget {
           */
     //---------------------
     focusNode.requestFocus();
-    return RawKeyboardListener(
+    return KeyboardListener(
       focusNode: focusNode,
-      onKey: (value) async {
-        if (value is RawKeyDownEvent) {
+      onKeyEvent: (value) async {
+        if (value is KeyDownEvent) {
           if (value.physicalKey == PhysicalKeyboardKey.keyN) {
             Navigator.pop(context);
           }
@@ -49,7 +49,6 @@ class ExitScreen extends StatelessWidget {
         icon: MaterialCommunityIcons.help_circle,
         style: CurrentTheme.headline5,
         leftButtonPressed: () async {
-         
           await exitTasks();
           //---------------------
         },
@@ -64,7 +63,7 @@ class ExitScreen extends StatelessWidget {
     );
   }
 
- /* 
+  /* 
           * Author: TM.Sakir
           * Date: 2023/9/19 09:49AM
           * change: this is to close the dualDisplay app, local api, crystal when closing the pos -- "taskkill /F /IM name.exe"
@@ -95,7 +94,7 @@ class ExitScreen extends StatelessWidget {
           'cmd.exe', ['/c', 'taskkill /F /IM CrystalReport.exe']);
       LogWriter().saveLogsToFile('ERROR_Log_', ['Closing previous api...']);
     } catch (e) {
-     await LogWriter().saveLogsToFile(
+      await LogWriter().saveLogsToFile(
           'ERROR_Log_', ['Error Closing previous api: ${e.toString()}']);
       print('Error: $e');
     }

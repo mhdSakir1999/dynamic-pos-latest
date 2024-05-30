@@ -138,10 +138,10 @@ class _DashboardViewState extends State<DashboardView> {
                           SizedBox(
                             width: 15.r,
                           ),
-                          RawKeyboardListener(
+                          KeyboardListener(
                               focusNode: _focusNode,
-                              onKey: (value) {
-                                if (value is RawKeyDownEvent) {
+                              onKeyEvent: (value) {
+                                if (value is KeyDownEvent) {
                                   if (value.physicalKey ==
                                       PhysicalKeyboardKey.escape) {
                                     Navigator.pop(context);

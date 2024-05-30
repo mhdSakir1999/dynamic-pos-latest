@@ -222,10 +222,10 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                   transitionDuration: const Duration(milliseconds: 200),
                   barrierDismissible: true,
                   barrierLabel: '',
-                  transitionBuilder: (context, a, b, _) => RawKeyboardListener(
+                  transitionBuilder: (context, a, b, _) => KeyboardListener(
                         focusNode: focusNode,
-                        onKey: (value) async {
-                          if (value is RawKeyDownEvent) {
+                        onKeyEvent: (value) async {
+                          if (value is KeyDownEvent) {
                             if (value.physicalKey == PhysicalKeyboardKey.keyV) {
                               LoyaltySummary? res;
                               bool permission = await hasPermission("A");

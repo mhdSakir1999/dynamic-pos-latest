@@ -140,11 +140,11 @@ class LandingHelper {
                     subtitle:
                         "The logged user: (${userBloc.currentUser?.uSERHEDUSERCODE}) is currently doing a shift on terminal $terminalId \nSo, login again with new cashier Id",
                     actions: [
-                      RawKeyboardListener(
+                      KeyboardListener(
                         focusNode: errorFocusNode,
                         autofocus: true,
-                        onKey: (value) {
-                          if (value is RawKeyDownEvent) {
+                        onKeyEvent: (value) {
+                          if (value is KeyDownEvent) {
                             if (value.physicalKey ==
                                     PhysicalKeyboardKey.enter ||
                                 value.physicalKey == PhysicalKeyboardKey.keyO) {
@@ -265,11 +265,11 @@ class LandingHelper {
             title: "sign_off_popup.title".tr(),
             subtitle: "",
             actions: [
-              RawKeyboardListener(
+              KeyboardListener(
                 focusNode: alertFocusNode,
                 autofocus: true,
-                onKey: (event) {
-                  if (event is RawKeyDownEvent) {
+                onKeyEvent: (event) {
+                  if (event is KeyDownEvent) {
                     if (event.physicalKey == PhysicalKeyboardKey.keyY) {
                       Navigator.pop(context);
                       validateSignOff();
@@ -283,11 +283,11 @@ class LandingHelper {
                     },
                     text: "sign_off_popup.yes".tr()),
               ),
-              RawKeyboardListener(
+              KeyboardListener(
                 focusNode: alertFocusNode,
                 autofocus: true,
-                onKey: (event) {
-                  if (event is RawKeyDownEvent) {
+                onKeyEvent: (event) {
+                  if (event is KeyDownEvent) {
                     if (event.physicalKey == PhysicalKeyboardKey.keyN) {
                       Navigator.pop(context);
                     }
@@ -411,11 +411,11 @@ class LandingHelper {
                     title: "sign_off_complete_popup.title".tr(),
                     subtitle: "",
                     actions: [
-                      RawKeyboardListener(
+                      KeyboardListener(
                         focusNode: FocusNode(),
                         autofocus: true,
-                        onKey: (value) {
-                          if (value is RawKeyDownEvent) {
+                        onKeyEvent: (value) {
+                          if (value is KeyDownEvent) {
                             if (value.physicalKey ==
                                     PhysicalKeyboardKey.enter ||
                                 value.physicalKey == PhysicalKeyboardKey.keyO) {

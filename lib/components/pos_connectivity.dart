@@ -73,11 +73,11 @@ class POSConnectivity {
                     title: "server_error.title".tr(),
                     subtitle: "server_error.subtitle".tr(),
                     actions: [
-                      RawKeyboardListener(
+                      KeyboardListener(
                         autofocus: true,
                         focusNode: _focusNode,
-                        onKey: (value) async {
-                          if (value is RawKeyDownEvent) {
+                        onKeyEvent: (value) async {
+                          if (value is KeyDownEvent) {
                             if (value.physicalKey ==
                                     PhysicalKeyboardKey.enter ||
                                 value.physicalKey == PhysicalKeyboardKey.keyO) {

@@ -46,6 +46,7 @@ class POSPriceCalculator {
   TextEditingController _multiplePriceEditingController =
       TextEditingController();
   KeyBoardController keyBoardController = KeyBoardController();
+  FocusNode multiplePriceNode = FocusNode();
 
   // this method can handle the open items
   Future<Product?> handleOpenItem(Product product, BuildContext context) async {
@@ -964,6 +965,7 @@ class POSPriceCalculator {
       double sellingPrice,
       List<ProductPriceChanges> multiplePrices,
       Product prod) async {
+    multiplePriceNode.requestFocus();
     List<ProductPriceChanges> prices = [];
     prices.addAll(multiplePrices.reversed.toList());
     _multiplePriceEditingController.clear();
@@ -990,7 +992,7 @@ class POSPriceCalculator {
                           onEnterMultiplePrice(prices, context, true),
                       buildContext: context);
                 },
-                autofocus: true,
+                autofocus: false,
                 controller: _multiplePriceEditingController,
                 onEditingComplete: () =>
                     onEnterMultiplePrice(prices, context, false),
@@ -1001,27 +1003,31 @@ class POSPriceCalculator {
                     InputDecoration(hintText: 'invoice.enter_price'.tr()),
               ),
               Expanded(
-                child: RawKeyboardListener(
-                  onKey: (value) {
-                    String label = value.data.keyLabel;
-                    //check the key is 0
-                    int index = 0;
-                    if (label == '0') {
-                      index = 1;
-                    } else {
-                      index = label.toString().parseDouble().toInt();
-                      if (index == 0) {
-                        index = -1;
+                child: KeyboardListener(
+                  onKeyEvent: (value) {
+                    if (value is KeyDownEvent) {
+                      String label = value.logicalKey.keyLabel;
+                      label = label.replaceAll('Numpad ', '');
+                      //check the key is 0
+                      int index = 0;
+                      if (label == '0') {
+                        index = 1;
+                      } else {
+                        index = label.toString().parseDouble().toInt();
+                        if (index == 0) {
+                          index = -1;
+                        }
+                      }
+
+                      // do the selection
+                      if (index <= prices.length + 1) {
+                        // Navigator.pop(context, prices[index - 1].pRSPRICE);
+                        Navigator.pop(context, prices[index - 1]);
                       }
                     }
-
-                    // do the selection
-                    if (index <= prices.length + 1) {
-                      // Navigator.pop(context, prices[index - 1].pRSPRICE);
-                      Navigator.pop(context, prices[index - 1]);
-                    }
                   },
-                  focusNode: FocusNode(),
+                  focusNode: multiplePriceNode,
+                  autofocus: true,
                   child: ListView.builder(
                     itemCount: prices.length,
                     itemBuilder: (context, index) {

@@ -241,9 +241,9 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
 
     return Container(
       width: double.infinity,
-      child: RawKeyboardListener(
+      child: KeyboardListener(
         focusNode: _keyboardFocus,
-        onKey: (value) {},
+        onKeyEvent: (value) {},
         child: Scrollbar(
           child: SingleChildScrollView(
             child: Column(

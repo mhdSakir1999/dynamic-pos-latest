@@ -95,9 +95,9 @@ class _ProductSearchViewState extends State<ProductSearchView> {
   }
 
   Widget buildContent() {
-    return RawKeyboardListener(
+    return KeyboardListener(
       focusNode: _keyboardFocus,
-      onKey: (value) {},
+      onKeyEvent: (value) {},
       child: Container(
         child: Row(
           children: [

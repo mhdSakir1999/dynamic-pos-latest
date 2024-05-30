@@ -229,9 +229,9 @@ class _LoginViewState extends State<LoginView> {
         alignment: Alignment.topCenter,
         padding: EdgeInsets.symmetric(horizontal: 20.r),
         child: SingleChildScrollView(
-          child: RawKeyboardListener(
+          child: KeyboardListener(
             focusNode: FocusNode(),
-            onKey: (value) {
+            onKeyEvent: (value) {
               // if (mounted)
               //   setState(() {
               //     capsLockWarning = value.logicalKey.keyId == 0x100070039;

@@ -27,13 +27,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
-  google_fonts: ^4.0.4
+  google_fonts: ^6.2.1
   flutter_screenutil: ^5.5.4
   flutter_easyloading: ^3.0.5
   supercharged: ^2.1.1
   easy_localization: ^3.0.1
   rxdart: ^0.27.5
-  intl: ^0.18.1
+  intl: ^0.19.0
   timer_builder: ^2.0.0
   flutter_icons:
     git:
@@ -59,18 +59,18 @@ dependencies:
   fingerprintjs: ^2.0.0
   desktop_window: ^0.4.0
   device_info_plus:
-  web_socket_channel: ^2.2.0
+  web_socket_channel: ^3.0.0
   infinite_scroll_pagination: ^4.0.0
   uuid: ^4.1.0
   dart_jsonwebtoken: ^2.4.2
   flutter_dotenv: ^5.0.2
   printing: ^5.9.3
-  http: ^0.13.5
+  http: ^1.2.1
   # cargills_loyalty:
   #   path: ../cargills_loyalty
-  fl_chart: ^0.65.0
+  fl_chart: ^0.68.0
   overlay_tutorial: ^3.0.0
-  lottie: ^2.6.0
+  lottie: ^3.1.2
   path_provider: ^2.0.11
   bitsdojo_window: ^0.1.3
   dropdown_button2: ^2.3.9

@@ -25,10 +25,10 @@ class LandingAlertController {
           title: "$key.title".tr(),
           subtitle: "$key.subtitle".tr(),
           actions: [
-            RawKeyboardListener(
+            KeyboardListener(
               focusNode: focusNode,
               autofocus: true,
-              onKey: (value) {
+              onKeyEvent: (value) {
                 // if (value is KeyDownEvent) {
                 //   if (value.physicalKey == PhysicalKeyboardKey.enter ||
                 //       value.physicalKey == PhysicalKeyboardKey.keyO) {
@@ -65,11 +65,11 @@ class LandingAlertController {
           title: "$key.title".tr(namedArgs: namedArgs),
           subtitle: "$key.subtitle".tr(namedArgs: namedArgs),
           actions: [
-            RawKeyboardListener(
+            KeyboardListener(
               focusNode: errorFocusNode,
               autofocus: true,
-              onKey: (value) {
-                if (value is RawKeyDownEvent) {
+              onKeyEvent: (value) {
+                if (value is KeyDownEvent) {
                   if (value.physicalKey == PhysicalKeyboardKey.enter ||
                       value.physicalKey == PhysicalKeyboardKey.keyO) {
                     Navigator.pop(context);

@@ -228,9 +228,9 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
         }
         return false;
       },
-      child: RawKeyboardListener(
+      child: KeyboardListener(
         autofocus: true,
-        onKey: (value) {
+        onKeyEvent: (value) {
           if (value.logicalKey == LogicalKeyboardKey.escape) {
             if (mounted)
               setState(() {
