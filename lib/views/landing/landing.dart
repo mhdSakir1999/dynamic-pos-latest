@@ -225,6 +225,7 @@ class _LandingViewState extends State<LandingView> {
   /* Promotion Dialog */
   /* By Dinuka 2022/07/28 */
   Future<void> promotionPopup(List<Promotion> promotionList) async {
+    final height = MediaQuery.of(context).size.height;
     _promoFocusNode.requestFocus();
     return showDialog<void>(
       context: context,
@@ -241,7 +242,27 @@ class _LandingViewState extends State<LandingView> {
                 }
               }
             },
-            child: SingleChildScrollView(
+            child:
+
+                // Column(
+                //   children: [
+                //     Container(
+                //       height: height * 0.5,
+                //       child: ListView.builder(
+                //           itemCount: promotionList.length,
+                //           itemBuilder: (context, index) =>
+                //               promotionItem(promotionList[index])),
+                //     ),
+                //     Container(
+                //       height: height * 0.2,
+                //       child: AlertDialogButton(
+                //           onPressed: () => Navigator.pop(context),
+                //           text: 'invoice.zero_item_button'.tr()),
+                //     )
+                //   ],
+                // )
+
+                SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
                   Column(

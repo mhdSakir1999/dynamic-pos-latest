@@ -2,13 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:checkout/bloc/cart_bloc.dart';
+import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/components/api_client.dart';
 import 'package:checkout/components/current_theme.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/components/widgets/pos_background.dart';
 import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
+import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/models/pos/paid_model.dart';
+import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/views/invoice/reClassification_payment_view.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -95,6 +98,37 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                               'Do payment re-classification before save !!!');
                           return;
                         }
+
+                        final permissionList = userBloc.userDetails?.userRights;
+                        bool hasPermission = false;
+                        final userCode =
+                            userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+                        hasPermission =
+                            SpecialPermissionHandler(context: context)
+                                .hasPermissionInList(
+                                    permissionList ?? [],
+                                    PermissionCode.reclassification,
+                                    "C",
+                                    userCode);
+
+                        //if user doesnt have the permission
+                        if (!hasPermission) {
+                          final res = await SpecialPermissionHandler(
+                                  context: context!)
+                              .askForPermission(
+                                  permissionCode:
+                                      PermissionCode.reclassification,
+                                  accessType: "C",
+                                  refCode: DateTime.now().toIso8601String());
+                          hasPermission = res.success;
+                        }
+
+                        // still havent permission
+                        if (!hasPermission) {
+                          return;
+                        }
+                        EasyLoading.show(
+                            status: 'please_wait'.tr(), dismissOnTap: true);
                         Map<String, dynamic> temp = {
                           'START_TIME': DateFormat('yyyy-MM-ddTHH:mm:ss.000')
                               .format(DateTime.parse(invDate)),
@@ -153,18 +187,20 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
 
                         if (res?.statusCode == 200) {
                           try {
-                            final resReturn = res?.data?["res"].toString();
-                            if (resReturn == null || resReturn == '') return;
-                            POSConfig.localPrintData = resReturn!;
-                            var stopwatch = Stopwatch();
+                            // final resReturn = res?.data?["res"].toString();
+                            // if (resReturn == null || resReturn == '') return;
+                            // POSConfig.localPrintData = resReturn!;
+                            // var stopwatch = Stopwatch();
 
-                            stopwatch.start();
-                            POSManualPrint()
-                                .printInvoice(data: resReturn!, points: 0);
-                            stopwatch.stop();
-                            print(stopwatch.elapsed.toString());
-                            payments = classifiedPayments;
+                            // stopwatch.start();
+                            // POSManualPrint()
+                            //     .printInvoice(data: resReturn!, points: 0);
+                            // stopwatch.stop();
+                            // print(stopwatch.elapsed.toString());
+                            payments.clear();
+                            payments.addAll(classifiedPayments);
                             classifiedPayments.clear();
+                            EasyLoading.showSuccess('Success !!!');
                             setState(() {});
                           } catch (e) {
                             await LogWriter().saveLogsToFile('ERROR_LOG_', [
@@ -173,9 +209,11 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                           }
                         } else {
                           EasyLoading.showError(
-                              'Can\'t be able to re-classify the invoice\nPlease try again !!!');
+                              'Can\'t be able to re-classify the payments\nPlease try again !!!');
+                          EasyLoading.dismiss();
                           return;
                         }
+                        EasyLoading.dismiss();
                       },
                       child: Text('Save'),
                       style: ButtonStyle(

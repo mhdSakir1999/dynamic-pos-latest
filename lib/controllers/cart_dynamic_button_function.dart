@@ -579,6 +579,27 @@ class CartDynamicButtonFunction {
           POSLoggerLevel.error, "Field 'context' has not been initialized."));
       return;
     } else {
+      final permissionList = userBloc.userDetails?.userRights;
+      bool hasPermission = false;
+      final userCode = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+      hasPermission = SpecialPermissionHandler(context: context!)
+          .hasPermissionInList(permissionList ?? [],
+              PermissionCode.reclassification, "A", userCode);
+
+      //if user doesnt have the permission
+      if (!hasPermission) {
+        final res = await SpecialPermissionHandler(context: context!)
+            .askForPermission(
+                permissionCode: PermissionCode.reclassification,
+                accessType: "A",
+                refCode: DateTime.now().toIso8601String());
+        hasPermission = res.success;
+      }
+
+      // still havent permission
+      if (!hasPermission) {
+        return;
+      }
       showModalBottomSheet(
         isDismissible: false,
         enableDrag: false,
