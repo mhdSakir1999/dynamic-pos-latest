@@ -2601,9 +2601,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                   clearSelection();
                                   focusNode.requestFocus();
                                   itemCodeFocus.requestFocus();
-                                  _pageViewController.animateToPage(0,
-                                      duration: Duration(milliseconds: 500),
-                                      curve: Curves.easeInOut);
+                                  if (posButton.functionName ==
+                                      'local_switch') {
+                                    _pageViewController.animateToPage(0,
+                                        duration: Duration(milliseconds: 500),
+                                        curve: Curves.easeInOut);
+                                  }
                                 });
                               }
                             },

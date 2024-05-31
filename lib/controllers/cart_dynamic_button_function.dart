@@ -569,6 +569,10 @@ class CartDynamicButtonFunction {
           EasyLoading.showError('special_functions.cant_open'.tr());
           return;
         }
+        if (POSConfig().localMode) {
+          EasyLoading.showError('special_functions.cant_open_local'.tr());
+          return;
+        }
         reClassification();
         break;
       case "local_switch":
