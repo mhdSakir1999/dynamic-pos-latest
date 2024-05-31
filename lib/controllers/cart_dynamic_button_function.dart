@@ -570,6 +570,8 @@ class CartDynamicButtonFunction {
         }
         reClassification();
         break;
+      case "local_switch":
+        
     }
   }
 

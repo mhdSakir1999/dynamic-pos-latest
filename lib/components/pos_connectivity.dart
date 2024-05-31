@@ -40,7 +40,7 @@ class POSConnectivity {
     });
   }
 
-  handleConnection() async {
+  handleConnection({bool manualLocalSwitch = false}) async {
     bool serverRes = await pingToServer();
     if (serverRes) {
       print('connected to server');

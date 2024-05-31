@@ -133,7 +133,8 @@
     "bill_cancel": "Bill Cancel\n[F9]",
     "cash_in": "Cash In\n[F8]",
     "cash_out": "Cash Out\n[Sift+F8]",
-    "re-classification": "Payment\nRe-Classification"
+    "re-classification": "Payment\nRe-Classification",
+    "local_switch": "Local Mode"
   },
   "special_functions": {
     "select_special_function": "Select Special Function",

@@ -324,7 +324,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                             textAlign: TextAlign.center, style: labelStyle)),
                     Expanded(
                         flex: 3,
-                        child: Text('Cheque Date',
+                        child: Text('Date',
                             textAlign: TextAlign.center, style: labelStyle)),
                     Expanded(
                         flex: 3,
