@@ -2594,12 +2594,17 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                   setState(() {
                                     activeDynamicButton = false;
                                   });
-                                await func.handleFunction(
-                                    cart: null, lastItem: null);
-                                scrollToBottom();
-                                clearSelection();
-                                focusNode.requestFocus();
-                                itemCodeFocus.requestFocus();
+                                await func
+                                    .handleFunction(cart: null, lastItem: null)
+                                    .then((value) {
+                                  scrollToBottom();
+                                  clearSelection();
+                                  focusNode.requestFocus();
+                                  itemCodeFocus.requestFocus();
+                                  _pageViewController.animateToPage(0,
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.easeInOut);
+                                });
                               }
                             },
                           ),

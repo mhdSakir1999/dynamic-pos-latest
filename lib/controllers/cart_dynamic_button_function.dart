@@ -6,6 +6,7 @@
 
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
+import 'package:checkout/components/components.dart';
 import 'package:checkout/controllers/cash_in_out_controller.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
@@ -571,7 +572,14 @@ class CartDynamicButtonFunction {
         reClassification();
         break;
       case "local_switch":
-        
+        if (context == null) {
+          POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.error,
+              "Field 'context' has not been initialized."));
+          return;
+        }
+        posConnectivity.setContext(context!);
+        await posConnectivity.handleConnection(manualLocalModeSwitch: true);
+        break;
     }
   }
 
