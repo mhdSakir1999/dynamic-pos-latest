@@ -86,6 +86,7 @@ class CartSummaryModel {
       'REF_NO': this.refNo,
       'RECALL_HOLD_INV': this.recallHoldInv,
       'INV_MODE': this.invMode,
+      'HED_REM': this.hedRem
     };
   }
 //    factory CartSummaryModel.fromMap(Map<String, dynamic> map) {

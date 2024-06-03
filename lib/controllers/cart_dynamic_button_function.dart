@@ -10,6 +10,7 @@ import 'package:checkout/components/components.dart';
 import 'package:checkout/controllers/cash_in_out_controller.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
+import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/local_storage_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_error_alert.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
@@ -19,7 +20,9 @@ import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/product_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/controllers/usb_serial_controller.dart';
+import 'package:checkout/extension/pos_types.dart';
 import 'package:checkout/models/pos/cart_model.dart';
+import 'package:checkout/models/pos/hed_remark_model.dart';
 import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
@@ -34,8 +37,10 @@ import 'package:checkout/views/invoice/weighted_item_view.dart';
 import 'package:checkout/views/pos_functions/special_functions.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supercharged/supercharged.dart';
 
 /// This class will return the function dynamic function for the relevant button
@@ -584,7 +589,228 @@ class CartDynamicButtonFunction {
         posConnectivity.setContext(context!);
         await posConnectivity.handleConnection(manualLocalModeSwitch: true);
         break;
+      case "invhed_remarks":
+        if (context == null) {
+          POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.error,
+              "Field 'context' has not been initialized."));
+          return;
+        }
+        await invHedRemarkDialog(context!);
+        break;
     }
+  }
+
+  TextEditingController rem1 = TextEditingController();
+  TextEditingController rem2 = TextEditingController();
+  TextEditingController rem3 = TextEditingController();
+  TextEditingController rem4 = TextEditingController();
+  TextEditingController rem5 = TextEditingController();
+  Future<void> invHedRemarkDialog(BuildContext context) async {
+    final now = DateTime.now();
+    final containerWidth = POSConfig().containerSize.w;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Invoice Header Remarks', textAlign: TextAlign.center),
+          content: SizedBox(
+            width: ScreenUtil().screenWidth * 0.6,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  width: containerWidth * 2,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      labelElement('Remark 1'),
+                      textElement(
+                        '',
+                        14,
+                        rem1,
+                        onTap: () {
+                          KeyBoardController().dismiss();
+                          KeyBoardController().init(context);
+                          KeyBoardController().showBottomDPKeyBoard(rem1,
+                              onEnter: () {
+                            KeyBoardController().dismiss();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: containerWidth * 1.5,
+                  child: Row(
+                    children: [
+                      labelElement('Remark 2'),
+                      textElement(
+                        '',
+                        14,
+                        rem2,
+                        onTap: () {
+                          KeyBoardController().dismiss();
+                          KeyBoardController().init(context);
+                          KeyBoardController().showBottomDPKeyBoard(rem2,
+                              onEnter: () {
+                            KeyBoardController().dismiss();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: containerWidth * 1.5,
+                  child: Row(
+                    children: [
+                      labelElement('Remark 3'),
+                      textElement(
+                        '',
+                        14,
+                        rem3,
+                        onTap: () {
+                          KeyBoardController().dismiss();
+                          KeyBoardController().init(context);
+                          KeyBoardController().showBottomDPKeyBoard(rem3,
+                              onEnter: () {
+                            KeyBoardController().dismiss();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: containerWidth * 1.5,
+                  child: Row(
+                    children: [
+                      labelElement('Remark 4'),
+                      textElement(
+                        '',
+                        14,
+                        rem4,
+                        onTap: () {
+                          KeyBoardController().dismiss();
+                          KeyBoardController().init(context);
+                          KeyBoardController().showBottomDPKeyBoard(rem4,
+                              onEnter: () {
+                            KeyBoardController().dismiss();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: containerWidth * 1.5,
+                  child: Row(
+                    children: [
+                      labelElement('Remark 5'),
+                      textElement(
+                        '',
+                        14,
+                        rem5,
+                        onTap: () {
+                          KeyBoardController().dismiss();
+                          KeyBoardController().init(context);
+                          KeyBoardController().showBottomDPKeyBoard(rem5,
+                              onEnter: () {
+                            KeyBoardController().dismiss();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final HedRemarkModel hedRem = HedRemarkModel(
+                        rem1: rem1.text,
+                        rem2: rem2.text,
+                        rem3: rem3.text,
+                        rem4: rem4.text,
+                        rem5: rem5.text);
+                    cartBloc.cartSummary?.hedRem = hedRem;
+                    Navigator.pop(context);
+                  },
+                  child: Text('Update'),
+                  style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(Colors.grey)),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget textElement(
+      String text, double width, TextEditingController controller,
+      {bool disabled = false,
+      FocusNode? focusNode,
+      StringToFunc? validator,
+      VoidCallback? onTap,
+      List<TextInputFormatter>? inputFormatter}) {
+    return wrapper(
+      width: width * 1,
+      child: TextFormField(
+        onTap: onTap,
+        validator: validator,
+        focusNode: focusNode,
+        readOnly: disabled,
+        textAlign: TextAlign.left,
+        inputFormatters: inputFormatter,
+        enabled: true,
+        style: CurrentTheme.bodyText2!
+            .copyWith(color: CurrentTheme.primaryColor, fontSize: 20.sp),
+        controller: controller,
+        textInputAction: TextInputAction.next,
+        onChanged: (String value) {},
+        onEditingComplete: () {},
+        maxLength: 100,
+        maxLines: 2,
+        decoration: InputDecoration(
+          filled: true,
+          hintText: text,
+          alignLabelWithHint: true,
+          isDense: true,
+          contentPadding: EdgeInsets.all(10),
+        ),
+      ),
+    );
+  }
+
+  Widget wrapper({required Widget child, required double width}) {
+    final containerWidth = POSConfig().containerSize.w;
+    return Container(
+      width: containerWidth * width / 14,
+      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 10.w),
+      child: child,
+    );
+  }
+
+  Container labelElement(text) {
+    final containerWidth = POSConfig().containerSize.w;
+    return Container(
+      width: (containerWidth) * 3.5 / 12,
+      child: Card(
+        color: CurrentTheme.primaryColor,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 20.w),
+          child: Text(
+            text,
+            style: CurrentTheme.bodyText2!.copyWith(
+                color: CurrentTheme.primaryLightColor,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold),
+            textAlign: TextAlign.left,
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> reClassification() async {

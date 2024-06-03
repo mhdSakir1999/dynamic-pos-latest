@@ -443,7 +443,9 @@ class InvoiceController {
           cartBloc.promoFreeTickets?.map((e) => e.toMap()).toList() ?? [],
       'REDEEMED_COUPONS':
           cartBloc.redeemedCoupon?.map((e) => e.toMap()).toList() ?? [],
-      'HED_REMARKS': []
+      'HED_REMARKS': cartBloc.cartSummary?.hedRem == null
+          ? []
+          : [cartBloc.cartSummary?.hedRem!.toMap()]
     };
 
     // saving our sending data to log files
