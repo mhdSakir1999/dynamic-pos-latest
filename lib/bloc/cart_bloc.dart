@@ -422,9 +422,11 @@ class CartBloc {
 
   /* Server connection confirmation dialog*/
   /* By Dinuka 2022/08/02 */
-  Future<void> serverConnectionPopup() async {
+  /* Modified by TM.Sakir */
+  Future<bool> serverConnectionPopup() async {
     if (context != null) {
-      return showDialog<void>(
+      bool? res = await showDialog<bool>(
+        barrierDismissible: false,
         context: context!,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -434,7 +436,7 @@ class CartBloc {
             actions: [
               AlertDialogButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(context, false);
                   },
                   text: 'payment_view.no'.tr()),
               AlertDialogButton(
@@ -442,15 +444,16 @@ class CartBloc {
                     posConnectivity.localConfirmed = false;
                     POSConfig().localMode = false;
                     posConnectivity.handleConnection();
-                    Navigator.pop(context);
+                    Navigator.pop(context, true);
                   },
                   text: 'payment_view.yes'.tr())
             ],
           );
         },
       );
+      return res == true;
     } else {
-      return null;
+      return false;
     }
   }
 

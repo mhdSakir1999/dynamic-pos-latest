@@ -560,8 +560,8 @@ class InvoiceController {
     String invoice = header.invheDINVNO ?? "";
     final map = await getCartDetails(invoice, isHoldInv: true);
 
-    final holdDetails = map['cartModels'];
-    final hedRem = map['hedRemarks'];
+    final List<CartModel> holdDetails = map['cartModels'];
+    final HedRemarkModel? hedRem = map['hedRemarks'];
 
     int lineNo = 0;
     int itemCount = 0;
@@ -692,7 +692,7 @@ class InvoiceController {
       final List data = res?.data?["details"] ?? [];
       final List remarkList = res?.data?["remarks"] ?? [];
       final HedRemarkModel? hedRem = res?.data?["hed_remarks"] != []
-          ? HedRemarkModel().fromMap(res?.data?["hed_remarks"])
+          ? HedRemarkModel().fromMap(res?.data?["hed_remarks"].first)
           : null;
       if (data.length == 0) return {"cartModels": [], "hedRemarks": null};
       final myList = data.map((e) => CartModel.fromMap(e)).toList();

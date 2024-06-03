@@ -11,11 +11,11 @@ class HedRemarkModel {
 
   HedRemarkModel fromMap(Map<String, dynamic> json) {
     return HedRemarkModel(
-      rem1: json['INVREM_REMARKS1'],
-      rem2: json['INVREM_REMARKS2'],
-      rem3: json['INVREM_REMARKS3'],
-      rem4: json['INVREM_REMARKS4'],
-      rem5: json['INVREM_REMARKS5'],
+      rem1: json['invreM_REMARKS1'],
+      rem2: json['invreM_REMARKS2'],
+      rem3: json['invreM_REMARKS3'],
+      rem4: json['invreM_REMARKS4'],
+      rem5: json['invreM_REMARKS5'],
     );
   }
 

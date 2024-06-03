@@ -26,7 +26,7 @@ import 'package:collection/collection.dart';
 class POSManualPrint {
   late Generator generator;
   List<int> bytes = [];
-  late Map<String, dynamic> invHed = {}, loc_det = {};
+  late Map<String, dynamic> invHed = {}, loc_det = {}, invHed_remark = {};
   late List<dynamic> promoSummary = [];
   late Map<String, dynamic>? customer;
   String invNo = '';
@@ -61,6 +61,7 @@ class POSManualPrint {
   List<PosColumn> posColList = [];
   String lineNo = '->';
   num incTaxTotal = 0;
+  String hedRemark = '';
 
   String proDesc = 'product_description';
   String stockCode = 'stock_code';
@@ -256,6 +257,8 @@ class POSManualPrint {
       if (indexOfCSHPayment != -1 && !reprint && !cancel && !hold) {
         bytes += generator.drawer();
       }
+
+      invHed_remark = det?['T_TBLINVREMARKS']?.first ?? {};
 
       await LogWriter()
           .saveLogsToFile('ERROR_LOG_', ['Start writing the invoice...']);
@@ -760,6 +763,7 @@ class POSManualPrint {
               "{promo_sum_lineNo}", addSpacesBack('$promo_sum_lineNo', 3));
           value = value.replaceAll("{promo_line_desc}",
               addSpacesBack('$promoSummaryLineName', variableMaxLength - 13));
+          value = value.replaceAll("{hedRemark}", hedRemark);
 
           num promoSummaryLineAmountNum = promoSummaryLineAmount;
           value = value.replaceAll(
@@ -1196,6 +1200,28 @@ class POSManualPrint {
           //       cancel: cancel);
           // }
           // }
+        }
+        if (node.name.local == 'deliveryDetails' && invHed_remark.isNotEmpty) {
+          List<xml.XmlNode> deliveryChildNodes = node.children;
+          await writeInvoiceBytes(
+              childNodes: deliveryChildNodes, reprint: reprint, cancel: cancel);
+        }
+        if (node.name.local == 'remarks' && invHed_remark.isNotEmpty) {
+          List<xml.XmlNode> remarksChildNodes = node.children;
+          for (var entry in invHed_remark.entries) {
+            String key = entry.key;
+            String value = entry.value.toString() ?? '';
+
+            if (key.startsWith('INVREM_REMARKS')) {
+              if (value != null && value != '') {
+                hedRemark = value;
+                await writeInvoiceBytes(
+                    childNodes: remarksChildNodes,
+                    reprint: reprint,
+                    cancel: cancel);
+              }
+            }
+          }
         }
       }
     }

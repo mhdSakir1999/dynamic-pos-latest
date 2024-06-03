@@ -606,6 +606,14 @@ class CartDynamicButtonFunction {
   TextEditingController rem4 = TextEditingController();
   TextEditingController rem5 = TextEditingController();
   Future<void> invHedRemarkDialog(BuildContext context) async {
+    final HedRemarkModel? existing = cartBloc.cartSummary?.hedRem;
+    if (existing != null) {
+      rem1.text = existing.rem1 ?? '';
+      rem2.text = existing.rem2 ?? '';
+      rem3.text = existing.rem3 ?? '';
+      rem4.text = existing.rem4 ?? '';
+      rem5.text = existing.rem5 ?? '';
+    }
     final now = DateTime.now();
     final containerWidth = POSConfig().containerSize.w;
     showDialog(

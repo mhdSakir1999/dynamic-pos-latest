@@ -340,8 +340,8 @@ GO
 
 
 CREATE TABLE [dbo].[T_TBLINVREMARKS](
-	[INVREM_LOCCODE] [varchar](3) NOT NULL,
-	[INVREM_INVNO] [varchar](10) NOT NULL,
+	[INVREM_LOCCODE] [varchar](10) NOT NULL,
+	[INVREM_INVNO] [varchar](30) NOT NULL,
 	[INVREM_REMARKS1] [varchar](100) NULL,
 	[INVREM_REMARKS2] [varchar](100) NULL,
 	[INVREM_REMARKS3] [varchar](100) NULL,
@@ -358,8 +358,8 @@ GO
 
 
 CREATE TABLE [dbo].[T_TBLINVREMARKS_HOLD](
-	[INVREM_LOCCODE] [varchar](3) NOT NULL,
-	[INVREM_INVNO] [varchar](10) NOT NULL,
+	[INVREM_LOCCODE] [varchar](10) NOT NULL,
+	[INVREM_INVNO] [varchar](30) NOT NULL,
 	[INVREM_REMARKS1] [varchar](100) NULL,
 	[INVREM_REMARKS2] [varchar](100) NULL,
 	[INVREM_REMARKS3] [varchar](100) NULL,
@@ -413,12 +413,6 @@ GO
 
 
 ------------------------------------
-
-
-
-
-
-
 
 ALTER PROCEDURE [dbo].[myPOS_DP_HOLD_INVOICE]
 @INVOICE_NO  varchar(max),
@@ -1893,3 +1887,580 @@ GO
 
 ----------------------------------------
 
+CREATE PROCEDURE [dbo].[myPOS_DP_GET_INVOICE_HED_REMARKS_BY_INVOICE_ID]
+	@InvoiceID NVARCHAR(30)
+AS
+BEGIN
+	SELECT * FROM T_TBLINVREMARKS WHERE INVREM_INVNO = @InvoiceID
+END
+GO
+
+
+-------------------------------------------
+
+
+
+CREATE TYPE [dbo].[SYNC_INV_HED_REMARKS] AS TABLE(
+	[INVREM_LOCCODE] [varchar](10) NOT NULL,
+	[INVREM_INVNO] [varchar](20) NOT NULL,
+	[INVREM_REMARKS1] [varchar](100) NULL,
+	[INVREM_REMARKS2] [varchar](100) NULL,
+	[INVREM_REMARKS3] [varchar](100) NULL,
+	[INVREM_REMARKS4] [varchar](100) NULL,
+	[INVREM_REMARKS5] [varchar](100) NULL,
+	[DTRANS] [bit] NULL,
+	[DTPROCESS] [bit] NULL,
+	[DTSPROCESS] [bit] NULL
+)
+GO
+
+
+------------------------------------------
+
+
+
+
+ALTER PROCEDURE [dbo].[myPOS_DP_SYNC_INVOICE]
+	@INVOICE_NO  varchar(max),
+	@SETUP_LOCATION varchar(10),
+	@LOC_CODE varchar(10),
+	@comCode varchar(10),
+	@date datetime,
+	@time datetime,
+	@invMode varchar(3),
+	@cashier varchar(50),
+	@tempCashier varchar(50),
+	@startTime datetime,
+	@startDate datetime,
+	@startDateTime datetime,
+	@datetime datetime,
+	@memberCode varchar(50),
+	@signOnDate datetime,
+	@terminalId varchar(10),
+	@shiftNo int,
+	@priceMode varchar(5),
+	@grossAmt numeric(18,2),
+	@discPer  numeric(18,2),
+	@discAmt  numeric(18,2),
+	@lineDiscPerTot  numeric(18,2),
+	@lineDiscAmtTot numeric(18,2),
+	@netAmount numeric(18,2),
+	@payAmount numeric(18,2),
+	@dueAmount numeric(18,2),
+	@changeAmount numeric(18,2),
+	@invoiced tinyint = 1,	
+	@refMode varchar(50) = '',
+	@refNo varchar(50) = '',
+	@taxInc numeric(18,2) = 0,
+	@taxExc numeric(18,2) = 0,
+	@detailsTable dbo.SYNC_INV_DETAILS READONLY,
+	@paymentsTable dbo.SYNC_INV_PAYMENTS READONLY,
+	@lineRemarksTable dbo.SYNC_INV_LINE_REMARKS READONLY,
+	@freeIssueTable dbo.SYNC_INV_FREE_ISSUES READONLY,
+	@proTax dbo.SYNC_INV_PRO_TAX READONLY,
+	@hedRemarks dbo.SYNC_INV_HED_REMARKS readonly,
+	@error nvarchar(max) output
+AS
+BEGIN
+	BEGIN TRY
+	BEGIN TRAN
+
+	SET NOCOUNT ON;
+
+	DECLARE @pointAdded  numeric(18,2)=0;
+	DECLARE @pointDeducted  numeric(18,2)=0;
+	DECLARE @pointNetAmount  numeric(18,2)=0;
+
+-- save inv header
+	INSERT INTO [dbo].[T_TBLINVHEADER]
+           ([INVHED_SETUPLOC]
+           ,[INVHED_LOCCODE]
+           ,[INVHED_INVNO]
+           ,[INVHED_MODE]
+           ,[INVHED_TXNDATE]
+           ,[INVHED_TIME]
+           ,[INVHED_ENDDATE]
+           ,[INVHED_ENDTIME]
+           ,[INVHED_SIGNONDATE]
+           ,[INVHED_STATION]
+           ,[INVHED_CASHIER]
+           ,[INVHED_SHITNO]
+           ,[INVHED_TEMCASHIER]
+           ,[INVHED_MEMBER]
+           ,[INVHED_PRICEMODE]
+           ,[INVHED_REFMODE]
+           ,[INVHED_REFNO]
+           ,[INVHED_GROAMT]
+           ,[INVHED_DISPER]
+           ,[INVHED_DISAMT]
+           ,[INVHED_LINEDISCPERTOT]
+           ,[INVHED_LINEDISAMTTOT]
+           ,[INVHED_ADDAMT]
+           ,[INVHED_NETAMT]
+           ,[INVHED_PAYAMT]
+           ,[INVHED_DUEAMT]
+           ,[INVHED_CHANGE]
+           ,[INVHED_POINTADDED]
+           ,[INVHED_POINTDEDUCT]
+           ,[INVHED_PRINTNO]
+           ,[INVHED_CANCELED]
+           ,[INVHED_CANUSER]
+           ,[INVHED_CANDATE]
+           ,[INVHED_CANTIME]
+           ,[CR_DATE]
+           ,[CR_BY]
+           ,[MD_DATE]
+           ,[MD_BY]
+           ,[DTS_DATE]
+           ,[INVHED_INVOICED]
+           ,[INVHED_ORDNUMBER]
+           ,[INVHED_ORDDATE]
+           ,[INVHED_ORDTIME]
+           ,[INVHED_ORDENDDATE]
+           ,[INVHED_ORDENDTIME]
+           ,[INVHED_ORDSTATION]
+           ,[INVHED_ORDCASHIER]
+           ,[DTRANS]
+           ,[DTPROCESS]
+           ,[DTSPROCESS]
+           ,[INVHED_CREAMT]
+           ,[INVHED_TAXPER]
+           ,[INVHED_INCTAXAMT]
+           ,[INVHED_SERAMT]
+           ,[GLBATCHNO]
+           ,[GLBATCHNO2]
+           ,[INVHED_PRINT]
+           ,[INVHED_DATETIME]
+           ,[INVHED_COMCODE]
+           ,[INVHED_SLR_CONVERT]
+           ,[INVHED_TAXBILLNO]
+           ,[INVHED_SIGNOFF]
+           ,[INVHED_SESSION]
+           ,[INVHED_SALEMODE]
+           ,[INVHED_TABLE]
+           ,[INVHED_VAT]
+           ,[INVHED_NBT]
+           ,[INVHED_TRANSFER]
+           ,[INVHED_SPOTCHECK]
+		   ,[INVHED_STARTTIME]
+		   )
+     VALUES
+           (@SETUP_LOCATION
+           ,@LOC_CODE
+           ,@INVOICE_NO
+           ,@invMode
+           ,@date
+           ,@startTime--<INVHED_TIME, datetime,>
+           ,@date--<INVHED_ENDDATE, datetime,>
+           ,@time--<INVHED_ENDTIME, datetime,>
+           ,@signOnDate--<INVHED_SIGNONDATE, datetime,>
+           ,@terminalId--<INVHED_STATION, varchar(3),>
+           ,@cashier--<INVHED_CASHIER, varchar(10),>
+           ,@shiftNo--<INVHED_SHITNO, decimal(18,0),>
+           ,@tempCashier--<INVHED_TEMCASHIER, varchar(10),>
+           ,@memberCode--<INVHED_MEMBER, varchar(20),>
+           ,@priceMode--<INVHED_PRICEMODE, varchar(5),>
+           ,@refMode--<INVHED_REFMODE, varchar(3),>
+           ,@refNo--<INVHED_REFNO, varchar(10),>
+           ,@grossAmt--<INVHED_GROAMT, decimal(18,2),>
+           ,@discPer--<INVHED_DISPER, decimal(18,2),>
+           ,@discAmt--<INVHED_DISAMT, decimal(18,2),>
+           ,@lineDiscPerTot--<INVHED_LINEDISCPERTOT, decimal(18,2),>
+           ,@lineDiscAmtTot--<INVHED_LINEDISAMTTOT, decimal(18,2),>
+           ,0--<INVHED_ADDAMT, decimal(18,2),>
+           ,@netAmount--<INVHED_NETAMT, decimal(18,2),>
+           ,@payAmount--<INVHED_PAYAMT, decimal(18,2),>
+           ,@dueAmount--<INVHED_DUEAMT, decimal(18,2),>
+           ,@changeAmount--<INVHED_CHANGE, decimal(18,2),>
+           ,@pointAdded --<INVHED_POINTADDED, decimal(18,2),>
+           ,@pointDeducted--<INVHED_POINTDEDUCT, decimal(18,2),>
+           ,0--<INVHED_PRINTNO, decimal(18,0),>
+           ,0--<INVHED_CANCELED, bit,>
+           ,''--<INVHED_CANUSER, varchar(10),>
+           ,@date--<INVHED_CANDATE, datetime,>
+           ,@time--<INVHED_CANTIME, datetime,>
+           ,@date--<CR_DATE, datetime,>
+           ,@cashier--<CR_BY, varchar(10),>
+           ,Null--<MD_DATE, datetime,>
+           ,null--<MD_BY, varchar(10),>
+           ,@date--<DTS_DATE, datetime,>
+           ,@invoiced--<INVHED_INVOICED, bit,>
+           ,@refNo--<INVHED_ORDNUMBER, varchar(10),>
+           ,null--<INVHED_ORDDATE, datetime,>
+           ,null--<INVHED_ORDTIME, datetime,>
+           ,null--<INVHED_ORDENDDATE, datetime,>
+           ,null--<INVHED_ORDENDTIME, datetime,>
+           ,null--<INVHED_ORDSTATION, varchar(3),>
+           ,null--<INVHED_ORDCASHIER, varchar(10),>
+           ,0--<DTRANS, bit,>
+           ,0--<DTPROCESS, bit,>
+           ,0--<DTSPROCESS, bit,>
+           ,0--<INVHED_CREAMT, decimal(18,2),>
+           ,0--<INVHED_TAXPER, decimal(18,2),>
+           ,@taxInc--<INVHED_INCTAXAMT, decimal(18,3),>
+           ,0--<INVHED_SERAMT, decimal(18,3),>
+           ,''--<GLBATCHNO, varchar(10),>
+           ,''--<GLBATCHNO2, varchar(10),>
+           ,0--<INVHED_PRINT, bit,>
+           ,@startDateTime--<INVHED_DATETIME, datetime,>
+           ,@comCode--<HED_COMCODE, varchar(3),>
+           ,1--<INVHED_SLR_CONVERT, numeric(18,2)(18,5),>
+           ,0--<INVHED_TAXBILLNO, numeric(18,2)(18,0),>
+           ,0--<INVHED_SIGNOFF, bit,>
+           ,0--<INVHED_SESSION, numeric(18,2)(18,0),>
+           ,'LM'--<INVHED_SALEMODE, varchar(3),>
+           ,(select top(1) STAT_MACHINEID from u_tblstations where STAT_ID=@terminalId and STAT_LOCCODE=@LOC_CODE)--<INVHED_TABLE, varchar(8),>
+           ,0--<INVHED_VAT, numeric(18,2)(18,2),>
+           ,0--<INVHED_NBT, numeric(18,2)(18,2),>
+           ,0--<INVHED_TRANSFER, int,>
+		   ,null
+		   ,@startTime--<INVHED_STARTTIME datetime> 
+		   )
+
+
+	-- save details level
+	INSERT INTO [dbo].[T_TBLINVDETAILS]
+           ([INVDET_SETUPLOC]
+           ,[INVDET_LOCCODE]
+           ,[INVDET_INVNO]
+           ,[INVDET_MODE]
+           ,[INVDET_LINENO]
+           ,[INVDET_TXNDATE]
+           ,[INVDET_TIME]
+           ,[INVDET_SALESMAN]
+           ,[INVDET_CANCELED]
+           ,[INVDET_VOID]
+           ,[INVDET_PROCODE]
+           ,[INVDET_ISVOUCHER]
+           ,[INVDET_OPITEM]
+           ,[INVDET_STOCKCODE]
+           ,[INVDET_PRODESC]
+           ,[INVDET_PROUNIT]
+           ,[INVDET_PROCASESIZE]
+           ,[INVDET_PROCOST]
+           ,[INVDET_PROSELLING]
+           ,[INVDET_PROAVGCOST]
+           ,[INVDET_SELLING]
+           ,[INVDET_DISCPER]
+           ,[INVDET_DISCAMT]
+           ,[INVDET_BILLDISCPER]
+           ,[INVDET_BILLDISCAMT]
+           ,[INVDET_CASEQTY]
+           ,[INVDET_UNITQTY]
+           ,[INVDET_CASERETQTY]
+           ,[INVDET_UNITRETQTY]
+           ,[INVDET_AMOUNT]
+           ,[DTRANS]
+           ,[DTPROCESS]
+           ,[DTSPROCESS]
+           ,[INVDET_MEMBER]
+           ,[INVDET_INVOICEDKOT]
+           ,[INVDET_FREEQTY]
+           ,[INVDET_NODISC]
+           ,[INVDET_KOTBOTTYPE]
+           ,[INVDET_KOTBOTNO]
+           ,[DET_SERVICEPER]
+           ,[INVDET_SALE1]
+           ,[INVDET_SALE1COMM]
+           ,[INVDET_SALE2]
+           ,[INVDET_SALE2COMM]
+           ,[INVDET_SALE3]
+           ,[INVDET_SALE3COMM]
+           ,[DET_COMCODE]
+           ,[INVDET_SLR_CONVERT]
+           ,[INVDET_PRINT]
+           ,[INVDET_SCANBARCODE]
+           ,[INVDET_EXPDATE]
+           ,[INVDET_CALEXP]
+           ,[INVDET_DATETIME]
+           ,[INV_DISPLAYED]
+           ,[INVDET_PLU_PACKPRICE]
+           ,[INVDET_DISTYPE]
+           ,[INVDET_PROMODISCPER]
+           ,[INVDET_PROMODISCAMT]
+           ,[INVDET_PROMOBILLDISCPER])
+	 SELECT [INVDET_SETUPLOC]
+			,[INVDET_LOCCODE]
+			,[INVDET_INVNO]
+			,[INVDET_MODE]
+			,[INVDET_LINENO]
+			,[INVDET_TXNDATE]
+			,[INVDET_TIME]
+			,[INVDET_SALESMAN]
+			,[INVDET_CANCELED]
+			,[INVDET_VOID]
+			,[INVDET_PROCODE]
+			,[INVDET_ISVOUCHER]
+			,[INVDET_OPITEM]
+			,[INVDET_STOCKCODE]
+			,[INVDET_PRODESC]
+			,[INVDET_PROUNIT]
+			,[INVDET_PROCASESIZE]
+			,[INVDET_PROCOST]
+			,[INVDET_PROSELLING]
+			,[INVDET_PROAVGCOST]
+			,[INVDET_SELLING]
+			,[INVDET_DISCPER]
+			,[INVDET_DISCAMT]
+			,[INVDET_BILLDISCPER]
+			,[INVDET_BILLDISCAMT]
+			,[INVDET_CASEQTY]
+			,[INVDET_UNITQTY]
+			,[INVDET_CASERETQTY]
+			,[INVDET_UNITRETQTY]
+			,[INVDET_AMOUNT]
+			,[DTRANS]
+			,[DTPROCESS]
+			,[DTSPROCESS]
+			,[INVDET_MEMBER]
+			,[INVDET_INVOICEDKOT]
+			,[INVDET_FREEQTY]
+			,[INVDET_NODISC]
+			,[INVDET_KOTBOTTYPE]
+			,[INVDET_KOTBOTNO]
+			,[DET_SERVICEPER]
+			,[INVDET_SALE1]
+			,[INVDET_SALE1COMM]
+			,[INVDET_SALE2]
+			,[INVDET_SALE2COMM]
+			,[INVDET_SALE3]
+			,[INVDET_SALE3COMM]
+			,[DET_COMCODE]
+			,[INVDET_SLR_CONVERT]
+			,[INVDET_PRINT]
+			,[INVDET_SCANBARCODE]
+			,[INVDET_EXPDATE]
+			,[INVDET_CALEXP]
+			,[INVDET_DATETIME]
+			,[INV_DISPLAYED]
+			,[INVDET_PLU_PACKPRICE]
+			,[INVDET_DISTYPE]
+			,[INVDET_PROMODISCPER]
+			,[INVDET_PROMODISCAMT]
+			,[INVDET_PROMOBILLDISCPER]
+		FROM @detailsTable
+
+	-- Save payment data
+	INSERT INTO [dbo].[T_TBLINVPAYMENTS]
+           ([INVPAY_SETUPLOC]
+           ,[INVPAY_LOCCODE]
+           ,[INVPAY_INVNO]
+           ,[INVPAY_MODE]
+           ,[INVPAY_SIGNONDATE]
+           ,[INVPAY_STATION]
+           ,[INVPAY_CASHIER]
+           ,[INVPAY_SHITNO]
+           ,[INVPAY_TEMCASHIER]
+           ,[INVPAY_SEQUENCE]
+           ,[INVPAY_PHCODE]
+           ,[INVPAY_PDCODE]
+           ,[INVPAY_REFNO]
+           ,[INVPAY_AMOUNT]
+           ,[INVPAY_PAIDAMOUNT]
+           ,[INVPAY_DETDATE]
+           ,[INVPAY_CANCELD]
+           ,[DTRANS]
+           ,[DTPROCESS]
+           ,[DTSPROCESS]
+           ,[INVPAY_FRAMOUNT]
+           ,[PAY_COMCODE]
+           ,[INVPAY_US_VS_FC]
+           ,[INVPAY_SL_VS_FC]
+           ,[INVPAY_SLR_CONVERT]
+           ,[INVPAY_SIGNOFF])
+	SELECT [INVPAY_SETUPLOC]
+		  ,[INVPAY_LOCCODE]
+		  ,[INVPAY_INVNO]
+		  ,[INVPAY_MODE]
+		  ,[INVPAY_SIGNONDATE]
+		  ,[INVPAY_STATION]
+		  ,[INVPAY_CASHIER]
+		  ,[INVPAY_SHITNO]
+		  ,[INVPAY_TEMCASHIER]
+		  ,[INVPAY_SEQUENCE]
+		  ,[INVPAY_PHCODE]
+		  ,[INVPAY_PDCODE]
+		  ,[INVPAY_REFNO]
+		  ,[INVPAY_AMOUNT]
+		  ,[INVPAY_PAIDAMOUNT]
+		  ,[INVPAY_DETDATE]
+		  ,[INVPAY_CANCELD]
+		  ,[DTRANS]
+		  ,[DTPROCESS]
+		  ,[DTSPROCESS]
+		  ,[INVPAY_FRAMOUNT]
+		  ,[PAY_COMCODE]
+		  ,[INVPAY_US_VS_FC]
+		  ,[INVPAY_SL_VS_FC]
+		  ,[INVPAY_SLR_CONVERT]
+		  ,[INVPAY_SIGNOFF]
+	  FROM @paymentsTable
+
+	-- save data invoice line remarks
+	INSERT INTO [dbo].[T_TBLINVLINEREMARKS]
+				([INVREM_LOCCODE]
+				,[INVREM_INVNO]
+				,[INVREM_LINENO]
+				,[INVREM_LINEREMARKS]
+				,[DTRANS]
+				,[DTPROCESS]
+				,[DTSPROCESS])
+	SELECT [INVREM_LOCCODE]
+			,[INVREM_INVNO]
+			,[INVREM_LINENO]
+			,[INVREM_LINEREMARKS]
+			,[DTRANS]
+			,[DTPROCESS]
+			,[DTSPROCESS]
+		FROM @lineRemarksTable
+
+	--save invoice header remarks
+	INSERT INTO [dbo].[T_TBLINVREMARKS]
+				([INVREM_LOCCODE] ,
+				[INVREM_INVNO] ,
+				[INVREM_REMARKS1] ,
+				[INVREM_REMARKS2] ,
+				[INVREM_REMARKS3] ,
+				[INVREM_REMARKS4] ,
+				[INVREM_REMARKS5] ,
+				[DTRANS] ,
+				[DTPROCESS] ,
+				[DTSPROCESS])
+	SELECT [INVREM_LOCCODE] ,
+				[INVREM_INVNO] ,
+				[INVREM_REMARKS1] ,
+				[INVREM_REMARKS2] ,
+				[INVREM_REMARKS3] ,
+				[INVREM_REMARKS4] ,
+				[INVREM_REMARKS5] ,
+				[DTRANS] ,
+				[DTPROCESS] ,
+				[DTSPROCESS]
+	FROM @hedRemarks
+
+	-- save free issues data
+	INSERT INTO [dbo].[T_TBLINVFREEISSUES]
+           ([INVPROMO_LOCCODE]
+           ,[INVPROMO_INVNO]
+           ,[INVPROMO_PROCODE]
+           ,[INVPROMO_PLU]
+           ,[INVPROMO_CANCELED]
+           ,[INVPROMO_LOC]
+           ,[DTRANS]
+           ,[DTPROCESS]
+           ,[DTSPROCESS]
+           ,[INVPROMO_DISCPER]
+           ,[INVPROMO_DICAMT]
+           ,[INVPROMO_LINENO]
+           ,[INVPROMO_BARCODE]
+           ,[INVPROMO_FREEQTY]
+           ,[INVPROMO_SPRICE]
+           ,[INVPROMO_INVQTY]
+           ,[INVPROMO_TYPE]
+           ,[INVPROMO_TXNDATE]
+           ,[INVPROMO_COUPON])
+	SELECT [INVPROMO_LOCCODE]
+			,[INVPROMO_INVNO]
+			,[INVPROMO_PROCODE]
+			,[INVPROMO_PLU]
+			,[INVPROMO_CANCELED]
+			,[INVPROMO_LOC]
+			,[DTRANS]
+			,[DTPROCESS]
+			,[DTSPROCESS]
+			,[INVPROMO_DISCPER]
+			,[INVPROMO_DICAMT]
+			,[INVPROMO_LINENO]
+			,[INVPROMO_BARCODE]
+			,[INVPROMO_FREEQTY]
+			,[INVPROMO_SPRICE]
+			,[INVPROMO_INVQTY]
+			,[INVPROMO_TYPE]
+			,[INVPROMO_TXNDATE]
+			,[INVPROMO_COUPON]
+		FROM @freeIssueTable
+
+	-- save data invoice promotion tax
+	INSERT INTO [dbo].[T_TBLTXNTAX]
+        ([TXN_TYPE]
+        ,[TXN_RUNNO]
+        ,[TXN_PROCODE]
+        ,[TXN_TAX]
+        ,[TXN_SEQ]
+        ,[TAX_GRAMT]
+        ,[TXN_RATE]
+        ,[TXN_AMOUNT]
+        ,[TXN_SETUPLOC]
+        ,[TXN_LOCCODE]
+        ,[TXN_INVNO]
+        ,[TXN_MODE]
+        ,[TXN_COMCODE]
+        ,[TXN_MULTIPLY]
+        ,[TAX_PRICE]
+        ,[TXN_LINENO])
+	SELECT [TXN_TYPE]
+		,[TXN_RUNNO]
+		,[TXN_PROCODE]
+		,[TXN_TAX]
+		,[TXN_SEQ]
+		,[TAX_GRAMT]
+		,[TXN_RATE]
+		,[TXN_AMOUNT]
+		,[TXN_SETUPLOC]
+		,[TXN_LOCCODE]
+		,[TXN_INVNO]
+		,[TXN_MODE]
+		,[TXN_COMCODE]
+		,[TXN_MULTIPLY]
+		,[TAX_PRICE]
+		,[TXN_LINENO]
+	FROM @proTax
+
+	update  pn SET pn.IPLU_SIH = pn.IPLU_SIH - dt.QTY
+	FROM M_TBLPROINVENTORY pn inner join (select INVDET_STOCKCODE,sum((INVDET_CASEQTY*INVDET_PROCASESIZE) +INVDET_UNITQTY) as QTY from @detailsTable group by INVDET_STOCKCODE) dt
+	ON pn.IPLU_PRODUCTCODE = dt.INVDET_STOCKCODE
+	where pn.IPLU_LOCCODE= @LOC_CODE
+	
+	
+	SET @error = null;
+
+	COMMIT TRAN
+	END TRY
+    
+	BEGIN CATCH
+	ROLLBACK TRAN
+		SET @error = ERROR_MESSAGE();
+		return @error
+	END CATCH
+  
+END
+GO
+
+
+-----------------------------------
+
+
+
+ALTER PROCEDURE [dbo].[myPOS_DP_DELETE_SYNCED_INVOICE_FROM_LOCAL]
+   -- Add the parameters for the stored procedure here
+   @InvoiceID varchar(30),
+   @InvMode varchar(5)
+AS
+BEGIN
+   -- SET NOCOUNT ON added to prevent extra result sets from
+   -- interfering with SELECT statements.
+   SET NOCOUNT ON;
+
+   -- Insert statements for procedure here
+   DELETE FROM T_TBLINVHEADER WHERE INVHED_INVNO=@InvoiceID AND INVHED_MODE= @InvMode
+   DELETE FROM T_TBLINVDETAILS WHERE INVDET_INVNO=@InvoiceID AND INVDET_MODE= @InvMode
+   DELETE FROM T_TBLINVPAYMENTS WHERE INVPAY_INVNO=@InvoiceID AND INVPAY_MODE= @InvMode
+   DELETE FROM T_TBLTXNTAX WHERE TXN_INVNO=@InvoiceID AND TXN_MODE= @InvMode
+   DELETE FROM T_TBLINVFREEISSUES WHERE INVPROMO_INVNO=@InvoiceID
+   DELETE FROM T_TBLINVLINEREMARKS WHERE INVREM_INVNO=@InvoiceID
+   DELETE FROM T_TBLINVREMARKS WHERE INVREM_INVNO=@InvoiceID
+END
+GO
+
+
+--------------------------------------

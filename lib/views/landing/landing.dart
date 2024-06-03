@@ -153,16 +153,19 @@ class _LandingViewState extends State<LandingView> {
                               await POSConnectivity().pingToServer();
                           if (serverRes) {
                             cartBloc.context = context;
-                            await cartBloc.serverConnectionPopup();
-                            EasyLoading.show(status: 'Please wait...');
-                            payModeBloc.getPayModeList();
-                            payModeBloc.getCardDetails();
-                            discountBloc.getDiscountTypes();
-                            groupBloc.getDepartments();
-                            priceModeBloc.fetchPriceModes();
-                            salesRepBloc.getSalesReps();
-                            initFunctions();
-                            EasyLoading.dismiss();
+                            bool userRes =
+                                await cartBloc.serverConnectionPopup();
+                            if (userRes == true) {
+                              EasyLoading.show(status: 'Please wait...');
+                              payModeBloc.getPayModeList();
+                              payModeBloc.getCardDetails();
+                              discountBloc.getDiscountTypes();
+                              groupBloc.getDepartments();
+                              priceModeBloc.fetchPriceModes();
+                              salesRepBloc.getSalesReps();
+                              initFunctions();
+                              EasyLoading.dismiss();
+                            }
                             setState(() {});
                           }
                         } else {
