@@ -912,9 +912,14 @@ GO
 ------------------------------------------
 
 
-
-
-
+ALTER TABLE dbo.U_TBLSETUP ADD
+	SETUP_SALES_BOM int NULL
+GO
+ALTER TABLE dbo.U_TBLSETUP ADD CONSTRAINT
+	DF_U_TBLSETUP_SETUP_SALES_BOM DEFAULT 0 FOR SETUP_SALES_BOM
+GO
+ALTER TABLE dbo.U_TBLSETUP SET (LOCK_ESCALATION = TABLE)
+GO
 
 --------------------------------------------
 
