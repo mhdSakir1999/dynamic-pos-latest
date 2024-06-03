@@ -40,9 +40,9 @@ class POSConnectivity {
     });
   }
 
-  handleConnection({bool manualLocalSwitch = false}) async {
+  handleConnection({bool manualLocalModeSwitch = false}) async {
     bool serverRes = await pingToServer();
-    if (serverRes) {
+    if (serverRes && !manualLocalModeSwitch) {
       print('connected to server');
       if (!localConfirmed) {
         POSLogger(POSLoggerLevel.info, "You are connected to server");
@@ -66,131 +66,68 @@ class POSConnectivity {
             _timer?.cancel();
             if (context != null) {
               _focusNode.requestFocus();
-              await showDialog(
-                barrierDismissible: false,
-                context: context!,
-                builder: (context) => POSErrorAlert(
-                    title: "server_error.title".tr(),
-                    subtitle: "server_error.subtitle".tr(),
-                    actions: [
-                      KeyboardListener(
-                        autofocus: true,
-                        focusNode: _focusNode,
-                        onKeyEvent: (value) async {
-                          if (value is KeyDownEvent) {
-                            if (value.physicalKey ==
-                                    PhysicalKeyboardKey.enter ||
-                                value.physicalKey == PhysicalKeyboardKey.keyO) {
-                              EasyLoading.show(status: 'Please wait...');
-                              bool hasPermission = false;
-                              hasPermission =
-                                  SpecialPermissionHandler(context: context)
-                                      .hasPermission(
-                                          permissionCode:
-                                              PermissionCode.disconnectedMode,
-                                          accessType: "A",
-                                          refCode: "");
-                              EasyLoading.dismiss();
-                              if (!hasPermission) {
-                                final res = await SpecialPermissionHandler(
-                                        context: context)
-                                    .askForPermission(
-                                        permissionCode:
-                                            PermissionCode.disconnectedMode,
-                                        accessType: "A",
-                                        refCode: "",
-                                        localConnection: true);
-                                hasPermission = res.success;
-                              }
-                              if (!hasPermission) {
-                                Navigator.pop(context);
-                                Future.delayed(Duration(seconds: 10), () {
-                                  startListen();
-                                });
-                              } else {
-                                Navigator.pop(context);
-                                localConfirmed = true;
-                                POSConfig().localMode = true;
-                                connectivityStream.sink
-                                    .add(POSConnectivityStatus.Local);
-                                ApiClient.url = POSConfig().local;
-                                startListen();
-                              }
-                            }
-                          }
-                        },
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  POSConfig().primaryDarkGrayColor.toColor()),
-                          onPressed: () async {
-                            EasyLoading.show(status: 'Please wait...');
-                            bool hasPermission = false;
-                            hasPermission =
-                                SpecialPermissionHandler(context: context)
-                                    .hasPermission(
-                                        permissionCode:
-                                            PermissionCode.disconnectedMode,
-                                        accessType: "A",
-                                        refCode: "");
-                            EasyLoading.dismiss();
-
-                            if (!hasPermission) {
-                              final res = await SpecialPermissionHandler(
-                                      context: context)
-                                  .askForPermission(
-                                      permissionCode:
-                                          PermissionCode.disconnectedMode,
-                                      accessType: "A",
-                                      refCode: "",
-                                      localConnection: true);
-                              hasPermission = res.success;
-                            }
-                            if (!hasPermission) {
-                              Navigator.pop(context);
-                              Future.delayed(Duration(seconds: 5), () {
-                                startListen();
-                              });
-                            } else {
-                              Navigator.pop(context);
-                              localConfirmed = true;
-                              POSConfig().localMode = true;
-                              connectivityStream.sink
-                                  .add(POSConnectivityStatus.Local);
-                              ApiClient.url = POSConfig().local;
-                              startListen();
-                            }
-                          },
-                          child: RichText(
-                              text: TextSpan(
-                                  text: "",
-                                  style: Theme.of(context)
-                                      .dialogTheme
-                                      .contentTextStyle,
-                                  children: [
-                                TextSpan(
-                                  text: "loyalty_server_error.okay"
-                                      .tr()
-                                      .substring(0, 1),
-                                  style: TextStyle(
-                                    decoration: TextDecoration
-                                        .underline, // Apply underline to the first letter
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: "loyalty_server_error.okay"
-                                      .tr()
-                                      .substring(1),
-                                ),
-                              ])),
-                          // Text(
-                          //   "loyalty_server_error.okay".tr(),
-                          //   style: Theme.of(context).dialogTheme.contentTextStyle,
-                          // ),
-                        ),
-                      )
-                    ]),
-              );
+              manualLocalModeSwitch
+                  ? await switchingLocal(context!, manualLocalModeSwitch)
+                  : await showDialog(
+                      barrierDismissible: false,
+                      context: context!,
+                      builder: (context) => POSErrorAlert(
+                          title: "server_error.title".tr(),
+                          subtitle: "server_error.subtitle".tr(),
+                          actions: [
+                            KeyboardListener(
+                              autofocus: true,
+                              focusNode: _focusNode,
+                              onKeyEvent: (value) async {
+                                if (value is KeyDownEvent) {
+                                  if (value.physicalKey ==
+                                          PhysicalKeyboardKey.enter ||
+                                      value.physicalKey ==
+                                          PhysicalKeyboardKey.keyO) {
+                                    await switchingLocal(
+                                        context, manualLocalModeSwitch);
+                                  }
+                                }
+                              },
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: POSConfig()
+                                        .primaryDarkGrayColor
+                                        .toColor()),
+                                onPressed: () async {
+                                  await switchingLocal(
+                                      context, manualLocalModeSwitch);
+                                },
+                                child: RichText(
+                                    text: TextSpan(
+                                        text: "",
+                                        style: Theme.of(context)
+                                            .dialogTheme
+                                            .contentTextStyle,
+                                        children: [
+                                      TextSpan(
+                                        text: "loyalty_server_error.okay"
+                                            .tr()
+                                            .substring(0, 1),
+                                        style: TextStyle(
+                                          decoration: TextDecoration
+                                              .underline, // Apply underline to the first letter
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "loyalty_server_error.okay"
+                                            .tr()
+                                            .substring(1),
+                                      ),
+                                    ])),
+                                // Text(
+                                //   "loyalty_server_error.okay".tr(),
+                                //   style: Theme.of(context).dialogTheme.contentTextStyle,
+                                // ),
+                              ),
+                            )
+                          ]),
+                    );
             }
           }
         } else {
@@ -203,6 +140,41 @@ class POSConnectivity {
         POSLogger(POSLoggerLevel.error, "Something went wrong");
         connectivityStream.sink.add(POSConnectivityStatus.None);
       }
+    }
+  }
+
+  Future<void> switchingLocal(BuildContext context, bool manual) async {
+    EasyLoading.show(status: 'Please wait...');
+    bool hasPermission = false;
+    if (!manual) {
+      hasPermission = SpecialPermissionHandler(context: context).hasPermission(
+          permissionCode: PermissionCode.disconnectedMode,
+          accessType: "A",
+          refCode: "");
+    }
+    EasyLoading.dismiss();
+
+    if (!hasPermission) {
+      final res = await SpecialPermissionHandler(context: context)
+          .askForPermission(
+              permissionCode: PermissionCode.disconnectedMode,
+              accessType: "A",
+              refCode: "",
+              localConnection: true);
+      hasPermission = res.success;
+    }
+    if (!hasPermission) {
+      if (!manual) Navigator.pop(context);
+      Future.delayed(Duration(seconds: 5), () {
+        startListen();
+      });
+    } else {
+      if (!manual) Navigator.pop(context);
+      localConfirmed = true;
+      POSConfig().localMode = true;
+      connectivityStream.sink.add(POSConnectivityStatus.Local);
+      ApiClient.url = POSConfig().local;
+      startListen();
     }
   }
 
