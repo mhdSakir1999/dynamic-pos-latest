@@ -23,6 +23,7 @@ import 'package:checkout/models/enum/signon_status.dart';
 import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/cart_summary_model.dart';
 import 'package:checkout/models/pos/ecr_response.dart';
+import 'package:checkout/models/pos/hed_remark_model.dart';
 import 'package:checkout/models/pos/hold_header_result.dart';
 import 'package:checkout/models/pos/inv_remarks.dart';
 import 'package:checkout/models/pos/invoice_header_result.dart';
@@ -442,6 +443,7 @@ class InvoiceController {
           cartBloc.promoFreeTickets?.map((e) => e.toMap()).toList() ?? [],
       'REDEEMED_COUPONS':
           cartBloc.redeemedCoupon?.map((e) => e.toMap()).toList() ?? [],
+      'HED_REMARKS': []
     };
 
     // saving our sending data to log files
@@ -554,7 +556,10 @@ class InvoiceController {
   Future getHoldCart(HoldInvoiceHeaders header) async {
     // get the hold cart details
     String invoice = header.invheDINVNO ?? "";
-    final holdDetails = await getCartDetails(invoice, isHoldInv: true);
+    final map = await getCartDetails(invoice, isHoldInv: true);
+
+    final holdDetails = map['cartModels'];
+    final hedRem = map['hedRemarks'];
 
     int lineNo = 0;
     int itemCount = 0;
@@ -568,16 +573,19 @@ class InvoiceController {
       }
 
       // this is to remove all the promotion related discounts (if it mistakely added)
-      element.promoDiscAmt = 0;
-      element.promoDiscPre = 0;
-      element.promoBillDiscPre = 0;
-      element.promoCode = '';
-      element.promoDesc = '';
-      element.promoDiscValue = 0;
+      if (element.unitQty > 0) {
+        // this condition prevent clearing promotion disc amount for returned item (promotion applied)
+        element.promoDiscAmt = 0;
+        element.promoDiscPre = 0;
+        element.promoBillDiscPre = 0;
+        element.promoCode = '';
+        element.promoDesc = '';
+        element.promoDiscValue = 0;
 
-      element.amount = (element.selling * element.unitQty) -
-          ((element.discAmt ?? 0) +
-              (element.selling / 100 * (element.discPer ?? 0)));
+        element.amount = (element.selling * element.unitQty) -
+            ((element.discAmt ?? 0) +
+                (element.selling / 100 * (element.discPer ?? 0)));
+      }
 
       CartModel cart = element;
       if (POSConfig().cartBatchItem) {
@@ -639,7 +647,8 @@ class InvoiceController {
         startTime: '',
         discPer: header.invheDDiscPer,
         priceMode: header.priceMode,
-        recallHoldInv: true);
+        recallHoldInv: true,
+        hedRem: hedRem);
     final List<PriceModes> priceModeList = priceModeBloc.priceModes;
     int index = priceModeList
         .indexWhere((element) => element.prMCODE == cartSum.priceMode);
@@ -667,7 +676,7 @@ class InvoiceController {
   }
 
   /// get cart details by id
-  Future<List<CartModel>> getCartDetails(String invoice,
+  Future<Map<String, dynamic>> getCartDetails(String invoice,
       {bool isHoldInv = false}) async {
     // getting hold invoice details endpoint is changed
     final res = await ApiClient.call(
@@ -676,11 +685,14 @@ class InvoiceController {
             : "invoice/details/$invoice",
         ApiMethod.GET);
     if (res?.data == null)
-      return [];
+      return {"cartModels": [], "hedRemarks": null};
     else {
       final List data = res?.data?["details"] ?? [];
       final List remarkList = res?.data?["remarks"] ?? [];
-      if (data.length == 0) return [];
+      final HedRemarkModel? hedRem = res?.data?["hed_remarks"] != []
+          ? HedRemarkModel().fromMap(res?.data?["hed_remarks"])
+          : null;
+      if (data.length == 0) return {"cartModels": [], "hedRemarks": null};
       final myList = data.map((e) => CartModel.fromMap(e)).toList();
 
       //going through remark
@@ -693,7 +705,7 @@ class InvoiceController {
           myList[index].lineRemark.add(remark.lineRemark ?? '');
         }
       }
-      return myList;
+      return {"cartModels": myList, "hedRemarks": hedRem};
     }
   }
 

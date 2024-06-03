@@ -4,6 +4,7 @@
  * Created At: 5/15/21, 10:44 AM
  */
 
+import 'package:checkout/models/pos/hed_remark_model.dart';
 import 'package:checkout/models/pos/inv_tax.dart';
 
 import 'package:checkout/extension/extensions.dart';
@@ -26,7 +27,7 @@ class CartSummaryModel {
   String? priceMode;
   String? priceModeDesc;
   String? customerCode;
-  bool editable=false;
+  bool editable = false;
   String? refNo;
   //reference mode for transaction
   String? refMode;
@@ -35,6 +36,7 @@ class CartSummaryModel {
   List<InvTax> invTax = [];
   String? promoCode;
   String invMode;
+  HedRemarkModel? hedRem;
 
   CartSummaryModel(
       {required this.invoiceNo,
@@ -49,8 +51,9 @@ class CartSummaryModel {
       this.refMode,
       this.refNo,
       this.recallHoldInv,
-      this.promoCode, this.invMode="INV",
-      });
+      this.promoCode,
+      this.invMode = "INV",
+      this.hedRem});
 
   factory CartSummaryModel.fromMap(Map<String, dynamic> map) {
     return new CartSummaryModel(
@@ -64,10 +67,9 @@ class CartSummaryModel {
         customerCode: map['MEMBER_CODE']?.toString() ?? '',
         editable: map['EDITABLE']?.toString().parseBool() ?? true,
         recallHoldInv: map['RECALL_HOLD_INV']?.toString().parseBool() ?? false,
-      refMode: map['REF_MODE']?.toString() ?? '',
-      refNo: map['REF_NO']?.toString() ?? '',
-      invMode: map['INV_MODE']?.toString() ?? '',
-    );
+        refMode: map['REF_MODE']?.toString() ?? '',
+        refNo: map['REF_NO']?.toString() ?? '',
+        invMode: map['INV_MODE']?.toString() ?? '');
   }
 
   Map<String, dynamic> toMap() {
@@ -82,7 +84,7 @@ class CartSummaryModel {
       'EDITABLE': this.editable,
       'REF_MODE': this.refMode,
       'REF_NO': this.refNo,
-      'RECALL_HOLD_INV':this.recallHoldInv,
+      'RECALL_HOLD_INV': this.recallHoldInv,
       'INV_MODE': this.invMode,
     };
   }

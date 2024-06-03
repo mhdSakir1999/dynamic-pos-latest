@@ -1330,7 +1330,8 @@ class POSPriceCalculator {
       canContinue = false;
       // get item details from server
       EasyLoading.show(status: 'please_wait'.tr());
-      final itemList = await InvoiceController().getCartDetails(refInvNo);
+      final map = await InvoiceController().getCartDetails(refInvNo);
+      final itemList = map['cartModels'];
       //chekc the item is in the database
       final summarizedReturnList = itemList
           .where((element) =>
@@ -1691,13 +1692,16 @@ class POSPriceCalculator {
           (element.stockCode) == 'DISCOUNT') {
         voidItem(element, null);
       }
-      element.amount += amount;
-      element.promoDiscAmt = 0;
-      element.promoDiscPre = 0;
-      element.promoBillDiscPre = 0;
-      element.promoCode = '';
-      element.promoDesc = '';
-      element.promoDiscValue = 0;
+      if (element.unitQty > 0) {
+        // this condition prevent clearing promotion disc amount for returned item (promotion applied)
+        element.amount += amount;
+        element.promoDiscAmt = 0;
+        element.promoDiscPre = 0;
+        element.promoBillDiscPre = 0;
+        element.promoCode = '';
+        element.promoDesc = '';
+        element.promoDiscValue = 0;
+      }
       cartBloc.updateCartUnconditionally(element);
     });
   }
