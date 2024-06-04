@@ -691,7 +691,7 @@ class InvoiceController {
     else {
       final List data = res?.data?["details"] ?? [];
       final List remarkList = res?.data?["remarks"] ?? [];
-      final HedRemarkModel? hedRem = res?.data?["hed_remarks"] != []
+      final HedRemarkModel? hedRem = res?.data?["hed_remarks"].isNotEmpty
           ? HedRemarkModel().fromMap(res?.data?["hed_remarks"].first)
           : null;
       if (data.length == 0) return {"cartModels": [], "hedRemarks": null};

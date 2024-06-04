@@ -23,7 +23,7 @@ class RecurringApiCalls {
 
   listenPhysicalCash() {
     handlePhysicalCash();
-    maxCashTimer = Timer.periodic(Duration(minutes: 10), (timer) {
+    maxCashTimer = Timer.periodic(Duration(minutes: 30), (timer) {
       handlePhysicalCash();
     });
   }
@@ -55,7 +55,7 @@ class RecurringApiCalls {
                     showFlare: true,
                   ));
           if (ignore) {
-            await Future.delayed(Duration(minutes: 5), () {
+            await Future.delayed(Duration(minutes: 30), () {
               listenPhysicalCash();
             });
           }

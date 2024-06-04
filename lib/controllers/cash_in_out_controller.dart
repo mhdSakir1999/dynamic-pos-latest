@@ -130,7 +130,8 @@ class CashInOutController {
       "LINE_REMARKS": [],
       "FREE_ISSUE": [],
       "INV_TICKETS": [],
-      'REDEEMED_COUPONS': []
+      'REDEEMED_COUPONS': [],
+      'HED_REMARKS': []
     };
     final res = await ApiClient.call(
         "cash_in_out/${cashIn ? "cash_in" : "cash_out"}", ApiMethod.POST,

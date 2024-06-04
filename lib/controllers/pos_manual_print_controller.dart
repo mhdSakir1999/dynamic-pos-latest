@@ -258,7 +258,17 @@ class POSManualPrint {
         bytes += generator.drawer();
       }
 
-      invHed_remark = det?['T_TBLINVREMARKS']?.first ?? {};
+      // invHed_remark = det['T_TBLINVREMARKS'] == []
+      //     ? {}
+      //     : det?['T_TBLINVREMARKS']?.first ?? {};
+
+      try {
+        invHed_remark = det['T_TBLINVREMARKS'].isEmpty
+            ? {}
+            : det?['T_TBLINVREMARKS']?.first ?? {};
+      } catch (e) {
+        invHed_remark = {};
+      }
 
       await LogWriter()
           .saveLogsToFile('ERROR_LOG_', ['Start writing the invoice...']);
