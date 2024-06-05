@@ -51,6 +51,13 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
   }
 
   @override
+  void dispose() {
+    invController.dispose();
+    invFocus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return POSBackground(
       child: Scaffold(

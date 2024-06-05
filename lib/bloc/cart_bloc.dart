@@ -4,6 +4,8 @@
  * Created At: 5/12/21, 4:20 PM
  */
 
+import 'dart:async';
+
 import 'package:checkout/bloc/customer_bloc.dart';
 import 'package:checkout/bloc/customer_coupons_bloc.dart';
 import 'package:checkout/bloc/paymode_bloc.dart';
@@ -18,6 +20,7 @@ import 'package:checkout/models/pos/ecr_response.dart';
 import 'package:checkout/models/pos/paid_model.dart';
 import 'package:checkout/models/pos/promotion_free_items.dart';
 import 'package:checkout/models/pos_config.dart';
+import 'package:dio/dio.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -26,6 +29,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../controllers/pos_alerts/pos_error_alert.dart';
 import '../models/pos/selectable_promotion_res.dart';
+import 'package:http/http.dart' as http;
 
 class CartBloc {
   final _cartSummary = BehaviorSubject<CartSummaryModel>();
@@ -394,7 +398,7 @@ class CartBloc {
 
     /* check connection is server */
     if (POSConfig().localMode) {
-      bool serverRes = await POSConnectivity().pingToServer();
+      bool serverRes = await POSConnectivity().pingToServer(time: 1);
       if (serverRes) await serverConnectionPopup();
     }
 

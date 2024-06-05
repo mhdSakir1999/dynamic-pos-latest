@@ -69,8 +69,8 @@ void main() async {
     //   Uri.parse(POSConfig().webSocketUrl),
     // );
     FlutterError.onError = (FlutterErrorDetails errorDetails) {
-      POSLoggerController.addNewLog(
-          POSLogger(POSLoggerLevel.error, errorDetails.exception.toString()));
+      // POSLoggerController.addNewLog(
+      //     POSLogger(POSLoggerLevel.error, errorDetails.exception.toString()));
     };
 
     runApp(

@@ -318,6 +318,12 @@ class _PaymentViewState extends State<PaymentView> {
   @override
   void dispose() {
     _timer?.cancel();
+    detailsEditingController.dispose();
+    dueBalanceEditingController.dispose();
+    focusNode.dispose();
+    errorNode.dispose();
+    balanceFocus.dispose();
+    detailsFocusNode.dispose();
     super.dispose();
   }
 

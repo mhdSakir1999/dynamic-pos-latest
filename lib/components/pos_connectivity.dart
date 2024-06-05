@@ -178,11 +178,11 @@ class POSConnectivity {
     }
   }
 
-  Future<bool> pingToServer() async {
+  Future<bool> pingToServer({int time = 15}) async {
     final server = POSConfig().server;
 
     // final beforeReq = DateTime.now();
-    bool res = await _checkConnection(server);
+    bool res = await _checkConnection(server, time: time);
     // final afterReq = DateTime.now();
     // POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
     //     "Check the connectivity to: $server - Latency: ${afterReq.millisecondsSinceEpoch - beforeReq.millisecondsSinceEpoch}ms"));
@@ -197,11 +197,11 @@ class POSConnectivity {
     return await _checkConnection(server);
   }
 
-  Future<bool> _checkConnection(String ip) async {
+  Future<bool> _checkConnection(String ip, {int time = 15}) async {
     try {
       final response = await http
           .head(Uri.parse(ip))
-          .timeout(const Duration(seconds: 15), onTimeout: () {
+          .timeout(Duration(seconds: time), onTimeout: () {
         throw TimeoutException(
             'The connection has timed out, Please try again!');
       });

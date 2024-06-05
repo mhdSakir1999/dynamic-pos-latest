@@ -452,6 +452,22 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         Expanded(child: buildContent())
       ],
     );
+    // return Stack(
+    //   children: [
+    //     Column(
+    //       children: [
+    //         POSInvoiceAppBar(
+    //           onPriceClick: _getPriceModes,
+    //         ),
+    //         Expanded(child: buildContent())
+    //       ],
+    //     ),
+    //     Positioned(
+    //         top: MediaQuery.of(context).size.height * 0.1,
+    //         right: MediaQuery.of(context).size.height * 0.05,
+    //         child: StreamContainer())
+    //   ],
+    // );
   }
 
   Widget buildContent() {
@@ -3499,6 +3515,87 @@ class PageIndicator extends StatelessWidget {
           // ),
         ],
       ),
+    );
+  }
+}
+
+class StreamContainer extends StatefulWidget {
+  @override
+  _StreamContainerState createState() => _StreamContainerState();
+}
+
+class _StreamContainerState extends State<StreamContainer> {
+  final StreamController<String> _streamController = StreamController<String>();
+  bool _isExpanded = false;
+  String _message = '';
+  bool opened = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Simulate receiving data from a stream after 2 seconds
+    Future.delayed(Duration(seconds: 3), () {
+      _streamController.add('SERVER MODE AVAILABLE');
+    });
+  }
+
+  @override
+  void dispose() {
+    _streamController.close();
+    super.dispose();
+  }
+
+  void _handleNewData(String data) {
+    setState(() {
+      _isExpanded = true;
+      _message = data;
+      opened = true;
+    });
+
+    // Collapse back to circle after 5 seconds
+    Future.delayed(Duration(seconds: 3), () {
+      if (mounted) {
+        setState(() {
+          _isExpanded = false;
+          _message = '';
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<String>(
+      stream: _streamController.stream,
+      builder: (context, snapshot) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (snapshot.hasData && !opened) {
+            _handleNewData(snapshot.data!);
+          }
+        });
+
+        return AnimatedContainer(
+          duration: Duration(seconds: 1),
+          width: _isExpanded ? 200 : 0,
+          height: 50,
+          decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.circular(_isExpanded ? 15 : 50),
+          ),
+          alignment: Alignment.center,
+          child: _isExpanded
+              ? Container(
+                  width: 400,
+                  height: 50,
+                  child: Text(
+                    _message,
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : SizedBox.shrink(),
+        );
+      },
     );
   }
 }

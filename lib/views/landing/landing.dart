@@ -102,6 +102,16 @@ class _LandingViewState extends State<LandingView> {
     _focusNode.dispose();
     _promoFocusNode.dispose();
     _eodFocusNode.dispose();
+    userCtrl.dispose();
+    locCtrl.dispose();
+    shiftCtrl.dispose();
+    stationCtrl.dispose();
+    dateCtrl.dispose();
+    userFocus.dispose();
+    locFocus.dispose();
+    shiftFocus.dispose();
+    stationFocus.dispose();
+    dateFocus.dispose();
     super.dispose();
   }
 

@@ -204,7 +204,6 @@ class _LoginViewState extends State<LoginView> {
                                 SystemNavigator.pop();
                               }
                             })),
-                    
                   ],
                 ),
               ),
@@ -711,6 +710,7 @@ class _LoginViewState extends State<LoginView> {
   void dispose() {
     passwordFocusNode.dispose();
     userNameFocusNode.dispose();
+    otpEditingController.dispose();
     super.dispose();
   }
 }
