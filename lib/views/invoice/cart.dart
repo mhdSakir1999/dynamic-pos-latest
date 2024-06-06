@@ -9,7 +9,10 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/customer_bloc.dart';
+import 'package:checkout/bloc/discount_bloc.dart';
+import 'package:checkout/bloc/group_bloc.dart';
 import 'package:checkout/bloc/lock_screen_bloc.dart';
+import 'package:checkout/bloc/paymode_bloc.dart';
 import 'package:checkout/bloc/price_mode_bloc.dart';
 import 'package:checkout/bloc/salesRep_bloc.dart';
 import 'package:checkout/components/components.dart';
@@ -33,6 +36,7 @@ import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/product_controller.dart';
 import 'package:checkout/controllers/promotion_controller.dart';
 import 'package:checkout/controllers/usb_serial_controller.dart';
+import 'package:checkout/models/enum/pos_connectivity_status.dart';
 import 'package:checkout/models/last_invoice_details.dart';
 import 'package:checkout/models/loyalty/loyalty_summary.dart';
 import 'package:checkout/models/pos/cart_model.dart';
@@ -443,31 +447,41 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     }
   }
 
+  void _refresh() {
+    setState(() {
+      // Update the state to trigger a rebuild
+    });
+  }
+
   Widget buildBody() {
-    return Column(
-      children: [
-        POSInvoiceAppBar(
-          onPriceClick: _getPriceModes,
-        ),
-        Expanded(child: buildContent())
-      ],
-    );
-    // return Stack(
+    // return Column(
     //   children: [
-    //     Column(
-    //       children: [
-    //         POSInvoiceAppBar(
-    //           onPriceClick: _getPriceModes,
-    //         ),
-    //         Expanded(child: buildContent())
-    //       ],
+    //     POSInvoiceAppBar(
+    //       onPriceClick: _getPriceModes,
     //     ),
-    //     Positioned(
-    //         top: MediaQuery.of(context).size.height * 0.1,
-    //         right: MediaQuery.of(context).size.height * 0.05,
-    //         child: StreamContainer())
+    //     Expanded(child: buildContent())
     //   ],
     // );
+    return Stack(
+      children: [
+        Column(
+          children: [
+            POSInvoiceAppBar(
+              onPriceClick: _getPriceModes,
+            ),
+            Expanded(child: buildContent())
+          ],
+        ),
+        Positioned(
+            top: 0,
+            right: 0,
+            child: POSConfig().localMode
+                ? StreamContainer(
+                    onUpdate: _refresh,
+                  )
+                : SizedBox.shrink())
+      ],
+    );
   }
 
   Widget buildContent() {
@@ -3520,6 +3534,9 @@ class PageIndicator extends StatelessWidget {
 }
 
 class StreamContainer extends StatefulWidget {
+  final VoidCallback onUpdate;
+
+  StreamContainer({Key? key, required this.onUpdate}) : super(key: key);
   @override
   _StreamContainerState createState() => _StreamContainerState();
 }
@@ -3529,14 +3546,15 @@ class _StreamContainerState extends State<StreamContainer> {
   bool _isExpanded = false;
   String _message = '';
   bool opened = false;
+  bool stop = false;
 
   @override
   void initState() {
     super.initState();
     // Simulate receiving data from a stream after 2 seconds
-    Future.delayed(Duration(seconds: 3), () {
-      _streamController.add('SERVER MODE AVAILABLE');
-    });
+    // Future.delayed(Duration(seconds: 3), () {
+    //   _streamController.add('SERVER MODE AVAILABLE');
+    // });
   }
 
   @override
@@ -3545,14 +3563,13 @@ class _StreamContainerState extends State<StreamContainer> {
     super.dispose();
   }
 
-  void _handleNewData(String data) {
+  void _handleNewData(String data) async {
     setState(() {
       _isExpanded = true;
       _message = data;
-      opened = true;
+      stop = true;
     });
 
-    // Collapse back to circle after 5 seconds
     Future.delayed(Duration(seconds: 3), () {
       if (mounted) {
         setState(() {
@@ -3561,41 +3578,152 @@ class _StreamContainerState extends State<StreamContainer> {
         });
       }
     });
+    Future.delayed(Duration(milliseconds: 3500), () {
+      if (mounted) {
+        setState(() {
+          opened = true;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<String>(
-      stream: _streamController.stream,
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    return StreamBuilder(
+      stream: posConnectivity
+          .connectionAvailabilityStream, //_streamController.stream,
       builder: (context, snapshot) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (snapshot.hasData && !opened) {
-            _handleNewData(snapshot.data!);
-          }
-        });
+        bool status = false;
+        if (snapshot.hasData) {
+          status = snapshot.data == POSConnectivityStatus.Server;
+        }
+        if (!stop) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (status && !opened) {
+              _handleNewData('Server Connection is Available');
+            }
+          });
+        } else if (!status && stop) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              _isExpanded = false;
+              opened = false;
+            });
+          });
+        }
 
         return AnimatedContainer(
-          duration: Duration(seconds: 1),
-          width: _isExpanded ? 200 : 0,
-          height: 50,
+          duration: Duration(milliseconds: 500),
+          width: _isExpanded
+              ? width * 0.25
+              : opened
+                  ? width * 0.03
+                  : 0,
+          height: width * 0.03,
           decoration: BoxDecoration(
-            color: Colors.green,
+            color: Colors.blue[800],
             borderRadius: BorderRadius.circular(_isExpanded ? 15 : 50),
           ),
           alignment: Alignment.center,
           child: _isExpanded
               ? Container(
-                  width: 400,
-                  height: 50,
+                  width: width * 0.25,
+                  height: width * 0.03,
                   child: Text(
                     _message,
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                 )
-              : SizedBox.shrink(),
+              : opened
+                  ? CircleAvatar(
+                      radius: width * 0.015,
+                      backgroundColor: const Color.fromARGB(255, 90, 255, 68),
+                      child: IconButton(
+                          onPressed: () async {
+                            if (!POSConfig().localMode) {
+                              EasyLoading.showInfo('');
+                              return;
+                            }
+                            if (cartBloc.cartSummary?.items != 0) {
+                              EasyLoading.showError(
+                                  'Finish the current invoicing process first \nto switch sever mode');
+                              return;
+                            }
+                            bool isSwitched = false;
+                            cartBloc.context = context;
+                            EasyLoading.show(status: 'please_wait'.tr());
+                            bool serverRes =
+                                await POSConnectivity().pingToServer(time: 2);
+                            EasyLoading.dismiss();
+                            if (serverRes) {
+                              isSwitched = await serverConnectionPopup();
+                            }
+
+                            if (isSwitched) {
+                              EasyLoading.show(
+                                  status: 'please_wait'.tr(),
+                                  dismissOnTap: true);
+                              var result =
+                                  await InvoiceController().uploadBillData();
+                              if (result != null) {
+                                EasyLoading.dismiss();
+                                EasyLoading.showToast(result['message']);
+                              }
+                              payModeBloc.getPayModeList();
+                              payModeBloc.getCardDetails();
+                              discountBloc.getDiscountTypes();
+                              groupBloc.getDepartments();
+                              priceModeBloc.fetchPriceModes();
+                              salesRepBloc.getSalesReps();
+                              await cartBloc.resetCart();
+                            }
+                            widget.onUpdate.call();
+                          },
+                          icon: Icon(
+                            Icons.wifi,
+                            size: width * 0.013,
+                          )),
+                    )
+                  : SizedBox.shrink(),
         );
       },
     );
+  }
+
+  Future<bool> serverConnectionPopup() async {
+    if (context != null) {
+      bool? res = await showDialog<bool>(
+        barrierDismissible: false,
+        context: context!,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title:
+                Text('payment_view.server_connection_confirmation_title'.tr()),
+            content: Text('payment_view.server_connection_confirmation'.tr()),
+            actions: [
+              AlertDialogButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  text: 'payment_view.no'.tr()),
+              AlertDialogButton(
+                  onPressed: () {
+                    posConnectivity.localConfirmed = false;
+                    POSConfig().localMode = false;
+                    posConnectivity.handleConnection();
+                    Navigator.pop(context, true);
+                  },
+                  text: 'payment_view.yes'.tr())
+            ],
+          );
+        },
+      );
+      return res == true;
+    } else {
+      return false;
+    }
   }
 }

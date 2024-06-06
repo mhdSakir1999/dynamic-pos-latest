@@ -396,11 +396,11 @@ class CartBloc {
   Future resetCart() async {
     await InvoiceController().clearTemp();
 
-    /* check connection is server */
-    if (POSConfig().localMode) {
-      bool serverRes = await POSConnectivity().pingToServer(time: 1);
-      if (serverRes) await serverConnectionPopup();
-    }
+    // /* check connection is server */
+    // if (POSConfig().localMode) {
+    //   bool serverRes = await POSConnectivity().pingToServer(time: 1);
+    //   if (serverRes) await serverConnectionPopup();
+    // }
 
     final zero = 0;
     final inv = await InvoiceController().getInvoiceNo();

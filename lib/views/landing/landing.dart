@@ -346,6 +346,7 @@ class _LandingViewState extends State<LandingView> {
                 AlertDialogButton(
                     onPressed: () {
                       Navigator.pop(context);
+                      // if (!POSConfig().localMode)
                       _restInvoiceNo(context);
                     },
                     text: 'Reset Invoice Number'),

@@ -24,6 +24,7 @@ import '../models/pos/permission_code.dart';
 
 class POSConnectivity {
   final connectivityStream = BehaviorSubject<POSConnectivityStatus>();
+  final connectionAvailabilityStream = BehaviorSubject<POSConnectivityStatus>();
   Timer? _timer;
   BuildContext? context;
   bool localConfirmed = false;
@@ -42,6 +43,11 @@ class POSConnectivity {
 
   handleConnection({bool manualLocalModeSwitch = false}) async {
     bool serverRes = await pingToServer();
+    if (serverRes) {
+      connectionAvailabilityStream.sink.add(POSConnectivityStatus.Server);
+    } else {
+      connectionAvailabilityStream.sink.add(POSConnectivityStatus.None);
+    }
     if (serverRes && !manualLocalModeSwitch) {
       print('connected to server');
       if (!localConfirmed) {
@@ -56,6 +62,11 @@ class POSConnectivity {
         print('not connected to server');
         POSLogger(POSLoggerLevel.error, "Something went wrong");
         bool localRes = await _pingToLocalServer();
+        if (!serverRes && localRes) {
+          connectionAvailabilityStream.sink.add(POSConnectivityStatus.Local);
+        } else if (!serverRes && !localRes) {
+          connectionAvailabilityStream.sink.add(POSConnectivityStatus.None);
+        }
         if (localRes) {
           if (localConfirmed) {
             POSLogger(POSLoggerLevel.info, "You are connected to local");

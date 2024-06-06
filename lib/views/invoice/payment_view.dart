@@ -1276,81 +1276,28 @@ class _PaymentViewState extends State<PaymentView> {
       }
       //navigate back and clear all
       EasyLoading.dismiss();
-      setState(() {
-        billCloseClicked = false;
-      });
+      if (!res.success) {
+        setState(() {
+          billCloseClicked = false;
+        });
+      }
 
       if (res.success) {
-        if (!POSConfig().trainingMode) {
-          if (res?.resReturn == null ||
-              res.resReturn == '' ||
-              res.resReturn == '{}') {
-            EasyLoading.show(status: 'please_wait'.tr());
-            final invDataCheckRes = await ApiClient.call(
-                "invoice/get_invoice_det/${cartBloc.cartSummary?.invoiceNo ?? ""}/${POSConfig().locCode}/INV",
-                // "invoice/get_invoice_det/010910000025/${POSConfig().locCode}/INV",
-                ApiMethod.GET,
-                successCode: 200);
-            EasyLoading.dismiss();
-            if (invDataCheckRes == null ||
-                invDataCheckRes.data['success'] != true ||
-                invDataCheckRes.data['res'] == null) {
-              final bool? retry = await showDialog<bool>(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => POSErrorAlert(
-                          title: 'easy_loading.cant_save_inv'.tr(),
-                          subtitle:
-                              "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
-                          actions: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: POSConfig()
-                                      .primaryDarkGrayColor
-                                      .toColor()),
-                              onPressed: () {
-                                Navigator.pop(context, true);
-                              },
-                              child: Text(
-                                'Retry',
-                                style: Theme.of(context)
-                                    .dialogTheme
-                                    .contentTextStyle,
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: POSConfig()
-                                      .primaryDarkGrayColor
-                                      .toColor()),
-                              onPressed: () {
-                                Navigator.pop(context, false);
-                              },
-                              child: Text(
-                                'Cancel',
-                                style: Theme.of(context)
-                                    .dialogTheme
-                                    .contentTextStyle,
-                              ),
-                            ),
-                          ]));
-              if (retry != true) {
-                return;
-              } else {
-                await billClose();
-                return;
-              }
-            } else {
-              var det;
-              try {
-                det =
-                    jsonDecode((invDataCheckRes.data?['res'] ?? "").toString());
-              } catch (e) {
-                det = {"T_TBLINVHEADER": []};
-              }
-              if ((det?['T_TBLINVHEADER'] ?? []).isEmpty) {
-                // EasyLoading.showError(
-                //     'Invoice not saved... try saving the invoice again !!!');
+        try {
+          if (!POSConfig().trainingMode) {
+            if (res?.resReturn == null ||
+                res.resReturn == '' ||
+                res.resReturn == '{}') {
+              EasyLoading.show(status: 'please_wait'.tr());
+              final invDataCheckRes = await ApiClient.call(
+                  "invoice/get_invoice_det/${cartBloc.cartSummary?.invoiceNo ?? ""}/${POSConfig().locCode}/INV",
+                  // "invoice/get_invoice_det/010910000025/${POSConfig().locCode}/INV",
+                  ApiMethod.GET,
+                  successCode: 200);
+              EasyLoading.dismiss();
+              if (invDataCheckRes == null ||
+                  invDataCheckRes.data['success'] != true ||
+                  invDataCheckRes.data['res'] == null) {
                 final bool? retry = await showDialog<bool>(
                     context: context,
                     barrierDismissible: false,
@@ -1391,107 +1338,171 @@ class _PaymentViewState extends State<PaymentView> {
                               ),
                             ]));
                 if (retry != true) {
-                  EasyLoading.showError('easy_loading.cant_save_inv'.tr());
                   return;
                 } else {
                   await billClose();
                   return;
                 }
               } else {
-                res.resReturn = invDataCheckRes.data?['res'].toString() ?? '';
+                var det;
+                try {
+                  det = jsonDecode(
+                      (invDataCheckRes.data?['res'] ?? "").toString());
+                } catch (e) {
+                  det = {"T_TBLINVHEADER": []};
+                }
+                if ((det?['T_TBLINVHEADER'] ?? []).isEmpty) {
+                  // EasyLoading.showError(
+                  //     'Invoice not saved... try saving the invoice again !!!');
+                  final bool? retry = await showDialog<bool>(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => POSErrorAlert(
+                              title: 'easy_loading.cant_save_inv'.tr(),
+                              subtitle:
+                                  "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
+                              actions: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: POSConfig()
+                                          .primaryDarkGrayColor
+                                          .toColor()),
+                                  onPressed: () {
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: Text(
+                                    'Retry',
+                                    style: Theme.of(context)
+                                        .dialogTheme
+                                        .contentTextStyle,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: POSConfig()
+                                          .primaryDarkGrayColor
+                                          .toColor()),
+                                  onPressed: () {
+                                    Navigator.pop(context, false);
+                                  },
+                                  child: Text(
+                                    'Cancel',
+                                    style: Theme.of(context)
+                                        .dialogTheme
+                                        .contentTextStyle,
+                                  ),
+                                ),
+                              ]));
+                  if (retry != true) {
+                    EasyLoading.showError('easy_loading.cant_save_inv'.tr());
+                    return;
+                  } else {
+                    await billClose();
+                    return;
+                  }
+                } else {
+                  res.resReturn = invDataCheckRes.data?['res'].toString() ?? '';
+                }
               }
             }
-          }
 
-          if (POSConfig().dualScreenWebsite != "")
-            DualScreenController().completeInvoice(paid.toDouble(),
-                balanceDue.toDouble(), balanceDue.toDouble(), 0);
+            if (POSConfig().dualScreenWebsite != "")
+              DualScreenController().completeInvoice(paid.toDouble(),
+                  balanceDue.toDouble(), balanceDue.toDouble(), 0);
 
-          String invoice = cartBloc.cartSummary?.invoiceNo ?? "";
-          String latestInvoiceNumber = invoice;
-          String lastInvNo = await InvoiceController().getInvoiceNo();
+            String invoice = cartBloc.cartSummary?.invoiceNo ?? "";
+            String latestInvoiceNumber = invoice;
+            String lastInvNo = await InvoiceController().getInvoiceNo();
 
-          String lastInvPrefix = lastInvNo.substring(0, 6);
-          String lastInvSuffix = lastInvNo.substring(6);
+            String lastInvPrefix = lastInvNo.substring(0, 6);
+            String lastInvSuffix = lastInvNo.substring(6);
 
-          int lengthOfSuffixInt =
-              (int.parse(lastInvSuffix) - 1).toString().length;
-          int zeroLength = 6 - lengthOfSuffixInt;
+            int lengthOfSuffixInt =
+                (int.parse(lastInvSuffix) - 1).toString().length;
+            int zeroLength = 6 - lengthOfSuffixInt;
 
-          if (int.parse(invoice) < int.parse(lastInvNo)) {
-            latestInvoiceNumber = lastInvPrefix +
-                ('0' * zeroLength) +
-                (int.parse(lastInvSuffix) - 1).toString();
-          }
-          InvoiceController().setInvoiceNo(latestInvoiceNumber);
-          LastInvoiceDetails lastInvoice = LastInvoiceDetails(
-              invoiceNo: invoice,
-              billAmount: subTotal.toStringAsFixed(2),
-              dueAmount: balanceDue.toStringAsFixed(2),
-              paidAmount: paid.toStringAsFixed(2));
-          cartBloc.updateLastInvoice(lastInvoice);
-
-          //print invoice
-
-          final customerEmail = customerBloc.currentCustomer?.cMEMAIL ?? '';
-          final ebillActive = customerBloc.currentCustomer?.cMEBILL ?? false;
-
-          bool canPrint = true;
-          if (ebillActive && customerEmail.isNotEmpty) {
-            if (await sendEbillAlert(invoice)) {
-              canPrint = false;
+            if (int.parse(invoice) < int.parse(lastInvNo)) {
+              latestInvoiceNumber = lastInvPrefix +
+                  ('0' * zeroLength) +
+                  (int.parse(lastInvSuffix) - 1).toString();
             }
-          }
+            InvoiceController().setInvoiceNo(latestInvoiceNumber);
+            LastInvoiceDetails lastInvoice = LastInvoiceDetails(
+                invoiceNo: invoice,
+                billAmount: subTotal.toStringAsFixed(2),
+                dueAmount: balanceDue.toStringAsFixed(2),
+                paidAmount: paid.toStringAsFixed(2));
+            cartBloc.updateLastInvoice(lastInvoice);
 
-          if (canPrint) {
-            try {
-              double loyaltyPoints = 0;
-              final String customerCode =
-                  customerBloc.currentCustomer?.cMCODE ?? '';
-              if (customerCode.isNotEmpty &&
-                  customerBloc.currentCustomer?.cMLOYALTY == true) {
-                var customerRes =
-                    await LoyaltyController().getLoyaltySummary(customerCode);
-                loyaltyPoints = customerRes?.pOINTSUMMARY ?? 0;
+            //print invoice
+
+            final customerEmail = customerBloc.currentCustomer?.cMEMAIL ?? '';
+            final ebillActive = customerBloc.currentCustomer?.cMEBILL ?? false;
+
+            bool canPrint = true;
+            if (ebillActive && customerEmail.isNotEmpty) {
+              if (await sendEbillAlert(invoice)) {
+                canPrint = false;
               }
+            }
 
-              if (customerBloc.currentCustomer?.taxRegNo != '' &&
-                  customerBloc.currentCustomer?.taxRegNo != null) {
-                final bool? canPrintTaxBill = await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(
-                        'invoice.tax_bill_print_title'.tr(),
-                        textAlign: TextAlign.center,
-                      ),
-                      content: Text('invoice.tax_bill_print_content'.tr()),
-                      actions: [
-                        AlertDialogButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            text: 'invoice.tax_bill_print_yes'.tr()),
-                        AlertDialogButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            text: 'invoice.tax_bill_print_no'.tr()),
-                      ],
-                    );
-                  },
-                );
-                if (canPrintTaxBill ?? false)
-                  await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
-                      true, res.resReturn);
-                else
+            if (canPrint) {
+              try {
+                double loyaltyPoints = 0;
+                final String customerCode =
+                    customerBloc.currentCustomer?.cMCODE ?? '';
+                if (customerCode.isNotEmpty &&
+                    customerBloc.currentCustomer?.cMLOYALTY == true) {
+                  var customerRes =
+                      await LoyaltyController().getLoyaltySummary(customerCode);
+                  loyaltyPoints = customerRes?.pOINTSUMMARY ?? 0;
+                }
+
+                if (customerBloc.currentCustomer?.taxRegNo != '' &&
+                    customerBloc.currentCustomer?.taxRegNo != null) {
+                  final bool? canPrintTaxBill = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(
+                          'invoice.tax_bill_print_title'.tr(),
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Text('invoice.tax_bill_print_content'.tr()),
+                        actions: [
+                          AlertDialogButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              text: 'invoice.tax_bill_print_yes'.tr()),
+                          AlertDialogButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              text: 'invoice.tax_bill_print_no'.tr()),
+                        ],
+                      );
+                    },
+                  );
+                  if (canPrintTaxBill ?? false)
+                    await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
+                        true, res.resReturn);
+                  else
+                    await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
+                        false, res.resReturn);
+                } else {
                   await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
                       false, res.resReturn);
-              } else {
-                await printInvoice(invoice, res.earnedPoints, loyaltyPoints,
-                    false, res.resReturn);
+                }
+              } catch (e) {
+                EasyLoading.showError('easy_loading.cant_print_inv'.tr());
               }
-            } catch (e) {
-              EasyLoading.showError('easy_loading.cant_print_inv'.tr());
             }
           }
+        } catch (e) {
+          setState(() {
+            billCloseClicked = false;
+          });
         }
+        setState(() {
+          billCloseClicked = false;
+        });
         cartBloc.context = context;
         await cartBloc.resetCart();
         Navigator.pushReplacementNamed(context, Cart.routeName);

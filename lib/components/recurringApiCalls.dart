@@ -46,7 +46,7 @@ class RecurringApiCalls {
               builder: (context) => POSWarningAlert(
                     title: 'Physical Cash Limit Alert',
                     subtitle:
-                        'Current cash sales (${cashSales.toStringAsFixed(2)}) has reached/exeeded the maximum limit (${cashLimit.toStringAsFixed(2)})',
+                        'Drawer amount: (${remainingCash.toStringAsFixed(2)}) has reached/exeeded the maximum limit: (${cashLimit.toStringAsFixed(2)})',
                     actions: [
                       AlertDialogButton(
                           onPressed: () => Navigator.pop(context, true),
