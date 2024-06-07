@@ -169,10 +169,10 @@ class ApiClient {
       if (response.statusCode != successCode) {
         //debugPrint(result);
         if (errorToast && !local) {
-          if (result == null || result.toString().isEmpty)
+          if (result == null || result.toString().isEmpty) {
             EasyLoading.showToast(
                 "easy_loading.invalid".tr()); //Invalid api response
-          else {
+          } else {
             final message = result?["message"] ?? "";
             if (message.toString().isNotEmpty && !local) {
               EasyLoading.showToast(message);
@@ -216,7 +216,7 @@ class ApiClient {
   static Future<String> generateBackendToken(String url) async {
     final Response<dynamic>? res = await call(
         'Login/${userBloc.currentUser?.uSERHEDUSERCODE}', ApiMethod.GET,
-        authorize: false, overrideUrl: url);
+        authorize: false, overrideUrl: url, errorToast: false);
     return res?.data['token'] ?? '';
   }
 }

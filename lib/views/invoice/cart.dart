@@ -3610,6 +3610,7 @@ class _StreamContainerState extends State<StreamContainer> {
             setState(() {
               _isExpanded = false;
               opened = false;
+              stop = false;
             });
           });
         }
@@ -3663,15 +3664,8 @@ class _StreamContainerState extends State<StreamContainer> {
                             }
 
                             if (isSwitched) {
-                              EasyLoading.show(
-                                  status: 'please_wait'.tr(),
-                                  dismissOnTap: true);
-                              var result =
-                                  await InvoiceController().uploadBillData();
-                              if (result != null) {
-                                EasyLoading.dismiss();
-                                EasyLoading.showToast(result['message']);
-                              }
+                              InvoiceController().uploadBillData();
+
                               payModeBloc.getPayModeList();
                               payModeBloc.getCardDetails();
                               discountBloc.getDiscountTypes();
@@ -3682,9 +3676,12 @@ class _StreamContainerState extends State<StreamContainer> {
                             }
                             widget.onUpdate.call();
                           },
-                          icon: Icon(
-                            Icons.wifi,
-                            size: width * 0.013,
+                          icon: Tooltip(
+                            message: 'Click to switch server mode',
+                            child: Icon(
+                              Icons.wifi,
+                              size: width * 0.013,
+                            ),
                           )),
                     )
                   : SizedBox.shrink(),
