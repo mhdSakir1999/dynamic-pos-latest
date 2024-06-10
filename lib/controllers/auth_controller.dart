@@ -130,7 +130,8 @@ class AuthController {
           "terminalId": POSConfig().terminalId,
           "location": POSConfig().locCode,
           "floatVal": floatValue,
-        }));
+        }),
+        restrictLocalCall: true);
     if (res == null) return "Something went wrong";
     if (res.statusCode != 200) {
       return "Something went wrong";
@@ -202,7 +203,8 @@ class AuthController {
           },
         ),
         successCode: 200,
-        errorToast: false);
+        errorToast: false,
+        restrictLocalCall: true);
     if (res == null) return false;
     if (res.statusCode == 200) return true;
     return false;

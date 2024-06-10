@@ -32,7 +32,8 @@ class ApiClient {
       bool local = false,
       bool authorize = true,
       bool writeLog = true,
-      bool backendToken = false}) async {
+      bool backendToken = false,
+      bool restrictLocalCall = false}) async {
     if (writeLog)
       POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.apiInfo,
           "-------------------API Call Started------------------------------"));
@@ -94,6 +95,11 @@ class ApiClient {
           tempFormData,
           '===================================================================='
         ]);
+      }
+
+      if (restrictLocalCall && POSConfig().localMode) {
+        EasyLoading.showError('This operation is restricted in local mode');
+        return null;
       }
 
       Response response;

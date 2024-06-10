@@ -305,10 +305,10 @@ BEGIN
 	UPDATE T_TBLINVHEADER SET INVHED_SPOTCHECK=1
 	WHERE CONVERT(DATE,INVHED_DATETIME) >= CONVERT(DATE,@signOndate) AND INVHED_CASHIER = @cashier AND INVHED_INVOICED=1 AND INVHED_CANCELED=0 AND INVHED_SPOTCHECK=0
 
-	SELECT * FROM U_TBLSPTCHKHEADER where SOH_LOCATION=@setUpLocation and SOH_DATE=@signOndate and SOH_USER=@cashier and SOH_STATION=@terminalId and SOH_SHIFT=@shiftNo
+	SELECT * FROM U_TBLSPTCHKHEADER where SOH_LOCATION=@setUpLocation and SOH_DATE=@signOndate and SOH_USER=@cashier and SOH_STATION=@terminalId and SOH_SHIFT=@shiftNo and SOH_ID = @id
 
 	SELECT U_TBLSPTCHKDETAIL.*,PH_DESC FROM U_TBLSPTCHKDETAIL, M_TBLPAYMODEHEAD where SOD_PAYCODE=PH_CODE and SOD_LOCATION=@setUpLocation and SOD_DATE=@signOndate 
-	and SOD_USER=@cashier and SOD_STATION=@terminalId and SOD_SHIFT=@shiftNo
+	and SOD_USER=@cashier and SOD_STATION=@terminalId and SOD_SHIFT=@shiftNo and SOD_ID = @id
 
 	select @signOndate as DE_DATE, @signOnTime as DE_TIME, @setUpLocation as DE_LOCATION, @cashier as DE_USER, @terminalId as DE_STATION, @shiftNo as DE_SHIFT, 
 	denomination_code as DE_DENCODE, ISNull(SUM(d_value * d_count),0) as DE_DENPHYAMT, 0 AS DTRANS, 0 AS DTPROCESS, 0 AS DTSPROCESS 
@@ -331,3 +331,32 @@ END
 GO
 
 -----------------------------------------------------------
+
+ALTER proc [dbo].[myPOS_DP_GET_INVOICE_DET_PRINT]
+@invno varchar(25),
+@loc varchar(10),
+@invmode varchar(5)
+
+as
+begin
+    select * from T_TBLINVHEADER where invhed_invno=@invno and invhed_loccode=@loc and invhed_mode=@invmode
+    select * from T_TBLINVDETAILS where invdet_invno=@invno and invdet_loccode=@loc and invdet_mode=@invmode
+    select * from T_TBLINVPAYMENTS where invpay_invno=@invno and invpay_loccode=@loc and invpay_mode=@invmode
+    select * from T_TBLINVFREEISSUES where INVPROMO_INVNO=@invno and INVPROMO_LOCCODE=@loc
+    select * from T_TBLINVLINEREMARKS where INVREM_INVNO=@invno and INVREM_LOCCODE=@loc
+    select * from M_TBLCUSTOMER where cm_code=(select INVHED_MEMBER from T_TBLINVHEADER where invhed_invno=@invno and invhed_loccode=@loc and invhed_mode=@invmode)
+    select * from U_TBLPRINTMSG
+    SELECT * FROM M_TBLPAYMODEHEAD
+    SELECT * FROM M_TBLPAYMODEDET
+    SELECT * FROM M_TBLLOCATIONS where LOC_CODE=@loc
+    select * from T_TBLINVPROMOTICKETS where PROMO_LOCCODE=@loc AND PROMO_INVNO=@invno
+    select H.PTICK_CODE AS TICKET_CODE,H.PTICK_DESC AS TICKET_NAME,D.PTICK_LINENO AS LINE_NO,D.PTICK_DESC AS LINE_CONTENT,D.PTICK_BOLD AS IS_BOLD,
+    D.PTICK_UNDLINE AS IS_UNDERLINE from M_TBLPROMOTION_TICKETS_HED H,M_TBLPROMOTION_TICKETS_DET D
+    WHERE H.PTICK_CODE=D.PTICK_CODE AND H.PTICK_CODE IN (select PROMO_TICKETID from T_TBLINVPROMOTICKETS where PROMO_LOCCODE=@loc AND PROMO_INVNO=@invno) ORDER BY H.PTICK_CODE, D.PTICK_LINENO
+	select * from T_TBLINVREMARKS where INVREM_INVNO=@invno and INVREM_LOCCODE=@loc
+
+end
+GO
+
+-------------------------------------------------------------
+

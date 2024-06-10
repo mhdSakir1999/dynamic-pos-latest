@@ -38,6 +38,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
   String invCashier = '--';
   String invCustomer = '--';
   String invRemark = '--';
+  List<String> hedRemarks = [];
 
   num invBalance = 0;
 
@@ -230,18 +231,23 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                   )
                 ],
               ),
-              invDetailCard(),
-              payments.isEmpty
-                  ? SizedBox.shrink()
-                  : Expanded(
-                      flex: 1,
-                      child: paymentsCard('OLD PAYMENTS', payments, true)),
-              classifiedPayments.isEmpty
-                  ? Expanded(child: SizedBox())
-                  : Expanded(
-                      flex: 1,
-                      child: paymentsCard(
-                          'RE-CLASSIFIED PAYMENTS', classifiedPayments, false)),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      invDetailCard(),
+                      payments.isEmpty
+                          ? SizedBox.shrink()
+                          : paymentsCard('OLD PAYMENTS', payments, true),
+                      classifiedPayments.isEmpty
+                          ? SizedBox.shrink()
+                          : paymentsCard('RE-CLASSIFIED PAYMENTS',
+                              classifiedPayments, false),
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -288,7 +294,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
     final height = MediaQuery.of(context).size.height;
     return Container(
         width: double.infinity,
-        height: height * 0.23,
+        // height: height * 0.23,
         child: Card(
           color: CurrentTheme.primaryColor,
           child: Column(
@@ -604,6 +610,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                             invCashier = '--';
                             invCustomer = '--';
                             invRemark = '--';
+                            hedRemarks = [];
                             invBalance = 0;
                             setState(() {});
                             bool isFetched = await getInvoicePayments();
@@ -644,6 +651,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                               invCashier = '--';
                               invCustomer = '--';
                               invRemark = '--';
+                              hedRemarks = [];
                               invBalance = 0;
                               setState(() {});
                               bool isFetched = await getInvoicePayments();
@@ -697,9 +705,25 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
             '--';
         invStation = header['INVHED_STATION'] ?? '--';
         invBalance = header['INVHED_CHANGE'] ?? 0;
-        invRemark = det['T_TBLINVLINEREMARKS'].length == 0
-            ? '--'
-            : det['T_TBLINVLINEREMARKS'][0]?['INVREM_LINEREMARKS'] ?? '--';
+        // invRemark = det['T_TBLINVLINEREMARKS'].length == 0
+        //     ? '--'
+        //     : det['T_TBLINVLINEREMARKS'][0]?['INVREM_LINEREMARKS'] ?? '--';
+        try {
+          if (det['T_TBLINVREMARKS'].isNotEmpty) {
+            Map map = det['T_TBLINVREMARKS'].first;
+            map.forEach((k, v) {
+              if (k.toString().contains('INVREM_REMARKS') &&
+                  v?.toString() != '') {
+                // hedRemarks.add(v.toString());
+                if (invRemark == '--') {
+                  invRemark = v.toString();
+                } else {
+                  invRemark = invRemark + '\n' + v.toString();
+                }
+              }
+            });
+          }
+        } catch (e) {}
       } catch (e) {
         // return false;
       }
@@ -740,11 +764,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
 }
 
 class invDetailRecords extends StatelessWidget {
-  const invDetailRecords({
-    super.key,
-    required this.label,
-    required this.value,
-  });
+  const invDetailRecords({super.key, required this.label, required this.value});
 
   final String label;
   final String value;

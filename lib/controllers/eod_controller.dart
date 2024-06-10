@@ -16,7 +16,8 @@ class EodController {
   Future<EoDValidationResult?> validateEodProcess(DateTime eodDate) async {
     final res = await ApiClient.call(
         "eod/validation?date=$eodDate&location=${POSConfig().locCode}", // new change-- passing loc as addition.
-        ApiMethod.GET);
+        ApiMethod.GET,
+        restrictLocalCall: true);
     if (res?.data == null)
       return null;
     else
@@ -26,7 +27,8 @@ class EodController {
   Future doEOD(DateTime eodDate) async {
     final res = await ApiClient.call("eod", ApiMethod.POST,
         formData: FormData.fromMap(
-            {'date': eodDate, 'location': POSConfig().locCode}));
+            {'date': eodDate, 'location': POSConfig().locCode}),
+        restrictLocalCall: true);
     if (res?.statusCode == 200) {
       EasyLoading.showSuccess('landing_view.eod_success'.tr());
     }

@@ -29,6 +29,7 @@ import 'package:checkout/models/pos/inv_remarks.dart';
 import 'package:checkout/models/pos/invoice_header_result.dart';
 import 'package:checkout/models/pos/paid_model.dart';
 import 'package:checkout/models/pos/price_mode_result.dart';
+import 'package:checkout/models/pos/pro_tax.dart';
 import 'package:checkout/models/pos_config.dart';
 
 import 'package:checkout/extension/extensions.dart';
@@ -696,6 +697,24 @@ class InvoiceController {
           : null;
       if (data.length == 0) return {"cartModels": [], "hedRemarks": null};
       final myList = data.map((e) => CartModel.fromMap(e)).toList();
+
+      /// tax mapping by [TM.Sakir]
+      try {
+        if (myList.isNotEmpty && res?.data['taxDet'].isNotEmpty) {
+          List<dynamic> taxdet = res?.data['taxDet'];
+          for (int i = 0; i < taxdet.length; i++) {
+            int proIndex =
+                myList.indexWhere((e) => e.proCode == taxdet[i]['proCode']);
+            if (proIndex != -1) {
+              final List taxes = taxdet[i]['proTaxList'] ?? [];
+              myList[proIndex].proTax =
+                  taxes.map((e) => ProTax.fromJson(e)).toList();
+            }
+          }
+        }
+      } catch (e) {
+        print(e.toString());
+      }
 
       //going through remark
       for (var dyRemark in remarkList) {

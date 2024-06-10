@@ -61,7 +61,8 @@ class DenominationController {
       '####################################################################'
     ]);
 
-    final res = await ApiClient.call("denomination", ApiMethod.POST, data: map);
+    final res = await ApiClient.call("denomination", ApiMethod.POST,
+        data: map, restrictLocalCall: true);
     await AuthController().checkUsername(
         userBloc.currentUser?.uSERHEDUSERCODE ?? '',
         authorize: true);
