@@ -88,7 +88,8 @@ class DenominationController {
         await POSManualPrint().printManagerSlip(
             data: res?.data['data'],
             denominations: denominations,
-            denominationDet: denominationDetails);
+            denominationDet: denominationDetails,
+            spotcheck: spot);
       }
     }
   }

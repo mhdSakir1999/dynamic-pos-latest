@@ -362,7 +362,8 @@ class POSManualPrint {
   Future<void> printManagerSlip(
       {required String data,
       required List<POSDenominationModel> denominations,
-      required List<POSDenominationDetail> denominationDet}) async {
+      required List<POSDenominationDetail> denominationDet,
+      bool spotcheck = false}) async {
     try {
       printerName = POSConfig.printerName;
       File file = File("${POSConfig.localPrintPath}/mngSignTemplate.xml");
@@ -419,7 +420,8 @@ class POSManualPrint {
       await writeMngSignBytes(
           childNodes: childNodes,
           cshdeno: denominationDet,
-          denos: denominations);
+          denos: denominations,
+          spotcheck: spotcheck);
 
       // Cutting the paper
       bytes += generator.cut();
@@ -1433,7 +1435,8 @@ class POSManualPrint {
   Future<void> writeMngSignBytes(
       {required List<xml.XmlNode> childNodes,
       required List<POSDenominationDetail> cshdeno,
-      required List<POSDenominationModel> denos}) async {
+      required List<POSDenominationModel> denos,
+      bool spotcheck = false}) async {
     for (int i = 1; i < childNodes.length; i += 2) {
       print(childNodes[i].toString());
       var node = childNodes[i];
@@ -1448,6 +1451,12 @@ class POSManualPrint {
         String width = mapValue(attributes, 'width', defaultValue: '1');
         String rowlength = mapValue(attributes, 'len', defaultValue: '12');
         String hrlength = mapValue(attributes, 'hrlen', defaultValue: '58');
+        String spot =
+            mapValue(attributes, 'spotcheck', defaultValue: 'SPOT CHECK SLIP');
+
+        if (label == 'heading' && spotcheck) {
+          value = spot;
+        }
 
         if (printerName == 'POS-80C' ||
             printerName == 'GP-C80250 Series' ||
@@ -1609,7 +1618,10 @@ class POSManualPrint {
         if (node.name.local == "row") {
           List<xml.XmlNode> rowchildNodes = node.children;
           await writeMngSignBytes(
-              childNodes: rowchildNodes, cshdeno: cshdeno, denos: denos);
+              childNodes: rowchildNodes,
+              cshdeno: cshdeno,
+              denos: denos,
+              spotcheck: spotcheck);
           bytes += generator.row(posColList);
           posColList.clear();
         }
@@ -1706,7 +1718,8 @@ class POSManualPrint {
               await writeMngSignBytes(
                   childNodes: denominationchildNodes,
                   cshdeno: cshdeno,
-                  denos: denos);
+                  denos: denos,
+                  spotcheck: spotcheck);
             }
           }
         }
@@ -1726,7 +1739,8 @@ class POSManualPrint {
               await writeMngSignBytes(
                   childNodes: paymentchildNodes,
                   cshdeno: cshdeno,
-                  denos: denos);
+                  denos: denos,
+                  spotcheck: spotcheck);
             }
           }
         }
