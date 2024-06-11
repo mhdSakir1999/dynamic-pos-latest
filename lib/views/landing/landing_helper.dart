@@ -116,7 +116,7 @@ class LandingHelper {
   }
 
   FocusNode errorFocusNode = new FocusNode();
-  validateSignOn(BuildContext context) async {
+  Future validateSignOn(BuildContext context) async {
     // this is necessary, because if the cashier do signoff,mng signoff and remain in the landing page, he can be able to signon and increase the shift number
     // without validating whether the current user, signon to the different terminal with different shift.
     await _authController
@@ -787,7 +787,7 @@ class LandingHelper {
           }
         }
 
-        Navigator.push(
+        await Navigator.push(
             _context,
             MaterialPageRoute(
               builder: (context) => ShiftReconciliationEntryView(
@@ -1079,7 +1079,7 @@ class LandingHelper {
               refCode: DateTime.now().toIso8601String());
 
       if (permissionRes.success) {
-        Navigator.push(
+        await Navigator.push(
             _context,
             MaterialPageRoute(
               builder: (context) => ShiftReconciliationEntryView(

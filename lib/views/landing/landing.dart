@@ -871,7 +871,7 @@ class _LandingViewState extends State<LandingView> {
               POSConfig().primaryColor.toColor().withOpacity(0.6);
           return KeyboardListener(
             focusNode: _focusNode,
-            onKeyEvent: (value) {
+            onKeyEvent: (value) async {
               if (value is KeyDownEvent) {
                 if (POSConfig().localMode != true &&
                     value.logicalKey == LogicalKeyboardKey.f1) {
@@ -887,8 +887,10 @@ class _LandingViewState extends State<LandingView> {
                           "date": strEodDate.parseDateTime().toString()
                         });
                     return;
-                  } else
-                    landingHelper.validateSignOn(context);
+                  } else {
+                    await landingHelper.validateSignOn(context);
+                    setState(() {});
+                  }
                 }
                 if (POSConfig().localMode != true &&
                     !POSConfig().trainingMode &&
@@ -906,12 +908,15 @@ class _LandingViewState extends State<LandingView> {
                 if (POSConfig().localMode != true &&
                     !POSConfig().trainingMode &&
                     value.logicalKey == LogicalKeyboardKey.f6) {
-                  landingHelper.managerSignOff(context, activeManagerSignOff);
+                  await landingHelper.managerSignOff(
+                      context, activeManagerSignOff);
+                  setState(() {});
                 }
                 if (POSConfig().localMode != true &&
                     !POSConfig().trainingMode &&
                     value.logicalKey == LogicalKeyboardKey.f7) {
-                  landingHelper.spotCheck();
+                  await landingHelper.spotCheck();
+                  setState(() {});
                 }
                 if (value.logicalKey == LogicalKeyboardKey.escape) {
                   String routeName = ExitScreen.routeName;
@@ -1010,7 +1015,7 @@ class _LandingViewState extends State<LandingView> {
                         onPressed: (POSConfig().localMode == true ||
                                 POSConfig().trainingMode)
                             ? null
-                            : () {
+                            : () async {
                                 if (isEOD_Pending == true) {
                                   alertController.showErrorAlert(
                                       "landing_eod_not_done_for_yersterday",
@@ -1021,7 +1026,8 @@ class _LandingViewState extends State<LandingView> {
                                       });
                                   return;
                                 } else
-                                  landingHelper.validateSignOn(context);
+                                  await landingHelper.validateSignOn(context);
+                                setState(() {});
                               },
                       )),
                       landingButton(
@@ -1093,9 +1099,10 @@ class _LandingViewState extends State<LandingView> {
                           onPressed: (POSConfig().localMode == true ||
                                   POSConfig().trainingMode)
                               ? null
-                              : () {
-                                  landingHelper.managerSignOff(
+                              : () async {
+                                  var x = await landingHelper.managerSignOff(
                                       context, activeManagerSignOff);
+                                  setState(() {});
                                 },
                         ),
                       ),
@@ -1112,8 +1119,9 @@ class _LandingViewState extends State<LandingView> {
                           onPressed: (POSConfig().localMode == true ||
                                   POSConfig().trainingMode)
                               ? null
-                              : () {
-                                  landingHelper.spotCheck();
+                              : () async {
+                                  await landingHelper.spotCheck();
+                                  setState(() {});
                                 },
                         ),
                       ),
