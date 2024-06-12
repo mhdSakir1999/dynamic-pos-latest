@@ -216,6 +216,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     posConnectivity.setContext(context);
     recurringApiCalls.setContext(context);
+    posConnectivity.setVoidCallback(_refresh);
     return GestureDetector(
       onTap: () {
         itemCodeFocus.requestFocus();
@@ -448,9 +449,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   }
 
   void _refresh() {
-    setState(() {
-      // Update the state to trigger a rebuild
-    });
+    setState(() {});
   }
 
   Widget buildBody() {

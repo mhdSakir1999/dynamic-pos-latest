@@ -670,6 +670,9 @@ class LandingHelper {
                 ""
           });
           break;
+        case "manager_sign_off":
+          _alertController.showErrorAlert("eod_alert_manager_sign_off");
+          break;
         case "invoice":
           if (!SpecialPermissionHandler(context: _context).hasPermission(
               permissionCode: PermissionCode.bypassHoldInvAtSignOff,

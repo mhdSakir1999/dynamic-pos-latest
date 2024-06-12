@@ -29,9 +29,14 @@ class POSConnectivity {
   BuildContext? context;
   bool localConfirmed = false;
   FocusNode _focusNode = FocusNode();
+  VoidCallback? onUpdate;
 
   setContext(BuildContext context) {
     this.context = context;
+  }
+
+  setVoidCallback(VoidCallback func) {
+    this.onUpdate = func;
   }
 
   startListen() {
@@ -185,6 +190,7 @@ class POSConnectivity {
       POSConfig().localMode = true;
       connectivityStream.sink.add(POSConnectivityStatus.Local);
       ApiClient.url = POSConfig().local;
+      onUpdate?.call();
       startListen();
     }
   }

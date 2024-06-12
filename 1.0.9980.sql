@@ -359,4 +359,148 @@ end
 GO
 
 -------------------------------------------------------------
+ALTER PROCEDURE [dbo].[myPOS_DP_CANCEL_INVOICE]
+@cashier varchar(20),
+@invoiceNo varchar(100),
+@locCode varchar(10),
+@invMode varchar(5)
+AS
+BEGIN
 
+	BEGIN TRAN t1;
+	DECLARE @error varchar(max);
+	DECLARE @RowCount1 INTEGER
+
+	UPDATE T_TBLINVHEADER SET 
+	INVHED_CANCELED=1,
+	INVHED_CANUSER=@cashier,
+	INVHED_CANDATE=GETDATE(),
+	INVHED_CANTIME=GETDATE(),
+	MD_BY=@cashier,
+	MD_DATE= GETDATE(),
+	DTRANS=0, DTPROCESS=0,DTSPROCESS=0
+	WHERE INVHED_CASHIER = @cashier AND INVHED_INVNO = @invoiceNo AND INVHED_MODE = @invMode
+	SELECT @RowCount1 = @@ROWCOUNT
+	PRINT 'INVHED UPDATE DONE'
+
+	---Update Stock In Hand
+	/*
+	UPDATE pn SET pn.IPLU_SIH = pn.IPLU_SIH + ((dt.INVDET_CASEQTY*dt.INVDET_PROCASESIZE) + (dt.INVDET_FREEQTY*dt.INVDET_PROCASESIZE) + INVDET_UNITQTY + INVDET_FREEQTY) 
+	FROM M_TBLPROINVENTORY pn INNER JOIN T_TBLINVDETAILS dt ON pn.IPLU_CODE = dt.INVDET_PROCODE 
+	WHERE dt.INVDET_INVNO=@invoiceNo AND pn.IPLU_LOCCODE = dt.INVDET_LOCCODE
+	*/
+	UPDATE pn SET pn.IPLU_SIH = pn.IPLU_SIH + dt.QTY
+	FROM M_TBLPROINVENTORY pn INNER JOIN 
+	(select INVDET_INVNO,INVDET_LOCCODE,INVDET_STOCKCODE, sum((INVDET_CASEQTY*INVDET_PROCASESIZE) + INVDET_UNITQTY) AS QTY
+	from T_TBLINVDETAILS where INVDET_INVNO=@invoiceNo AND INVDET_LOCCODE=@locCode group by INVDET_INVNO,INVDET_LOCCODE,INVDET_STOCKCODE) dt 
+	ON pn.IPLU_PRODUCTCODE = dt.INVDET_STOCKCODE AND pn.IPLU_LOCCODE = dt.INVDET_LOCCODE
+
+	PRINT 'STOCK UPDATE DONE'
+	
+/*
+	-- going through sold gvs
+	UPDATE M_TBLVOUCHERS
+	SET VC_CANCASHIER=@cashier,VC_CANDATE=GETDATE(), VC_CANINVNO=@invoiceNo,VC_CANLOC=INVDET_LOCCODE,VC_CANPOS=INVHED_STATION
+	FROM M_TBLVOUCHERS
+	JOIN T_TBLINVDETAILS
+	ON INVDET_PROCODE = VC_NUMBER
+	JOIN T_TBLINVHEADER
+	ON INVHED_INVNO = INVDET_INVNO
+	WHERE INVHED_INVNO=@invoiceNo AND INVDET_ISVOUCHER=1
+	PRINT 'VOUCHER UPDATE DONE'
+
+	--cancle loyalty
+	UPDATE U_TBLLOYALTY_POINTS SET POINT_CANCELED=1 WHERE POINT_INVNO = @invoiceNo
+	PRINT 'LOYALTY POINT UPDATE DONE'
+*/
+	select * from T_TBLINVHEADER where invhed_invno=@invoiceNo and invhed_loccode=@locCode and invhed_mode=@invMode
+	select * from T_TBLINVDETAILS where invdet_invno=@invoiceNo and invdet_loccode=@locCode and invdet_mode=@invMode
+	select * from T_TBLINVPAYMENTS where invpay_invno=@invoiceNo and invpay_loccode=@locCode and invpay_mode=@invMode
+	select * from T_TBLINVFREEISSUES where INVPROMO_INVNO=@invoiceNo and INVPROMO_LOCCODE=@locCode
+	select * from T_TBLINVLINEREMARKS where INVREM_INVNO=@invoiceNo and INVREM_LOCCODE=@locCode
+	select * from M_TBLCUSTOMER where cm_code=(select invhed_member from T_TBLINVHEADER where invhed_invno=@invoiceNo and invhed_loccode=@locCode and invhed_mode=@invMode)
+	select * from U_TBLPRINTMSG
+	SELECT * FROM M_TBLPAYMODEHEAD
+	SELECT * FROM M_TBLPAYMODEDET
+	SELECT * FROM M_TBLLOCATIONS where loc_code = @locCode
+
+	IF @RowCount1=1
+		BEGIN
+		SET @error = '';
+		COMMIT TRAN t1;
+		END
+	ELSE
+		BEGIN
+		SET @error = 'You cannot cancel this invoice';
+		ROLLBACK TRAN t1
+		END
+	SELECT @error as error
+END
+GO
+
+-------------------------------------------------------------------------------
+
+ALTER   PROCEDURE [dbo].[myPOS_DP_EOD_VALIDATION]
+	@date datetime = null,
+	@location nvarchar(10)
+AS
+BEGIN
+    SET NOCOUNT ON;
+	
+	DECLARE @error varchar(max);
+	DECLARE @setupLoc varchar(max);
+	DECLARE @signOnCount varchar(max);
+	Declare @mngSignOnCount varchar(max);
+	IF @date = null
+	BEGIN
+		SET @date = GETDATE();
+	END
+	--SELECT @setupLoc=SETUP_LOCATION FROM U_TBLSETUP
+	set @setupLoc=@location
+	-- validate sign on users 
+	SELECT  @signOnCount =COUNT(UH_ID) FROM U_TBLUSERHEAD WHERE UH_ISSIGNEDON = 1 AND UH_SIGNLOC =@setupLoc
+	select @mngSignOnCount = COUNT(UH_ID) from U_TBLUSERHEAD WHERE UH_ISMNGSIGNOFF = 0 AND UH_SIGNLOC =@setupLoc
+
+	IF @signOnCount>0
+	BEGIN
+		SET @error = 'sign_on'
+	END
+	else if @mngSignOnCount>0
+	BEGIN
+		SET @error = 'manager_sign_off'
+	END
+	ELSE
+	BEGIN
+		-- validate hold invoices
+		DECLARE @invoiceCount varchar(max);
+		SELECT @invoiceCount = COUNT(INVHED_INVNO) FROM T_TBLINVHEADER WHERE INVHED_INVOICED=0 AND INVHED_CANCELED=0 AND CONVERT(DATE,INVHED_DATETIME) = CONVERT(DATE,@date)
+
+		IF @invoiceCount>0
+		BEGIN
+			SET @error = 'invoice'
+		END
+		ELSE
+		BEGIN 
+		-- validate date
+			DECLARE @endDate datetime;
+			--SELECT @endDate = SETUP_ENDDATE FROM U_TBLSETUP
+			SELECT @endDate=EOD_DATE FROM U_TBLLAST_EOD WHERE EOD_LOC=@setupLoc
+			IF  CONVERT(DATE,@endDate) < CONVERT(DATE,@date)
+			BEGIN
+				SET @error = null
+			END
+			ELSE
+			BEGIN
+				SET @error = convert(varchar,@endDate)
+			END
+
+		END
+
+	END
+
+	SELECT @error as error
+
+END
+GO
+
+-------------------------------------------------------------------------

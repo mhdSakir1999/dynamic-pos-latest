@@ -583,6 +583,11 @@
     "subtitle": "Please logout the following user(s) ( {users} ) from the system",
     "okay": "Okay"
   },
+  "eod_alert_manager_sign_off": {
+    "title": "EOD Validation failed",
+    "subtitle": "Manager sign-off is not completed for one or more terminals !!!",
+    "okay": "Okay"
+  },
   "eod_alert_hold_invoice": {
     "title": "EOD Validation failed",
     "subtitle": "You can't continue the EOD process with ongoing invoice(s)",

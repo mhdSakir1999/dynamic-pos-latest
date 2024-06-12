@@ -71,6 +71,11 @@ class InvoiceController {
     if (invNo == null) {
       invNo = await getMaximumInvNo(getInvPrefix(), 'INV');
     }
+
+    // whatever the invoice number (last invoiced), we save it in local storage
+    // this will prevent errors when clear the invoice number
+    setInvoiceNo(invNo!);
+
     String nextInv = await incrementInvoiceNo(invNo);
     //by Pubudu Wijetunge on 15/Sep/2023
     //Comment the setInvoice function calling due to the number skiping issue when clearing the invoice screen.
