@@ -1,0 +1,14 @@
+<Report>
+    <logo value="spar-modified.bmp" width="350" height="50"/>
+    <text label="location" value="{location}" align="center" font="A" bold="false" height="1" width="1" />
+    <text label="address" value="{address}" align="center" font="A" bold="false" height="1" width="1" />
+    <text label="email" value="{email}" align="center" font="A" bold="false" height="1" width="1" />
+    <text label="phone" value="Phone: {number}" align="center" font="A" bold="false" height="1" width="1" />
+    <feed value="1"/>
+    <ticketDescriptions>
+        <text label="ticket_description" value="{ticketDesc}" align="center" font="A" bold="false" height="1" width="1"/>
+    </ticketDescriptions>
+    <feed value="1"/>
+    <barcode label="ticket_barcode" height="60" width="100"/>
+    <feed value="1"/>
+</Report>

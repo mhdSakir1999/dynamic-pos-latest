@@ -1,0 +1,14 @@
+<Report name="SignSlipTemplate (Signoff, Signon)">
+    <text label="type" value="{type}" align="left" font="A" bold="false" height="1" width="2" />
+    <feed value="1" />
+    <text label="cashierId" value="Cashier ID   :  {cashierId}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="cashier"   value="Cashier Name :  {cashier}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="station"   value="Terminal ID  :  {station}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="location"  value="Location Name:  {locationName}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="shift"     value="Shift No.    :  {shift}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="location"  value="{signDateType}:  {signDate} " align="left" font="A" bold="false" height="1" width="1" />
+    <float label="floatvalue" value='FLOAT' font="A" align="left" bold="false" height="1" width="1"/>
+    <feed value="2" />
+    <text label="line"      value="              _ _ _ _ _ _ _ _ _ _ _ _ _   " align="right" font="A" bold="false" height="1" width="1" />
+    <text label="signature" value="                      Signature           " align="right" font="A" bold="false" height="1" width="1" />
+</Report>

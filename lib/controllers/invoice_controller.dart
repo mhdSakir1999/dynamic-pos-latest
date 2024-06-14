@@ -16,6 +16,7 @@ import 'package:checkout/components/ext_loyalty/ext_module_helper.dart';
 import 'package:checkout/controllers/customer_controller.dart';
 import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
+import 'package:checkout/controllers/pos_logger_controller.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/print_controller.dart';
 import 'package:checkout/controllers/sms_controller.dart';
@@ -33,6 +34,7 @@ import 'package:checkout/models/pos/pro_tax.dart';
 import 'package:checkout/models/pos_config.dart';
 
 import 'package:checkout/extension/extensions.dart';
+import 'package:checkout/models/pos_logger.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -74,7 +76,16 @@ class InvoiceController {
 
     // whatever the invoice number (last invoiced), we save it in local storage
     // this will prevent errors when clear the invoice number
-    setInvoiceNo(invNo!);
+    if (invNo != null && invNo != '') setInvoiceNo(invNo!);
+
+    if (POSConfig().localMode && invNo == null) {
+      POSLoggerController.addNewLog(POSLogger(
+          POSLoggerLevel.error, "Cannot generate a new invoice number"));
+      EasyLoading.showError(
+          'Cannot create invoice number from scratch in the local.\nIt may cause issues when syncing the invoices with server mode\nSo, please try to switch server mode',
+          duration: Duration(seconds: 3));
+      return '';
+    }
 
     String nextInv = await incrementInvoiceNo(invNo);
     //by Pubudu Wijetunge on 15/Sep/2023
@@ -722,15 +733,17 @@ class InvoiceController {
       }
 
       //going through remark
-      for (var dyRemark in remarkList) {
-        final remark = InvoiceLineRemarks.fromMap(dyRemark);
-        //find relevant item in cart list
-        final index = myList.indexWhere((element) =>
-            element.lineNo?.toString() == remark.lineNo.toString());
-        if (index != -1) {
-          myList[index].lineRemark.add(remark.lineRemark ?? '');
+      try {
+        for (var dyRemark in remarkList) {
+          final remark = InvoiceLineRemarks.fromMap(dyRemark);
+          //find relevant item in cart list
+          final index = myList.indexWhere((element) =>
+              element.lineNo?.toString() == remark.lineNo.toString());
+          if (index != -1) {
+            myList[index].lineRemark.add(remark.lineRemark ?? '');
+          }
         }
-      }
+      } catch (e) {}
       return {"cartModels": myList, "hedRemarks": hedRem};
     }
   }

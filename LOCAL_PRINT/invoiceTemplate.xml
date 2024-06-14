@@ -1,0 +1,78 @@
+<Report name="InvoicePrintTemplate" for="Epson Printers">
+    <logo value="spar-modified.bmp" width="250" height="100" inCancelBill="true"/>
+    <!-- <feed value="1"/> -->
+    <text label="location" value="{location}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <text label="address" value="{address}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <text label="email" value="{email}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <text label="phone" value="Phone: {number}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <hr hrlen="42" inCancelBill="true"/>
+    <text label="datetime" value="Date &amp; Time : {startdate}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <text label="invoice_no" value="Invoice No  : {invNo}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <hr hrlen="42" inCancelBill="true"/>
+    <text label="invoice" value="INVOICE" hr="true" reprint="** RE-PRINT **" cancel="** CANCEL **" align="center" font="A" bold="false" height="1" width="2" inCancelBill="true"/>
+    <hr hrlen="42" inCancelBill="true"/>
+    <text label="pro_desc" value="PRODUCT         PRICE        QTY          AMOUNT" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+    <hr hrlen="42" inCancelBill="false"/>
+    <product>
+        <text label="pro_desc" value="{lineNo} {item_desc}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        
+        <text label="product_list_values" value="{stockCode}{price}{qty}{amount}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+
+        <discounts rowCount="6">
+            <text label="discount lines" value="{discount}" align="center" font="B" bold="false" height="1" width="1" inCancelBill="false"/>
+        </discounts>
+    </product>
+    <!-- this hr automatically assigning itself the font which is used last. ex: if discount lines are there it uses B else it uses A -->
+    <!-- So, I am going to manually give hr -->
+    <!-- <hr hrlen="42" font="A" /> -->
+    <text label="manual_hr" value="------------------------------------------" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+    <text label="gross_amount" value="GROSS AMOUNT   {grossAmount}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+    <text label="all_discount_total" value="TOTAL DISCOUNT {allDiscountTotal}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+    <text label="net_amount" value="NET AMOUNT     {netAmount}" align="center" font="A" bold="true" height="2" width="1" inCancelBill="true"/>
+    <hr hrlen="42" inCancelBill="true"/>
+    <payments>
+        <text label="payments" value="{payment_desc}{payment_refCode}{paymentAmount}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+    </payments>
+    <hr hrlen="42" inCancelBill="false"/>
+    <balance>
+        <text label="balance_amount" value="BALANCE        {balance}" align="center" font="A" bold="true" height="2" width="1" inCancelBill="false"/>
+        <hr hrlen="42" inCancelBill="false"/>
+    </balance>
+    <text label="count/totalqty" value="ITEMS : {productCount}      TOTAL QUANTITY : {qtyCount}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <hr hrlen="42" inCancelBill="true"/>
+    <text label="cashier/station" value="Cashier   : {cashier}Terminal  : {station}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <text label="end_time" value="End Time  : {endTime}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <hr hrlen="42" inCancelBill="true"/>
+    <loyalty>
+        <text label="member_no" value="Membership No. :    {memberId}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        <text label="member_name" value="Member Name    :    {custName}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        <hr hrlen="42" inCancelBill="false"/>
+        <text label="loyalty_heading" value="LOYALTY POINTS SUMMARY                    " align="left" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        <text label="points_earn" value="Earned on this bill   : {earnedPoints}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        <text label="points_deduct" value="Redeemed on this bill : {redeemedPoints}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        <text label="points_bal" value="Balance Points        : {balancePoints}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        <hr hrlen="42" inCancelBill="false"/>
+    </loyalty>
+    <!-- <text label="promoSummary_heading" value="PROMOTION SUMMARY                         " align="left" font="A" bold="false" height="1" width="1" inCancelBill="false"/> -->
+    <promotionSummary>
+        <text label="promoSummary_heading" value="PROMOTION SUMMARY                         " align="left" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        <promoSummary>
+            <text label="promo_summary" value="{promo_sum_lineNo}{promo_line_desc}{promo_line_amount}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        </promoSummary>
+        <hr hrlen="42" inCancelBill="false"/>
+    </promotionSummary>
+    <deliveryDetails>
+        <text label="loyalty_heading" value="DELIVERY DETAILS                         " align="left" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        <remarks>
+            <text label="invhed_remarks" value="{hedRemark}" align="left" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+        </remarks>
+        <hr hrlen="42" inCancelBill="false"/>
+    </deliveryDetails>
+    <text label="* description" value="* Non-Discounted Items                                  " align="left" font="B" bold="false" height="1" width="1" inCancelBill="false"/>
+    <text label="print_msg" value="{printMessage}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+    <barcode label="generating barcode with invNo" height="60" width="100" inCancelBill="true"/>
+    <!-- <qr value="https://spar.lk/" size='6' align="center" /> -->
+    <!-- <text label="thank" value="Thank you {customerName}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/> -->
+    <!-- <feed value="1"/> -->
+    <text label="poweredBy" value="Powered by 24x7Retail Software Solutions" align="center" font="B" bold="false" height="1" width="1" inCancelBill="true"/>
+</Report>

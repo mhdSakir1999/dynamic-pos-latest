@@ -1,0 +1,29 @@
+<Report name="ReceiptTemplate (cashIn, cashOut)">
+    <logo value="spar-modified.bmp" width="350" height="50"/>
+    <text label="location" value="{location}" align="center" font="A" bold="false" height="1" width="1" />
+    <text label="address" value="{address}" align="center" font="A" bold="false" height="1" width="1" />
+    <feed value="1" />
+    <text label="mode" value="{mode}" align="center" font="A" bold="false" height="1" width="2" />
+    <feed value="1" />
+    <text label="runNo" value="RunNo     :  {runNo}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="cashier"   value="Cashier   :  {cashier}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="station"   value="Station   :  {station}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="date"  value="Date      :  {date}" align="left" font="A" bold="false" height="1" width="1" />
+    <feed value="1"/>
+    <text label="description"     value="{rw_desc}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="manual_hr" value="------------------------------------------" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+    <text label="amount"  value="AMOUNT    :  {amount}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="remark"  value="REMARK    :  {remark}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="manual_hr" value="------------------------------------------" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>    
+    <text label="payType" value='PAYMENT MODE TYPE  : {payMode}' font="A" align="left" bold="false" height="1" width="1"/>
+    <text label="reference" value='REFERENCE          : {refCode}' font="A" align="left" bold="false" height="1" width="1"/>
+    <text label="manual_hr" value="------------------------------------------" align="center" font="A" bold="false" height="1" width="1" inCancelBill="false"/>
+    <barcode label="generating barcode with runNo" height="60" width="100" />
+    <feed value="1" />
+    <text label="line"        value="  _ _ _ _ _ _ _ _ _    _ _ _ _ _ _ _ _ _  " align="center" font="A" bold="false" height="1" width="1" />
+    <text label="designation" value="        Manager             Cashier       " align="center" font="A" bold="false" height="1" width="1" />
+    <feed value="1" />
+    <text label="advancePaymentContent" value="            _ _ _ _ _ _ _ _ _ _ _ _            " align="center" font="A" bold="false" height="1" width="1" />
+    <text label="advancePaymentContent" value="                    Customer                   " align="center" font="A" bold="false" height="1" width="1" />
+    <text label="poweredBy" value="Powered by 24x7Retail Software Solutions" align="center" font="B" bold="false" height="1" width="1" />
+</Report>

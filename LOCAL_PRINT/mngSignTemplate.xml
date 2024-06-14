@@ -1,0 +1,54 @@
+<Report>
+    <text label="heading" value="MANAGER SIGN-OFF&#xA;COLLECTION DECLARATION" align="center" font="A" bold="false" height="1" width="1" />
+    <feed value="1" />
+    <text label="user" value="Sign Off User      :  {mng_signOffUser}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="date" value="Sign Off Date      :  {mng_signOffDate}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="time" value="Sign Off Time      :  {mng_signOffTime}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="location" value="Location           :  {mng_location}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="printedOn" value="Printed On         :  {mng_printedOn}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="printedUser" value="Printed User       :  {mng_printedUser}" align="left" font="A" bold="false" height="1" width="1" />
+    <feed value="1" />
+    <text label="station" value="Station            :  {mng_station}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="ShiftNo" value="Shift No           :  {mng_shift}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="startInv" value="Starting Inv.No    :  {mng_startInv}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="endInv" value="Ending Inv.No      :  {mng_endInv}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="invCount" value="Invoice Count      :  {mng_invCount}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="cancelInvCount" value="Cancel Inv.Count   :  {mng_cancelInvCount}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="refund" value="Refund Amount      :  {mng_refundAmt}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="discount" value="Total Discount     :  {mng_totDiscount}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="holdBills" value="Hold Bills         :  {mng_holdBills}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="netAmount" value="Net Amount         :  {mng_netAmt}" align="left" font="A" bold="false" height="1" width="1" />
+    <feed value="1" />
+    <text label="heading" value="CASH DENOMINATION" align="center" font="A" bold="false" height="1" width="1" />
+    <feed value="1" />
+    <text label="denominationHeading" value="Description                         Amount" align="left" font="A" bold="false" height="1" width="1" />
+    <hr hrlen="42"/>
+    <denomination>
+        <text label="denominations" value="{csh_deno_desc}x{csh_deno_count}{csh_deno_amt}" align="left" font="B" bold="false" height="1" width="1" />
+    </denomination>
+    <!--hr issue when using hr after font B  -->
+    <!-- <hr hrlen="42"/> -->
+    <text label="manual_hr" value="------------------------------------------" align="center" font="A" bold="false" height="1" width="1" />
+    <text label="denominationTotal" value="TOTAL CASH DECLARATION   {tot_csh_declaration}" align="center" font="A" bold="false" height="1" width="1" />
+    <hr hrlen="42"/>
+    <feed value="1"/>
+    <text label="payTypes" value="PayType   Sys.Amount  Phy.Amount  Variance" align="center" font="A" bold="false" height="1" width="1" />
+    <hr hrlen="42"/>
+    <payment>
+        <text label="payments" value="{sod_payType}{sod_sysAmt}{sod_phyAmt}{sod_variance}" align="center" font="B" bold="false" height="1" width="1" />
+    </payment>
+    <feed value="1"/>
+    <text label="summary" value="SUMMARY OF CASH" align="center" font="A" bold="false" height="1" width="1" />
+    <hr hrlen="42"/>
+    <text label="openBalance" value="Opening Balance    :  {mng_openingBalance}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="cshSales" value="+ Tot Cash Sales   :  {mng_totCashSales}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="withdrawals" value="- Withdrawals      :  {mng_withdrawals}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="reciepts" value="+ Reciepts         :  {mng_reciepts}" align="left" font="A" bold="false" height="1" width="1" />
+    <hr hrlen="42"/>
+    <text label="calcCshAmt" value="Calculated Cash Amount : {mng_calcCashAmt}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="physicalCshAmt" value="Physical Cash Amount   : {mng_cshPhysical}" align="left" font="A" bold="false" height="1" width="1" />
+    <hr hrlen="42"/>
+    <text label="cshVariance" value="CASH VARIANCE          : {mng_cshVariance}" align="left" font="A" bold="false" height="1" width="1" />
+    <feed value="1"/>
+    <text label="footer" value="Powered by 24x7 Retail Software Solutions" align="center" font="B" bold="false" height="1" width="1" />      
+</Report>

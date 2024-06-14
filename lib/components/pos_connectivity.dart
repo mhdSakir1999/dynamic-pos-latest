@@ -79,8 +79,9 @@ class POSConnectivity {
             ApiClient.url = POSConfig().local;
             POSConfig().localMode = true;
           } else {
-            _timer?.cancel();
+            if (_timer == null) return;
             if (context != null) {
+              _timer?.cancel();
               _focusNode.requestFocus();
               manualLocalModeSwitch
                   ? await switchingLocal(context!, manualLocalModeSwitch)
