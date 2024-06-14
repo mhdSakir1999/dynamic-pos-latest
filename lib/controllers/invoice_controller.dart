@@ -78,6 +78,7 @@ class InvoiceController {
     // this will prevent errors when clear the invoice number
     if (invNo != null && invNo != '') setInvoiceNo(invNo!);
 
+    // restriction added by [TM.Sakir] to prevent continueing with xxxxx001 invoice number in local mode
     if (POSConfig().localMode && invNo == null) {
       POSLoggerController.addNewLog(POSLogger(
           POSLoggerLevel.error, "Cannot generate a new invoice number"));

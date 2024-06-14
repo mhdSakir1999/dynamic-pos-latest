@@ -12,6 +12,7 @@ import 'package:checkout/controllers/pos_logger_controller.dart';
 import 'package:checkout/models/enum/pos_connectivity_status.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -216,14 +217,14 @@ class POSConnectivity {
   }
 
   Future<bool> _checkConnection(String ip, {int time = 15}) async {
+    Dio dio = Dio();
     try {
-      final response = await http
-          .head(Uri.parse(ip))
-          .timeout(Duration(seconds: time), onTimeout: () {
+      final response =
+          await dio.head(ip).timeout(Duration(seconds: time), onTimeout: () {
         throw TimeoutException(
             'The connection has timed out, Please try again!');
       });
-      bool status = response.statusCode < 500;
+      bool status = (response.statusCode ?? 500) < 500;
       EasyLoading.dismiss();
       return status;
     } on SocketException {

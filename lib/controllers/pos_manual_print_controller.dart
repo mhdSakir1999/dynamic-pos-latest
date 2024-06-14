@@ -391,8 +391,21 @@ class POSManualPrint {
       mng_signOffUser = signOffHeadDet["SOH_USER"] ?? '';
       var signoffdate =
           signOffHeadDet["SOH_BKOFFDATE"]; //"2024-01-11T11:00:31.513"
-      mng_signOffDate = signoffdate.split('T')[0];
-      mng_signOffTime = (signoffdate ?? '').split('T')[1].split('.')[0];
+
+      try {
+        if (spotcheck) {
+          mng_signOffDate =
+              (signOffHeadDet["SOH_SIGNONDATE"] ?? '').split('T')[0];
+          mng_signOffTime = (signOffHeadDet["SOH_SIGNONTIME"] ?? '')
+              .split('T')[1]
+              .split('.')[0];
+        } else {
+          mng_signOffDate = signoffdate.split('T')[0];
+          mng_signOffTime = (signoffdate ?? '').split('T')[1].split('.')[0];
+        }
+      } catch (e) {
+        await LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
+      }
       mng_location = signOffHeadDet?['SOH_LOCATION'] ?? '';
       mng_printedUser = userHed?.uSERHEDUSERCODE ?? ' N/A';
       mng_station = signOffHeadDet['SOH_STATION'] ?? 'N/A';
@@ -1451,10 +1464,10 @@ class POSManualPrint {
         String width = mapValue(attributes, 'width', defaultValue: '1');
         String rowlength = mapValue(attributes, 'len', defaultValue: '12');
         String hrlength = mapValue(attributes, 'hrlen', defaultValue: '58');
-        String spot =
-            mapValue(attributes, 'spotcheck', defaultValue: 'SPOT CHECK SLIP');
+        String spot = mapValue(attributes, 'spotcheck', defaultValue: '--');
 
-        if (label == 'heading' && spotcheck) {
+        if ((label == 'heading' || label == 'date' || label == 'time') &&
+            spotcheck) {
           value = spot;
         }
 

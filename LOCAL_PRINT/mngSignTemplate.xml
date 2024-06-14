@@ -1,9 +1,9 @@
 <Report>
-    <text label="heading" value="MANAGER SIGN-OFF&#xA;COLLECTION DECLARATION" align="center" font="A" bold="false" height="1" width="1" />
+    <text label="heading" value="MANAGER SIGN-OFF&#xA;COLLECTION DECLARATION" spotcheck= "SPOT CHECK&#xA;COLLECTION DECLARATION" align="center" font="A" bold="false" height="1" width="1" />
     <feed value="1" />
     <text label="user" value="Sign Off User      :  {mng_signOffUser}" align="left" font="A" bold="false" height="1" width="1" />
-    <text label="date" value="Sign Off Date      :  {mng_signOffDate}" align="left" font="A" bold="false" height="1" width="1" />
-    <text label="time" value="Sign Off Time      :  {mng_signOffTime}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="date" value="Sign Off Date      :  {mng_signOffDate}" spotcheck="Sign On Date       :  {mng_signOffDate}" align="left" font="A" bold="false" height="1" width="1" />
+    <text label="time" value="Sign Off Time      :  {mng_signOffTime}" spotcheck="Sign On Time       :  {mng_signOffTime}" align="left" font="A" bold="false" height="1" width="1" />
     <text label="location" value="Location           :  {mng_location}" align="left" font="A" bold="false" height="1" width="1" />
     <text label="printedOn" value="Printed On         :  {mng_printedOn}" align="left" font="A" bold="false" height="1" width="1" />
     <text label="printedUser" value="Printed User       :  {mng_printedUser}" align="left" font="A" bold="false" height="1" width="1" />
