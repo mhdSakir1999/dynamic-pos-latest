@@ -47,7 +47,7 @@ class POSConnectivity {
   }
 
   handleConnection({bool manualLocalModeSwitch = false}) async {
-    bool serverRes = await pingToServer();
+    bool serverRes = await pingToServer(time: 15);
     if (serverRes) {
       connectionAvailabilityStream.sink.add(POSConnectivityStatus.Server);
     } else {
@@ -181,7 +181,7 @@ class POSConnectivity {
     }
     if (!hasPermission) {
       if (!manual) Navigator.pop(context);
-      Future.delayed(Duration(seconds: 5), () {
+      Future.delayed(Duration(seconds: 10), () {
         startListen();
       });
     } else {
@@ -206,12 +206,12 @@ class POSConnectivity {
     return res;
   }
 
-  Future<bool> _pingToLocalServer() async {
+  Future<bool> _pingToLocalServer({int time = 15}) async {
     // if (!POSConfig().localMode) return false;
     final server = POSConfig().local;
     POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.info,
         "Check the connectivity to local server: $server"));
-    return await _checkConnection(server);
+    return await _checkConnection(server, time: time);
   }
 
   Future<bool> _checkConnection(String ip, {int time = 15}) async {
