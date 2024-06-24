@@ -1304,7 +1304,7 @@ class _PaymentViewState extends State<PaymentView> {
                     builder: (context) => POSErrorAlert(
                             title: 'easy_loading.cant_save_inv'.tr(),
                             subtitle:
-                                "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
+                                "An error occured when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
                             actions: [
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -1360,7 +1360,7 @@ class _PaymentViewState extends State<PaymentView> {
                       builder: (context) => POSErrorAlert(
                               title: 'easy_loading.cant_save_inv'.tr(),
                               subtitle:
-                                  "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
+                                  "An error occured when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
                               actions: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
