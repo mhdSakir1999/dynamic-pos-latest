@@ -58,8 +58,13 @@ class InvoiceController {
       return getInvPrefix() + "1".padLeft(invNoInt, '0');
     }
 
+    // this condition is for this kind of invoices: 011607011607, here prefix = suffix
+    bool sameAsPref = invNo.replaceAll(getInvPrefix(), '') == '';
+
     /// if invoice number is not null increment the invoice number
-    int currentSeq = int.parse(invNo.replaceAll(getInvPrefix(), ''));
+    int currentSeq = sameAsPref
+        ? int.parse(getInvPrefix())
+        : int.parse(invNo.replaceAll(getInvPrefix(), ''));
     return getInvPrefix() + (currentSeq + 1).toString().padLeft(invNoInt, '0');
   }
 
