@@ -606,10 +606,18 @@ class InvoiceController {
         element.promoCode = '';
         element.promoDesc = '';
         element.promoDiscValue = 0;
+        element.billDiscPer = 0;
+
+        // commented & corrected by [TM.Sakir] -- wrong logic
+        // element.amount = (element.selling * element.unitQty) -
+        //     ((element.discAmt ?? 0) +
+        //         (element.selling / 100 * (element.discPer ?? 0)));
 
         element.amount = (element.selling * element.unitQty) -
             ((element.discAmt ?? 0) +
-                (element.selling / 100 * (element.discPer ?? 0)));
+                ((element.selling * element.unitQty) /
+                    100 *
+                    (element.discPer ?? 0)));
       }
 
       CartModel cart = element;
@@ -670,7 +678,8 @@ class InvoiceController {
         qty: qty,
         subTotal: subTotal,
         startTime: '',
-        discPer: header.invheDDiscPer,
+        discPer:
+            0, // header.invheDDiscPer, // new change: I make billdiscper 0 when recall
         priceMode: header.priceMode,
         recallHoldInv: true,
         hedRem: hedRem);
