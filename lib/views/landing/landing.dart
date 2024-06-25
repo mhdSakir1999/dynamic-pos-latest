@@ -480,8 +480,29 @@ class _LandingViewState extends State<LandingView> {
                                 KeyBoardController().dismiss();
                                 KeyBoardController().init(context);
                                 KeyBoardController().showBottomDPKeyBoard(
-                                    userCtrl, onEnter: () {
+                                    userCtrl, onEnter: () async {
                                   KeyBoardController().dismiss();
+                                  userFocus.unfocus();
+                                  locFocus.requestFocus();
+                                  await KeyBoardController().setIsShow();
+                                  KeyBoardController().showBottomDPKeyBoard(
+                                      locCtrl, onEnter: () async {
+                                    KeyBoardController().dismiss();
+                                    locFocus.unfocus();
+                                    stationFocus.requestFocus();
+                                    await KeyBoardController().setIsShow();
+                                    KeyBoardController().showBottomDPKeyBoard(
+                                        stationCtrl, onEnter: () async {
+                                      KeyBoardController().dismiss();
+                                      stationFocus.unfocus();
+                                      shiftFocus.requestFocus();
+                                      await KeyBoardController().setIsShow();
+                                      KeyBoardController().showBottomDPKeyBoard(
+                                          shiftCtrl, onEnter: () {
+                                        KeyBoardController().dismiss();
+                                      });
+                                    });
+                                  });
                                 });
                               },
                             ),
@@ -501,9 +522,23 @@ class _LandingViewState extends State<LandingView> {
                               onTap: () {
                                 KeyBoardController().dismiss();
                                 KeyBoardController().init(context);
-                                KeyBoardController()
-                                    .showBottomDPKeyBoard(locCtrl, onEnter: () {
+                                KeyBoardController().showBottomDPKeyBoard(
+                                    locCtrl, onEnter: () async {
                                   KeyBoardController().dismiss();
+                                  locFocus.unfocus();
+                                  stationFocus.requestFocus();
+                                  await KeyBoardController().setIsShow();
+                                  KeyBoardController().showBottomDPKeyBoard(
+                                      stationCtrl, onEnter: () async {
+                                    KeyBoardController().dismiss();
+                                    stationFocus.unfocus();
+                                    shiftFocus.requestFocus();
+                                    await KeyBoardController().setIsShow();
+                                    KeyBoardController().showBottomDPKeyBoard(
+                                        shiftCtrl, onEnter: () {
+                                      KeyBoardController().dismiss();
+                                    });
+                                  });
                                 });
                               },
                             ),
@@ -524,8 +559,15 @@ class _LandingViewState extends State<LandingView> {
                                 KeyBoardController().dismiss();
                                 KeyBoardController().init(context);
                                 KeyBoardController().showBottomDPKeyBoard(
-                                    stationCtrl, onEnter: () {
+                                    stationCtrl, onEnter: () async {
                                   KeyBoardController().dismiss();
+                                  stationFocus.unfocus();
+                                  shiftFocus.requestFocus();
+                                  await KeyBoardController().setIsShow();
+                                  KeyBoardController().showBottomDPKeyBoard(
+                                      shiftCtrl, onEnter: () {
+                                    KeyBoardController().dismiss();
+                                  });
                                 });
                               },
                             ),
