@@ -546,7 +546,7 @@ class _LandingViewState extends State<LandingView> {
                                 KeyBoardController().dismiss();
                                 KeyBoardController().init(context);
                                 KeyBoardController().showBottomDPKeyBoard(
-                                    userCtrl, onEnter: () {
+                                    shiftCtrl, onEnter: () {
                                   KeyBoardController().dismiss();
                                 });
                               },

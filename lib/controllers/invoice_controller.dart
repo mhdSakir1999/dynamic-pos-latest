@@ -763,7 +763,7 @@ class InvoiceController {
     }
   }
 
-  // get today invoices
+  // get today invoices --> past 7 days invoices
   Future<List<InvoiceHeader>> getTodayInvoices() async {
     final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
     final res = await ApiClient.call("invoice/today/$cashier", ApiMethod.GET);
@@ -771,6 +771,22 @@ class InvoiceController {
       return [];
     else {
       return InvoiceHeaderResult.fromJson(res?.data).invoiceHeader ?? [];
+    }
+  }
+
+  // getting cash-on-delivery (cod) based invoices
+  Future<List<CODInvoiceHeader>> getCODInvoices() async {
+    final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+    final res =
+        await ApiClient.call("invoice/cod_invoices/$cashier", ApiMethod.GET);
+    if (res?.data != null &&
+        res?.data['success'] == true &&
+        res?.data['invoice_header'] != []) {
+      List data = res?.data['invoice_header'];
+      if (data.isEmpty) return [];
+      return data.map((e) => CODInvoiceHeader.fromJson(e)).toList();
+    } else {
+      return [];
     }
   }
 

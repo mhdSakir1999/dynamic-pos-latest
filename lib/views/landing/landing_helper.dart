@@ -252,12 +252,15 @@ class LandingHelper {
   userSignOff() async {
     //doing a invoice sync before we do sign-off
     EasyLoading.show(status: 'please_wait'.tr(), dismissOnTap: true);
-    var result = await InvoiceController().uploadBillData();
-    if (result != null) {
-      EasyLoading.dismiss();
-      EasyLoading.showToast(result['message']);
+    if (true /* POSConfig().allowLocalMode && POSConfig().allow_sync_bills */) {
+      var result = InvoiceController().uploadBillData().then((value) {
+        if (value != null) {
+          EasyLoading.dismiss();
+          EasyLoading.showToast(value['message']);
+        }
+      });
     }
-
+    EasyLoading.dismiss();
     alertFocusNode.requestFocus();
     showDialog(
         context: _context,

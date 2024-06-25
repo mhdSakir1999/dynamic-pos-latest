@@ -28,6 +28,7 @@ import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
 import 'package:checkout/views/invoice/bill_cancel_view.dart';
 import 'package:checkout/views/invoice/cash_in_out_view.dart';
+import 'package:checkout/views/invoice/cod_pendingInvoices_view.dart';
 import 'package:checkout/views/invoice/discount_entry_view.dart';
 import 'package:checkout/views/invoice/payment_reClassification_view.dart';
 import 'package:checkout/views/invoice/product_search_view.dart';
@@ -596,6 +597,28 @@ class CartDynamicButtonFunction {
           return;
         }
         await invHedRemarkDialog(context!);
+        break;
+      case "cod_headers":
+        if (context == null) {
+          POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.error,
+              "Field 'context' has not been initialized."));
+          return;
+        }
+        var res = await InvoiceController().getCODInvoices();
+        if (res.isEmpty) {
+          EasyLoading.showInfo('No pending COD-based invoices found');
+          return;
+        }
+        await showModalBottomSheet(
+          isScrollControlled: true,
+          useRootNavigator: true,
+          context: context!,
+          builder: (context) {
+            return CODPendingInvoiceView(
+              headers: res,
+            );
+          },
+        );
         break;
     }
   }
