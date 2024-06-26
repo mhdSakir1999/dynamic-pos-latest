@@ -581,7 +581,9 @@ class InvoiceController {
   Future getHoldCart(HoldInvoiceHeaders header) async {
     // get the hold cart details
     String invoice = header.invheDINVNO ?? "";
+    EasyLoading.show(status: "please_wait".tr());
     final map = await getCartDetails(invoice, isHoldInv: true);
+    EasyLoading.dismiss();
 
     final List<CartModel> holdDetails = map['cartModels'];
     final HedRemarkModel? hedRem = map['hedRemarks'];
@@ -591,6 +593,7 @@ class InvoiceController {
     double qty = 0;
     double subTotal = 0;
 
+    EasyLoading.show(status: "please_wait".tr());
     holdDetails.forEach((element) async {
       // added this block to set the allowDiscount flag using (noDisc, unitQty) since we dont get any priceLists details along with the api call
       if (element.noDisc == false && element.unitQty > 0) {
@@ -692,8 +695,12 @@ class InvoiceController {
     cartBloc.updateCartSummary(cartSum);
 
     await InvoiceController().updateTempCartSummary(cartSum);
+    EasyLoading.dismiss();
+
+    EasyLoading.show(status: "please_wait".tr());
     //clear the hold record
     await ApiClient.call("invoice/hold/$invoice", ApiMethod.DELETE);
+    EasyLoading.dismiss();
 
     //  update the time
     final time =

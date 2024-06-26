@@ -178,7 +178,7 @@ class MyApp extends StatelessWidget {
             primaryColor: POSConfig().primaryColor.toColor(),
             scaffoldBackgroundColor: Colors.transparent,
             elevatedButtonTheme: ElevatedButtonThemeData(
-                style:  ElevatedButton.styleFrom(
+                style: ElevatedButton.styleFrom(
                     padding:
                         EdgeInsets.symmetric(horizontal: 50.w, vertical: 25.h),
                     backgroundColor: Colors.redAccent,
@@ -268,7 +268,7 @@ class MyApp extends StatelessWidget {
             primaryColorDark: config.primaryDarkColor.toColor(),
             primaryColorLight: config.primaryLightColor.toColor(),
           ),
-          home:  Root(),
+          home: Root(),
         );
       },
       designSize: const Size(1366, 768),

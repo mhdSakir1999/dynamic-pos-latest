@@ -27,6 +27,7 @@ import 'package:checkout/controllers/customer_controller.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/gift_voucher_controller.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/loyalty_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
@@ -244,7 +245,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       value.physicalKey == PhysicalKeyboardKey.numpadAdd) {
                     if (!payButtonPressed) {
                       payButtonPressed = true;
-                      await billClose();
+                      try {
+                        await billClose();
+                      } catch (e) {
+                        await LogWriter().saveLogsToFile('ERROR_LOG_',
+                            ['Bill Close Function Exception:' + e.toString()]);
+                      }
                       payButtonPressed = false;
                     }
                     // billClose();
@@ -304,7 +310,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   void _handleKeyEvent(KeyDownEvent event) async {
     /// new change by [TM.Sakir]
     /// if cartBloc.cartSummary has items disabling 'special_function' button
-    if (cartBloc.cartSummary?.items != 0 &&
+    if ((cartBloc.currentCart?.length ?? 0) >
+            0 //cartBloc.cartSummary?.items != 0
+        &&
         (!HardwareKeyboard.instance.isShiftPressed &&
             event.logicalKey == LogicalKeyboardKey.f1)) {
       EasyLoading.showError('special_functions.cant_open'.tr());
@@ -2491,7 +2499,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                               }
 
                               /// if cartBloc.cartSummary has items disabling 'special_function' button
-                              if (cartBloc.cartSummary?.items != 0 &&
+                              if ((cartBloc.currentCart?.length ?? 0) >
+                                      0 // cartBloc.cartSummary?.items != 0
+                                  &&
                                   posButton.functionName ==
                                       'special_function') {
                                 EasyLoading.showError(
@@ -2771,7 +2781,13 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                     onPressed: () async {
                       if (!payButtonPressed) {
                         payButtonPressed = true;
-                        await billClose();
+                        try {
+                          await billClose();
+                        } catch (e) {
+                          await LogWriter().saveLogsToFile('ERROR_LOG_', [
+                            'Bill Close Function Exception:' + e.toString()
+                          ]);
+                        }
                         payButtonPressed = false;
                       }
                       // billClose();
@@ -3008,7 +3024,8 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
 
     //load promotions
     // EasyLoading.dismiss();
-    await PromotionController(context).applyPromotion();
+    if (!POSConfig().disablePromotions)
+      await PromotionController(context).applyPromotion();
 
     await showModalBottomSheet(
       isScrollControlled: true,
