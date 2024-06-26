@@ -95,31 +95,32 @@ class _CustomOTPInputState extends State<CustomOTPInput> {
               width: ScreenUtil().screenWidth / 3.5,
               child: ResponsiveGridList(
                   scroll: false,
-                  desiredItemWidth: ScreenUtil().screenWidth/20,
+                  desiredItemWidth: ScreenUtil().screenWidth / 20,
                   children: List.generate(
                       10,
                       (i) => Padding(
-                        padding: const EdgeInsets.all(2.5),
-                        child: TextButton(
+                            padding: const EdgeInsets.all(2.5),
+                            child: TextButton(
                               onPressed: () => updateOTP(i.toString()),
                               style: ButtonStyle(
                                 padding:
-                                    MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                  EdgeInsets.symmetric(
+                                    WidgetStateProperty.all<EdgeInsetsGeometry>(
+                                  const EdgeInsets.symmetric(
                                       horizontal: 20,
                                       vertical: 10), // Adjust padding as needed
                                 ),
-                                minimumSize: MaterialStateProperty.all<Size>(
-                                  Size(50, 60), // Set the desired size
+                                minimumSize: WidgetStateProperty.all<Size>(
+                                  const Size(50, 60), // Set the desired size
                                 ),
-                                textStyle: MaterialStateProperty.all<TextStyle>(
-                                  TextStyle(
+                                textStyle: WidgetStateProperty.all<TextStyle>(
+                                  const TextStyle(
                                       fontSize: 20.0,
-                                      color: Colors.white), // Set the text style
+                                      color:
+                                          Colors.white), // Set the text style
                                 ),
-                                backgroundColor: MaterialStateProperty.all<Color>(
+                                backgroundColor: WidgetStateProperty.all<Color>(
                                     Colors.greenAccent),
-                                shape: MaterialStateProperty.all<OutlinedBorder>(
+                                shape: WidgetStateProperty.all<OutlinedBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           8.0)), // Set the shape of the button
@@ -127,10 +128,10 @@ class _CustomOTPInputState extends State<CustomOTPInput> {
                               ),
                               child: Text(
                                 i.toString(),
-                                style: TextStyle(color: Colors.black),
+                                style:const TextStyle(color: Colors.black),
                               ),
                             ),
-                      ))),
+                          ))),
             ),
             // for (var i = 0; i <= 9; i++)
             //   TextButton(
@@ -164,15 +165,15 @@ class _CustomOTPInputState extends State<CustomOTPInput> {
             //   )
             TextButton(
               style: ButtonStyle(
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                   EdgeInsets.symmetric(
                       horizontal: 20, vertical: 10), // Adjust padding as needed
                 ),
-                minimumSize: MaterialStateProperty.all<Size>(
+                minimumSize: WidgetStateProperty.all<Size>(
                   Size(40, 100), // Set the desired size
                 ),
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                shape: MaterialStateProperty.all<OutlinedBorder>(
+                backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
+                shape: WidgetStateProperty.all<OutlinedBorder>(
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                           8.0)), // Set the shape of the button

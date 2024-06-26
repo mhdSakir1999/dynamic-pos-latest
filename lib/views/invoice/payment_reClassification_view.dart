@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
@@ -122,7 +121,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                         //if user doesnt have the permission
                         if (!hasPermission) {
                           final res = await SpecialPermissionHandler(
-                                  context: context!)
+                                  context: context)
                               .askForPermission(
                                   permissionCode:
                                       PermissionCode.reclassification,

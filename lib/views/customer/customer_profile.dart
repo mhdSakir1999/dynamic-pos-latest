@@ -279,6 +279,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                     customerCodeEditingController,
                                     disabled: !_editableCustomerCode,
                                     validator: (String? text) {
+                                      return null;
+                                    
                                       // return validateEmpty(
                                       //   text,
                                       //   "customer_code_error",
@@ -691,7 +693,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                                 } else {
                                                   customerGroupEditingController
                                                           .text =
-                                                      value?.cGDESC ?? "";
+                                                      value.cGDESC ?? "";
                                                   _selectedGroup = value;
                                                 }
                                                 ;
@@ -925,6 +927,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                               .tr();
                                         }
                                       }
+                                      return null;
                                     },
                                     onTap: () {
                                       KeyBoardController().dismiss();
@@ -1758,8 +1761,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
           // offset: const Offset(-20, 0),
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(40),
-            thickness: MaterialStateProperty.all<double>(6),
-            thumbVisibility: MaterialStateProperty.all<bool>(true),
+            thickness: WidgetStateProperty.all<double>(6),
+            thumbVisibility: WidgetStateProperty.all<bool>(true),
           ),
         ),
         menuItemStyleData: const MenuItemStyleData(

@@ -557,7 +557,7 @@ class SharedPreferenceController {
             'API_LOG_', ['setupData: ${setup?.toJson().toString()}']);
         if (setup != null) {
           LogWriter().saveLogsToFile(
-              'API_LOG_', ['setupData: ${setup?.toJson().toString()}']);
+              'API_LOG_', ['setupData: ${setup.toJson().toString()}']);
           pos.setup = setup;
           String clientId = setup.clientLicense ?? '';
           notificationBloc.getAnnouncements();

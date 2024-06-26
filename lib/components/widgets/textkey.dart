@@ -230,7 +230,7 @@ class BackspaceKey extends StatelessWidget {
               focusNode?.requestFocus();
             },
             child: Container(
-              child: Center(
+              child: const Center(
                 child: Icon(
                   Icons.backspace_outlined,
                   color: Colors.white,
@@ -400,7 +400,7 @@ class DelKey extends StatelessWidget {
               focusNode?.requestFocus();
             },
             child: Container(
-              child: Center(
+              child:const Center(
                 child: Text('Del'),
               ),
             ),
@@ -445,7 +445,7 @@ class CapsKey extends StatelessWidget {
               focusNode?.requestFocus();
             },
             child: Container(
-              child: Center(
+              child: const Center(
                 child: Icon(Icons.keyboard_capslock, color: Colors.white),
               ),
             ),
@@ -489,7 +489,7 @@ class ShiftKey extends StatelessWidget {
               focusNode?.requestFocus();
             },
             child: Container(
-              child: Center(
+              child: const Center(
                 child: Text('Shift'),
               ),
             ),
@@ -527,7 +527,7 @@ class EnterKey extends StatelessWidget {
               keyBoardBloc.setKey(keyType.Enter);
             },
             child: Container(
-              child: Center(
+              child: const Center(
                 child: Text('Enter'),
               ),
             ),
@@ -554,7 +554,7 @@ class NullKey extends StatelessWidget {
         child: Material(
           color: KeyBoardConfig().primaryBKColor,
           child: Container(
-            child: Center(
+            child: const Center(
               child: Text(''),
             ),
           ),

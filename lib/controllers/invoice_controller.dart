@@ -81,7 +81,7 @@ class InvoiceController {
 
     // whatever the invoice number (last invoiced), we save it in local storage
     // this will prevent errors when clear the invoice number
-    if (invNo != null && invNo != '') setInvoiceNo(invNo!);
+    if (invNo != null && invNo != '') setInvoiceNo(invNo);
 
     // restriction added by [TM.Sakir] to prevent continueing with xxxxx001 invoice number in local mode
     if (POSConfig().localMode && invNo == null) {

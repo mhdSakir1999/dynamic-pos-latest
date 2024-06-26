@@ -101,7 +101,7 @@ class _ReprintViewState extends State<ReprintView> {
                 child: DataTable(
                   dataRowMinHeight: 50.r,
                   dataRowMaxHeight: 75.r,
-                  headingRowColor: MaterialStateColor.resolveWith(
+                  headingRowColor: WidgetStateColor.resolveWith(
                     (states) {
                       return CurrentTheme.primaryColor!;
                     },

@@ -4,7 +4,6 @@
 /// Created At: 29/05/2024, 11.20 AM
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:checkout/bloc/cart_bloc.dart';
@@ -24,28 +23,19 @@ import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/ecr_controller.dart';
 import 'package:checkout/controllers/email_controller.dart';
 import 'package:checkout/controllers/gift_voucher_controller.dart';
-import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/loyalty_controller.dart';
 import 'package:checkout/controllers/otp_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
-import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/pos_price_calculator.dart';
-import 'package:checkout/controllers/print_controller.dart';
-import 'package:checkout/controllers/usb_serial_controller.dart';
 import 'package:checkout/models/enum/keyboard_type.dart';
-import 'package:checkout/models/last_invoice_details.dart';
-import 'package:checkout/models/pos/cart_model.dart';
-import 'package:checkout/models/pos/cart_summary_model.dart';
 import 'package:checkout/models/pos/ecr_response.dart';
 import 'package:checkout/models/pos/gift_voucher_result.dart';
-import 'package:checkout/models/pos/invoice_save_res.dart';
 import 'package:checkout/models/pos/payment_mode.dart';
 import 'package:checkout/models/pos/card_details_result.dart';
 import 'package:checkout/models/pos/paid_model.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
-import 'package:checkout/views/invoice/cart.dart';
 import 'package:checkout/views/invoice/discount_breakdown.dart';
 import 'package:checkout/views/invoice/payment_breakdown.dart';
 import 'package:checkout/views/invoice/tax_breakdown_view.dart';
@@ -69,7 +59,6 @@ import '../../controllers/sms_controller.dart';
 import '../../controllers/special_permission_handler.dart';
 import '../../models/loyalty/customer_coupons_result.dart';
 import '../../models/pos/permission_code.dart';
-import 'invoice_app_bar.dart';
 
 class ReClassificationPaymentView extends StatefulWidget {
   static const routeName = "re-classification_payment_view";

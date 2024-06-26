@@ -67,6 +67,6 @@ class HideWidgetOnScreenSize extends StatelessWidget {
         if (md) return child;
         break;
     }
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 }

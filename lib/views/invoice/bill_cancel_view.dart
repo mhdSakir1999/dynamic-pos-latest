@@ -98,7 +98,7 @@ class _BillCancellationViewState extends State<BillCancellationView> {
                 child: DataTable(
                   dataRowMinHeight: 50.r,
                   dataRowMaxHeight: 75.r,
-                  headingRowColor: MaterialStateColor.resolveWith(
+                  headingRowColor: WidgetStateColor.resolveWith(
                     (states) {
                       return CurrentTheme.primaryColor!;
                     },

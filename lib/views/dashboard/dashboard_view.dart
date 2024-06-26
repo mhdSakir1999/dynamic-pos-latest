@@ -80,7 +80,7 @@ class _DashboardViewState extends State<DashboardView> {
         payModeWiseBillCount =
             jsonDecode(dashboardData!)['PayModeWiseBillCount'];
         totalPayModeInvCount = 0;
-        payModeWiseBillCount!.forEach(
+        payModeWiseBillCount.forEach(
             (element) => totalPayModeInvCount += element['TotalCount']);
         utilityBillCount = jsonDecode(dashboardData!)['UtilityBillCount'];
       });
@@ -218,6 +218,7 @@ class _DashboardViewState extends State<DashboardView> {
                                     // return date;
                                     await getDashbordData();
                                     setState(() {});
+                                    return null;
                                   },
                                 ),
                               ),
@@ -353,7 +354,7 @@ class _DashboardViewState extends State<DashboardView> {
                             child: Column(
                               children: [
                                 Text("Invoices (Payment mode wise)"),
-                                payModeWiseBillCount!.length != 0
+                                payModeWiseBillCount.length != 0
                                     ? PieChartSample(
                                         legendData: List.generate(
                                             payModeWiseBillCount.length, (i) {

@@ -6,15 +6,10 @@
 
 import 'package:checkout/components/components.dart';
 import 'package:checkout/components/widgets/go_back.dart';
-import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/keyboard_controller.dart';
-import 'package:checkout/models/pos/hold_header_result.dart';
 import 'package:checkout/models/pos/invoice_header_result.dart';
-import 'package:checkout/models/pos_config.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:supercharged/supercharged.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CODPendingInvoiceView extends StatefulWidget {

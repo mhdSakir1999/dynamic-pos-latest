@@ -666,8 +666,8 @@ class _WeightedItemViewState extends State<WeightedItemView> {
   /// This card will show the selected item's group card
   Widget buildGroupDetailsCard() {
     final style = CurrentTheme.subtitle2;
-    String code = selectedGroup?.gPCODE ?? "";
-    String desc = selectedGroup?.gPDESC ?? "";
+    final String code = selectedGroup?.gPCODE ?? "";
+    final String desc = selectedGroup?.gPDESC ?? "";
     return Card(
       color: CurrentTheme.primaryColor,
       child: Container(
@@ -701,11 +701,11 @@ class _WeightedItemViewState extends State<WeightedItemView> {
 
   /// This card show the item details
   Widget buildProductDetailsCard() {
-    String code = selectedProduct?.pLUCODE ?? "";
-    String desc = selectedProduct?.pLUPOSDESC ?? "";
+    final String code = selectedProduct?.pLUCODE ?? "";
+    final String desc = selectedProduct?.pLUPOSDESC ?? "";
     final price = selectedProduct?.sELLINGPRICE ?? 0;
-    String mrp = price.thousandsSeparator();
-    String qty = this.qty.toString();
+    final String mrp = price.thousandsSeparator();
+    final String qty = this.qty.toString();
 
     final style = CurrentTheme.subtitle2;
     return Card(
@@ -725,21 +725,21 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                 ),
                 Text(
                   "weighted_item.product_name".tr(namedArgs: {"name": desc}),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.mpr".tr(namedArgs: {"mrp": mrp}),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.quantity".tr(namedArgs: {"qty": qty}),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.line_amount".tr(namedArgs: {
                     "total": (this.qty * price).thousandsSeparator()
                   }),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
               ],
             ),
@@ -869,10 +869,10 @@ class _WeightedItemViewState extends State<WeightedItemView> {
       /// new change - adding bottle prices seperately in invoice when buying liquor items [or maybe any other]
       /// Author : [TM.Sakir] at 2023-11-01 11:10 AM
       /// -------------------------------------------------------------------------------------------------
-      var size = MediaQuery.of(context).size;
-      TextEditingController qtyController =
-          TextEditingController(text: qty.toString());
-      double newqty = 1;
+      // var size = MediaQuery.of(context).size;
+      // TextEditingController qtyController =
+      //     TextEditingController(text: qty.toString());
+      // double newqty = 1;
       await POSPriceCalculator().addItemToCart(
           myProduct!, qty, context, null, null, null,
           secondApiCall: true, successToast: false);
@@ -930,7 +930,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
               isScrollControlled: true,
               isDismissible: false,
               useRootNavigator: true,
-              context: context!,
+              context: context,
               builder: (context) {
                 return ReturnBottleSelectionView(
                   returnProResList: resList!.emptyBottles!,

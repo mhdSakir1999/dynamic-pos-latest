@@ -245,7 +245,7 @@ class _DiscountBreakdownState extends State<DiscountBreakdown> {
           ],
         ),
         const Divider(),
-        SizedBox(
+        const SizedBox(
           height: 20,
         )
       ],

@@ -23,7 +23,6 @@ import '../../controllers/invoice_controller.dart';
 import '../../controllers/keyboard_controller.dart';
 import '../../controllers/master_download_controller.dart';
 import '../../controllers/pos_alerts/pos_error_alert.dart';
-import '../../controllers/pos_price_calculator.dart';
 import '../../controllers/special_permission_handler.dart';
 import '../../models/pos/permission_code.dart';
 

@@ -478,7 +478,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                 ? StreamContainer(
                     onUpdate: _refresh,
                   )
-                : SizedBox.shrink())
+                : const SizedBox.shrink())
       ],
     );
   }
@@ -513,13 +513,10 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       child: Scrollbar(
                           //  thumbVisibility: true,
                           controller: scrollController,
-                          thickness: 20,
+                          thickness: 10,
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                controller: scrollController,
-                                child: buildCartList()),
+                            padding: const EdgeInsets.only(right: 5),
+                            child: buildCartList(),
                           ))),
                   SizedBox(
                     height: 10,
@@ -1922,13 +1919,13 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
 
   // this method return the cart list
   Widget buildCartList() {
-    final headingStyle = TextStyle(
-        fontSize: POSConfig().cartDynamicButtonFontSize.sp,
-        fontWeight: FontWeight.bold,
-        color: CurrentTheme.primaryLightColor);
-    final dataStyle = TextStyle(
-        fontSize: POSConfig().cartDynamicButtonFontSize.sp,
-        color: CurrentTheme.primaryLightColor);
+    // final headingStyle = TextStyle(
+    //     fontSize: POSConfig().cartDynamicButtonFontSize.sp,
+    //     fontWeight: FontWeight.bold,
+    //     color: CurrentTheme.primaryLightColor);
+    // final dataStyle = TextStyle(
+    //     fontSize: POSConfig().cartDynamicButtonFontSize.sp,
+    //     color: CurrentTheme.primaryLightColor);
 
     return StreamBuilder<Map<String, CartModel>>(
         stream: cartBloc.currentCartSnapshot,
@@ -1972,10 +1969,11 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //           []);
           // }
           return ListView.builder(
+            controller: scrollController,
             itemCount: length,
             shrinkWrap: true,
             reverse: false,
-            physics: NeverScrollableScrollPhysics(),
+            physics: BouncingScrollPhysics(),
             itemBuilder: (context, index) =>
                 buildCartCard(map!.values.toList()[index]),
           );
@@ -1988,7 +1986,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     bool voided = cart.itemVoid ?? false;
     return DataRow(
         selected: selected,
-        color: MaterialStateColor.resolveWith(
+        color: WidgetStateColor.resolveWith(
           (states) {
             if (voided)
               return Colors.redAccent;
@@ -2052,22 +2050,22 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
-            Icon(
+            const Icon(
               Icons.delete,
               color: Colors.white,
             ),
             Text(
               " ${"invoice.void".tr()}",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.right,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
           ],
@@ -2095,22 +2093,22 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
-            Icon(
+            const Icon(
               Icons.edit,
               color: Colors.white,
             ),
             Text(
               " ${"invoice.remark".tr()}",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.left,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
           ],
@@ -2279,7 +2277,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                               ],
                             ),
                             discountText == null
-                                ? SizedBox.shrink()
+                                ? const SizedBox.shrink()
                                 : Positioned(
                                     right: 0,
                                     child: Card(
@@ -2301,7 +2299,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           imageUrl: (cartModel.image ??
                               "images/products/" + cartModel.proCode + '.png'),
                           errorWidget: (context, url, error) =>
-                              SizedBox.shrink(),
+                              const SizedBox.shrink(),
                           imageBuilder: (context, image) {
                             return Card(
                               elevation: 5,
@@ -2633,7 +2631,8 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                   if (posButton.functionName ==
                                       'local_switch') {
                                     _pageViewController.animateToPage(0,
-                                        duration: Duration(milliseconds: 500),
+                                        duration:
+                                            const Duration(milliseconds: 500),
                                         curve: Curves.easeInOut);
                                   }
                                 });
@@ -3615,7 +3614,7 @@ class _StreamContainerState extends State<StreamContainer> {
         }
 
         return AnimatedContainer(
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           width: _isExpanded
               ? width * 0.25
               : opened
@@ -3633,7 +3632,7 @@ class _StreamContainerState extends State<StreamContainer> {
                   height: width * 0.03,
                   child: Text(
                     _message,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -3683,43 +3682,38 @@ class _StreamContainerState extends State<StreamContainer> {
                             ),
                           )),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
         );
       },
     );
   }
 
   Future<bool> serverConnectionPopup() async {
-    if (context != null) {
-      bool? res = await showDialog<bool>(
-        barrierDismissible: false,
-        context: context!,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title:
-                Text('payment_view.server_connection_confirmation_title'.tr()),
-            content: Text('payment_view.server_connection_confirmation'.tr()),
-            actions: [
-              AlertDialogButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  text: 'payment_view.no'.tr()),
-              AlertDialogButton(
-                  onPressed: () {
-                    posConnectivity.localConfirmed = false;
-                    POSConfig().localMode = false;
-                    posConnectivity.handleConnection();
-                    Navigator.pop(context, true);
-                  },
-                  text: 'payment_view.yes'.tr())
-            ],
-          );
-        },
-      );
-      return res == true;
-    } else {
-      return false;
-    }
+    bool? res = await showDialog<bool>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('payment_view.server_connection_confirmation_title'.tr()),
+          content: Text('payment_view.server_connection_confirmation'.tr()),
+          actions: [
+            AlertDialogButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                text: 'payment_view.no'.tr()),
+            AlertDialogButton(
+                onPressed: () {
+                  posConnectivity.localConfirmed = false;
+                  POSConfig().localMode = false;
+                  posConnectivity.handleConnection();
+                  Navigator.pop(context, true);
+                },
+                text: 'payment_view.yes'.tr())
+          ],
+        );
+      },
+    );
+    return res == true;
   }
 }
