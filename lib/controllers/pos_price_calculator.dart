@@ -1329,7 +1329,7 @@ class POSPriceCalculator {
     if (canContinue) {
       canContinue = false;
       // get item details from server
-      EasyLoading.show(status: 'please_wait'.tr());
+      EasyLoading.show(status: 'please_wait'.tr(), dismissOnTap: true);
       final map = await InvoiceController().getCartDetails(refInvNo);
       final itemList = map['cartModels'];
       //chekc the item is in the database
@@ -1647,6 +1647,22 @@ class POSPriceCalculator {
     InvoiceController().clearTempPayment();
     clearProductTax();
     clearPromotion();
+    clearGroupBasedDiscounts();
+  }
+
+  // clearing staff-based auto discount when go back form payment view
+  void clearGroupBasedDiscounts() {
+    // final summary = cartBloc.cartSummary;
+    cartBloc.currentCart?.values.forEach((element) {
+      if (element.itemVoid != true && element.groupDiscApplied == true) {
+        final double disc = element.discAmt ?? 0;
+        element.amount += disc;
+        cartBloc.cartSummary?.subTotal += disc;
+        element.discAmt = 0;
+        element.discountReason = '';
+        element.groupDiscApplied = false;
+      }
+    });
   }
 
   void clearProductTax() {

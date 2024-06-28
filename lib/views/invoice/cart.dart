@@ -24,6 +24,7 @@ import 'package:checkout/controllers/audit_log_controller.dart';
 import 'package:checkout/controllers/cart_dynamic_button_controller.dart';
 import 'package:checkout/controllers/cart_dynamic_button_function.dart';
 import 'package:checkout/controllers/customer_controller.dart';
+import 'package:checkout/controllers/discount_handler.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/gift_voucher_controller.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
@@ -1633,9 +1634,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     final style1Bold = style1.copyWith(
         fontWeight: FontWeight.bold, fontSize: style1.fontSize! * 1.5);
-    final style2 =
-        CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
-    final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
+    // final style2 =
+    //     CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
+    // final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
     return StreamBuilder<CartSummaryModel>(
         stream: cartBloc.cartSummarySnapshot,
         builder: (context, AsyncSnapshot<CartSummaryModel> snapshot) {
@@ -1678,14 +1679,14 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           'invoice.line'.tr() + ':',
                           style: style1,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
                           lines,
                           style: style1Bold,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                       ],
@@ -1696,14 +1697,14 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           'invoice.item'.tr() + ':',
                           style: style1,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
                           items,
                           style: style1Bold,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                       ],
@@ -1715,14 +1716,14 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           'invoice.quantity'.tr() + ':',
                           style: style1,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
                           qty,
                           style: style1Bold,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                       ],
@@ -1733,7 +1734,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           'invoice.sub_total'.tr() + ':',
                           style: style1,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
@@ -1756,9 +1757,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     final style1Bold = style1.copyWith(
         fontWeight: FontWeight.bold, fontSize: style1.fontSize! * 1.5);
-    final style2 =
-        CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
-    final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
+    // final style2 =
+    //     CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
+    // final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
     return StreamBuilder<LastInvoiceDetails>(
         stream: cartBloc.lastInvoiceDetails,
         builder: (context, AsyncSnapshot<LastInvoiceDetails> snapshot) {
@@ -1781,7 +1782,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                         style: style1,
                       ),
                     ),
-                    HideWidgetOnScreenSize(
+                    const HideWidgetOnScreenSize(
                       md: true,
                       child: SizedBox(
                         width: 3,
@@ -1794,45 +1795,45 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                         style: style1Bold,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       'invoice.sub_total'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       data.billAmount.parseDouble().thousandsSeparator(),
                       style: style1Bold,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
                       'invoice.paid_amount'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       data.paidAmount.parseDouble().thousandsSeparator(),
                       style: style1Bold,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
                       'invoice.balance'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Text(
                       data.dueAmount.parseDouble().thousandsSeparator(),
                       style: style1Bold,
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ));
@@ -3020,6 +3021,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
       }
     }
 
+    /// Staff discount calculation
+    ///------------------------------------------------------------------------------------------------------------
+    await DiscountHandler().handleCusGroupDiscount();
     ///------------------------------------------------------------------------------------------------------------
 
     //load promotions

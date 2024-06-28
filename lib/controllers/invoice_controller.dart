@@ -728,6 +728,7 @@ class InvoiceController {
     if (res?.data == null)
       return {"cartModels": [], "hedRemarks": null};
     else {
+      EasyLoading.show(status: "please_wait".tr(), dismissOnTap: true);
       final List data = res?.data?["details"] ?? [];
       final List remarkList = res?.data?["remarks"] ?? [];
       final HedRemarkModel? hedRem = res?.data?["hed_remarks"].isNotEmpty
@@ -752,8 +753,10 @@ class InvoiceController {
         }
       } catch (e) {
         print(e.toString());
+        EasyLoading.dismiss();
       }
 
+      EasyLoading.show(status: "please_wait".tr());
       //going through remark
       try {
         for (var dyRemark in remarkList) {
@@ -765,7 +768,10 @@ class InvoiceController {
             myList[index].lineRemark.add(remark.lineRemark ?? '');
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        EasyLoading.dismiss();
+      }
+      EasyLoading.dismiss();
       return {"cartModels": myList, "hedRemarks": hedRem};
     }
   }

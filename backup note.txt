@@ -83,3 +83,14 @@ changed places: discount_handler(line 130), bill_discount_handler(line 152), cus
 2024-04-22 : discount related fixes, net amount check before save the bill, due amount display error fix when promotion applied, scale barcode related implementation (for spar: hardcoded using #), added a flag to cart model if fixed price is applied
 
 2024-05-02 : windows touch screen fixes (scrolling) and so.
+
+2024-06-27
+=================
+* Payment re-classification UI and feature
+* Option to manually switch switch to local mode
+* Manager sign-off re-print option
+* Floating pop-up button to notify the user that the server connection is back and can use it to switch back
+* New slidable page view for dynamic buttons in the cart page
+* New UI to add invoice header remarks and printing implementation of those header remarks
+* Hold-recall critical fixes (clearing promo discs, recalculation of line discs, fetching tax details with inv details in order to calculate the taxes for recalled items)
+* Invoice number related fixes  

@@ -89,12 +89,20 @@ class _LandingViewState extends State<LandingView> {
     _focusNode.requestFocus();
     if (POSConfig().enablePollDisplay == 'true') {
       try {
-        usbSerial.sendToSerialDisplay('     HELLO !!!      ');
-        usbSerial.sendToSerialDisplay('  WELCOME TO SPAR   ');
+        // usbSerial.sendToSerialDisplay('     HELLO !!!      ');
+        // usbSerial.sendToSerialDisplay('  WELCOME TO SPAR   ');
+        usbSerial.showCustomMessages('hello');
+        usbSerial.showCustomMessages('welcome');
       } catch (e) {
         LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
       }
     }
+    payModeBloc.getPayModeList();
+    payModeBloc.getCardDetails();
+    discountBloc.getDiscountTypes();
+    groupBloc.getDepartments();
+    priceModeBloc.fetchPriceModes();
+    salesRepBloc.getSalesReps(); //fetching salesreps and save it in bloc/stream
   }
 
   @override
@@ -844,12 +852,13 @@ class _LandingViewState extends State<LandingView> {
   }
 
   Widget buildBody(BuildContext context, LandingHelper landingHelper) {
-    payModeBloc.getPayModeList();
-    payModeBloc.getCardDetails();
-    discountBloc.getDiscountTypes();
-    groupBloc.getDepartments();
-    priceModeBloc.fetchPriceModes();
-    salesRepBloc.getSalesReps(); //fetching salesreps and save it in bloc/stream
+    // change by Sakir: moved these calls to initstate method
+    // payModeBloc.getPayModeList();
+    // payModeBloc.getCardDetails();
+    // discountBloc.getDiscountTypes();
+    // groupBloc.getDepartments();
+    // priceModeBloc.fetchPriceModes();
+    // salesRepBloc.getSalesReps(); //fetching salesreps and save it in bloc/stream
     final currentUser = userBloc.currentUser;
 
     String? date = userBloc.userDetails?.date ?? currentUser?.uSERHEDSIGNONTIME;

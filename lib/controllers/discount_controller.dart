@@ -12,4 +12,18 @@ class DiscountController {
     if (res?.data == null) return null;
     return DiscountTypeResult.fromJson(res?.data);
   }
+
+  Future<List<ProductDiscountStatus>> getProductDiscStatusForGrpDisc(
+      List<Map<String, dynamic>> proCodeMap) async {
+    var data = Map<String, dynamic>.from({"sku_codes": proCodeMap});
+    final res = await ApiClient.call(
+        "products/staff_disc_validate", ApiMethod.GET,
+        data: data);
+    if (res?.data == null && res?.data['data'] == null) return [];
+    List resList = res?.data['data'] ?? [];
+    if (resList.isEmpty) return [];
+    return resList
+        .map((element) => ProductDiscountStatus.fromJson(element))
+        .toList();
+  }
 }

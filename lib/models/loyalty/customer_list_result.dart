@@ -63,6 +63,10 @@ class CustomerResult {
   bool? noPromo;
   bool? sendOTP;
   double? defaultDiscount;
+  bool? cg_cal_staff_disc;
+  double? disc_min_disc_per;
+  double? disc_min_cost_var;
+  double? disc_min_selling_var;
 
   CustomerResult(
       {this.cMCODE,
@@ -85,7 +89,11 @@ class CustomerResult {
       this.taxRegNo,
       this.noPromo,
       this.sendOTP,
-      this.defaultDiscount});
+      this.defaultDiscount,
+      this.cg_cal_staff_disc,
+      this.disc_min_disc_per,
+      this.disc_min_cost_var,
+      this.disc_min_selling_var});
 
   CustomerResult.fromJson(Map<String, dynamic> json) {
     cMCODE = json['cM_CODE'];
@@ -121,6 +129,10 @@ class CustomerResult {
     } catch (e) {
       defaultDiscount = 0;
     }
+    cg_cal_staff_disc = json['cG_CAL_STAFF_DISC'] ?? false;
+    disc_min_disc_per = json['disC_MIN_DISC_PER'] ?? 0;
+    disc_min_cost_var = json['disC_MIN_COST_VAR'] ?? 0;
+    disc_min_selling_var = json['disC_MIN_SELLING_VAR'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

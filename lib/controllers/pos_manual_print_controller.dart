@@ -3,7 +3,6 @@
 /// Created At: 2023-12-18 2.30PM.
 /// Manual way to generate printouts from pos -- only supports windows
 
-// ignore_for_file: non_constant_identifier_names
 
 import 'dart:async';
 import 'dart:convert';
