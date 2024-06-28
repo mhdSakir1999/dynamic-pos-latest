@@ -38,6 +38,7 @@ import 'package:checkout/models/pos_logger.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:supercharged/supercharged.dart';
 
 import '../models/pos/invoice_save_res.dart';
 import 'dual_screen_controller.dart';
@@ -357,49 +358,59 @@ class InvoiceController {
 //--------------------------------------------------------------------------------------------------------------------------------
     /// validation by: [TM.Sakir]
     // Adding a validation for check whether the net amount and pro detail amounts are tallying
-    // double calculatedDetNet = 0;
-    // for (var pro in cartBloc.currentCart!.values.toList()) {
-    //   // double tempBillDisc = 0;
-    //   // if (pro.billDiscPer != null || pro.billDiscPer != 0) {
-    //   //   tempBillDisc = (pro.unitQty * pro.selling).toDouble() *
-    //   //       (pro.billDiscPer ?? 0) /
-    //   //       100;
-    //   // }
-    //   // calculatedDetNet += pro.amount - tempBillDisc;
+    if (invoiced) {
+      EasyLoading.dismiss();
+      double calculatedDetNet = 0;
+      for (var pro in cartBloc.currentCart!.values.toList()) {
+        // double tempBillDisc = 0;
+        // if (pro.billDiscPer != null || pro.billDiscPer != 0) {
+        //   tempBillDisc = (pro.unitQty * pro.selling).toDouble() *
+        //       (pro.billDiscPer ?? 0) /
+        //       100;
+        // }
+        // calculatedDetNet += pro.amount - tempBillDisc;
 
-    //   if (pro.itemVoid != true) {
-    //     double tempBillDisc =
-    //         (pro.unitQty * pro.selling) * (pro.billDiscPer ?? 0) / 100;
-    //     double tempLineDiscAmt = pro.discAmt ?? 0;
-    //     double tempLineDiscPer =
-    //         (pro.unitQty * pro.selling) * (pro.discPer ?? 0) / 100;
-    //     double tempPromoDiscPer =
-    //         (pro.unitQty * pro.selling) * (pro.promoDiscPre ?? 0) / 100;
-    //     double tempPromoDiscAmt = pro.promoDiscAmt ?? 0;
+        if (pro.itemVoid != true) {
+          double tempBillDisc =
+              (pro.unitQty * pro.selling) * (pro.billDiscPer ?? 0) / 100;
+          double tempLineDiscAmt = pro.discAmt ?? 0;
+          double tempLineDiscPer =
+              (pro.unitQty * pro.selling) * (pro.discPer ?? 0) / 100;
+          double tempPromoDiscPer =
+              (pro.unitQty * pro.selling) * (pro.promoDiscPre ?? 0) / 100;
+          double tempPromoDiscAmt = pro.promoDiscAmt ?? 0;
 
-    //     calculatedDetNet += (pro.unitQty * pro.selling) -
-    //         (tempBillDisc +
-    //             tempLineDiscAmt +
-    //             tempLineDiscPer +
-    //             tempPromoDiscPer +
-    //             tempPromoDiscAmt);
-    //   }
-    // }
-    // if (netAmt != calculatedDetNet) {
-    //   EasyLoading.showError('Net amount calculation error');
-    //   return InvoiceSaveRes(false, 0, null);
-    // }
-    // if (cartBloc.paidList != null && cartBloc.paidList != []) {
-    //   double tempPaidTotal = 0;
-    //   for (var paid in cartBloc.paidList!) {
-    //     tempPaidTotal += paid.paidAmount;
-    //   }
-    //   if (netAmt != tempPaidTotal) {
-    //     EasyLoading.showError('Paid amount calculation error');
-    //     return InvoiceSaveRes(false, 0, null);
-    //   }
-    // }
+          calculatedDetNet += (pro.unitQty * pro.selling) -
+              (tempBillDisc +
+                  tempLineDiscAmt +
+                  tempLineDiscPer +
+                  tempPromoDiscPer +
+                  tempPromoDiscAmt);
+        }
+      }
+      if (netAmt != calculatedDetNet && (netAmt - calculatedDetNet).abs() > 1) {
+        bool? userRes = await amountValidationDialog(context,
+            'There is an amount(${(netAmt - calculatedDetNet).abs().toStringAsFixed(2)}) mismatch found between the calculated bill amount and the net amount\nNet amount : ${netAmt.toStringAsFixed(2)}\nCalculated amount: ${calculatedDetNet.toStringAsFixed(2)}\nDo you want to save the invoice anyway?');
+        if (userRes == false) return InvoiceSaveRes(false, 0, null);
+        // EasyLoading.showError('Net amount calculation error');
+        // return InvoiceSaveRes(false, 0, null);
+      }
+      if (cartBloc.paidList != null && cartBloc.paidList != []) {
+        double tempPaidTotal = 0;
+        for (var paid in cartBloc.paidList!) {
+          tempPaidTotal += paid.paidAmount;
+        }
+        if (netAmt != tempPaidTotal && (netAmt - tempPaidTotal).abs() > 1) {
+          bool? userRes = await amountValidationDialog(context,
+              'There is an amount(${(netAmt - tempPaidTotal).abs()}) mismatch found between the paid amount and the net amount\nNet amount : ${netAmt.toStringAsFixed(2)}\nPaid amount: ${tempPaidTotal.toStringAsFixed(2)}\nDo you want to save the invoice anyway?');
+          if (userRes == false) return InvoiceSaveRes(false, 0, null);
+          // EasyLoading.showError('Paid amount calculation error');
+          // return InvoiceSaveRes(false, 0, null);
+        }
+      }
+    }
 //--------------------------------------------------------------------------------------------------------------------------------
+    EasyLoading.show(status: 'please_wait'.tr());
     String cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "UnAuthorized";
     String tempCashier =
         userBloc.currentUser?.uSERHEDUSERCODE ?? "UnAuthorized";
@@ -546,6 +557,40 @@ class InvoiceController {
 
     return InvoiceSaveRes(
         success, earnedLoyaltyPoints, /* kDebugMode ? '{}' : */ resReturn);
+  }
+
+  Future<bool?> amountValidationDialog(BuildContext context, String content) {
+    return showGeneralDialog(
+        context: context,
+        transitionDuration: const Duration(milliseconds: 200),
+        barrierDismissible: false,
+        barrierLabel: '',
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return const SizedBox();
+        },
+        transitionBuilder: (context, animation, secondaryAnimation, child) =>
+            Transform.scale(
+              scale: animation.value,
+              child: AlertDialog(
+                title: Center(child: Text('Amount Mismatch')),
+                content: Text(content),
+                actions: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              POSConfig().primaryDarkGrayColor.toColor()),
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('payment_view.yes'.tr())),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              POSConfig().primaryDarkGrayColor.toColor()),
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('payment_view.no'.tr())),
+                ],
+              ),
+            ));
   }
 
   // clear the temp payments
