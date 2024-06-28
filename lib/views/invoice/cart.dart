@@ -2301,38 +2301,45 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                      Container(
-                        height: 80.r,
-                        child: CachedNetworkImage(
-                          httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                          imageUrl: (cartModel.image ??
-                              "images/products/" + cartModel.proCode + '.png'),
-                          errorWidget: (context, url, error) =>
-                              const SizedBox.shrink(),
-                          imageBuilder: (context, image) {
-                            return Card(
-                              elevation: 5,
-                              color: CurrentTheme.primaryColor,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(POSConfig()
-                                      .rounderBorderRadiusBottomLeft),
-                                  bottomRight: Radius.circular(POSConfig()
-                                      .rounderBorderRadiusBottomRight),
-                                  topLeft: Radius.circular(
-                                      POSConfig().rounderBorderRadiusTopLeft),
-                                  topRight: Radius.circular(
-                                      POSConfig().rounderBorderRadiusTopRight),
-                                ),
-                                child: Image(
-                                  image: image,
-                                  fit: BoxFit.contain,
-                                ),
+                      // new settings added by [TM.Sakir] for stop loading item images
+                      POSConfig().disableCartImageLoad
+                          ? SizedBox.shrink()
+                          : Container(
+                              height: 80.r,
+                              child: CachedNetworkImage(
+                                httpHeaders: {
+                                  'Access-Control-Allow-Origin': '*'
+                                },
+                                imageUrl: (cartModel.image ??
+                                    "images/products/" +
+                                        cartModel.proCode +
+                                        '.png'),
+                                errorWidget: (context, url, error) =>
+                                    const SizedBox.shrink(),
+                                imageBuilder: (context, image) {
+                                  return Card(
+                                    elevation: 5,
+                                    color: CurrentTheme.primaryColor,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(POSConfig()
+                                            .rounderBorderRadiusBottomLeft),
+                                        bottomRight: Radius.circular(POSConfig()
+                                            .rounderBorderRadiusBottomRight),
+                                        topLeft: Radius.circular(POSConfig()
+                                            .rounderBorderRadiusTopLeft),
+                                        topRight: Radius.circular(POSConfig()
+                                            .rounderBorderRadiusTopRight),
+                                      ),
+                                      child: Image(
+                                        image: image,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                            ),
                     ],
                   ),
                 ],
@@ -3024,6 +3031,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     /// Staff discount calculation
     ///------------------------------------------------------------------------------------------------------------
     await DiscountHandler().handleCusGroupDiscount();
+
     ///------------------------------------------------------------------------------------------------------------
 
     //load promotions

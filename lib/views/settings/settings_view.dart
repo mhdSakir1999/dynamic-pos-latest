@@ -112,6 +112,7 @@ class _SettingViewState extends State<SettingView> {
   bool isTraining = POSConfig().trainingMode;
   bool auto_cust_popup = POSConfig().auto_cust_popup;
   bool disablePromotions = POSConfig().disablePromotions;
+  bool disableCartImageLoad = POSConfig().disableCartImageLoad;
   final passwordController = TextEditingController();
 
   //keyboard colors
@@ -261,6 +262,14 @@ class _SettingViewState extends State<SettingView> {
               onChanged: (bool val) {
                 setState(() {
                   auto_cust_popup = val;
+                });
+              }),
+          buildSwitch(
+              title: 'Disable Product Images (Invoice Page)',
+              value: disableCartImageLoad,
+              onChanged: (bool val) {
+                setState(() {
+                  disableCartImageLoad = val;
                 });
               }),
         ],
@@ -842,7 +851,7 @@ class _SettingViewState extends State<SettingView> {
                   children: [
                     Container(
                       height: 200.h,
-                      child: FlareActor(
+                      child: const FlareActor(
                         "assets/flare/waring.flr",
                         animation: "animate",
                       ),
@@ -992,7 +1001,8 @@ class _SettingViewState extends State<SettingView> {
       ..posKeyBoardExactTxtColor = posKeyBoardExactTxtColor.hex
       ..trainingMode = isTraining
       ..auto_cust_popup = auto_cust_popup
-      ..disablePromotions = disablePromotions;
+      ..disablePromotions = disablePromotions
+      ..disableCartImageLoad = disableCartImageLoad;
 
     SharedPreferenceController controller = SharedPreferenceController();
     await controller.saveConfig(posConfig);

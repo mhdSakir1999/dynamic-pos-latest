@@ -42,6 +42,7 @@ class SharedPreferenceController {
   final String _touchKeyBoard = "touch_keyboard";
   final String _promotion = "disable_promotions";
   final String _customerPopup = "customer_popup";
+  final String _disableCartImage = "disable_cart_image";
   final String _terminalId = "terminal_id";
   final String _posServer = "pos_server";
   final String _posLocalServer = "pos_local_server";
@@ -161,6 +162,7 @@ class SharedPreferenceController {
     setTouchKeyboard(posConfig.touchKeyboardEnabled);
     setPromotionFlag(posConfig.disablePromotions);
     setCustomerPopup(posConfig.auto_cust_popup);
+    setCartImageDisable(posConfig.disableCartImageLoad);
     setTerminalId(posConfig.terminalId);
     print(posConfig.terminalId);
     // setPOSServer(posConfig.server);
@@ -253,6 +255,10 @@ class SharedPreferenceController {
 
   Future setCustomerPopup(bool enabled) async {
     return _preferences!.setBool(_customerPopup, enabled);
+  }
+
+  Future setCartImageDisable(bool enabled) async {
+    return _preferences!.setBool(_disableCartImage, enabled);
   }
 
   Future setGvTutorial(bool showed) async {
@@ -458,6 +464,8 @@ class SharedPreferenceController {
             defaultPOSConfig.disablePromotions
         ..auto_cust_popup = _preferences!.getBool(_customerPopup) ??
             defaultPOSConfig.auto_cust_popup
+        ..disableCartImageLoad = _preferences!.getBool(_disableCartImage) ??
+            defaultPOSConfig.disableCartImageLoad
         ..terminalId =
             _preferences!.getString(_terminalId) ?? defaultPOSConfig.terminalId
         ..backgroundImage = _preferences!.getString(_backgroundImage) ??

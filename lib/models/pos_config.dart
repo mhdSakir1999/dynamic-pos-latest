@@ -32,6 +32,7 @@ class POSConfig {
   bool allow_sync_bills = true;
   bool auto_cust_popup = true;
   bool disablePromotions = false;
+  bool disableCartImageLoad = false;
 
   bool trainingMode = false;
 
