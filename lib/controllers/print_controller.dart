@@ -49,7 +49,7 @@ class PrintController {
                   //     },
                   //     child: Text("pos_printer_not_found.retry".tr())),
                   !showView
-                      ? SizedBox.shrink()
+                      ? const SizedBox.shrink()
                       : ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor:

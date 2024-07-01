@@ -137,7 +137,7 @@ class _CODPendingInvoiceViewState extends State<CODPendingInvoiceView> {
                                             Radius.circular(12)),
                                         color: CurrentTheme.primaryColor!),
                                     child: Center(
-                                      child: Text(
+                                      child:const Text(
                                         'Invoice Remarks',
                                         style: TextStyle(
                                             color: Colors.white,

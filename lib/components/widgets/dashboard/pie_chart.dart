@@ -129,7 +129,7 @@ class PieChartSampleState extends State<PieChartSample> {
             ),
           );
         default:
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
       }
     });
   }

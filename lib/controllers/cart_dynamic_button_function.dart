@@ -231,8 +231,8 @@ class CartDynamicButtonFunction {
 
   Future _holdBill() async {
     /// new change by [TM.Sakir] -- initiating new invoice when holding a invoice
-    LocalStorageController _localStorageController = LocalStorageController();
-    String? currentSummaryInv = cartBloc.cartSummary?.invoiceNo;
+    // LocalStorageController _localStorageController = LocalStorageController();
+    // String? currentSummaryInv = cartBloc.cartSummary?.invoiceNo;
 
     final cartLen = cartBloc.currentCart?.length ?? 0;
     if (cartLen == 0) {
@@ -254,7 +254,8 @@ class CartDynamicButtonFunction {
             .askForPermission(
                 permissionCode: PermissionCode.billHold,
                 accessType: "A",
-                refCode: cartBloc.cartSummary?.invoiceNo ?? '');
+                refCode:
+                    ('hold_${cartBloc.cartSummary?.invoiceNo}')); // modification on refcode
         hasPermission = res.success;
       }
 

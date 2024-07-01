@@ -65,7 +65,7 @@ class PayButton extends StatelessWidget {
                         "${POSConfig().posImageServer}images/pay_modes/${code.toLowerCase()}.png",
                     httpHeaders: {'Access-Control-Allow-Origin': '*'},
                     errorWidget: (context, url, error) {
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     },
                   )),
             ),

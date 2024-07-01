@@ -93,7 +93,7 @@ class _LoginViewState extends State<LoginView> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               getScreenSize() == ScreenSize.md
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : SizedBox(
                       height: double.infinity,
                       width: ScreenUtil().screenWidth * 0.7,
@@ -165,7 +165,7 @@ class _LoginViewState extends State<LoginView> {
                         top: 0,
                         right: 0,
                         child: IconButton(
-                            icon: Icon(Icons.settings),
+                            icon: const Icon(Icons.settings),
                             onPressed: () {
                               showModalBottomSheet(
                                 context: context,
@@ -179,7 +179,7 @@ class _LoginViewState extends State<LoginView> {
                         top: 0,
                         right: 40,
                         child: IconButton(
-                            icon: Icon(Icons.close),
+                            icon: const Icon(Icons.close),
                             onPressed: () async {
                               try {
                                 final result = await Process.run('cmd.exe', [
@@ -263,7 +263,7 @@ class _LoginViewState extends State<LoginView> {
                         style: CurrentTheme.subtitle2
                             ?.copyWith(color: Colors.yellow),
                       )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                 SizedBox(
                   height: 5.h,
                 ),
@@ -305,7 +305,7 @@ class _LoginViewState extends State<LoginView> {
                   height: 12.h,
                 ),
                 if (!canShowPasswordField)
-                  SizedBox.shrink()
+                 const SizedBox.shrink()
                 else
                   Column(
                     children: [

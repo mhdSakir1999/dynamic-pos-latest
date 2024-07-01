@@ -280,7 +280,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                     disabled: !_editableCustomerCode,
                                     validator: (String? text) {
                                       return null;
-                                    
+
                                       // return validateEmpty(
                                       //   text,
                                       //   "customer_code_error",
@@ -855,9 +855,9 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                               const EdgeInsets.only(right: 15),
                                           child: Icon(Icons.verified_outlined),
                                         )
-                                      : SizedBox.shrink(),
+                                      : const SizedBox.shrink(),
                                   !POSConfig().otpEnabled
-                                      ? SizedBox.shrink()
+                                      ? const SizedBox.shrink()
                                       : activeButtonElement(
                                           'customer_profile.verify'.tr(), true,
                                           () async {
@@ -1012,7 +1012,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                           "customer_profile.male".tr(),
                                           style: TextStyle(fontSize: 14.sp),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 5,
                                         ),
                                         Radio(
@@ -1156,13 +1156,13 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                                       onPressed: pickImage,
                                                       child: Text(
                                                           "Change Picture"))
-                                                  : SizedBox.shrink()),
+                                                  : const SizedBox.shrink()),
                                     ],
                                   ),
                                 ),
                               ),
                               if (widget.customer == null)
-                                SizedBox.shrink()
+                                const SizedBox.shrink()
                               else
                                 notificationElement(
                                     "${_points.toStringAsFixed(2)}",
@@ -1627,7 +1627,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
         ),
       );
     else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
 

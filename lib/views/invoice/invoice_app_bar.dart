@@ -130,7 +130,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
               stream: userBloc.currentUserStream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData)
-                  return Text(
+                  return const Text(
                     "UnAuthorized Access",
                     style: TextStyle(
                       color: Colors.redAccent,
@@ -376,7 +376,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                   pageBuilder: (context, animation, secondaryAnimation) {
-                    return SizedBox();
+                    return const SizedBox();
                   });
             },
       child: smallDevice

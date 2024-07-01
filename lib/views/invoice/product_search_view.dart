@@ -159,7 +159,7 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                               children: [
                                 IconButton(
                                     onPressed: () => Navigator.pop(context),
-                                    icon: Icon(
+                                    icon:const Icon(
                                       Icons.close,
                                       color: Colors.white,
                                     )),

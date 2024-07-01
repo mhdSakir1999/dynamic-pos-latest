@@ -1554,7 +1554,7 @@ class PromotionController {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Scan/Enter Coupon Numebr',
+                title: const Text('Scan/Enter Coupon Numebr',
                     textAlign: TextAlign.center),
                 content: SizedBox(
                   width: ScreenUtil().screenWidth / 2,
@@ -1566,7 +1566,7 @@ class PromotionController {
                         height: 200,
                         width: 200,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextField(
@@ -1583,7 +1583,7 @@ class PromotionController {
                             return;
                         },
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 12, fontWeight: FontWeight.bold),
                       )
                     ],

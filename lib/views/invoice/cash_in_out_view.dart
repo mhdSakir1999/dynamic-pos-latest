@@ -405,11 +405,11 @@ class _CashInOutViewState extends State<CashInOutView> {
 
   Widget maskField() {
     if (selectedPayModeDetail == null)
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     else {
       final detail = selectedPayModeDetail!;
       if ((detail.pdMask ?? '').isEmpty) {
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       }
 
       final mask = detail.pdMask;

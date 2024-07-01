@@ -21,7 +21,7 @@ class _PaymentBreakdownState extends State<PaymentBreakdown> {
   }
 
   Widget _paymentDetails() {
-    TextStyle style =
+    final TextStyle style =
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     return StreamBuilder(
         stream: cartBloc.paidListStream,
@@ -88,7 +88,7 @@ class _PaymentBreakdownState extends State<PaymentBreakdown> {
   }
 
   Widget _paidListItem(PaidModel paiditem) {
-    TextStyle style =
+   final TextStyle style =
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     return Row(
       children: [

@@ -527,7 +527,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                             padding: const EdgeInsets.only(right: 5),
                             child: buildCartList(),
                           ))),
-                  SizedBox(
+                 const SizedBox(
                     height: 10,
                   ),
                   Row(
@@ -579,7 +579,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                             }
                           },
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search),
+                              prefixIcon:const Icon(Icons.search),
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   if (itemCodeEditingController
@@ -599,7 +599,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
 
                                   itemCodeFocus.requestFocus();
                                 },
-                                icon: Icon(Icons.backspace_outlined),
+                                icon:const Icon(Icons.backspace_outlined),
                               ),
                               filled: true,
                               hintText: "invoice.search".tr()),
@@ -875,7 +875,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
               ),
         ),
         Container(
-            margin: EdgeInsets.only(top: 8, right: 16),
+            margin:const EdgeInsets.only(top: 8, right: 16),
             child: buildBottomCard()),
       ],
     );
@@ -938,12 +938,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     String code = temp;
     final symbol = "*";
     bool isScaleBarcode = false;
-    var size = MediaQuery.of(context).size;
+    // var size = MediaQuery.of(context).size;
     TextEditingController qtyController =
         TextEditingController(text: qty.toString());
-    double newqty = 1;
-    ProductResult? returnProRes;
-    List<bool> selected;
+    // double newqty = 1;
+    // ProductResult? returnProRes;
+    // List<bool> selected;
     if (code.contains(symbol)) {
       //  split it lhs is qty
       final split = code.split(symbol);
@@ -1428,7 +1428,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                 children: [
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(
+                      icon:const Icon(
                         Icons.close,
                         color: Colors.white,
                       )),
@@ -2150,9 +2150,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
 
   // this method build the card based cart item list
   Widget buildCartCard(CartModel cartModel) {
-    bool selected = cartModel.key == (selectedCartItem?.key ?? "null:D");
+    final bool selected = cartModel.key == (selectedCartItem?.key ?? "null:D");
 
-    bool voided = (cartModel.itemVoid ?? false);
+    final bool voided = (cartModel.itemVoid ?? false);
     final style = CurrentTheme.bodyText1!.copyWith(
         color: CurrentTheme.primaryLightColor,
         fontSize: (POSConfig().cardFontSize).sp);
@@ -2240,7 +2240,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                             style: style,
                                           ),
                                         )),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Expanded(
@@ -2257,7 +2257,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                 ),
                                 Row(
                                   children: [
-                                    Spacer(),
+                                    const Spacer(),
                                     // SizedBox(width: POSConfig().cardIdLength.w,
                                     //     ),
                                     Container(
@@ -2303,7 +2303,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       ),
                       // new settings added by [TM.Sakir] for stop loading item images
                       POSConfig().disableCartImageLoad
-                          ? SizedBox.shrink()
+                          ? const SizedBox.shrink()
                           : Container(
                               height: 80.r,
                               child: CachedNetworkImage(
@@ -2776,7 +2776,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                 nextFocusTo: itemCodeFocus),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Container(
@@ -3490,7 +3490,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
               ),
             ),
         pageBuilder: (context, animation, secondaryAnimation) {
-          return SizedBox();
+          return const SizedBox();
         });
   }
 }
@@ -3616,7 +3616,7 @@ class _StreamContainerState extends State<StreamContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    // final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return StreamBuilder(
       stream: posConnectivity

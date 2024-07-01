@@ -82,7 +82,7 @@ class _CustomOTPInputState extends State<CustomOTPInput> {
           //   });
           // },
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
