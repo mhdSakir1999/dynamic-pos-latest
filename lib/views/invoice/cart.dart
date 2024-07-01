@@ -476,6 +476,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           children: [
             POSInvoiceAppBar(
               onPriceClick: _getPriceModes,
+              afterCustomerPopup: giveFocus,
             ),
             Expanded(child: buildContent())
           ],
@@ -527,7 +528,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                             padding: const EdgeInsets.only(right: 5),
                             child: buildCartList(),
                           ))),
-                 const SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
@@ -579,7 +580,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                             }
                           },
                           decoration: InputDecoration(
-                              prefixIcon:const Icon(Icons.search),
+                              prefixIcon: const Icon(Icons.search),
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   if (itemCodeEditingController
@@ -599,7 +600,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
 
                                   itemCodeFocus.requestFocus();
                                 },
-                                icon:const Icon(Icons.backspace_outlined),
+                                icon: const Icon(Icons.backspace_outlined),
                               ),
                               filled: true,
                               hintText: "invoice.search".tr()),
@@ -875,7 +876,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
               ),
         ),
         Container(
-            margin:const EdgeInsets.only(top: 8, right: 16),
+            margin: const EdgeInsets.only(top: 8, right: 16),
             child: buildBottomCard()),
       ],
     );
@@ -926,6 +927,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   void clearSelection() {
     selectedCartItem = null;
     activeDynamicButton = true;
+    if (mounted) setState(() {});
+  }
+
+  void giveFocus() {
+    focusNode.requestFocus();
+    itemCodeFocus.requestFocus();
     if (mounted) setState(() {});
   }
 
@@ -1428,7 +1435,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                 children: [
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon:const Icon(
+                      icon: const Icon(
                         Icons.close,
                         color: Colors.white,
                       )),

@@ -18,6 +18,7 @@ import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -35,14 +36,14 @@ class ReprintView extends StatefulWidget {
 class _ReprintViewState extends State<ReprintView> {
   final searchController = TextEditingController();
   final scrollController = ScrollController();
-  late List<InvoiceHeader> headers;
+  late List<InvoiceHeader> headers = [];
   bool clicked = false;
   KeyBoardController keyBoardController = KeyBoardController();
 
   @override
   void initState() {
     super.initState();
-    headers = widget.headers;
+    headers.addAll(widget.headers);
   }
 
   @override
@@ -64,17 +65,49 @@ class _ReprintViewState extends State<ReprintView> {
               Expanded(
                 child: Container(
                   child: TextField(
-                    onChanged: (value) {
-                      if (value.length >= 1 && mounted)
+                    onChanged: (value) async {
+                      // if (value.length >= 1 && mounted)
+                      //   setState(() {
+                      //     headers = widget.headers;
+                      //   });
+                      if (value.length < 12 && mounted) {
                         setState(() {
-                          headers = widget.headers;
+                          List<InvoiceHeader> x = [];
+                          x.addAll(widget.headers);
+                          headers = x;
                         });
+                      } else {
+                        EasyLoading.show(status: 'please_wait'.tr());
+                        var res = await InvoiceController()
+                            .searchCashierInvoice(value);
+                        EasyLoading.dismiss();
+                        if (res.isNotEmpty) {
+                          setState(() {
+                            headers = res;
+                          });
+                        }
+                      }
                     },
                     onTap: () {
                       keyBoardController.init(context);
                       keyBoardController.showBottomDPKeyBoard(searchController,
-                          onEnter: () {
-                        search();
+                          onEnter: () async {
+                        // search();
+                        if (searchController.text.length == 0 && mounted) {
+                          headers = widget.headers;
+
+                          search();
+                        } else {
+                          EasyLoading.show(status: 'please_wait'.tr());
+                          var res = await InvoiceController()
+                              .searchCashierInvoice(searchController.text);
+                          EasyLoading.dismiss();
+                          if (res.isNotEmpty) {
+                            setState(() {
+                              headers = res;
+                            });
+                          }
+                        }
                       }, buildContext: context);
                     },
                     onEditingComplete: search,
@@ -129,10 +162,13 @@ class _ReprintViewState extends State<ReprintView> {
   // search cart details by text
   void search() {
     final search = searchController.text;
+    List<InvoiceHeader> l = [];
+    l.addAll(widget.headers);
     // apply  the search condition
-    headers = widget.headers
-        .where((element) => search == element.invheDINVNO)
-        .toList();
+    try {
+      headers =
+          l.where((element) => element.invheDINVNO!.contains(search)).toList();
+    } catch (e) {}
     if (mounted) {
       setState(() {});
     }

@@ -832,6 +832,21 @@ class InvoiceController {
     }
   }
 
+  Future<List<InvoiceHeader>> searchCashierInvoice(String invoiceNo) async {
+    final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+    try {
+      final res = await ApiClient.call(
+          "invoice/searchCashierInvoice/$invoiceNo/$cashier", ApiMethod.GET);
+      if (res?.data == null || res?.data == '')
+        return [];
+      else {
+        return InvoiceHeaderResult.fromJson(res?.data).invoiceHeader ?? [];
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+
   // getting cash-on-delivery (cod) based invoices
   Future<List<CODInvoiceHeader>> getCODInvoices() async {
     final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";

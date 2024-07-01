@@ -179,3 +179,21 @@ END
 GO
 
 ------------------------------------------------------
+CREATE         PROCEDURE [dbo].[myPOS_DP_SEARCH_INVOICE_HEADER]
+@invNo varchar(max),
+@cashier varchar(max)
+AS
+BEGIN
+
+	
+	SELECT  
+	INVHED_INVNO,INVHED_CASHIER,INVHED_TIME,INVHED_MODE,INVHED_NETAMT,INVHED_DISPER,INVHED_GROAMT,
+	INVHED_INVOICED,INVHED_MEMBER,INVHED_PRICEMODE FROM T_TBLINVHEADER
+	WHERE  INVHED_INVNO = @invNo and INVHED_CASHIER = @cashier and INVHED_MODE ='INV' AND INVHED_CANCELED=0 and INVHED_INVOICED = 1
+	-- ORDER BY INVHED_TIME desc
+	order by INVHED_DATETIME desc
+	
+
+END
+GO
+-----------------------------------------------------------
