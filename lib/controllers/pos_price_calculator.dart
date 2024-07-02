@@ -1137,7 +1137,8 @@ class POSPriceCalculator {
         }
         invTax.add(InvTax(
             taxCode: proTax.taXCODE ?? '',
-            productCode: item.stockCode,
+            productCode:
+                item.proCode ?? item.stockCode, // changed stockCode --> proCode
             grossAmount: basePrice.toDouble(),
             taxAmount: taxAmt,
             taxPercentage: taxRate,
@@ -1770,20 +1771,21 @@ class POSPriceCalculator {
 
   Future<List<CartModel?>?> showInvoicedProducts(BuildContext context,
       {required List<CartModel> cartItems, required String invNo}) async {
-   final Color iconColor = CurrentTheme.primaryLightColor!;
+    final Color iconColor = CurrentTheme.primaryLightColor!;
     final space1 = SizedBox(
       width: 15.w,
     );
-   final double fontSize = 20.sp;
-   final double width = MediaQuery.of(context).size.width;
-   final double height = MediaQuery.of(context).size.height;
+    final double fontSize = 20.sp;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
 
     double total = 0;
     for (int i = 0; i < cartItems.length; i++) {
       total += cartItems[i].amount;
     }
 
-   final List<bool> isSelected = List.generate(cartItems.length, (index) => false);
+    final List<bool> isSelected =
+        List.generate(cartItems.length, (index) => false);
     List<int> selectedProductIndexes = [];
     List<CartModel?> selectedProducts = [];
     // bool isSelected = false;
@@ -1848,12 +1850,12 @@ class POSPriceCalculator {
                               height: height * 0.13,
                               child: Column(
                                 children: [
-                                 const Divider(),
+                                  const Divider(),
                                   ListTile(
                                     leading: SizedBox(
                                       width: width * 0.02,
                                     ),
-                                    title:  Row(
+                                    title: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
@@ -1936,7 +1938,7 @@ class POSPriceCalculator {
                                       ],
                                     ),
                                   ),
-                                 const Divider()
+                                  const Divider()
                                 ],
                               ),
                             ),
