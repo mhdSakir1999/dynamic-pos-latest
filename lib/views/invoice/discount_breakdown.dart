@@ -32,7 +32,7 @@ class _DiscountBreakdownState extends State<DiscountBreakdown> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle style =
+   final TextStyle style =
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     List<CartModel?> item = [];
     cartBloc.currentCart?.forEach((key, value) {

@@ -152,7 +152,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 60.r, height: 60.r, child: UserImage()),
+                      SizedBox(width: 60.r, height: 60.r, child:  UserImage()),
                       Expanded(
                         child: Text(
                           // 'WWWWWWWWWW',

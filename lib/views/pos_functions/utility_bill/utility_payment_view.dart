@@ -924,7 +924,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                     ? GoBackIconButton(
                         onPressed: _ecr ? () {} : clearTempPayment,
                       )
-                    : Spacer(),
+                    : const Spacer(),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
@@ -936,7 +936,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                   )),
                 ),
                 POSConfig().defaultCheckoutLSH
-                    ? Spacer()
+                    ? const Spacer()
                     : GoBackIconButton(onPressed: clearTempPayment),
                 SizedBox(
                   width: 15.r,
@@ -1356,14 +1356,14 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                 const Text(
                     'ECR Intergrator',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                       alignment: Alignment.centerRight,
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(
+                      icon:const Icon(
                         Icons.close_rounded,
                         color: Colors.white,
                       )),
@@ -1456,7 +1456,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                         const SizedBox(
                             height: 10,
                           ),
                           Expanded(
@@ -1471,11 +1471,11 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SizedBox(
+                                   const SizedBox(
                                       height: 10,
                                     ),
-                                    Text('Enter the Amount to pay'),
-                                    SizedBox(
+                                   const Text('Enter the Amount to pay'),
+                                  const  SizedBox(
                                       height: 10,
                                     ),
                                     Container(
@@ -1512,13 +1512,13 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      Text(
+                                     const Text(
                                         'Total Outstanding Amount',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 30),
                                       ),
-                                      SizedBox(
+                                     const SizedBox(
                                         height: 10,
                                       ),
                                       Text(
@@ -1612,7 +1612,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
             ],
           ),
           (selectedPayModeDetail?.pDRATE ?? 0) <= 0
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : buildCard(
                   "payment_view.foreign_currency".tr(
                       namedArgs: {"frc": selectedPayModeDetail!.pDCODE ?? ""}),
@@ -1624,7 +1624,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                 final double taxInc = snapshot.data?.taxInc ?? 0;
 
                 if (taxExc.toDouble() + taxInc.toDouble() == 0) {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
 
                 /* added comment block t show only the exclusive and NOT Display only tax value */
@@ -1706,7 +1706,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
           padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
           child: Row(
             children: [
-              Spacer(),
+             const Spacer(),
               Text(
                 title,
                 style: CurrentTheme.headline6!.copyWith(
@@ -1752,10 +1752,10 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                       children: [
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          child: Center(
+                          child:const Center(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
+                              child:const Text(
                                 'Enter gift voucher number here',
                               ),
                             ),
@@ -1765,7 +1765,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                             onPressed: () {
                               showTutorial(false);
                             },
-                            child: Text('Got it'))
+                            child:const Text('Got it'))
                       ],
                     );
                   },
@@ -1804,11 +1804,11 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
 
   Widget maskField() {
     if (selectedPayModeDetail == null)
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     else {
       final detail = selectedPayModeDetail!;
       if (emptyMask()) {
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       }
 
       final mask = detail.pdMask;
@@ -1860,46 +1860,46 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
     }
   }
 
-  void _ecrDialog(BuildContext _context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('ecr.read'.tr()),
-            actions: <Widget>[
-              AlertDialogButton(
-                  onPressed: () async {
-                    Navigator.pop(context);
-                    EasyLoading.show(status: 'please_wait'.tr());
-                    final EcrResponse? ecr = await EcrController().binRequest();
-                    EasyLoading.dismiss();
-                    if (ecr?.success == true) {
-                      EasyLoading.showInfo("easy_loading.success_card".tr());
-                      _ecr = true;
-                      formatCardNoFromEcr(
-                          ecr?.ecrCard?.strTxnCardBin ?? '', '****');
-                      _ecrTimer();
-                      if (mounted) {
-                        setState(() {});
-                      }
+  // void _ecrDialog(BuildContext _context) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('ecr.read'.tr()),
+  //           actions: <Widget>[
+  //             AlertDialogButton(
+  //                 onPressed: () async {
+  //                   Navigator.pop(context);
+  //                   EasyLoading.show(status: 'please_wait'.tr());
+  //                   final EcrResponse? ecr = await EcrController().binRequest();
+  //                   EasyLoading.dismiss();
+  //                   if (ecr?.success == true) {
+  //                     EasyLoading.showInfo("easy_loading.success_card".tr());
+  //                     _ecr = true;
+  //                     formatCardNoFromEcr(
+  //                         ecr?.ecrCard?.strTxnCardBin ?? '', '****');
+  //                     _ecrTimer();
+  //                     if (mounted) {
+  //                       setState(() {});
+  //                     }
 
-                      //TODO: handle promotion
-                    } else {
-                      String error = ecr?.ecrCard?.strErrorDesc ?? '';
-                      if (error.isEmpty) {
-                        error =
-                            'Unknown Error - ${ecr?.ecrCard?.strErrorCode ?? ''}';
-                      }
-                      EasyLoading.showError(error);
-                    }
-                  },
-                  text: 'ecr.yes'.tr()),
-              AlertDialogButton(
-                  onPressed: () => Navigator.pop(context), text: 'ecr.no'.tr())
-            ],
-          );
-        });
-  }
+  //                     //TODO: handle promotion
+  //                   } else {
+  //                     String error = ecr?.ecrCard?.strErrorDesc ?? '';
+  //                     if (error.isEmpty) {
+  //                       error =
+  //                           'Unknown Error - ${ecr?.ecrCard?.strErrorCode ?? ''}';
+  //                     }
+  //                     EasyLoading.showError(error);
+  //                   }
+  //                 },
+  //                 text: 'ecr.yes'.tr()),
+  //             AlertDialogButton(
+  //                 onPressed: () => Navigator.pop(context), text: 'ecr.no'.tr())
+  //           ],
+  //         );
+  //       });
+  // }
 
   String formatCardNoFromEcr(String bin, String last) {
     if (bin.isNotEmpty) {
@@ -1945,7 +1945,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
             'tax.tax_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(width: double.infinity, child: TaxBreakdownView()),
+          content:const SizedBox(width: double.infinity, child: TaxBreakdownView()),
         );
       },
     );
@@ -1960,7 +1960,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
             'paid_list.pay_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(width: double.infinity, child: PaymentBreakdown()),
+          content:const SizedBox(width: double.infinity, child: PaymentBreakdown()),
         );
       },
     );

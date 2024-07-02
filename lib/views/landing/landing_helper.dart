@@ -833,7 +833,7 @@ class LandingHelper {
                     elevation: 5,
                     shadowColor: Theme.of(context).primaryColor,
                     child: Padding(
-                      padding: EdgeInsets.only(
+                      padding:const EdgeInsets.only(
                           top: 20.0, left: 20, right: 40, bottom: 0),
                       child: Center(
                         child: Column(
@@ -842,11 +842,11 @@ class LandingHelper {
                               padding: const EdgeInsets.only(bottom: 10.0),
                               child: Text(
                                 'landing_view.pending_signoff'.tr(),
-                                style: TextStyle(
+                                style:const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 30),
                               ),
                             ),
-                            Divider(),
+                           const Divider(),
                             Column(
                               children: [
                                 Container(
@@ -951,7 +951,7 @@ class LandingHelper {
                                                             '--',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: TextStyle(
+                                                        style:const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 2,
                                                   ),
@@ -962,7 +962,7 @@ class LandingHelper {
                                                             '--',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: TextStyle(
+                                                        style:const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 2,
                                                   ),
@@ -973,7 +973,7 @@ class LandingHelper {
                                                           '--',
                                                       textAlign:
                                                           TextAlign.center,
-                                                      style: TextStyle(
+                                                      style:const TextStyle(
                                                           fontSize: 20),
                                                     ),
                                                     flex: 2,
@@ -987,7 +987,7 @@ class LandingHelper {
                                                                 ""),
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: TextStyle(
+                                                        style:const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 2,
                                                   ),
@@ -998,7 +998,7 @@ class LandingHelper {
                                                             '--',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: TextStyle(
+                                                        style:const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 2,
                                                   ),
@@ -1008,7 +1008,7 @@ class LandingHelper {
                                                             '--',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: TextStyle(
+                                                        style:const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 1,
                                                   ),

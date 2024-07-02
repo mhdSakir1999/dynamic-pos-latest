@@ -159,7 +159,7 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                               children: [
                                 IconButton(
                                     onPressed: () => Navigator.pop(context),
-                                    icon:const Icon(
+                                    icon: const Icon(
                                       Icons.close,
                                       color: Colors.white,
                                     )),
@@ -256,10 +256,10 @@ class _ProductSearchViewState extends State<ProductSearchView> {
   }
 
   Widget buildItemList() {
-    final headingStyle = TextStyle(
-        fontSize: POSConfig().cartDynamicButtonFontSize.sp,
-        fontWeight: FontWeight.bold,
-        color: CurrentTheme.primaryLightColor);
+    // final headingStyle = TextStyle(
+    //     fontSize: POSConfig().cartDynamicButtonFontSize.sp,
+    //     fontWeight: FontWeight.bold,
+    //     color: CurrentTheme.primaryLightColor);
 
     return Container(
       width: double.infinity,
@@ -366,7 +366,7 @@ class _ProductSearchViewState extends State<ProductSearchView> {
 
   Widget buildTableRow(int index) {
     final Product product = productList[index];
-    bool selected = product.pLUCODE == selectedProduct?.pLUCODE;
+    final bool selected = product.pLUCODE == selectedProduct?.pLUCODE;
     final dataStyle = TextStyle(
         fontSize: POSConfig().cartDynamicButtonFontSize.sp * 1.3,
         color: CurrentTheme.primaryLightColor);
@@ -554,7 +554,7 @@ class _ProductSearchViewState extends State<ProductSearchView> {
           ],
         ),
         selectedProduct == null
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : Container(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -578,9 +578,9 @@ class _ProductSearchViewState extends State<ProductSearchView> {
   Widget _firstView() {
     final style =
         CurrentTheme.subtitle2!.copyWith(color: CurrentTheme.primaryDarkColor);
-    double width = 250.w;
-    double height = 100.h;
-    Color color = POSConfig().primaryDarkGrayColor.toColor();
+   final double width = 250.w;
+   final double height = 100.h;
+   final Color color = POSConfig().primaryDarkGrayColor.toColor();
     return Column(
       children: [
         Row(
@@ -1215,7 +1215,7 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                 child: CachedNetworkImage(
                   imageUrl: (selectedProduct?.image ?? ""),
                   httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                  errorWidget: (context, url, error) => SizedBox.shrink(),
+                  errorWidget: (context, url, error) =>const SizedBox.shrink(),
                 )),
           ),
         ),

@@ -123,12 +123,12 @@ class _PromotionViewState extends State<PromotionView> {
             (element.promoBillDiscPre ?? 0) > 0)
         .toList();
     if (cart.isEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
     return Column(
       children: [
         Text('promo.applied_title'.tr()),
-        Divider(),
+       const Divider(),
         SizedBox(
           width: double.infinity,
           child: SizedBox(
@@ -181,7 +181,7 @@ class _PromotionViewState extends State<PromotionView> {
             ),
           ),
         ),
-        Divider(),
+       const Divider(),
       ],
     );
   }
@@ -211,11 +211,11 @@ class _PromotionViewState extends State<PromotionView> {
           builder: (BuildContext context,
               AsyncSnapshot<List<PromotionFreeTickets>> snapshot) {
             if (snapshot.data == null) {
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
             final List<PromotionFreeTickets> freeTicketList = snapshot.data!;
             if (freeTicketList.isEmpty) {
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
             return Column(
               children: [
@@ -276,7 +276,7 @@ class _PromotionViewState extends State<PromotionView> {
                     ),
                   ),
                 ),
-                Divider(),
+               const Divider(),
               ],
             );
           },
@@ -293,11 +293,11 @@ class _PromotionViewState extends State<PromotionView> {
           builder: (BuildContext context,
               AsyncSnapshot<List<PromotionFreeGVs>> snapshot) {
             if (snapshot.data == null) {
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
             final List<PromotionFreeGVs> freeGVList = snapshot.data!;
             if (freeGVList.isEmpty) {
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
             return Column(
               children: [
@@ -374,7 +374,7 @@ class _PromotionViewState extends State<PromotionView> {
                     ),
                   ),
                 ),
-                Divider(),
+               const Divider(),
               ],
             );
           },
@@ -391,11 +391,11 @@ class _PromotionViewState extends State<PromotionView> {
           builder: (BuildContext context,
               AsyncSnapshot<List<PromotionFreeItems>> snapshot) {
             if (snapshot.data == null) {
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
             final List<PromotionFreeItems> freeItemsList = snapshot.data!;
             if (freeItemsList.isEmpty) {
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
             return Column(
               children: [
@@ -478,7 +478,7 @@ class _PromotionViewState extends State<PromotionView> {
                     ),
                   ),
                 ),
-                Divider(),
+               const Divider(),
               ],
             );
           },
@@ -517,18 +517,18 @@ class _PromotionViewState extends State<PromotionView> {
       builder: (BuildContext context,
           AsyncSnapshot<List<PromotionFreeItems>> snapshot) {
         if (snapshot.data == null) {
-          return SizedBox();
+          return const SizedBox();
         }
         final List<PromotionFreeItems> freeItemsList = snapshot.data!;
         List canShow = freeItemsList.where((e) => e.remainingQty > 0).toList();
         if (canShow.isEmpty) {
-          return SizedBox();
+          return const SizedBox();
         }
         return Column(
           children: [
             Row(
               children: [
-                Spacer(),
+               const Spacer(),
                 // Text('promo.scan'.tr()),
                 // SizedBox(
                 //   width: 15.w,
@@ -543,13 +543,13 @@ class _PromotionViewState extends State<PromotionView> {
                           _textEditingController.text, context);
                       _textEditingController.clear();
                     },
-                    decoration: InputDecoration(
+                    decoration:const InputDecoration(
                         filled: true, hintText: "Scan Free Item"),
                   ),
                 ),
               ],
             ),
-            Divider(),
+           const Divider(),
           ],
         );
       },
@@ -562,18 +562,18 @@ class _PromotionViewState extends State<PromotionView> {
       builder: (BuildContext context,
           AsyncSnapshot<List<PromotionFreeGVs>> snapshot) {
         if (snapshot.data == null) {
-          return SizedBox();
+          return const SizedBox();
         }
         final List<PromotionFreeGVs> freeGVList = snapshot.data!;
         List canShow = freeGVList.where((e) => e.remainingQty > 0).toList();
         if (canShow.isEmpty) {
-          return SizedBox();
+          return const SizedBox();
         }
         return Column(
           children: [
             Row(
               children: [
-                Spacer(),
+               const Spacer(),
                 // Text('promo.scan'.tr()),
                 // SizedBox(
                 //   width: 15.w,
@@ -588,13 +588,13 @@ class _PromotionViewState extends State<PromotionView> {
                           _GVtextEditingController.text, context);
                       _GVtextEditingController.clear();
                     },
-                    decoration: InputDecoration(
+                    decoration:const InputDecoration(
                         filled: true, hintText: "Scan Free Voucher"),
                   ),
                 ),
               ],
             ),
-            Divider(),
+           const Divider(),
           ],
         );
       },
@@ -603,7 +603,7 @@ class _PromotionViewState extends State<PromotionView> {
 
   Widget _buildSelectablePromo() {
     if (selectablePromotionsList.isEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
     return ListView.builder(
       shrinkWrap: true,
@@ -614,7 +614,7 @@ class _PromotionViewState extends State<PromotionView> {
             children: [
               Text(
                 'promo.selectable_promo'.tr(),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style:const TextStyle(fontWeight: FontWeight.bold),
               )
             ],
           );
@@ -667,7 +667,7 @@ class _PromotionViewState extends State<PromotionView> {
 
   Widget _buildBillDiscountPromo() {
     if (billDiscountPromos.isEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     final cart = widget.cartList
@@ -675,13 +675,13 @@ class _PromotionViewState extends State<PromotionView> {
         .toList();
 
     if (cart.isNotEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return Column(
       children: [
         Text('promo.applied_title'.tr()),
-        Divider(),
+       const Divider(),
         SizedBox(
           width: double.infinity,
           child: SizedBox(
@@ -720,7 +720,7 @@ class _PromotionViewState extends State<PromotionView> {
             ),
           ),
         ),
-        Divider(),
+       const Divider(),
       ],
     );
   }

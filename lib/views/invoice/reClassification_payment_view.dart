@@ -1037,7 +1037,7 @@ class _ReClassificationPaymentViewState
                     ]),
               ),
           pageBuilder: (context, animation, secondaryAnimation) {
-            return SizedBox();
+            return const SizedBox();
           });
       if (confirm != true) return;
     }
@@ -1080,7 +1080,7 @@ class _ReClassificationPaymentViewState
                     ? GoBackIconButton(
                         onPressed: _ecr ? () {} : clearTempPayment,
                       )
-                    : Spacer(),
+                    : const Spacer(),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
@@ -1092,7 +1092,7 @@ class _ReClassificationPaymentViewState
                   )),
                 ),
                 POSConfig().defaultCheckoutLSH
-                    ? Spacer()
+                    ? const Spacer()
                     : GoBackIconButton(onPressed: clearTempPayment),
                 SizedBox(
                   width: 15.r,
@@ -1634,7 +1634,7 @@ class _ReClassificationPaymentViewState
                       },
 
                       // Navigator.pop(context),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.close_rounded,
                         color: Colors.white,
                       )),
@@ -1835,7 +1835,7 @@ class _ReClassificationPaymentViewState
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Expanded(
@@ -1850,11 +1850,11 @@ class _ReClassificationPaymentViewState
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 10,
                                     ),
-                                    Text('Enter the Amount to pay'),
-                                    SizedBox(
+                                    const Text('Enter the Amount to pay'),
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                     Container(
@@ -1895,18 +1895,18 @@ class _ReClassificationPaymentViewState
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Total Outstanding Amount',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 30),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Text(
                                         balanceDue.toStringAsFixed(2),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 50),
                                       ),
@@ -2118,7 +2118,7 @@ class _ReClassificationPaymentViewState
             ],
           ),
           (selectedPayModeDetail?.pDRATE ?? 0) <= 0
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : buildCard(
                   "payment_view.foreign_currency".tr(
                       namedArgs: {"frc": selectedPayModeDetail!.pDCODE ?? ""}),
@@ -2194,7 +2194,7 @@ class _ReClassificationPaymentViewState
           padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
           child: Row(
             children: [
-              Spacer(),
+              const Spacer(),
               Text(
                 title,
                 style: CurrentTheme.headline6!.copyWith(
@@ -2240,10 +2240,10 @@ class _ReClassificationPaymentViewState
                       children: [
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          child: Center(
+                          child: const Center(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
+                              child: const Text(
                                 'Enter gift voucher number here',
                               ),
                             ),
@@ -2253,7 +2253,7 @@ class _ReClassificationPaymentViewState
                             onPressed: () {
                               showTutorial(false);
                             },
-                            child: Text('Got it'))
+                            child:const Text('Got it'))
                       ],
                     );
                   },
@@ -2292,11 +2292,11 @@ class _ReClassificationPaymentViewState
 
   Widget maskField() {
     if (selectedPayModeDetail == null)
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     else {
       final detail = selectedPayModeDetail!;
       if (emptyMask()) {
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       }
 
       final mask = detail.pdMask;
@@ -2333,8 +2333,8 @@ class _ReClassificationPaymentViewState
                           (enteredCard?.crDHEDDESC ?? "") +
                           ".png",
                       httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                      errorWidget: (context, url, error) => SizedBox.shrink(),
-                      placeholder: (context, url) => SizedBox.shrink(),
+                      errorWidget: (context, url, error) =>const SizedBox.shrink(),
+                      placeholder: (context, url) => const SizedBox.shrink(),
                     ),
                   )),
               onChanged: (value) {
@@ -2348,47 +2348,47 @@ class _ReClassificationPaymentViewState
     }
   }
 
-  void _ecrDialog(BuildContext _context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('ecr.read'.tr()),
-            actions: <Widget>[
-              AlertDialogButton(
-                  onPressed: () async {
-                    Navigator.pop(context);
-                    EasyLoading.show(status: 'please_wait'.tr());
-                    final EcrResponse? ecr = await EcrController().binRequest();
-                    EasyLoading.dismiss();
-                    if (ecr?.success == true) {
-                      EasyLoading.showInfo(
-                          "Successfully fetch the card details");
-                      _ecr = true;
-                      formatCardNoFromEcr(
-                          ecr?.ecrCard?.strTxnCardBin ?? '', '****');
-                      _ecrTimer();
-                      if (mounted) {
-                        setState(() {});
-                      }
+  // void _ecrDialog(BuildContext _context) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text('ecr.read'.tr()),
+  //           actions: <Widget>[
+  //             AlertDialogButton(
+  //                 onPressed: () async {
+  //                   Navigator.pop(context);
+  //                   EasyLoading.show(status: 'please_wait'.tr());
+  //                   final EcrResponse? ecr = await EcrController().binRequest();
+  //                   EasyLoading.dismiss();
+  //                   if (ecr?.success == true) {
+  //                     EasyLoading.showInfo(
+  //                         "Successfully fetch the card details");
+  //                     _ecr = true;
+  //                     formatCardNoFromEcr(
+  //                         ecr?.ecrCard?.strTxnCardBin ?? '', '****');
+  //                     _ecrTimer();
+  //                     if (mounted) {
+  //                       setState(() {});
+  //                     }
 
-                      //TODO: handle promotion
-                    } else {
-                      String error = ecr?.ecrCard?.strErrorDesc ?? '';
-                      if (error.isEmpty) {
-                        error =
-                            'Unknown Error - ${ecr?.ecrCard?.strErrorCode ?? ''}';
-                      }
-                      EasyLoading.showError(error);
-                    }
-                  },
-                  text: 'ecr.yes'.tr()),
-              AlertDialogButton(
-                  onPressed: () => Navigator.pop(context), text: 'ecr.no'.tr())
-            ],
-          );
-        });
-  }
+  //                     //TODO: handle promotion
+  //                   } else {
+  //                     String error = ecr?.ecrCard?.strErrorDesc ?? '';
+  //                     if (error.isEmpty) {
+  //                       error =
+  //                           'Unknown Error - ${ecr?.ecrCard?.strErrorCode ?? ''}';
+  //                     }
+  //                     EasyLoading.showError(error);
+  //                   }
+  //                 },
+  //                 text: 'ecr.yes'.tr()),
+  //             AlertDialogButton(
+  //                 onPressed: () => Navigator.pop(context), text: 'ecr.no'.tr())
+  //           ],
+  //         );
+  //       });
+  // }
 
   String formatCardNoFromEcr(String bin, String last) {
     if (bin.isNotEmpty) {
@@ -2434,7 +2434,7 @@ class _ReClassificationPaymentViewState
             'tax.tax_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(width: double.infinity, child: TaxBreakdownView()),
+          content: SizedBox(width: double.infinity, child:const TaxBreakdownView()),
         );
       },
     );
@@ -2449,26 +2449,26 @@ class _ReClassificationPaymentViewState
             'paid_list.pay_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(width: double.infinity, child: PaymentBreakdown()),
+          content: SizedBox(width: double.infinity, child:const PaymentBreakdown()),
         );
       },
     );
   }
 
-  void _showDiscList() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            'discount_list.disc_title'.tr(),
-            textAlign: TextAlign.center,
-          ),
-          content: SizedBox(width: double.infinity, child: DiscountBreakdown()),
-        );
-      },
-    );
-  }
+  // void _showDiscList() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(
+  //           'discount_list.disc_title'.tr(),
+  //           textAlign: TextAlign.center,
+  //         ),
+  //         content: SizedBox(width: double.infinity, child:const DiscountBreakdown()),
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<void> _handleReferencedPayMode(double amount) async {
     String reference = selectedPayModeHeader?.reference ?? '';

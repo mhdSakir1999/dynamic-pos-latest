@@ -195,11 +195,11 @@ class _SettingViewState extends State<SettingView> {
                 //       }),
                 // ),
                 buildItemCard('Functional Settings', buildFunctionalSettings()),
-                SizedBox(
+               const SizedBox(
                   height: 5,
                 ),
                 buildButtonSet(),
-                SizedBox(
+               const SizedBox(
                   height: 40,
                 )
               ],

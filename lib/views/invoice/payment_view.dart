@@ -1083,7 +1083,7 @@ class _PaymentViewState extends State<PaymentView> {
                     ? GoBackIconButton(
                         onPressed: _ecr ? () {} : clearTempPayment,
                       )
-                    : Spacer(),
+                    :const Spacer(),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
@@ -1095,7 +1095,7 @@ class _PaymentViewState extends State<PaymentView> {
                   )),
                 ),
                 POSConfig().defaultCheckoutLSH
-                    ? Spacer()
+                    ?const Spacer()
                     : GoBackIconButton(onPressed: clearTempPayment),
                 SizedBox(
                   width: 15.r,

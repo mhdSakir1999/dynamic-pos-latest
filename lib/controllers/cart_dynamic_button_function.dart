@@ -656,8 +656,28 @@ class CartDynamicButtonFunction {
                           KeyBoardController().dismiss();
                           KeyBoardController().init(context);
                           KeyBoardController().showBottomDPKeyBoard(rem1,
-                              onEnter: () {
+                              onEnter: () async {
                             KeyBoardController().dismiss();
+                            await KeyBoardController().setIsShow();
+                            KeyBoardController().showBottomDPKeyBoard(rem2,
+                                onEnter: () async {
+                              KeyBoardController().dismiss();
+                              await KeyBoardController().setIsShow();
+                              KeyBoardController().showBottomDPKeyBoard(rem3,
+                                  onEnter: () async {
+                                KeyBoardController().dismiss();
+                                await KeyBoardController().setIsShow();
+                                KeyBoardController().showBottomDPKeyBoard(rem4,
+                                    onEnter: () async {
+                                  KeyBoardController().dismiss();
+                                  await KeyBoardController().setIsShow();
+                                  KeyBoardController().showBottomDPKeyBoard(
+                                      rem5, onEnter: () async {
+                                    KeyBoardController().dismiss();
+                                  });
+                                });
+                              });
+                            });
                           });
                         },
                       ),
@@ -677,8 +697,23 @@ class CartDynamicButtonFunction {
                           KeyBoardController().dismiss();
                           KeyBoardController().init(context);
                           KeyBoardController().showBottomDPKeyBoard(rem2,
-                              onEnter: () {
+                              onEnter: () async {
                             KeyBoardController().dismiss();
+                            await KeyBoardController().setIsShow();
+                            KeyBoardController().showBottomDPKeyBoard(rem3,
+                                onEnter: () async {
+                              KeyBoardController().dismiss();
+                              await KeyBoardController().setIsShow();
+                              KeyBoardController().showBottomDPKeyBoard(rem4,
+                                  onEnter: () async {
+                                KeyBoardController().dismiss();
+                                await KeyBoardController().setIsShow();
+                                KeyBoardController().showBottomDPKeyBoard(rem5,
+                                    onEnter: () async {
+                                  KeyBoardController().dismiss();
+                                });
+                              });
+                            });
                           });
                         },
                       ),
@@ -698,8 +733,18 @@ class CartDynamicButtonFunction {
                           KeyBoardController().dismiss();
                           KeyBoardController().init(context);
                           KeyBoardController().showBottomDPKeyBoard(rem3,
-                              onEnter: () {
+                              onEnter: () async {
                             KeyBoardController().dismiss();
+                            await KeyBoardController().setIsShow();
+                            KeyBoardController().showBottomDPKeyBoard(rem4,
+                                onEnter: () async {
+                              KeyBoardController().dismiss();
+                              await KeyBoardController().setIsShow();
+                              KeyBoardController().showBottomDPKeyBoard(rem5,
+                                  onEnter: () async {
+                                KeyBoardController().dismiss();
+                              });
+                            });
                           });
                         },
                       ),
@@ -719,8 +764,13 @@ class CartDynamicButtonFunction {
                           KeyBoardController().dismiss();
                           KeyBoardController().init(context);
                           KeyBoardController().showBottomDPKeyBoard(rem4,
-                              onEnter: () {
+                              onEnter: () async {
                             KeyBoardController().dismiss();
+                            await KeyBoardController().setIsShow();
+                            KeyBoardController().showBottomDPKeyBoard(rem5,
+                                onEnter: () async {
+                              KeyBoardController().dismiss();
+                            });
                           });
                         },
                       ),

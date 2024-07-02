@@ -337,7 +337,7 @@ class _LandingViewState extends State<LandingView> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Special Options', textAlign: TextAlign.center),
+          title:const Text('Special Options', textAlign: TextAlign.center),
           content: SizedBox(
             width: ScreenUtil().screenWidth * 0.4,
             child: Column(
@@ -456,13 +456,13 @@ class _LandingViewState extends State<LandingView> {
   FocusNode dateFocus = FocusNode();
   Future<void> _rePrintDialog(BuildContext context) async {
     nodes = [userFocus, locFocus, stationFocus, shiftFocus];
-    final now = DateTime.now();
+    // final now = DateTime.now();
     final containerWidth = POSConfig().containerSize.w;
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Manager-Signoff Re-Print', textAlign: TextAlign.center),
+          title:const Text('Manager-Signoff Re-Print', textAlign: TextAlign.center),
           content: SizedBox(
             width: ScreenUtil().screenWidth * 0.6,
             child: Row(
@@ -999,7 +999,7 @@ class _LandingViewState extends State<LandingView> {
                         ),
                         TextSpan(
                             text: loggedUser,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style:const TextStyle(fontWeight: FontWeight.bold)),
                       ]),
                     ),
                   ),

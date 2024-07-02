@@ -150,7 +150,7 @@ class _UtilityBillViewState extends State<UtilityBillView> {
                         EdgeInsets.symmetric(vertical: 15.h, horizontal: 5.w),
                     child: Column(
                       children: [
-                        Text('Authorized person only'),
+                        const Text('Authorized person only'),
                         SizedBox(
                           height: 15.h,
                         ),
@@ -243,7 +243,7 @@ class _UtilityBillViewState extends State<UtilityBillView> {
     final myWidgets = component.widget ?? [];
 
     if (myWidgets.isEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return Visibility(
@@ -303,7 +303,7 @@ class _UtilityBillViewState extends State<UtilityBillView> {
       case 'TEXTDISABLED':
         return _myTextField(index, style, utilityWidget, disabled: true);
       default:
-        return SizedBox();
+        return const SizedBox();
     }
   }
 
@@ -378,7 +378,8 @@ class _UtilityBillViewState extends State<UtilityBillView> {
                           _utilityWidgetList[balanceIndex!]
                               .textEditingController
                               .text = "Invalid Amount";
-                          EasyLoading.showToast("easy_loading.invalid_amount".tr());
+                          EasyLoading.showToast(
+                              "easy_loading.invalid_amount".tr());
                         } else {
                           _utilityWidgetList[balanceIndex!]
                               .textEditingController
@@ -439,7 +440,8 @@ class _UtilityBillViewState extends State<UtilityBillView> {
                               _utilityWidgetList[balanceIndex!]
                                   .textEditingController
                                   .text = "Invalid Amount";
-                              EasyLoading.showToast("easy_loading.invalid_amount".tr());
+                              EasyLoading.showToast(
+                                  "easy_loading.invalid_amount".tr());
                             } else {
                               _utilityWidgetList[balanceIndex!]
                                   .textEditingController
@@ -536,7 +538,7 @@ class _UtilityBillViewState extends State<UtilityBillView> {
                   isDense: true,
                   hintText: text,
                   hintStyle: style,
-                  contentPadding: EdgeInsets.all(10),
+                  contentPadding: const EdgeInsets.all(10),
                 ),
               ),
             ),
@@ -599,7 +601,7 @@ class _UtilityBillViewState extends State<UtilityBillView> {
             ),
             Text(
               '   ' + ((utilityWidget.ubUREGEX ?? '').isEmpty ? ' ' : '*'),
-              style: TextStyle(color: Colors.redAccent),
+              style: const TextStyle(color: Colors.redAccent),
             )
           ],
         ),
@@ -618,14 +620,14 @@ class _UtilityBillViewState extends State<UtilityBillView> {
                 width: 20.r,
               ),
               GoBackIconButton(),
-              Spacer(),
+              const Spacer(),
               Text(
                 widget.utilityBillSetup.uBDESC ?? '',
                 style: CurrentTheme.headline6!
                     .copyWith(color: CurrentTheme.primaryColor),
                 textAlign: TextAlign.center,
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
         ),

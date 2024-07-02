@@ -430,7 +430,7 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
         margin: EdgeInsets.zero,
         child: Row(
           children: [
-            Spacer(
+           const Spacer(
               flex: 1,
             ),
             Text(
