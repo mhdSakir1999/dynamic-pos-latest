@@ -236,7 +236,7 @@ class _ShiftReconciliationEntryViewState
                           ),
                           textAlign: TextAlign.center,
                         ),
-                       const Spacer(),
+                        const Spacer(),
                         Container(
                           width: config.paymentDynamicButtonHeight * 0.7.h,
                           child: CachedNetworkImage(
@@ -244,7 +244,7 @@ class _ShiftReconciliationEntryViewState
                             imageUrl:
                                 "${POSConfig().posImageServer}images/pay_modes/${payButton.detailCode.toLowerCase()}.png",
                             errorWidget: (context, url, error) =>
-                               const SizedBox.shrink(),
+                                const SizedBox.shrink(),
                           ),
                         ),
                         SizedBox(
@@ -460,7 +460,7 @@ class _ShiftReconciliationEntryViewState
           padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
           child: Row(
             children: [
-             const Spacer(
+              const Spacer(
                 flex: 8,
               ),
               Text(
@@ -525,7 +525,7 @@ class _ShiftReconciliationEntryViewState
                           "$denoVal * ${denomination.count} = ${denomination.value! * denomination.count!}",
                           style: CurrentTheme.headline6,
                         ),
-                       const Spacer(),
+                        const Spacer(),
                         Container(
                           width: 300.w,
                           padding: EdgeInsets.all(5.r),

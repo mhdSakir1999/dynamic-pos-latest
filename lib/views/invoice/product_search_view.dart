@@ -451,7 +451,7 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                 children: [
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(
+                      icon:const Icon(
                         Icons.close,
                         color: Colors.white,
                       )),
@@ -578,9 +578,9 @@ class _ProductSearchViewState extends State<ProductSearchView> {
   Widget _firstView() {
     final style =
         CurrentTheme.subtitle2!.copyWith(color: CurrentTheme.primaryDarkColor);
-   final double width = 250.w;
-   final double height = 100.h;
-   final Color color = POSConfig().primaryDarkGrayColor.toColor();
+    final double width = 250.w;
+    final double height = 100.h;
+    final Color color = POSConfig().primaryDarkGrayColor.toColor();
     return Column(
       children: [
         Row(
@@ -1215,7 +1215,7 @@ class _ProductSearchViewState extends State<ProductSearchView> {
                 child: CachedNetworkImage(
                   imageUrl: (selectedProduct?.image ?? ""),
                   httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                  errorWidget: (context, url, error) =>const SizedBox.shrink(),
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
                 )),
           ),
         ),

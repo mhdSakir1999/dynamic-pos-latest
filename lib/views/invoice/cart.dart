@@ -1679,7 +1679,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Spacer(),
+                    // const Spacer(),
                     Row(
                       children: [
                         Text(
@@ -1751,7 +1751,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       ],
                     )
 
-                    // Spacer(),
+                    // const Spacer(),
                   ],
                 ),
               ));
@@ -1781,7 +1781,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     HideWidgetOnScreenSize(
                       md: true,
                       child: Text(
@@ -1861,7 +1861,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //                 mainAxisAlignment: MainAxisAlignment.center,
           //                 crossAxisAlignment: CrossAxisAlignment.center,
           //                 children: [
-          //                   Spacer(),
+          //                   const Spacer(),
           //                   HideWidgetOnScreenSize(
           //                     md: true,
           //                     child: Text(
@@ -1898,7 +1898,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //                         .thousandsSeparator(),
           //                     style: style1Bold,
           //                   ),
-          //                   // Spacer(),
+          //                   // const Spacer(),
           //                   Text(
           //                     'invoice.paid_amount'.tr(),
           //                     style: style1,
@@ -1912,7 +1912,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //                         .thousandsSeparator(),
           //                     style: style1Bold,
           //                   ),
-          //                   //Spacer(),
+          //                   //const Spacer(),
           //                   Text(
           //                     'invoice.balance'.tr(),
           //                     style: style2,
@@ -1924,7 +1924,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //                     data.dueAmount.parseDouble().thousandsSeparator(),
           //                     style: style2Bold,
           //                   ),
-          //                   // Spacer(),
+          //                   // const Spacer(),
           //                 ],
           //               ),
           //             );

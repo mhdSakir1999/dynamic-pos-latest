@@ -1356,14 +1356,14 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                 const Text(
+                  const Text(
                     'ECR Intergrator',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                       alignment: Alignment.centerRight,
                       onPressed: () => Navigator.pop(context),
-                      icon:const Icon(
+                      icon: const Icon(
                         Icons.close_rounded,
                         color: Colors.white,
                       )),
@@ -1456,7 +1456,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                               ),
                             ],
                           ),
-                         const SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Expanded(
@@ -1471,11 +1471,11 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                   const SizedBox(
+                                    const SizedBox(
                                       height: 10,
                                     ),
-                                   const Text('Enter the Amount to pay'),
-                                  const  SizedBox(
+                                    const Text('Enter the Amount to pay'),
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                     Container(
@@ -1512,13 +1512,13 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                     const Text(
+                                      const Text(
                                         'Total Outstanding Amount',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 30),
                                       ),
-                                     const SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Text(
@@ -1706,7 +1706,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
           padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
           child: Row(
             children: [
-             const Spacer(),
+              const Spacer(),
               Text(
                 title,
                 style: CurrentTheme.headline6!.copyWith(
@@ -1752,10 +1752,10 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                       children: [
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          child:const Center(
+                          child: const Center(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child:const Text(
+                              child: const Text(
                                 'Enter gift voucher number here',
                               ),
                             ),
@@ -1765,7 +1765,7 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
                             onPressed: () {
                               showTutorial(false);
                             },
-                            child:const Text('Got it'))
+                            child: const Text('Got it'))
                       ],
                     );
                   },
@@ -1945,7 +1945,8 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
             'tax.tax_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content:const SizedBox(width: double.infinity, child: TaxBreakdownView()),
+          content:
+              const SizedBox(width: double.infinity, child: TaxBreakdownView()),
         );
       },
     );
@@ -1960,7 +1961,8 @@ class _UtilityBillPaymentViewState extends State<UtilityBillPaymentView> {
             'paid_list.pay_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content:const SizedBox(width: double.infinity, child: PaymentBreakdown()),
+          content:
+              const SizedBox(width: double.infinity, child: PaymentBreakdown()),
         );
       },
     );

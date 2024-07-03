@@ -95,15 +95,15 @@ class POSAlertTemplate extends StatelessWidget {
                 height: 8.h,
               ),
               // user card and time
-             const Row(
+              const Row(
                 children: [
-                 const Expanded(
+                  const Expanded(
                       child: UserCard(
                     welcome: false,
                     text: "",
                     shift: true,
                   )),
-                 const POSClock(),
+                  const POSClock(),
                 ],
               ),
               //Title
@@ -133,7 +133,7 @@ class POSAlertTemplate extends StatelessWidget {
                   : const SizedBox.shrink(),
               //Notifications
               notifications == null
-                  ?const SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : Card(
                       color: CurrentTheme.primaryColor,
                       child: Padding(
@@ -284,8 +284,8 @@ class POSAlertTemplate extends StatelessWidget {
                       ),
                     )
                   : expNotificationSpacer
-                      ?const Spacer()
-                      :const SizedBox.shrink(),
+                      ? const Spacer()
+                      : const SizedBox.shrink(),
               Row(
                 children: [
                   Expanded(

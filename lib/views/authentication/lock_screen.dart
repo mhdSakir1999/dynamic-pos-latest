@@ -56,8 +56,8 @@ class _LockScreenState extends State<LockScreen> {
     final padding = EdgeInsets.symmetric(vertical: 10.r);
     return Column(
       children: [
-       const Spacer(),
-       const Center(
+        const Spacer(),
+        const Center(
             child: POSClock(
           centerAlign: true,
           dateFontSize: 20,
@@ -127,7 +127,7 @@ class _LockScreenState extends State<LockScreen> {
                   hintText: "Enter your Password",
                   hintStyle: TextStyle(color: CurrentTheme.primaryColor)),
             )),
-       const Spacer(
+        const Spacer(
           flex: 3,
         ),
       ],

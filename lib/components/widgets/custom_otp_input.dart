@@ -166,11 +166,11 @@ class _CustomOTPInputState extends State<CustomOTPInput> {
             TextButton(
               style: ButtonStyle(
                 padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-                  EdgeInsets.symmetric(
+                 const EdgeInsets.symmetric(
                       horizontal: 20, vertical: 10), // Adjust padding as needed
                 ),
                 minimumSize: WidgetStateProperty.all<Size>(
-                  Size(40, 100), // Set the desired size
+                 const Size(40, 100), // Set the desired size
                 ),
                 backgroundColor: WidgetStateProperty.all<Color>(Colors.red),
                 shape: WidgetStateProperty.all<OutlinedBorder>(
@@ -180,7 +180,7 @@ class _CustomOTPInputState extends State<CustomOTPInput> {
                 ),
               ),
               onPressed: deleteDigit,
-              child: Icon(Icons.backspace_outlined),
+              child: const Icon(Icons.backspace_outlined),
             ),
           ],
         ),

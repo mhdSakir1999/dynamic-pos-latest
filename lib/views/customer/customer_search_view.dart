@@ -531,7 +531,7 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
           ),
           Row(
             children: [
-              Spacer(),
+              const Spacer(),
               Container(
                 width: buttonWidth,
                 child: ElevatedButton(
@@ -545,7 +545,7 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
                   child: Text("customer_search_view.reset_button".tr()),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 width: buttonWidth,
                 child: ElevatedButton(
@@ -601,7 +601,7 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
           SizedBox(
@@ -609,7 +609,7 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
           ),
           Row(
             children: [
-              Spacer(),
+              const Spacer(),
               Container(
                 width: buttonWidth,
                 child: ElevatedButton(
@@ -650,7 +650,7 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 width: buttonWidth,
                 child: ElevatedButton(
@@ -672,7 +672,7 @@ class _CustomerSearchViewState extends State<CustomerSearchView> {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
         ],

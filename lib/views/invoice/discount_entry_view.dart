@@ -315,7 +315,7 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
               ),
               textAlign: TextAlign.center,
             ),
-           const Spacer(),
+            const Spacer(),
           ],
         ),
         // style: ElevatedButton.styleFrom(
@@ -430,7 +430,7 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
         margin: EdgeInsets.zero,
         child: Row(
           children: [
-           const Spacer(
+            const Spacer(
               flex: 1,
             ),
             Text(

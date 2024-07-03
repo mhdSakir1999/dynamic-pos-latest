@@ -231,7 +231,7 @@ class BackspaceKey extends StatelessWidget {
             },
             child: Container(
               child: const Center(
-                child: Icon(
+                child: const Icon(
                   Icons.backspace_outlined,
                   color: Colors.white,
                 ),
@@ -446,7 +446,7 @@ class CapsKey extends StatelessWidget {
             },
             child: Container(
               child: const Center(
-                child: Icon(Icons.keyboard_capslock, color: Colors.white),
+                child:const Icon(Icons.keyboard_capslock, color: Colors.white),
               ),
             ),
           ),

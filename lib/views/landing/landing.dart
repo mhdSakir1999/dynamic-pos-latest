@@ -199,13 +199,13 @@ class _LandingViewState extends State<LandingView> {
                       )),
                   IconButton(
                       onPressed: () => _rePrintDialog(context),
-                      icon: Icon(
+                      icon:const Icon(
                         Icons.print_outlined,
                         color: Colors.green,
                       )),
                   IconButton(
                       onPressed: () => _showSpecialOptions(context),
-                      icon: Icon(
+                      icon:const Icon(
                         Icons.sync,
                         color: Colors.green,
                       )),
@@ -708,7 +708,7 @@ class _LandingViewState extends State<LandingView> {
                                         shiftNo: shiftCtrl.text,
                                         date: dateCtrl.text);
                               },
-                              icon: Icon(
+                              icon:const Icon(
                                 Icons.print,
                               )),
                         ),

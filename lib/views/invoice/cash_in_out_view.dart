@@ -170,14 +170,14 @@ class _CashInOutViewState extends State<CashInOutView> {
                     width: 8.w,
                   ),
                   GoBackIconButton(),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     "cash_in_out_view.${widget.cashIn ? "cash_in" : "cash_out"}"
                         .tr(),
                     style: CurrentTheme.headline6!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
-                  Spacer(),
+                  const Spacer(),
                 ],
               )),
         ),

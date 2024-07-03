@@ -150,7 +150,7 @@ class POSBackground extends StatelessWidget {
                 text,
                 style: CurrentTheme.bodyText1,
               ),
-              Spacer(),
+              const Spacer(),
               InkWell(
                 onTap: onClick,
                 child: Text(

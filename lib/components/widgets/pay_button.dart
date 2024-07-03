@@ -55,7 +55,7 @@ class PayButton extends StatelessWidget {
               // maxLines: 1,
               // overflow: TextOverflow.fade,
             ),
-            Spacer(),
+            const Spacer(),
             Expanded(
               child: Container(
                   width: config.paymentDynamicButtonHeight * 0.8.h,

@@ -77,7 +77,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
         ),
         Expanded(
             child: Padding(
-          padding:const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
           child: buildBody(),
         )),
       ],
@@ -151,20 +151,22 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                     if (mounted) setState(() {});
                     textFocus.requestFocus();
                   },
-                  child:const Text('exit'))
+                  child: const Text('exit'))
             ],
           ),
         )),
         Expanded(child: buildLSHContent()),
-        _viewStatus != _ViewStatus.Product ? const SizedBox.shrink() : lineSpace(),
         _viewStatus != _ViewStatus.Product
-            ?const SizedBox.shrink()
+            ? const SizedBox.shrink()
+            : lineSpace(),
+        _viewStatus != _ViewStatus.Product
+            ? const SizedBox.shrink()
             : buildBottomCard(),
         _viewStatus != _ViewStatus.Product
-            ?const SizedBox.shrink()
+            ? const SizedBox.shrink()
             : buildGroupDetailsCard(),
         _viewStatus != _ViewStatus.Product
-            ?const SizedBox.shrink()
+            ? const SizedBox.shrink()
             : buildProductDetailsCard(),
       ],
     );
@@ -214,47 +216,47 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Text(
                       'invoice.item'.tr() + ':',
                       style: style1,
                     ),
-                   const SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       items,
                       style: style1Bold,
                     ),
-                   const SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       'invoice.quantity'.tr() + ':',
                       style: style1,
                     ),
-                   const SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       qty,
                       style: style1Bold,
                     ),
-                   const SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       'invoice.sub_total'.tr() + ':',
                       style: style1,
                     ),
-                   const SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Text(
                       subtotal,
                       style: style1Bold,
                     ),
-                   const Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ));
@@ -389,7 +391,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                   imageUrl: image,
                   fit: BoxFit.cover,
                   httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                  errorWidget: (context, url, error) =>const SizedBox.shrink(),
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
                 ),
               )),
               Padding(
@@ -485,7 +487,8 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                       httpHeaders: {'Access-Control-Allow-Origin': '*'},
                       imageUrl: (cartModel.image ??
                           "images/products/" + cartModel.proCode + '.png'),
-                      errorWidget: (context, url, error) =>const SizedBox.shrink(),
+                      errorWidget: (context, url, error) =>
+                          const SizedBox.shrink(),
                       imageBuilder: (context, image) {
                         return Card(
                           elevation: 5,
@@ -546,7 +549,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                             ),
                             Row(
                               children: [
-                               const Spacer(),
+                                const Spacer(),
                                 // SizedBox(width: POSConfig().cardIdLength.w,
                                 //     ),
                                 Container(
@@ -750,7 +753,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                 children: [
                   IconButton(
                       onPressed: decrementQty,
-                      icon:const Icon(
+                      icon: const Icon(
                         FontAwesome.minus_circle,
                       ),
                       iconSize: 40.r,
@@ -760,7 +763,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                   ),
                   IconButton(
                     onPressed: incrementQty,
-                    icon:const Icon(
+                    icon: const Icon(
                       FontAwesome.plus_circle,
                     ),
                     iconSize: 40.r,

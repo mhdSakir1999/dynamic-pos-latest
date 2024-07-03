@@ -527,8 +527,8 @@ class _VarientSelectionState extends State<VarientSelection> {
                         ),
                         Row(
                           children: [
-                           const SizedBox(child: Text('Quantity:')),
-                           const SizedBox(
+                            const SizedBox(child: Text('Quantity:')),
+                            const SizedBox(
                               width: 10,
                             ),
                             SizedBox(
@@ -592,7 +592,7 @@ class _VarientSelectionState extends State<VarientSelection> {
                                       );
                                       Navigator.pop(context);
                                     },
-                                    child:const Text('Add')),
+                                    child: const Text('Add')),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),

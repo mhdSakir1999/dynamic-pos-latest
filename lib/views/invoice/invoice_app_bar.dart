@@ -152,7 +152,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: 60.r, height: 60.r, child:  UserImage()),
+                      SizedBox(width: 60.r, height: 60.r, child: UserImage()),
                       Expanded(
                         child: Text(
                           // 'WWWWWWWWWW',
@@ -484,7 +484,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Spacer(),
+                    // const Spacer(),
                     space2,
                     Tooltip(
                       message: tooltip,
@@ -505,7 +505,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                     ),
-                    // Spacer(),
+                    // const Spacer(),
                     space2,
                     Icon(
                       FontAwesome5.clipboard,
@@ -525,7 +525,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                     ),
-                    // Spacer(),
+                    // const Spacer(),
                     space2,
                     Icon(
                       FontAwesome5Solid.map_marker_alt,
@@ -544,7 +544,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                     ),
-                    // Spacer(),
+                    // const Spacer(),
                     space2,
                     IconButton(
                       onPressed: () {

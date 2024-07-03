@@ -2253,7 +2253,7 @@ class _ReClassificationPaymentViewState
                             onPressed: () {
                               showTutorial(false);
                             },
-                            child:const Text('Got it'))
+                            child: const Text('Got it'))
                       ],
                     );
                   },
@@ -2333,7 +2333,8 @@ class _ReClassificationPaymentViewState
                           (enteredCard?.crDHEDDESC ?? "") +
                           ".png",
                       httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                      errorWidget: (context, url, error) =>const SizedBox.shrink(),
+                      errorWidget: (context, url, error) =>
+                          const SizedBox.shrink(),
                       placeholder: (context, url) => const SizedBox.shrink(),
                     ),
                   )),
@@ -2434,7 +2435,8 @@ class _ReClassificationPaymentViewState
             'tax.tax_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(width: double.infinity, child:const TaxBreakdownView()),
+          content:
+              SizedBox(width: double.infinity, child: const TaxBreakdownView()),
         );
       },
     );
@@ -2449,7 +2451,8 @@ class _ReClassificationPaymentViewState
             'paid_list.pay_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(width: double.infinity, child:const PaymentBreakdown()),
+          content:
+              SizedBox(width: double.infinity, child: const PaymentBreakdown()),
         );
       },
     );

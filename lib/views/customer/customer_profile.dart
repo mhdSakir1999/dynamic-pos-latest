@@ -1356,14 +1356,14 @@ class _CustomerProfileState extends State<CustomerProfile> {
               width: 15.r,
             ),
             GoBackIconButton(),
-            Spacer(),
+            const Spacer(),
             Text(
               text,
               style: CurrentTheme.subtitle1!
                   .copyWith(color: CurrentTheme.primaryColor),
               textAlign: TextAlign.center,
             ),
-            Spacer()
+            const Spacer()
           ],
         ),
       ),
@@ -1418,7 +1418,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
           alignment: Alignment.centerRight,
           child: Column(
             children: [
-              Spacer(),
+              const Spacer(),
               SizedBox(
                 width: textWidth,
                 child: Text(
@@ -1489,7 +1489,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                   textAlign: TextAlign.right,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
         ),

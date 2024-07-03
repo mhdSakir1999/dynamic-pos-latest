@@ -128,7 +128,7 @@ class _PromotionViewState extends State<PromotionView> {
     return Column(
       children: [
         Text('promo.applied_title'.tr()),
-       const Divider(),
+        const Divider(),
         SizedBox(
           width: double.infinity,
           child: SizedBox(
@@ -181,7 +181,7 @@ class _PromotionViewState extends State<PromotionView> {
             ),
           ),
         ),
-       const Divider(),
+        const Divider(),
       ],
     );
   }
@@ -276,7 +276,7 @@ class _PromotionViewState extends State<PromotionView> {
                     ),
                   ),
                 ),
-               const Divider(),
+                const Divider(),
               ],
             );
           },
@@ -374,7 +374,7 @@ class _PromotionViewState extends State<PromotionView> {
                     ),
                   ),
                 ),
-               const Divider(),
+                const Divider(),
               ],
             );
           },
@@ -478,7 +478,7 @@ class _PromotionViewState extends State<PromotionView> {
                     ),
                   ),
                 ),
-               const Divider(),
+                const Divider(),
               ],
             );
           },
@@ -528,7 +528,7 @@ class _PromotionViewState extends State<PromotionView> {
           children: [
             Row(
               children: [
-               const Spacer(),
+                const Spacer(),
                 // Text('promo.scan'.tr()),
                 // SizedBox(
                 //   width: 15.w,
@@ -543,13 +543,13 @@ class _PromotionViewState extends State<PromotionView> {
                           _textEditingController.text, context);
                       _textEditingController.clear();
                     },
-                    decoration:const InputDecoration(
+                    decoration: const InputDecoration(
                         filled: true, hintText: "Scan Free Item"),
                   ),
                 ),
               ],
             ),
-           const Divider(),
+            const Divider(),
           ],
         );
       },
@@ -573,7 +573,7 @@ class _PromotionViewState extends State<PromotionView> {
           children: [
             Row(
               children: [
-               const Spacer(),
+                const Spacer(),
                 // Text('promo.scan'.tr()),
                 // SizedBox(
                 //   width: 15.w,
@@ -588,13 +588,13 @@ class _PromotionViewState extends State<PromotionView> {
                           _GVtextEditingController.text, context);
                       _GVtextEditingController.clear();
                     },
-                    decoration:const InputDecoration(
+                    decoration: const InputDecoration(
                         filled: true, hintText: "Scan Free Voucher"),
                   ),
                 ),
               ],
             ),
-           const Divider(),
+            const Divider(),
           ],
         );
       },
@@ -614,7 +614,7 @@ class _PromotionViewState extends State<PromotionView> {
             children: [
               Text(
                 'promo.selectable_promo'.tr(),
-                style:const TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               )
             ],
           );
@@ -681,7 +681,7 @@ class _PromotionViewState extends State<PromotionView> {
     return Column(
       children: [
         Text('promo.applied_title'.tr()),
-       const Divider(),
+        const Divider(),
         SizedBox(
           width: double.infinity,
           child: SizedBox(
@@ -720,7 +720,7 @@ class _PromotionViewState extends State<PromotionView> {
             ),
           ),
         ),
-       const Divider(),
+        const Divider(),
       ],
     );
   }

@@ -1083,7 +1083,7 @@ class _PaymentViewState extends State<PaymentView> {
                     ? GoBackIconButton(
                         onPressed: _ecr ? () {} : clearTempPayment,
                       )
-                    :const Spacer(),
+                    : const Spacer(),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
@@ -1095,7 +1095,7 @@ class _PaymentViewState extends State<PaymentView> {
                   )),
                 ),
                 POSConfig().defaultCheckoutLSH
-                    ?const Spacer()
+                    ? const Spacer()
                     : GoBackIconButton(onPressed: clearTempPayment),
                 SizedBox(
                   width: 15.r,
@@ -2826,7 +2826,8 @@ class _PaymentViewState extends State<PaymentView> {
             'tax.tax_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content:const SizedBox(width: double.infinity, child: TaxBreakdownView()),
+          content:
+              const SizedBox(width: double.infinity, child: TaxBreakdownView()),
         );
       },
     );
@@ -2841,7 +2842,8 @@ class _PaymentViewState extends State<PaymentView> {
             'paid_list.pay_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content:const SizedBox(width: double.infinity, child: PaymentBreakdown()),
+          content:
+              const SizedBox(width: double.infinity, child: PaymentBreakdown()),
         );
       },
     );
@@ -2856,7 +2858,8 @@ class _PaymentViewState extends State<PaymentView> {
             'discount_list.disc_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content:const SizedBox(width: double.infinity, child: DiscountBreakdown()),
+          content: const SizedBox(
+              width: double.infinity, child: DiscountBreakdown()),
         );
       },
     );

@@ -195,11 +195,11 @@ class _SettingViewState extends State<SettingView> {
                 //       }),
                 // ),
                 buildItemCard('Functional Settings', buildFunctionalSettings()),
-               const SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 buildButtonSet(),
-               const SizedBox(
+                const SizedBox(
                   height: 40,
                 )
               ],
@@ -346,7 +346,7 @@ class _SettingViewState extends State<SettingView> {
             ),
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Switch(
             activeColor: Colors.redAccent, value: value, onChanged: onChanged)
       ],
@@ -521,7 +521,7 @@ class _SettingViewState extends State<SettingView> {
               style: style2,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Material(
             elevation: 10,
             child: InkWell(
