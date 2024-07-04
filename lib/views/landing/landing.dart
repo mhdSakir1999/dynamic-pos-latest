@@ -246,7 +246,7 @@ class _LandingViewState extends State<LandingView> {
   /* Promotion Dialog */
   /* By Dinuka 2022/07/28 */
   Future<void> promotionPopup(List<Promotion> promotionList) async {
-    final height = MediaQuery.of(context).size.height;
+    // final height = MediaQuery.of(context).size.height;
     _promoFocusNode.requestFocus();
     return showDialog<void>(
       context: context,
@@ -410,11 +410,11 @@ class _LandingViewState extends State<LandingView> {
                 SizedBox(height: 25.h),
                 AlertDialogButton(
                     onPressed: () async {
-                      String data = POSConfig.localPrintData;
-                      List<POSDenominationModel> denominations =
-                          POSConfig.denominations;
-                      List<POSDenominationDetail> denominationDet =
-                          POSConfig.denominationDet;
+                      // String data = POSConfig.localPrintData;
+                      // List<POSDenominationModel> denominations =
+                      //     POSConfig.denominations;
+                      // List<POSDenominationDetail> denominationDet =
+                      //     POSConfig.denominationDet;
                       // await POSManualPrint()
                       //     .printInvoice(data: data, points: 0.0);
                       // await POSManualPrint().printSignSlip(
@@ -718,7 +718,7 @@ class _LandingViewState extends State<LandingView> {
                         style: CurrentTheme.bodyText2!.copyWith(
                             color: CurrentTheme.primaryDarkColor,
                             fontSize: 18.sp,
-                            fontWeight: FontWeight.bold),
+                            fontWeight:  FontWeight.bold),
                       )
                     ],
                   ),
@@ -761,7 +761,7 @@ class _LandingViewState extends State<LandingView> {
             focusNode?.unfocus();
             nodes[index + 1].requestFocus();
           } else {
-            int index = nodes.indexWhere((element) => element == focusNode);
+            // int index = nodes.indexWhere((element) => element == focusNode);
             focusNode?.unfocus();
             dateFocus.requestFocus();
           }
@@ -812,7 +812,7 @@ class _LandingViewState extends State<LandingView> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
               'Do you want to apply latest structure changes from server?'),
           actions: [
             AlertDialogButton(
@@ -834,7 +834,7 @@ class _LandingViewState extends State<LandingView> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Do you want to reset invoice number?'),
+          title: const Text('Do you want to reset invoice number?'),
           actions: [
             AlertDialogButton(
                 onPressed: () {

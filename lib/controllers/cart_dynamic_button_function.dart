@@ -266,7 +266,7 @@ class CartDynamicButtonFunction {
 
         // handle printings of a hold bill
         if (res.success == true) {
-          POSConfig.localPrintData = res.resReturn!;
+          // POSConfig.localPrintData = res.resReturn!;
           var stopwatch = Stopwatch();
 
           stopwatch.start();
@@ -635,8 +635,8 @@ class CartDynamicButtonFunction {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Invoice Header Remarks', textAlign: TextAlign.center),
+        return  AlertDialog(
+          title: const Text('Invoice Header Remarks', textAlign: TextAlign.center),
           content: SizedBox(
             width: ScreenUtil().screenWidth * 0.6,
             child: Column(

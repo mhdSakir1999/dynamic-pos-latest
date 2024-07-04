@@ -1543,11 +1543,11 @@ class _PaymentViewState extends State<PaymentView> {
               invoiceNo, earnedPoints, totalPoints, taxbill, resReturn),
           context);
     } else {
-      POSConfig.localPrintData = resReturn!;
+      // POSConfig.localPrintData = resReturn!;
       var stopwatch = Stopwatch();
 
       stopwatch.start();
-      POSManualPrint().printInvoice(data: resReturn, points: totalPoints);
+      POSManualPrint().printInvoice(data: resReturn!, points: totalPoints);
       stopwatch.stop();
       print(stopwatch.elapsed.toString());
     }

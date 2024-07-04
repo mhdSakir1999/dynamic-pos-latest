@@ -573,7 +573,7 @@ class InvoiceController {
             Transform.scale(
               scale: animation.value,
               child: AlertDialog(
-                title: Center(child: Text('Amount Mismatch')),
+                title: const Center(child: Text('Amount Mismatch')),
                 content: Text(content),
                 actions: [
                   ElevatedButton(

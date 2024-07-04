@@ -1016,7 +1016,7 @@ class _ReClassificationPaymentViewState
           transitionBuilder: (context, a, b, _) => Transform.scale(
                 scale: a.value,
                 child: AlertDialog(
-                    content: Text('Do you want to clear the payments?'),
+                    content: Text('general_dialog.clear_payment'.tr()),
                     actions: [
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(

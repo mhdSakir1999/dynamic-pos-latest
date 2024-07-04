@@ -1418,95 +1418,95 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     }
   }
 
-  void _qtyKeyboard(TextEditingController qtyController, var returnProRes,
-      bool isScaleBarcode) async {
-    // KeyBoardController().dismiss();
-    if (POSConfig().touchKeyboardEnabled) {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: Colors.transparent,
-            alignment: Alignment.bottomCenter,
-            content: SizedBox(
-              width: 450.w,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.white,
-                      )),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Tooltip(
-                    message: 'quantity',
-                    child: TextField(
-                      // onEditingComplete: () => searchItem(),
-                      onSubmitted: (value) async {
-                        Navigator.pop(context);
-                        await calculator.addItemToCart(
-                            returnProRes!.product!.first,
-                            double.parse(qtyController.text),
-                            context,
-                            returnProRes!.prices,
-                            returnProRes!.proPrices,
-                            returnProRes!.proTax,
-                            secondApiCall: false,
-                            scaleBarcode: isScaleBarcode);
-                        Navigator.pop(context);
-                      },
-                      controller: qtyController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                          hintStyle: CurrentTheme.headline6!
-                              .copyWith(color: CurrentTheme.primaryDarkColor),
-                          hintText: '',
-                          filled: true),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  POSKeyBoard(
-                    color: Colors.transparent,
-                    onPressed: () {
-                      //_customerCodeEditingController.clear();
-                      if (qtyController.text.length != 0) {
-                        qtyController.text = qtyController.text
-                            .substring(0, qtyController.text.length - 1);
-                      }
-                    },
-                    clearButton: true,
-                    isInvoiceScreen: false,
-                    disableArithmetic: true,
-                    onEnter: () async {
-                      Navigator.pop(context);
-                      await calculator.addItemToCart(
-                          returnProRes!.product!.first,
-                          double.parse(qtyController.text),
-                          context,
-                          returnProRes!.prices,
-                          returnProRes!.proPrices,
-                          returnProRes!.proTax,
-                          secondApiCall: false,
-                          scaleBarcode: isScaleBarcode);
-                      Navigator.pop(context);
-                    },
-                    controller: qtyController,
-                    // nextFocusTo: editingFocusNode,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
-  }
+  // void _qtyKeyboard(TextEditingController qtyController, var returnProRes,
+  //     bool isScaleBarcode) async {
+  //   // KeyBoardController().dismiss();
+  //   if (POSConfig().touchKeyboardEnabled) {
+  //     await showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           backgroundColor: Colors.transparent,
+  //           alignment: Alignment.bottomCenter,
+  //           content: SizedBox(
+  //             width: 450.w,
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 IconButton(
+  //                     onPressed: () => Navigator.pop(context),
+  //                     icon: const Icon(
+  //                       Icons.close,
+  //                       color: Colors.white,
+  //                     )),
+  //                 SizedBox(
+  //                   height: 10.h,
+  //                 ),
+  //                 Tooltip(
+  //                   message: 'quantity',
+  //                   child: TextField(
+  //                     // onEditingComplete: () => searchItem(),
+  //                     onSubmitted: (value) async {
+  //                       Navigator.pop(context);
+  //                       await calculator.addItemToCart(
+  //                           returnProRes!.product!.first,
+  //                           double.parse(qtyController.text),
+  //                           context,
+  //                           returnProRes!.prices,
+  //                           returnProRes!.proPrices,
+  //                           returnProRes!.proTax,
+  //                           secondApiCall: false,
+  //                           scaleBarcode: isScaleBarcode);
+  //                       Navigator.pop(context);
+  //                     },
+  //                     controller: qtyController,
+  //                     autofocus: true,
+  //                     decoration: InputDecoration(
+  //                         hintStyle: CurrentTheme.headline6!
+  //                             .copyWith(color: CurrentTheme.primaryDarkColor),
+  //                         hintText: '',
+  //                         filled: true),
+  //                   ),
+  //                 ),
+  //                 SizedBox(
+  //                   height: 10.h,
+  //                 ),
+  //                 POSKeyBoard(
+  //                   color: Colors.transparent,
+  //                   onPressed: () {
+  //                     //_customerCodeEditingController.clear();
+  //                     if (qtyController.text.length != 0) {
+  //                       qtyController.text = qtyController.text
+  //                           .substring(0, qtyController.text.length - 1);
+  //                     }
+  //                   },
+  //                   clearButton: true,
+  //                   isInvoiceScreen: false,
+  //                   disableArithmetic: true,
+  //                   onEnter: () async {
+  //                     Navigator.pop(context);
+  //                     await calculator.addItemToCart(
+  //                         returnProRes!.product!.first,
+  //                         double.parse(qtyController.text),
+  //                         context,
+  //                         returnProRes!.prices,
+  //                         returnProRes!.proPrices,
+  //                         returnProRes!.proTax,
+  //                         secondApiCall: false,
+  //                         scaleBarcode: isScaleBarcode);
+  //                     Navigator.pop(context);
+  //                   },
+  //                   controller: qtyController,
+  //                   // nextFocusTo: editingFocusNode,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   //handle gv
   Future _handleGiftVoucher() async {
@@ -3068,7 +3068,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     String code = PermissionCode.stockBypass;
     String type = "A";
     String refCode =
-        invNo + "@" + (proStockCode ?? "") + "@" + qty.toDouble().toString();
+        invNo + "@" + (proStockCode) + "@" + qty.toDouble().toString();
     bool permissionStatus = handler.hasPermission(
         permissionCode: code, accessType: type, refCode: refCode);
     if (!permissionStatus) {
@@ -3229,7 +3229,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                   .printInvoice(invoice, invRes.earnedPoints, 0, false, null),
               context);
         } else {
-          POSConfig.localPrintData = invRes.resReturn ?? '';
+          // POSConfig.localPrintData = invRes.resReturn ?? '';
           var stopwatch = Stopwatch();
 
           stopwatch.start();

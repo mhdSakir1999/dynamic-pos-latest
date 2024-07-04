@@ -897,7 +897,8 @@
     "sales_assist_no_products": "Add items to cart to select sales assistant",
     "continue_zero_float": "Are you sure to continue with the float amount of 0.00",
     "change": "Change",
-    "mngSignOff_confirm": "Do you confirm the amount and want to do sign-off"
+    "mngSignOff_confirm": "Do you confirm the amount and want to do sign-off",
+    "clear_payment": "Do you want to clear the payments?"
   },
   "tool_tip": {
     "promo_refresh": "Promotion Refresh",
