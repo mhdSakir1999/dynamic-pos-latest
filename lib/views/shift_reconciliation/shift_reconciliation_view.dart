@@ -69,7 +69,7 @@ class ShiftReconciliationView extends StatelessWidget {
 
   Widget buildCard(BuildContext context) {
     final user = userBloc.currentUser;
-    String name = user?.uSERHEDTITLE ?? '';
+    final String name = user?.uSERHEDTITLE ?? '';
     final shiftNo = user?.shiftNo ?? "";
     return Container(
       child: Column(

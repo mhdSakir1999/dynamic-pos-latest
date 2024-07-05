@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
@@ -29,8 +28,8 @@ class PaymentReClassification extends StatefulWidget {
 }
 
 class _PaymentReClassificationState extends State<PaymentReClassification> {
-  TextEditingController invController = TextEditingController();
-  FocusNode invFocus = FocusNode();
+  final TextEditingController invController = TextEditingController();
+  final FocusNode invFocus = FocusNode();
   String invDate = '--';
   num invAmount = 0;
   String invLoc = '--';
@@ -94,7 +93,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
 
                         setState(() {});
                       },
-                      child: Text('Re-Classify'),
+                      child: const Text('Re-Classify'),
                     ),
                   ),
                   Padding(
@@ -122,7 +121,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                         //if user doesnt have the permission
                         if (!hasPermission) {
                           final res = await SpecialPermissionHandler(
-                                  context: context!)
+                                  context: context)
                               .askForPermission(
                                   permissionCode:
                                       PermissionCode.reclassification,
@@ -223,8 +222,8 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                         }
                         EasyLoading.dismiss();
                       },
-                      child: Text('Save'),
-                      style: ButtonStyle(
+                      child: const Text('Save'),
+                      style:  ButtonStyle(
                           backgroundColor:
                               WidgetStatePropertyAll(Colors.green[800])),
                     ),
@@ -238,10 +237,10 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                     children: [
                       invDetailCard(),
                       payments.isEmpty
-                          ? SizedBox.shrink()
+                          ? const SizedBox.shrink()
                           : paymentsCard('OLD PAYMENTS', payments, true),
                       classifiedPayments.isEmpty
-                          ? SizedBox.shrink()
+                          ? const SizedBox.shrink()
                           : paymentsCard('RE-CLASSIFIED PAYMENTS',
                               classifiedPayments, false),
                     ],
@@ -283,13 +282,13 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
               ]),
             ),
         pageBuilder: (context, animation, secondaryAnimation) {
-          return SizedBox();
+          return const SizedBox();
         });
   }
 
   Widget paymentsCard(
       String paymentLabel, List<PaidModel> payments, bool isOld) {
-    var labelStyle = TextStyle(
+    final labelStyle = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black);
     final height = MediaQuery.of(context).size.height;
     return Container(
@@ -365,7 +364,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                         ],
                       ),
                     )
-                  : SizedBox.shrink()
+                  : const SizedBox.shrink()
             ],
           ),
         ));
@@ -391,27 +390,27 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     paymentRowValue(value: (index + 1).toString(), flex: 1),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     paymentRowValue(flex: 2, value: current.phCode),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     paymentRowValue(flex: 3, value: current.phDesc ?? ''),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     paymentRowValue(flex: 2, value: current.pdCode),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     paymentRowValue(flex: 3, value: current.pdDesc ?? ''),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     paymentRowValue(flex: 5, value: current.refNo),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     paymentRowValue(
@@ -419,7 +418,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                         value: (current.paidDateTime.toString() ?? 'T')
                             .split(' ')
                             .first),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     paymentRowValue(
@@ -434,7 +433,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
   }
 
   Expanded paymentRowValue({int flex = 1, String value = '--'}) {
-    var valueStyle = CurrentTheme.bodyText1!.copyWith(
+    final valueStyle = CurrentTheme.bodyText1!.copyWith(
         fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600);
     return Expanded(
         flex: flex,
@@ -555,7 +554,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
         color: CurrentTheme.primaryLightColor, fontWeight: FontWeight.w600);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final config = POSConfig();
+    // final config = POSConfig();
     return Container(
       width: width * 0.5,
       child: Card(
@@ -582,7 +581,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                         height: height * 0.05,
                         child: TextField(
                           style: textStyle,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             fillColor: Colors.white,
                             contentPadding:
                                 EdgeInsets.only(left: 10, right: 10),
@@ -663,7 +662,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                               }
                               EasyLoading.dismiss();
                             },
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.search,
                             )),
                       ),
@@ -771,7 +770,7 @@ class invDetailRecords extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    // final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final textStyle = CurrentTheme.bodyText1!.copyWith(
         color: CurrentTheme.primaryDarkColor, fontWeight: FontWeight.w600);
@@ -787,7 +786,7 @@ class invDetailRecords extends StatelessWidget {
                       Text(label.toUpperCase(), style: CurrentTheme.bodyText2)),
               SizedBox(
                 width: width * 0.02,
-                child: Text(':'),
+                child: const Text(':'),
               ),
               Container(
                 decoration: BoxDecoration(

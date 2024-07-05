@@ -37,6 +37,7 @@ class POSInvoiceAppBar extends StatefulWidget {
   // if this is not null this will show as invoice no
   final String? overrideInvoiceNo;
   final VoidCallback? onPriceClick;
+  final VoidCallback? afterCustomerPopup;
   final bool hideCustomer;
   final FocusNode customerButtonNode = FocusNode();
 
@@ -45,7 +46,8 @@ class POSInvoiceAppBar extends StatefulWidget {
       this.showCustomer = true,
       this.overrideInvoiceNo,
       this.onPriceClick,
-      this.hideCustomer = false})
+      this.hideCustomer = false,
+      this.afterCustomerPopup})
       : super(key: key);
 
   @override
@@ -130,7 +132,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
               stream: userBloc.currentUserStream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData)
-                  return Text(
+                  return const Text(
                     "UnAuthorized Access",
                     style: TextStyle(
                       color: Colors.redAccent,
@@ -180,8 +182,9 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                   backgroundColor: POSConfig().primaryDarkGrayColor.toColor()),
               onPressed: (widget.hideCustomer || POSConfig().localMode)
                   ? null
-                  : () {
-                      CustomerController().showCustomerPicker(context);
+                  : () async {
+                      await CustomerController().showCustomerPicker(context);
+                      widget.afterCustomerPopup?.call();
                     },
               child: Text(
                 "app_bar.select_customer".tr(),
@@ -190,8 +193,9 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
           return GestureDetector(
               onTap: widget.hideCustomer
                   ? null
-                  : () {
-                      CustomerController().showCustomerPicker(context);
+                  : () async {
+                      await CustomerController().showCustomerPicker(context);
+                      widget.afterCustomerPopup?.call();
                     },
               child: buildUserImage(snapshot.data!));
         }
@@ -249,10 +253,12 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                                 );
                                 Navigator.pop(
                                     context); //closing the showdialog box at the end
+                                widget.afterCustomerPopup?.call();
                               }
                             }
                             if (value.physicalKey == PhysicalKeyboardKey.keyN) {
                               Navigator.pop(context);
+                              widget.afterCustomerPopup?.call();
                             }
                             if (value.physicalKey == PhysicalKeyboardKey.keyY) {
                               Navigator.pop(context);
@@ -262,7 +268,9 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                                 cartBloc.updateCartSummary(cartSum);
                               }
                               customerBloc.changeCurrentCustomer(null);
-                              CustomerController().showCustomerPicker(context);
+                              await CustomerController()
+                                  .showCustomerPicker(context);
+                              widget.afterCustomerPopup?.call();
                             }
                           }
                         },
@@ -304,6 +312,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                                         );
                                         Navigator.pop(
                                             context); //closing the showdialog box at the end
+                                        widget.afterCustomerPopup?.call();
                                       }
                                     },
                                     child: RichText(
@@ -327,6 +336,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                                             .toColor()),
                                     onPressed: () {
                                       Navigator.pop(context);
+                                      widget.afterCustomerPopup?.call();
                                     },
                                     child: RichText(
                                         text: TextSpan(text: '', children: [
@@ -347,7 +357,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                                         backgroundColor: POSConfig()
                                             .primaryDarkGrayColor
                                             .toColor()),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       Navigator.pop(context);
                                       var cartSum = cartBloc.cartSummary;
                                       if (cartSum != null) {
@@ -355,8 +365,9 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                                         cartBloc.updateCartSummary(cartSum);
                                       }
                                       customerBloc.changeCurrentCustomer(null);
-                                      CustomerController()
+                                      await CustomerController()
                                           .showCustomerPicker(context);
+                                      widget.afterCustomerPopup?.call();
                                     },
                                     child: RichText(
                                         text: TextSpan(text: '', children: [
@@ -376,7 +387,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                   pageBuilder: (context, animation, secondaryAnimation) {
-                    return SizedBox();
+                    return const SizedBox();
                   });
             },
       child: smallDevice
@@ -473,7 +484,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Spacer(),
+                    // const Spacer(),
                     space2,
                     Tooltip(
                       message: tooltip,
@@ -494,7 +505,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                     ),
-                    // Spacer(),
+                    // const Spacer(),
                     space2,
                     Icon(
                       FontAwesome5.clipboard,
@@ -514,7 +525,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                     ),
-                    // Spacer(),
+                    // const Spacer(),
                     space2,
                     Icon(
                       FontAwesome5Solid.map_marker_alt,
@@ -533,7 +544,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
                         ),
                       ),
                     ),
-                    // Spacer(),
+                    // const Spacer(),
                     space2,
                     IconButton(
                       onPressed: () {
@@ -562,7 +573,7 @@ class _POSInvoiceAppBarState extends State<POSInvoiceAppBar> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
+        return const AlertDialog(
           content: ServiceStatusView(),
         );
       },

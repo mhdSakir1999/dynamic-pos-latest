@@ -95,15 +95,15 @@ class POSAlertTemplate extends StatelessWidget {
                 height: 8.h,
               ),
               // user card and time
-              Row(
+              const Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: UserCard(
                     welcome: false,
                     text: "",
                     shift: true,
                   )),
-                  POSClock(),
+                  const POSClock(),
                 ],
               ),
               //Title
@@ -130,10 +130,10 @@ class POSAlertTemplate extends StatelessWidget {
                         ),
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
               //Notifications
               notifications == null
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : Card(
                       color: CurrentTheme.primaryColor,
                       child: Padding(
@@ -221,7 +221,7 @@ class POSAlertTemplate extends StatelessWidget {
                               height: 15.h,
                             ),
                             hideTextField2
-                                ? SizedBox.shrink()
+                                ? const SizedBox.shrink()
                                 : TextField(
                                     focusNode: text2FocusNode,
                                     textAlign: TextAlign.center,
@@ -252,7 +252,7 @@ class POSAlertTemplate extends StatelessWidget {
                               height: 15.h,
                             ),
                             hideTextField3
-                                ? SizedBox.shrink()
+                                ? const SizedBox.shrink()
                                 : TextField(
                                     focusNode: text3FocusNode,
                                     textAlign: TextAlign.center,
@@ -284,8 +284,8 @@ class POSAlertTemplate extends StatelessWidget {
                       ),
                     )
                   : expNotificationSpacer
-                      ? Spacer()
-                      : SizedBox.shrink(),
+                      ? const Spacer()
+                      : const SizedBox.shrink(),
               Row(
                 children: [
                   Expanded(
@@ -339,7 +339,7 @@ class POSAlertTemplate extends StatelessWidget {
         ),
       );
     else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
 }

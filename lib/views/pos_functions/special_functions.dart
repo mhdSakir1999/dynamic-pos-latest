@@ -23,7 +23,6 @@ import '../../controllers/invoice_controller.dart';
 import '../../controllers/keyboard_controller.dart';
 import '../../controllers/master_download_controller.dart';
 import '../../controllers/pos_alerts/pos_error_alert.dart';
-import '../../controllers/pos_price_calculator.dart';
 import '../../controllers/special_permission_handler.dart';
 import '../../models/pos/permission_code.dart';
 
@@ -126,14 +125,14 @@ class _SpecialFunctionsState extends State<SpecialFunctions> {
                 ),
                 Container(
                   width: containerWidth,
-                  child: Row(
+                  child: const Row(
                     children: [
-                      Expanded(
-                          child: UserCard(
+                      const Expanded(
+                          child: const UserCard(
                         text: "",
                         shift: true,
                       )),
-                      POSClock(),
+                      const POSClock(),
                     ],
                   ),
                 ),
@@ -336,12 +335,12 @@ class _SpecialFunctionsState extends State<SpecialFunctions> {
                           children: [
                             SizedBox(
                               width: 90.w,
-                              child: Text('Value',
+                              child: const Text('Value',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       decoration: TextDecoration.underline)),
                             ),
-                            Text('Count',
+                            const Text('Count',
                                 style: TextStyle(
                                     decoration: TextDecoration.underline))
                           ],
@@ -490,14 +489,14 @@ class _SpecialFunctionsState extends State<SpecialFunctions> {
                 width: 20.r,
               ),
               GoBackIconButton(),
-              Spacer(),
+              const Spacer(),
               Text(
                 text,
                 style: CurrentTheme.headline6!
                     .copyWith(color: CurrentTheme.primaryColor),
                 textAlign: TextAlign.center,
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
         ),

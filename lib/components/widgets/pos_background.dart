@@ -55,20 +55,20 @@ class POSBackground extends StatelessWidget {
           ],
         ),
         if (POSConfig().trainingMode)
-          Positioned(
+          const Positioned(
               right: 10,
               top: 10,
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.circle_rounded,
                     color: const Color.fromARGB(255, 245, 221, 11),
                     size: 12,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
-                  Text(
+                  const Text(
                     'Training Mode',
                     style: TextStyle(color: Colors.white, fontSize: 12),
                   )
@@ -120,7 +120,7 @@ class POSBackground extends StatelessWidget {
   Widget _showSubscriptionMessage() {
     return StatefulBuilder(
       builder: (BuildContext context, void Function(void Function()) setState) {
-        if (POSConfig().licenseMessage.isEmpty) return SizedBox.shrink();
+        if (POSConfig().licenseMessage.isEmpty) return const SizedBox.shrink();
         return _topNotice(
             text: POSConfig().licenseMessage,
             color: POSConfig().licenseMessageColor,
@@ -150,7 +150,7 @@ class POSBackground extends StatelessWidget {
                 text,
                 style: CurrentTheme.bodyText1,
               ),
-              Spacer(),
+              const Spacer(),
               InkWell(
                 onTap: onClick,
                 child: Text(
@@ -176,7 +176,7 @@ class POSBackground extends StatelessWidget {
         ),
         isMobile ? SafeArea(child: child) : child,
         !locked
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : SizedBox.expand(
                 child: BackdropFilter(
                   filter: new ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
@@ -198,6 +198,6 @@ class POSBackground extends StatelessWidget {
     if (showConnection) {
       return Positioned(child: connectionWidgetData());
     }
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 }

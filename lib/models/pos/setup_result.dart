@@ -136,7 +136,7 @@ class Setup {
     } catch (e) {
       maxCashLimit = 0;
     }
-    itemReturnDayLimit = json?['setuP_RETURN_DAYS'] ?? 0;
+    itemReturnDayLimit = json['setuP_RETURN_DAYS'] ?? 0;
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

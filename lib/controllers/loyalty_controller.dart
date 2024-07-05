@@ -22,5 +22,6 @@ class LoyaltyController {
     } on Exception catch (_) {
       return null;
     }
+    return null;
   }
 }

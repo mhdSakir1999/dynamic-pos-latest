@@ -77,7 +77,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
         ),
         Expanded(
             child: Padding(
-          padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
           child: buildBody(),
         )),
       ],
@@ -151,20 +151,22 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                     if (mounted) setState(() {});
                     textFocus.requestFocus();
                   },
-                  child: Text('exit'))
+                  child: const Text('exit'))
             ],
           ),
         )),
         Expanded(child: buildLSHContent()),
-        _viewStatus != _ViewStatus.Product ? SizedBox.shrink() : lineSpace(),
         _viewStatus != _ViewStatus.Product
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
+            : lineSpace(),
+        _viewStatus != _ViewStatus.Product
+            ? const SizedBox.shrink()
             : buildBottomCard(),
         _viewStatus != _ViewStatus.Product
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : buildGroupDetailsCard(),
         _viewStatus != _ViewStatus.Product
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : buildProductDetailsCard(),
       ],
     );
@@ -181,7 +183,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
             padding: EdgeInsets.only(left: 8.r, right: 8.r, bottom: 4.r),
             child: buildPriceCard(),
           );
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       },
     );
   }
@@ -192,10 +194,10 @@ class _WeightedItemViewState extends State<WeightedItemView> {
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     final style1Bold = style1.copyWith(
         fontWeight: FontWeight.bold, fontSize: 10 * getFontSize());
-    final style2 = CurrentTheme.headline4!.copyWith(
-        color: CurrentTheme.primaryLightColor, fontSize: 10 * getFontSize());
-    final style2Bold = style2.copyWith(
-        fontWeight: FontWeight.bold, fontSize: 10 * getFontSize());
+    // final style2 = CurrentTheme.headline4!.copyWith(
+    //     color: CurrentTheme.primaryLightColor, fontSize: 10 * getFontSize());
+    // final style2Bold = style2.copyWith(
+    //     fontWeight: FontWeight.bold, fontSize: 10 * getFontSize());
     return StreamBuilder<CartSummaryModel>(
         stream: cartBloc.cartSummarySnapshot,
         builder: (context, AsyncSnapshot<CartSummaryModel> snapshot) {
@@ -203,7 +205,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
           String items = "${data?.items ?? 0}";
           String qty = data?.qty.qtyFormatter() ?? "0.0";
           String subtotal = "${(data?.subTotal ?? 0).thousandsSeparator()}";
-          String lines = "";
+          // String lines = "";
 
           return Card(
               color: CurrentTheme.primaryColor,
@@ -214,47 +216,47 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Text(
                       'invoice.item'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       items,
                       style: style1Bold,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       'invoice.quantity'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       qty,
                       style: style1Bold,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       'invoice.sub_total'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Text(
                       subtotal,
                       style: style1Bold,
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ));
@@ -389,7 +391,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                   imageUrl: image,
                   fit: BoxFit.cover,
                   httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                  errorWidget: (context, url, error) => SizedBox.shrink(),
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
                 ),
               )),
               Padding(
@@ -420,13 +422,13 @@ class _WeightedItemViewState extends State<WeightedItemView> {
 
   // this method return the cart list
   Widget buildCartList() {
-    final headingStyle = TextStyle(
-        fontSize: POSConfig().cartDynamicButtonFontSize.sp,
-        fontWeight: FontWeight.bold,
-        color: CurrentTheme.primaryLightColor);
-    final dataStyle = TextStyle(
-        fontSize: POSConfig().cartDynamicButtonFontSize.sp,
-        color: CurrentTheme.primaryLightColor);
+    // final headingStyle = TextStyle(
+    //     fontSize: POSConfig().cartDynamicButtonFontSize.sp,
+    //     fontWeight: FontWeight.bold,
+    //     color: CurrentTheme.primaryLightColor);
+    // final dataStyle = TextStyle(
+    //     fontSize: POSConfig().cartDynamicButtonFontSize.sp,
+    //     color: CurrentTheme.primaryLightColor);
 
     return StreamBuilder<Map<String, CartModel>>(
         stream: cartBloc.currentCartSnapshot,
@@ -451,7 +453,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
 
   // this method build the card based cart item list
   Widget buildCartCard(CartModel cartModel) {
-    bool voided = (cartModel.itemVoid ?? false);
+    // bool voided = (cartModel.itemVoid ?? false);
     final style = CurrentTheme.bodyText1!.copyWith(
         color: CurrentTheme.primaryLightColor,
         fontSize: (POSConfig().cardFontSize).sp);
@@ -485,7 +487,8 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                       httpHeaders: {'Access-Control-Allow-Origin': '*'},
                       imageUrl: (cartModel.image ??
                           "images/products/" + cartModel.proCode + '.png'),
-                      errorWidget: (context, url, error) => SizedBox.shrink(),
+                      errorWidget: (context, url, error) =>
+                          const SizedBox.shrink(),
                       imageBuilder: (context, image) {
                         return Card(
                           elevation: 5,
@@ -528,7 +531,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                                             fontSize: 10 * getFontSize()),
                                       ),
                                     )),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
@@ -546,7 +549,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                             ),
                             Row(
                               children: [
-                                Spacer(),
+                                const Spacer(),
                                 // SizedBox(width: POSConfig().cardIdLength.w,
                                 //     ),
                                 Container(
@@ -578,7 +581,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                           ],
                         ),
                         discountText == null
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : Positioned(
                                 right: 0,
                                 child: Card(
@@ -666,8 +669,8 @@ class _WeightedItemViewState extends State<WeightedItemView> {
   /// This card will show the selected item's group card
   Widget buildGroupDetailsCard() {
     final style = CurrentTheme.subtitle2;
-    String code = selectedGroup?.gPCODE ?? "";
-    String desc = selectedGroup?.gPDESC ?? "";
+    final String code = selectedGroup?.gPCODE ?? "";
+    final String desc = selectedGroup?.gPDESC ?? "";
     return Card(
       color: CurrentTheme.primaryColor,
       child: Container(
@@ -701,11 +704,11 @@ class _WeightedItemViewState extends State<WeightedItemView> {
 
   /// This card show the item details
   Widget buildProductDetailsCard() {
-    String code = selectedProduct?.pLUCODE ?? "";
-    String desc = selectedProduct?.pLUPOSDESC ?? "";
+    final String code = selectedProduct?.pLUCODE ?? "";
+    final String desc = selectedProduct?.pLUPOSDESC ?? "";
     final price = selectedProduct?.sELLINGPRICE ?? 0;
-    String mrp = price.thousandsSeparator();
-    String qty = this.qty.toString();
+    final String mrp = price.thousandsSeparator();
+    final String qty = this.qty.toString();
 
     final style = CurrentTheme.subtitle2;
     return Card(
@@ -725,21 +728,21 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                 ),
                 Text(
                   "weighted_item.product_name".tr(namedArgs: {"name": desc}),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.mpr".tr(namedArgs: {"mrp": mrp}),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.quantity".tr(namedArgs: {"qty": qty}),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.line_amount".tr(namedArgs: {
                     "total": (this.qty * price).thousandsSeparator()
                   }),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
               ],
             ),
@@ -750,7 +753,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                 children: [
                   IconButton(
                       onPressed: decrementQty,
-                      icon: Icon(
+                      icon: const Icon(
                         FontAwesome.minus_circle,
                       ),
                       iconSize: 40.r,
@@ -760,7 +763,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
                   ),
                   IconButton(
                     onPressed: incrementQty,
-                    icon: Icon(
+                    icon: const Icon(
                       FontAwesome.plus_circle,
                     ),
                     iconSize: 40.r,
@@ -869,10 +872,10 @@ class _WeightedItemViewState extends State<WeightedItemView> {
       /// new change - adding bottle prices seperately in invoice when buying liquor items [or maybe any other]
       /// Author : [TM.Sakir] at 2023-11-01 11:10 AM
       /// -------------------------------------------------------------------------------------------------
-      var size = MediaQuery.of(context).size;
-      TextEditingController qtyController =
-          TextEditingController(text: qty.toString());
-      double newqty = 1;
+      // var size = MediaQuery.of(context).size;
+      // TextEditingController qtyController =
+      //     TextEditingController(text: qty.toString());
+      // double newqty = 1;
       await POSPriceCalculator().addItemToCart(
           myProduct!, qty, context, null, null, null,
           secondApiCall: true, successToast: false);
@@ -930,7 +933,7 @@ class _WeightedItemViewState extends State<WeightedItemView> {
               isScrollControlled: true,
               isDismissible: false,
               useRootNavigator: true,
-              context: context!,
+              context: context,
               builder: (context) {
                 return ReturnBottleSelectionView(
                   returnProResList: resList!.emptyBottles!,

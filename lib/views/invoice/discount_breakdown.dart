@@ -32,7 +32,7 @@ class _DiscountBreakdownState extends State<DiscountBreakdown> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle style =
+   final TextStyle style =
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     List<CartModel?> item = [];
     cartBloc.currentCart?.forEach((key, value) {
@@ -116,7 +116,7 @@ class _DiscountBreakdownState extends State<DiscountBreakdown> {
 
                   return _discountListItem(item[i]!);
                 } else {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
               },
             ),
@@ -132,9 +132,9 @@ class _DiscountBreakdownState extends State<DiscountBreakdown> {
   }
 
   Widget _discountListItem(CartModel item) {
-    TextStyle style1 =
+   final TextStyle style1 =
         CurrentTheme.bodyText2!.copyWith(color: CurrentTheme.primaryLightColor);
-    TextStyle style2 = CurrentTheme.bodyText2!
+   final TextStyle style2 = CurrentTheme.bodyText2!
         .copyWith(color: Colors.greenAccent, fontWeight: FontWeight.bold);
     return Row(
       children: [
@@ -199,7 +199,7 @@ class _DiscountBreakdownState extends State<DiscountBreakdown> {
   }
 
   Widget _discountSummary() {
-    double promoDiscount = (cartBloc.cartSummary?.promoDiscount ?? 0);
+   final double promoDiscount = (cartBloc.cartSummary?.promoDiscount ?? 0);
     return Column(
       children: [
         Row(
@@ -245,7 +245,7 @@ class _DiscountBreakdownState extends State<DiscountBreakdown> {
           ],
         ),
         const Divider(),
-        SizedBox(
+        const SizedBox(
           height: 20,
         )
       ],

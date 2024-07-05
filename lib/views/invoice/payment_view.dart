@@ -1083,7 +1083,7 @@ class _PaymentViewState extends State<PaymentView> {
                     ? GoBackIconButton(
                         onPressed: _ecr ? () {} : clearTempPayment,
                       )
-                    : Spacer(),
+                    : const Spacer(),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
@@ -1095,7 +1095,7 @@ class _PaymentViewState extends State<PaymentView> {
                   )),
                 ),
                 POSConfig().defaultCheckoutLSH
-                    ? Spacer()
+                    ? const Spacer()
                     : GoBackIconButton(onPressed: clearTempPayment),
                 SizedBox(
                   width: 15.r,
@@ -1304,7 +1304,7 @@ class _PaymentViewState extends State<PaymentView> {
                     builder: (context) => POSErrorAlert(
                             title: 'easy_loading.cant_save_inv'.tr(),
                             subtitle:
-                                "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
+                                "An error occured when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
                             actions: [
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -1360,7 +1360,7 @@ class _PaymentViewState extends State<PaymentView> {
                       builder: (context) => POSErrorAlert(
                               title: 'easy_loading.cant_save_inv'.tr(),
                               subtitle:
-                                  "Something error happened when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
+                                  "An error occured when saving the invoice ${cartBloc.cartSummary?.invoiceNo ?? ""}\nDo you want to retry?",
                               actions: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -1543,7 +1543,7 @@ class _PaymentViewState extends State<PaymentView> {
               invoiceNo, earnedPoints, totalPoints, taxbill, resReturn),
           context);
     } else {
-      POSConfig.localPrintData = resReturn!;
+      // POSConfig.localPrintData = resReturn!;
       var stopwatch = Stopwatch();
 
       stopwatch.start();
@@ -1955,7 +1955,7 @@ class _PaymentViewState extends State<PaymentView> {
                       },
 
                       // Navigator.pop(context),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.close_rounded,
                         color: Colors.white,
                       )),
@@ -2156,7 +2156,7 @@ class _PaymentViewState extends State<PaymentView> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Expanded(
@@ -2171,16 +2171,16 @@ class _PaymentViewState extends State<PaymentView> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 10,
                                     ),
-                                    Text('Enter the Amount to pay'),
-                                    SizedBox(
+                                    const Text('Enter the Amount to pay'),
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                     Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 20),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 20),
                                       child: TextField(
                                         onTap: () {
                                           amountEditingController.clear();
@@ -2216,13 +2216,13 @@ class _PaymentViewState extends State<PaymentView> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Total Outstanding Amount',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 30),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Text(
@@ -2308,7 +2308,7 @@ class _PaymentViewState extends State<PaymentView> {
                   ),
                   Text(
                     'customer_coupons_popup_view.title'.tr(),
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 10.h,
@@ -2488,7 +2488,7 @@ class _PaymentViewState extends State<PaymentView> {
             ],
           ),
           (selectedPayModeDetail?.pDRATE ?? 0) <= 0
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : buildCard(
                   "payment_view.foreign_currency".tr(
                       namedArgs: {"frc": selectedPayModeDetail!.pDCODE ?? ""}),
@@ -2500,7 +2500,7 @@ class _PaymentViewState extends State<PaymentView> {
                 final double taxInc = snapshot.data?.taxInc ?? 0;
 
                 if (taxExc.toDouble() + taxInc.toDouble() == 0) {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
 
                 /* added comment block t show only the exclusive and NOT Display only tax value */
@@ -2585,7 +2585,7 @@ class _PaymentViewState extends State<PaymentView> {
           padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
           child: Row(
             children: [
-              Spacer(),
+              const Spacer(),
               Text(
                 title,
                 style: CurrentTheme.headline6!.copyWith(
@@ -2634,7 +2634,7 @@ class _PaymentViewState extends State<PaymentView> {
                           child: Center(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
+                              child: const Text(
                                 'Enter gift voucher number here',
                               ),
                             ),
@@ -2644,7 +2644,7 @@ class _PaymentViewState extends State<PaymentView> {
                             onPressed: () {
                               showTutorial(false);
                             },
-                            child: Text('Got it'))
+                            child: const Text('Got it'))
                       ],
                     );
                   },
@@ -2683,11 +2683,11 @@ class _PaymentViewState extends State<PaymentView> {
 
   Widget maskField() {
     if (selectedPayModeDetail == null)
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     else {
       final detail = selectedPayModeDetail!;
       if (emptyMask()) {
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       }
 
       final mask = detail.pdMask;
@@ -2724,8 +2724,9 @@ class _PaymentViewState extends State<PaymentView> {
                           (enteredCard?.crDHEDDESC ?? "") +
                           ".png",
                       httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                      errorWidget: (context, url, error) => SizedBox.shrink(),
-                      placeholder: (context, url) => SizedBox.shrink(),
+                      errorWidget: (context, url, error) =>
+                          const SizedBox.shrink(),
+                      placeholder: (context, url) => const SizedBox.shrink(),
                     ),
                   )),
               onChanged: (value) {
@@ -2825,7 +2826,8 @@ class _PaymentViewState extends State<PaymentView> {
             'tax.tax_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(width: double.infinity, child: TaxBreakdownView()),
+          content:
+              const SizedBox(width: double.infinity, child: TaxBreakdownView()),
         );
       },
     );
@@ -2840,7 +2842,8 @@ class _PaymentViewState extends State<PaymentView> {
             'paid_list.pay_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(width: double.infinity, child: PaymentBreakdown()),
+          content:
+              const SizedBox(width: double.infinity, child: PaymentBreakdown()),
         );
       },
     );
@@ -2855,7 +2858,8 @@ class _PaymentViewState extends State<PaymentView> {
             'discount_list.disc_title'.tr(),
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(width: double.infinity, child: DiscountBreakdown()),
+          content: const SizedBox(
+              width: double.infinity, child: DiscountBreakdown()),
         );
       },
     );

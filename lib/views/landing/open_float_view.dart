@@ -54,7 +54,7 @@ class _OpenFloatScreenState extends State<OpenFloatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final config = POSConfig();
+    // final config = POSConfig();
     final currentUser = userBloc.currentUser;
     //final format = DateFormat("yyyy-MM-dd HH:mm:ss");
     final format = DateFormat("yyyy-MM-dd");
@@ -211,7 +211,7 @@ class _OpenFloatScreenState extends State<OpenFloatScreen> {
                                               ),
                                           pageBuilder: (context, animation,
                                               secondaryAnimation) {
-                                            return SizedBox();
+                                            return const SizedBox();
                                           });
                                   if (continueWithZeroFloat != true) return;
                                 }
@@ -227,7 +227,7 @@ class _OpenFloatScreenState extends State<OpenFloatScreen> {
                               heightFactor: 2,
                               child: Text(
                                 openingFloatController.text,
-                                style: TextStyle(
+                                style:const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
@@ -240,7 +240,7 @@ class _OpenFloatScreenState extends State<OpenFloatScreen> {
                   height: 10.h,
                 ),
                 !editable
-                    ? SizedBox.shrink()
+                    ? const SizedBox.shrink()
                     : Container(
                         width: containerWidth,
                         child: POSKeyBoard(
@@ -312,7 +312,7 @@ class _OpenFloatScreenState extends State<OpenFloatScreen> {
                                             ),
                                         pageBuilder: (context, animation,
                                             secondaryAnimation) {
-                                          return SizedBox();
+                                          return const SizedBox();
                                         });
                                 if (continueWithZeroFloat != true) return;
                               }
@@ -428,7 +428,7 @@ class _OpenFloatScreenState extends State<OpenFloatScreen> {
                                         ),
                                     pageBuilder: (context, animation,
                                         secondaryAnimation) {
-                                      return SizedBox();
+                                      return const SizedBox();
                                     });
                             if (continueWithZeroFloat != true) return;
                           }

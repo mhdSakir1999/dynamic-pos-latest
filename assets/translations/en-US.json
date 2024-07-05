@@ -135,7 +135,8 @@
     "cash_out": "Cash Out\n[Sift+F8]",
     "re-classification": "Payment\nRe-Classification",
     "local_switch": "Local Mode",
-    "invhed_remarks": "Invoice Remarks"
+    "invhed_remarks": "Invoice Remarks",
+    "cod_headers": "COD\nPending Invoices"
   },
   "special_functions": {
     "select_special_function": "Select Special Function",
@@ -503,6 +504,15 @@
     "cashier": "Cashier",
     "net_amount": "Sub Total",
     "time": "Time",
+    "select": "Select",
+    "inv_mode": "Inv Mode",
+    "scan_barcode": "Scan Barcode or Search"
+  },
+  "cod_pendingInvoice_view": {
+    "invoice_no": "Invoice No",
+    "cashier": "Cashier",
+    "amount": "COD Amount",
+    "date": "Invoiced Date",
     "select": "Select",
     "inv_mode": "Inv Mode",
     "scan_barcode": "Scan Barcode or Search"
@@ -887,7 +897,8 @@
     "sales_assist_no_products": "Add items to cart to select sales assistant",
     "continue_zero_float": "Are you sure to continue with the float amount of 0.00",
     "change": "Change",
-    "mngSignOff_confirm": "Do you confirm the amount and want to do sign-off"
+    "mngSignOff_confirm": "Do you confirm the amount and want to do sign-off",
+    "clear_payment": "Do you want to clear the payments?"
   },
   "tool_tip": {
     "promo_refresh": "Promotion Refresh",

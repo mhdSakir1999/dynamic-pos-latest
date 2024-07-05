@@ -79,12 +79,12 @@ class _NotificationAlertState extends State<NotificationAlert> {
                                 if (e.cRBY != null)
                                   TextSpan(
                                       text: "By ",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.bold)),
                                 TextSpan(
                                     text: e.cRBY,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
                                 if (e.cRBY != null) TextSpan(text: "- "),
                                 TextSpan(text: date)
                               ])),
@@ -133,22 +133,22 @@ class _NotificationAlertState extends State<NotificationAlert> {
           mainAxisAlignment:
               secondary ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
-            Icon(
+            const Icon(
               Icons.delete,
               color: Colors.amber,
             ),
             Text(
               " ${"notifications.clear".tr()}",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.amber,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.left,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
           ],

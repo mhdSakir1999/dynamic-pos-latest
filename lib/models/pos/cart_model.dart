@@ -80,6 +80,9 @@ class CartModel {
 
   bool? fixedPriceApplied = false;
 
+  /// [groupDiscApplied] used for indicating whether the staff discount (or any other cust group based discount) is applied or not
+  bool? groupDiscApplied = false;
+
   factory CartModel.fromMap(Map<String, dynamic> map) {
     List<dynamic> dyPromoFreeItems = [];
     List<PromotionFreeGVs> dyPromoFreeGVs = [];
@@ -267,7 +270,8 @@ class CartModel {
       this.dateTime,
       this.promoDiscAmt,
       this.promoDiscPre,
-      this.fixedPriceApplied = false});
+      this.fixedPriceApplied = false,
+      this.groupDiscApplied = false});
 
   Map<String, dynamic> toMap() {
     return {

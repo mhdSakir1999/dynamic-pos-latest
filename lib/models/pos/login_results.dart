@@ -19,9 +19,9 @@ class LoginResult {
     message = json['message'];
     data =
         json['data'] != null ? new PasswordData.fromJson(json['data']) : null;
-    loginAttemptData = (json?['login_attempts'] != null &&
-            json?['login_attempts']?.length != 0)
-        ? LoginAttemptData.fromJson(json?['login_attempts']?.first)
+    loginAttemptData = (json['login_attempts'] != null &&
+            json['login_attempts']?.length != 0)
+        ? LoginAttemptData.fromJson(json['login_attempts']?.first)
         : null;
   }
 

@@ -4,14 +4,19 @@
  * Created At: 6/4/21, 10:22 AM
  */
 import 'package:checkout/bloc/cart_bloc.dart';
+import 'package:checkout/bloc/customer_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
+import 'package:checkout/controllers/discount_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
 import 'package:checkout/models/pos/cart_model.dart';
 import 'package:checkout/models/pos/discount_type_result.dart';
+import 'package:checkout/models/pos/pro_tax.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/extension/extensions.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class DiscountHandler {
   Future<double> manualLineDiscount(
@@ -184,5 +189,86 @@ class DiscountHandler {
     cartBloc.updateCartItem(cart);
     cartBloc.updateCartSummaryPrice(change);
     // cartBloc.updateCartSummaryPrice(cart.amount);
+  }
+
+  Future handleCusGroupDiscount() async {
+    try {
+      if (customerBloc.currentCustomer != null &&
+          (cartBloc.cartSummary?.priceMode != null &&
+              cartBloc.cartSummary!.priceMode!.isEmpty)) {
+        if ((cartBloc.cartSummary?.discPer ?? 0) > 0) return;
+        final customer = customerBloc.currentCustomer;
+        if (customer?.cg_cal_staff_disc != true) return;
+        final double crs_min_disc_per = customer!.disc_min_disc_per ?? 0;
+        final double crs_min_sale_variance = customer.disc_min_selling_var ?? 0;
+        final double crs_min_cost_variance = customer.disc_min_cost_var ?? 0;
+        List<CartModel> cartList =
+            cartBloc.currentCart?.values.toList() ?? []; // this cannot be empty
+        if (cartList.isEmpty) return;
+        List<Map<String, dynamic>> proCodeMap = List.generate(cartList.length,
+            (index) => {"productCode": cartList[index].proCode});
+        var list = await DiscountController()
+            .getProductDiscStatusForGrpDisc(proCodeMap);
+        if (list.isEmpty) return;
+
+        for (var element in cartList) {
+          if (element.groupDiscApplied == true) continue;
+          if (element.itemVoid == true) continue; // skip discounting if voided
+          if (element.unitQty <= 0) continue; // skip discounting if returned
+          if (element.noDisc)
+            continue; // skip discounting if it is a non-discountable
+          if ((element.discAmt ?? 0) != 0) continue;
+          if ((element.discPer ?? 0) != 0) continue;
+          if ((element.billDiscAmt ?? 0) != 0) continue;
+          if ((element.billDiscPer ?? 0) != 0) continue;
+          if ((element.promoDiscAmt ?? 0) != 0) continue;
+          if ((element.promoDiscPre ?? 0) != 0) continue;
+
+          int index = list.indexWhere(
+              (e) => e.proCode == element.proCode && e.status == 'ACTIVE');
+
+          if (index == -1) continue;
+          double cPrice =
+              (element.proCost ?? 0) / (element.proCaseSize ?? 1); // static
+          double ncPrice = (element.proCost ?? 0) /
+              (element.proCaseSize ?? 1); // dynamic -- calculated cost price
+
+          List<ProTax> taxes = element.proTax ?? [];
+
+          for (var tax in taxes) {
+            double rate = tax.taXRATE ?? 0;
+            // tax_value = cPrice * (((100+rate)/100) - 1);
+            double tax_value = cPrice * (rate / 100);
+            ncPrice += tax_value;
+          }
+
+          double discount = 0;
+          double sPrice = element.selling ?? 0;
+
+          if (((sPrice - ncPrice) * 100 / sPrice) > crs_min_disc_per) {
+            if ((sPrice * crs_min_sale_variance) >
+                (ncPrice * crs_min_cost_variance)) {
+              discount = sPrice - (sPrice * crs_min_sale_variance);
+            } else if ((sPrice * crs_min_sale_variance) <
+                (ncPrice * crs_min_cost_variance)) {
+              discount = sPrice - (ncPrice * crs_min_cost_variance);
+            }
+          }
+
+          if (discount == 0 || discount < 0) continue;
+
+          // After all validations finally assigning this discount value to the line disc amount.
+          element.discAmt = discount;
+          element.amount -= discount;
+          cartBloc.cartSummary?.subTotal -= discount;
+          element.groupDiscApplied = true;
+          element.discountReason = 'Customer Group-based Discount';
+        }
+      }
+    } catch (e) {
+      EasyLoading.showError('Cannot calculate customer group-based ');
+      await LogWriter().saveLogsToFile('ERROR_LOG_',
+          ['Staff Discount Calculation Exception: ${e.toString()}']);
+    }
   }
 }

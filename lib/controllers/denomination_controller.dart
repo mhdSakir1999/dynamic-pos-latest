@@ -67,10 +67,10 @@ class DenominationController {
         userBloc.currentUser?.uSERHEDUSERCODE ?? '',
         authorize: true);
     if (res?.statusCode == 200) {
-      POSConfig.localPrintData = res?.data['data'];
-      POSConfig.denominations = denominations;
-      POSConfig.denominationDet = denominationDetails;
-      print(POSConfig.localPrintData);
+      // POSConfig.localPrintData = res?.data['data'];
+      // POSConfig.denominations = denominations;
+      // POSConfig.denominationDet = denominationDetails;
+      // print(POSConfig.localPrintData);
       EasyLoading.showSuccess('easy_loading.success_save'.tr());
 
       //new change -- after successfuly manager signed-off, clear the pendinguser bloc

@@ -24,6 +24,7 @@ import 'package:checkout/controllers/audit_log_controller.dart';
 import 'package:checkout/controllers/cart_dynamic_button_controller.dart';
 import 'package:checkout/controllers/cart_dynamic_button_function.dart';
 import 'package:checkout/controllers/customer_controller.dart';
+import 'package:checkout/controllers/discount_handler.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/gift_voucher_controller.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
@@ -245,7 +246,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       value.physicalKey == PhysicalKeyboardKey.numpadAdd) {
                     if (!payButtonPressed) {
                       payButtonPressed = true;
-                      await billClose();
+                      try {
+                        await billClose();
+                      } catch (e) {
+                        await LogWriter().saveLogsToFile('ERROR_LOG_',
+                            ['Bill Close Function Exception:' + e.toString()]);
+                      }
                       payButtonPressed = false;
                     }
                     // billClose();
@@ -305,7 +311,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
   void _handleKeyEvent(KeyDownEvent event) async {
     /// new change by [TM.Sakir]
     /// if cartBloc.cartSummary has items disabling 'special_function' button
-    if (cartBloc.cartSummary?.items != 0 &&
+    if ((cartBloc.currentCart?.length ?? 0) >
+            0 //cartBloc.cartSummary?.items != 0
+        &&
         (!HardwareKeyboard.instance.isShiftPressed &&
             event.logicalKey == LogicalKeyboardKey.f1)) {
       EasyLoading.showError('special_functions.cant_open'.tr());
@@ -468,6 +476,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           children: [
             POSInvoiceAppBar(
               onPriceClick: _getPriceModes,
+              afterCustomerPopup: giveFocus,
             ),
             Expanded(child: buildContent())
           ],
@@ -479,7 +488,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                 ? StreamContainer(
                     onUpdate: _refresh,
                   )
-                : SizedBox.shrink())
+                : const SizedBox.shrink())
       ],
     );
   }
@@ -514,15 +523,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       child: Scrollbar(
                           //  thumbVisibility: true,
                           controller: scrollController,
-                          thickness: 20,
+                          thickness: 10,
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                controller: scrollController,
-                                child: buildCartList()),
+                            padding: const EdgeInsets.only(right: 5),
+                            child: buildCartList(),
                           ))),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
@@ -574,7 +580,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                             }
                           },
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search),
+                              prefixIcon: const Icon(Icons.search),
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   if (itemCodeEditingController
@@ -594,7 +600,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
 
                                   itemCodeFocus.requestFocus();
                                 },
-                                icon: Icon(Icons.backspace_outlined),
+                                icon: const Icon(Icons.backspace_outlined),
                               ),
                               filled: true,
                               hintText: "invoice.search".tr()),
@@ -870,7 +876,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
               ),
         ),
         Container(
-            margin: EdgeInsets.only(top: 8, right: 16),
+            margin: const EdgeInsets.only(top: 8, right: 16),
             child: buildBottomCard()),
       ],
     );
@@ -924,6 +930,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     if (mounted) setState(() {});
   }
 
+  void giveFocus() {
+    focusNode.requestFocus();
+    itemCodeFocus.requestFocus();
+    if (mounted) setState(() {});
+  }
+
   /// new change - invoicing empty bottles as considering them as new product when buying liquor items or any other
   /// Author - [TM.Sakir] at 2023-11-01 11:10 AM
   /// -------------------------------------------------------------------------------------------------
@@ -933,12 +945,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     String code = temp;
     final symbol = "*";
     bool isScaleBarcode = false;
-    var size = MediaQuery.of(context).size;
+    // var size = MediaQuery.of(context).size;
     TextEditingController qtyController =
         TextEditingController(text: qty.toString());
-    double newqty = 1;
-    ProductResult? returnProRes;
-    List<bool> selected;
+    // double newqty = 1;
+    // ProductResult? returnProRes;
+    // List<bool> selected;
     if (code.contains(symbol)) {
       //  split it lhs is qty
       final split = code.split(symbol);
@@ -1406,95 +1418,95 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     }
   }
 
-  void _qtyKeyboard(TextEditingController qtyController, var returnProRes,
-      bool isScaleBarcode) async {
-    // KeyBoardController().dismiss();
-    if (POSConfig().touchKeyboardEnabled) {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: Colors.transparent,
-            alignment: Alignment.bottomCenter,
-            content: SizedBox(
-              width: 450.w,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                      )),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Tooltip(
-                    message: 'quantity',
-                    child: TextField(
-                      // onEditingComplete: () => searchItem(),
-                      onSubmitted: (value) async {
-                        Navigator.pop(context);
-                        await calculator.addItemToCart(
-                            returnProRes!.product!.first,
-                            double.parse(qtyController.text),
-                            context,
-                            returnProRes!.prices,
-                            returnProRes!.proPrices,
-                            returnProRes!.proTax,
-                            secondApiCall: false,
-                            scaleBarcode: isScaleBarcode);
-                        Navigator.pop(context);
-                      },
-                      controller: qtyController,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                          hintStyle: CurrentTheme.headline6!
-                              .copyWith(color: CurrentTheme.primaryDarkColor),
-                          hintText: '',
-                          filled: true),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  POSKeyBoard(
-                    color: Colors.transparent,
-                    onPressed: () {
-                      //_customerCodeEditingController.clear();
-                      if (qtyController.text.length != 0) {
-                        qtyController.text = qtyController.text
-                            .substring(0, qtyController.text.length - 1);
-                      }
-                    },
-                    clearButton: true,
-                    isInvoiceScreen: false,
-                    disableArithmetic: true,
-                    onEnter: () async {
-                      Navigator.pop(context);
-                      await calculator.addItemToCart(
-                          returnProRes!.product!.first,
-                          double.parse(qtyController.text),
-                          context,
-                          returnProRes!.prices,
-                          returnProRes!.proPrices,
-                          returnProRes!.proTax,
-                          secondApiCall: false,
-                          scaleBarcode: isScaleBarcode);
-                      Navigator.pop(context);
-                    },
-                    controller: qtyController,
-                    // nextFocusTo: editingFocusNode,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
-  }
+  // void _qtyKeyboard(TextEditingController qtyController, var returnProRes,
+  //     bool isScaleBarcode) async {
+  //   // KeyBoardController().dismiss();
+  //   if (POSConfig().touchKeyboardEnabled) {
+  //     await showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           backgroundColor: Colors.transparent,
+  //           alignment: Alignment.bottomCenter,
+  //           content: SizedBox(
+  //             width: 450.w,
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 IconButton(
+  //                     onPressed: () => Navigator.pop(context),
+  //                     icon: const Icon(
+  //                       Icons.close,
+  //                       color: Colors.white,
+  //                     )),
+  //                 SizedBox(
+  //                   height: 10.h,
+  //                 ),
+  //                 Tooltip(
+  //                   message: 'quantity',
+  //                   child: TextField(
+  //                     // onEditingComplete: () => searchItem(),
+  //                     onSubmitted: (value) async {
+  //                       Navigator.pop(context);
+  //                       await calculator.addItemToCart(
+  //                           returnProRes!.product!.first,
+  //                           double.parse(qtyController.text),
+  //                           context,
+  //                           returnProRes!.prices,
+  //                           returnProRes!.proPrices,
+  //                           returnProRes!.proTax,
+  //                           secondApiCall: false,
+  //                           scaleBarcode: isScaleBarcode);
+  //                       Navigator.pop(context);
+  //                     },
+  //                     controller: qtyController,
+  //                     autofocus: true,
+  //                     decoration: InputDecoration(
+  //                         hintStyle: CurrentTheme.headline6!
+  //                             .copyWith(color: CurrentTheme.primaryDarkColor),
+  //                         hintText: '',
+  //                         filled: true),
+  //                   ),
+  //                 ),
+  //                 SizedBox(
+  //                   height: 10.h,
+  //                 ),
+  //                 POSKeyBoard(
+  //                   color: Colors.transparent,
+  //                   onPressed: () {
+  //                     //_customerCodeEditingController.clear();
+  //                     if (qtyController.text.length != 0) {
+  //                       qtyController.text = qtyController.text
+  //                           .substring(0, qtyController.text.length - 1);
+  //                     }
+  //                   },
+  //                   clearButton: true,
+  //                   isInvoiceScreen: false,
+  //                   disableArithmetic: true,
+  //                   onEnter: () async {
+  //                     Navigator.pop(context);
+  //                     await calculator.addItemToCart(
+  //                         returnProRes!.product!.first,
+  //                         double.parse(qtyController.text),
+  //                         context,
+  //                         returnProRes!.prices,
+  //                         returnProRes!.proPrices,
+  //                         returnProRes!.proTax,
+  //                         secondApiCall: false,
+  //                         scaleBarcode: isScaleBarcode);
+  //                     Navigator.pop(context);
+  //                   },
+  //                   controller: qtyController,
+  //                   // nextFocusTo: editingFocusNode,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   //handle gv
   Future _handleGiftVoucher() async {
@@ -1629,9 +1641,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     final style1Bold = style1.copyWith(
         fontWeight: FontWeight.bold, fontSize: style1.fontSize! * 1.5);
-    final style2 =
-        CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
-    final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
+    // final style2 =
+    //     CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
+    // final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
     return StreamBuilder<CartSummaryModel>(
         stream: cartBloc.cartSummarySnapshot,
         builder: (context, AsyncSnapshot<CartSummaryModel> snapshot) {
@@ -1667,21 +1679,21 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Spacer(),
+                    // const Spacer(),
                     Row(
                       children: [
                         Text(
                           'invoice.line'.tr() + ':',
                           style: style1,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
                           lines,
                           style: style1Bold,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                       ],
@@ -1692,14 +1704,14 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           'invoice.item'.tr() + ':',
                           style: style1,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
                           items,
                           style: style1Bold,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                       ],
@@ -1711,14 +1723,14 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           'invoice.quantity'.tr() + ':',
                           style: style1,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
                           qty,
                           style: style1Bold,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                       ],
@@ -1729,7 +1741,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           'invoice.sub_total'.tr() + ':',
                           style: style1,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Text(
@@ -1739,7 +1751,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                       ],
                     )
 
-                    // Spacer(),
+                    // const Spacer(),
                   ],
                 ),
               ));
@@ -1752,9 +1764,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     final style1Bold = style1.copyWith(
         fontWeight: FontWeight.bold, fontSize: style1.fontSize! * 1.5);
-    final style2 =
-        CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
-    final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
+    // final style2 =
+    //     CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
+    // final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
     return StreamBuilder<LastInvoiceDetails>(
         stream: cartBloc.lastInvoiceDetails,
         builder: (context, AsyncSnapshot<LastInvoiceDetails> snapshot) {
@@ -1769,7 +1781,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     HideWidgetOnScreenSize(
                       md: true,
                       child: Text(
@@ -1777,7 +1789,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                         style: style1,
                       ),
                     ),
-                    HideWidgetOnScreenSize(
+                    const HideWidgetOnScreenSize(
                       md: true,
                       child: SizedBox(
                         width: 3,
@@ -1790,45 +1802,45 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                         style: style1Bold,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       'invoice.sub_total'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       data.billAmount.parseDouble().thousandsSeparator(),
                       style: style1Bold,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
                       'invoice.paid_amount'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       data.paidAmount.parseDouble().thousandsSeparator(),
                       style: style1Bold,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
                       'invoice.balance'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Text(
                       data.dueAmount.parseDouble().thousandsSeparator(),
                       style: style1Bold,
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ));
@@ -1849,7 +1861,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //                 mainAxisAlignment: MainAxisAlignment.center,
           //                 crossAxisAlignment: CrossAxisAlignment.center,
           //                 children: [
-          //                   Spacer(),
+          //                   const Spacer(),
           //                   HideWidgetOnScreenSize(
           //                     md: true,
           //                     child: Text(
@@ -1886,7 +1898,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //                         .thousandsSeparator(),
           //                     style: style1Bold,
           //                   ),
-          //                   // Spacer(),
+          //                   // const Spacer(),
           //                   Text(
           //                     'invoice.paid_amount'.tr(),
           //                     style: style1,
@@ -1900,7 +1912,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //                         .thousandsSeparator(),
           //                     style: style1Bold,
           //                   ),
-          //                   //Spacer(),
+          //                   //const Spacer(),
           //                   Text(
           //                     'invoice.balance'.tr(),
           //                     style: style2,
@@ -1912,7 +1924,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //                     data.dueAmount.parseDouble().thousandsSeparator(),
           //                     style: style2Bold,
           //                   ),
-          //                   // Spacer(),
+          //                   // const Spacer(),
           //                 ],
           //               ),
           //             );
@@ -1923,13 +1935,13 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
 
   // this method return the cart list
   Widget buildCartList() {
-    final headingStyle = TextStyle(
-        fontSize: POSConfig().cartDynamicButtonFontSize.sp,
-        fontWeight: FontWeight.bold,
-        color: CurrentTheme.primaryLightColor);
-    final dataStyle = TextStyle(
-        fontSize: POSConfig().cartDynamicButtonFontSize.sp,
-        color: CurrentTheme.primaryLightColor);
+    // final headingStyle = TextStyle(
+    //     fontSize: POSConfig().cartDynamicButtonFontSize.sp,
+    //     fontWeight: FontWeight.bold,
+    //     color: CurrentTheme.primaryLightColor);
+    // final dataStyle = TextStyle(
+    //     fontSize: POSConfig().cartDynamicButtonFontSize.sp,
+    //     color: CurrentTheme.primaryLightColor);
 
     return StreamBuilder<Map<String, CartModel>>(
         stream: cartBloc.currentCartSnapshot,
@@ -1973,10 +1985,11 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
           //           []);
           // }
           return ListView.builder(
+            controller: scrollController,
             itemCount: length,
             shrinkWrap: true,
             reverse: false,
-            physics: NeverScrollableScrollPhysics(),
+            physics: BouncingScrollPhysics(),
             itemBuilder: (context, index) =>
                 buildCartCard(map!.values.toList()[index]),
           );
@@ -1989,7 +2002,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     bool voided = cart.itemVoid ?? false;
     return DataRow(
         selected: selected,
-        color: MaterialStateColor.resolveWith(
+        color: WidgetStateColor.resolveWith(
           (states) {
             if (voided)
               return Colors.redAccent;
@@ -2053,22 +2066,22 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
-            Icon(
+            const Icon(
               Icons.delete,
               color: Colors.white,
             ),
             Text(
               " ${"invoice.void".tr()}",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.right,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
           ],
@@ -2096,22 +2109,22 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
-            Icon(
+            const Icon(
               Icons.edit,
               color: Colors.white,
             ),
             Text(
               " ${"invoice.remark".tr()}",
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.left,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
           ],
@@ -2144,9 +2157,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
 
   // this method build the card based cart item list
   Widget buildCartCard(CartModel cartModel) {
-    bool selected = cartModel.key == (selectedCartItem?.key ?? "null:D");
+    final bool selected = cartModel.key == (selectedCartItem?.key ?? "null:D");
 
-    bool voided = (cartModel.itemVoid ?? false);
+    final bool voided = (cartModel.itemVoid ?? false);
     final style = CurrentTheme.bodyText1!.copyWith(
         color: CurrentTheme.primaryLightColor,
         fontSize: (POSConfig().cardFontSize).sp);
@@ -2234,7 +2247,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                             style: style,
                                           ),
                                         )),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Expanded(
@@ -2251,7 +2264,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                 ),
                                 Row(
                                   children: [
-                                    Spacer(),
+                                    const Spacer(),
                                     // SizedBox(width: POSConfig().cardIdLength.w,
                                     //     ),
                                     Container(
@@ -2280,7 +2293,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                               ],
                             ),
                             discountText == null
-                                ? SizedBox.shrink()
+                                ? const SizedBox.shrink()
                                 : Positioned(
                                     right: 0,
                                     child: Card(
@@ -2295,38 +2308,45 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                      Container(
-                        height: 80.r,
-                        child: CachedNetworkImage(
-                          httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                          imageUrl: (cartModel.image ??
-                              "images/products/" + cartModel.proCode + '.png'),
-                          errorWidget: (context, url, error) =>
-                              SizedBox.shrink(),
-                          imageBuilder: (context, image) {
-                            return Card(
-                              elevation: 5,
-                              color: CurrentTheme.primaryColor,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(POSConfig()
-                                      .rounderBorderRadiusBottomLeft),
-                                  bottomRight: Radius.circular(POSConfig()
-                                      .rounderBorderRadiusBottomRight),
-                                  topLeft: Radius.circular(
-                                      POSConfig().rounderBorderRadiusTopLeft),
-                                  topRight: Radius.circular(
-                                      POSConfig().rounderBorderRadiusTopRight),
-                                ),
-                                child: Image(
-                                  image: image,
-                                  fit: BoxFit.contain,
-                                ),
+                      // new settings added by [TM.Sakir] for stop loading item images
+                      POSConfig().disableCartImageLoad
+                          ? const SizedBox.shrink()
+                          : Container(
+                              height: 80.r,
+                              child: CachedNetworkImage(
+                                httpHeaders: {
+                                  'Access-Control-Allow-Origin': '*'
+                                },
+                                imageUrl: (cartModel.image ??
+                                    "images/products/" +
+                                        cartModel.proCode +
+                                        '.png'),
+                                errorWidget: (context, url, error) =>
+                                    const SizedBox.shrink(),
+                                imageBuilder: (context, image) {
+                                  return Card(
+                                    elevation: 5,
+                                    color: CurrentTheme.primaryColor,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(POSConfig()
+                                            .rounderBorderRadiusBottomLeft),
+                                        bottomRight: Radius.circular(POSConfig()
+                                            .rounderBorderRadiusBottomRight),
+                                        topLeft: Radius.circular(POSConfig()
+                                            .rounderBorderRadiusTopLeft),
+                                        topRight: Radius.circular(POSConfig()
+                                            .rounderBorderRadiusTopRight),
+                                      ),
+                                      child: Image(
+                                        image: image,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                            ),
                     ],
                   ),
                 ],
@@ -2494,7 +2514,9 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                               }
 
                               /// if cartBloc.cartSummary has items disabling 'special_function' button
-                              if (cartBloc.cartSummary?.items != 0 &&
+                              if ((cartBloc.currentCart?.length ?? 0) >
+                                      0 // cartBloc.cartSummary?.items != 0
+                                  &&
                                   posButton.functionName ==
                                       'special_function') {
                                 EasyLoading.showError(
@@ -2639,7 +2661,8 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                   if (posButton.functionName ==
                                       'local_switch') {
                                     _pageViewController.animateToPage(0,
-                                        duration: Duration(milliseconds: 500),
+                                        duration:
+                                            const Duration(milliseconds: 500),
                                         curve: Curves.easeInOut);
                                   }
                                 });
@@ -2765,7 +2788,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                 nextFocusTo: itemCodeFocus),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Container(
@@ -2778,7 +2801,13 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                     onPressed: () async {
                       if (!payButtonPressed) {
                         payButtonPressed = true;
-                        await billClose();
+                        try {
+                          await billClose();
+                        } catch (e) {
+                          await LogWriter().saveLogsToFile('ERROR_LOG_', [
+                            'Bill Close Function Exception:' + e.toString()
+                          ]);
+                        }
                         payButtonPressed = false;
                       }
                       // billClose();
@@ -3011,11 +3040,16 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
       }
     }
 
+    /// Staff discount calculation
+    ///------------------------------------------------------------------------------------------------------------
+    await DiscountHandler().handleCusGroupDiscount();
+
     ///------------------------------------------------------------------------------------------------------------
 
     //load promotions
     // EasyLoading.dismiss();
-    await PromotionController(context).applyPromotion();
+    if (!POSConfig().disablePromotions)
+      await PromotionController(context).applyPromotion();
 
     await showModalBottomSheet(
       isScrollControlled: true,
@@ -3039,7 +3073,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
     String code = PermissionCode.stockBypass;
     String type = "A";
     String refCode =
-        invNo + "@" + (proStockCode ?? "") + "@" + qty.toDouble().toString();
+        invNo + "@" + (proStockCode) + "@" + qty.toDouble().toString();
     bool permissionStatus = handler.hasPermission(
         permissionCode: code, accessType: type, refCode: refCode);
     if (!permissionStatus) {
@@ -3200,7 +3234,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                   .printInvoice(invoice, invRes.earnedPoints, 0, false, null),
               context);
         } else {
-          POSConfig.localPrintData = invRes.resReturn ?? '';
+          // POSConfig.localPrintData = invRes.resReturn ?? '';
           var stopwatch = Stopwatch();
 
           stopwatch.start();
@@ -3468,7 +3502,7 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
               ),
             ),
         pageBuilder: (context, animation, secondaryAnimation) {
-          return SizedBox();
+          return const SizedBox();
         });
   }
 }
@@ -3594,7 +3628,7 @@ class _StreamContainerState extends State<StreamContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    // final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return StreamBuilder(
       stream: posConnectivity
@@ -3621,7 +3655,7 @@ class _StreamContainerState extends State<StreamContainer> {
         }
 
         return AnimatedContainer(
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           width: _isExpanded
               ? width * 0.25
               : opened
@@ -3639,7 +3673,7 @@ class _StreamContainerState extends State<StreamContainer> {
                   height: width * 0.03,
                   child: Text(
                     _message,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -3689,43 +3723,38 @@ class _StreamContainerState extends State<StreamContainer> {
                             ),
                           )),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
         );
       },
     );
   }
 
   Future<bool> serverConnectionPopup() async {
-    if (context != null) {
-      bool? res = await showDialog<bool>(
-        barrierDismissible: false,
-        context: context!,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title:
-                Text('payment_view.server_connection_confirmation_title'.tr()),
-            content: Text('payment_view.server_connection_confirmation'.tr()),
-            actions: [
-              AlertDialogButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  text: 'payment_view.no'.tr()),
-              AlertDialogButton(
-                  onPressed: () {
-                    posConnectivity.localConfirmed = false;
-                    POSConfig().localMode = false;
-                    posConnectivity.handleConnection();
-                    Navigator.pop(context, true);
-                  },
-                  text: 'payment_view.yes'.tr())
-            ],
-          );
-        },
-      );
-      return res == true;
-    } else {
-      return false;
-    }
+    bool? res = await showDialog<bool>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('payment_view.server_connection_confirmation_title'.tr()),
+          content: Text('payment_view.server_connection_confirmation'.tr()),
+          actions: [
+            AlertDialogButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                text: 'payment_view.no'.tr()),
+            AlertDialogButton(
+                onPressed: () {
+                  posConnectivity.localConfirmed = false;
+                  POSConfig().localMode = false;
+                  posConnectivity.handleConnection();
+                  Navigator.pop(context, true);
+                },
+                text: 'payment_view.yes'.tr())
+          ],
+        );
+      },
+    );
+    return res == true;
   }
 }

@@ -5,7 +5,6 @@
  */
 import 'package:checkout/extension/extensions.dart';
 
-
 class InvoiceHeaderResult {
   bool? success;
   List<InvoiceHeader>? invoiceHeader;
@@ -78,5 +77,45 @@ class InvoiceHeader {
     data['invheD_NETAMT'] = this.invheDNETAMT;
     data['invheD_DISPER'] = this.invheDDISPER;
     return data;
+  }
+}
+
+class CODInvoiceHeader {
+  String? invNo;
+  String? date;
+  String? pdCode;
+  double? paidAmount;
+  String? cashier;
+  String? rem1;
+  String? rem2;
+  String? rem3;
+  String? rem4;
+  String? rem5;
+
+  CODInvoiceHeader(
+      {this.invNo,
+      this.date,
+      this.cashier,
+      this.paidAmount,
+      this.pdCode,
+      this.rem1,
+      this.rem2,
+      this.rem3,
+      this.rem4,
+      this.rem5});
+
+  CODInvoiceHeader.fromJson(Map<String, dynamic> json) {
+    invNo = json['invheD_INVNO'];
+    date = json['invheD_TXNDATE'] == null
+        ? ''
+        : json['invheD_TXNDATE'].toString().split('T')[0];
+    cashier = json['invheD_CASHIER'];
+    paidAmount = json['invpaY_PAIDAMOUNT'] ?? 0;
+    pdCode = json['invpaY_PDCODE'];
+    rem1 = json['reM1'];
+    rem2 = json['reM2'];
+    rem3 = json['reM3'];
+    rem4 = json['reM4'];
+    rem5 = json['reM5'];
   }
 }

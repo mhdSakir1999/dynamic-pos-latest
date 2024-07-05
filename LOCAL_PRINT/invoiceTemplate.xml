@@ -41,6 +41,7 @@
     <text label="count/totalqty" value="ITEMS : {productCount}      TOTAL QUANTITY : {qtyCount}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
     <hr hrlen="42" inCancelBill="true"/>
     <text label="cashier/station" value="Cashier   : {cashier}Terminal  : {station}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
+    <!-- <text label="cashier/station" value="Cashier   : {cashierName}Terminal  : {station}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/> -->
     <text label="end_time" value="End Time  : {endTime}" align="center" font="A" bold="false" height="1" width="1" inCancelBill="true"/>
     <hr hrlen="42" inCancelBill="true"/>
     <loyalty>

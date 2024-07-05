@@ -1137,7 +1137,8 @@ class POSPriceCalculator {
         }
         invTax.add(InvTax(
             taxCode: proTax.taXCODE ?? '',
-            productCode: item.stockCode,
+            productCode:
+                item.proCode ?? item.stockCode, // changed stockCode --> proCode
             grossAmount: basePrice.toDouble(),
             taxAmount: taxAmt,
             taxPercentage: taxRate,
@@ -1329,7 +1330,7 @@ class POSPriceCalculator {
     if (canContinue) {
       canContinue = false;
       // get item details from server
-      EasyLoading.show(status: 'please_wait'.tr());
+      EasyLoading.show(status: 'please_wait'.tr(), dismissOnTap: true);
       final map = await InvoiceController().getCartDetails(refInvNo);
       final itemList = map['cartModels'];
       //chekc the item is in the database
@@ -1647,6 +1648,22 @@ class POSPriceCalculator {
     InvoiceController().clearTempPayment();
     clearProductTax();
     clearPromotion();
+    clearGroupBasedDiscounts();
+  }
+
+  // clearing staff-based auto discount when go back form payment view
+  void clearGroupBasedDiscounts() {
+    // final summary = cartBloc.cartSummary;
+    cartBloc.currentCart?.values.forEach((element) {
+      if (element.itemVoid != true && element.groupDiscApplied == true) {
+        final double disc = element.discAmt ?? 0;
+        element.amount += disc;
+        cartBloc.cartSummary?.subTotal += disc;
+        element.discAmt = 0;
+        element.discountReason = '';
+        element.groupDiscApplied = false;
+      }
+    });
   }
 
   void clearProductTax() {
@@ -1754,20 +1771,21 @@ class POSPriceCalculator {
 
   Future<List<CartModel?>?> showInvoicedProducts(BuildContext context,
       {required List<CartModel> cartItems, required String invNo}) async {
-    Color iconColor = CurrentTheme.primaryLightColor!;
+    final Color iconColor = CurrentTheme.primaryLightColor!;
     final space1 = SizedBox(
       width: 15.w,
     );
-    double fontSize = 20.sp;
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    final double fontSize = 20.sp;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
 
     double total = 0;
     for (int i = 0; i < cartItems.length; i++) {
       total += cartItems[i].amount;
     }
 
-    List<bool> isSelected = List.generate(cartItems.length, (index) => false);
+    final List<bool> isSelected =
+        List.generate(cartItems.length, (index) => false);
     List<int> selectedProductIndexes = [];
     List<CartModel?> selectedProducts = [];
     // bool isSelected = false;
@@ -1832,7 +1850,7 @@ class POSPriceCalculator {
                               height: height * 0.13,
                               child: Column(
                                 children: [
-                                  Divider(),
+                                  const Divider(),
                                   ListTile(
                                     leading: SizedBox(
                                       width: width * 0.02,
@@ -1920,7 +1938,7 @@ class POSPriceCalculator {
                                       ],
                                     ),
                                   ),
-                                  Divider()
+                                  const Divider()
                                 ],
                               ),
                             ),

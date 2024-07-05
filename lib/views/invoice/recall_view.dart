@@ -158,7 +158,7 @@ class _RecallViewState extends State<RecallView> {
     setState(() {
       clicked = true;
     });
-    EasyLoading.show(status: "please_wait".tr());
+    // EasyLoading.show(status: "please_wait".tr());
     await InvoiceController().getHoldCart(header);
     EasyLoading.dismiss();
     if (mounted)

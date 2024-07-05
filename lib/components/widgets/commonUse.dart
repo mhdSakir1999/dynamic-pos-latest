@@ -331,7 +331,7 @@ Future<void> _checkServerStatus(BuildContext context) async {
   showDialog(
     context: context,
     builder: (context) {
-      return AlertDialog(
+      return const AlertDialog(
         content: ServiceStatusView(),
       );
     },

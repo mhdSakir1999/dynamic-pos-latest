@@ -65,7 +65,7 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
 
   @override
   void initState() {
-    super.initState();   
+    super.initState();
 
     //check discount applicable or not
     if (widget.cartItem != null && widget.cartItem!.noDisc == true) {
@@ -229,7 +229,8 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
                       child: Container(
                           child: CachedNetworkImage(
                         httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                        errorWidget: (context, url, error) => SizedBox.shrink(),
+                        errorWidget: (context, url, error) =>
+                            const SizedBox.shrink(),
                         imageUrl: product.image ?? "",
                       )))
                 ],
@@ -314,7 +315,7 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
               ),
               textAlign: TextAlign.center,
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
         // style: ElevatedButton.styleFrom(
@@ -429,7 +430,7 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
         margin: EdgeInsets.zero,
         child: Row(
           children: [
-            Spacer(
+            const Spacer(
               flex: 1,
             ),
             Text(
@@ -441,7 +442,7 @@ class _DiscountEntryViewState extends State<DiscountEntryView> {
             Expanded(
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 10),
-                child: child == null ? SizedBox.shrink() : child,
+                child: child == null ? const SizedBox.shrink() : child,
               ),
             ),
             Container(

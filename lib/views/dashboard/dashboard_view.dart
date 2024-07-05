@@ -80,7 +80,7 @@ class _DashboardViewState extends State<DashboardView> {
         payModeWiseBillCount =
             jsonDecode(dashboardData!)['PayModeWiseBillCount'];
         totalPayModeInvCount = 0;
-        payModeWiseBillCount!.forEach(
+        payModeWiseBillCount.forEach(
             (element) => totalPayModeInvCount += element['TotalCount']);
         utilityBillCount = jsonDecode(dashboardData!)['UtilityBillCount'];
       });
@@ -174,7 +174,7 @@ class _DashboardViewState extends State<DashboardView> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.calendar_month_rounded,
                                 size: 25,
                               ),
@@ -218,10 +218,11 @@ class _DashboardViewState extends State<DashboardView> {
                                     // return date;
                                     await getDashbordData();
                                     setState(() {});
+                                    return null;
                                   },
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               IconButton(
@@ -229,13 +230,13 @@ class _DashboardViewState extends State<DashboardView> {
                                     await getDashbordData();
                                     setState(() {});
                                   },
-                                  icon: Icon(Icons.loop))
+                                  icon: const Icon(Icons.loop))
                             ],
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20.0,
                     ),
 
@@ -250,14 +251,14 @@ class _DashboardViewState extends State<DashboardView> {
                               "dashboard_view.tot_Inv_Count".tr(),
                               totInvoiceCount),
                         ),
-                        SizedBox(width: 20.0),
+                        const SizedBox(width: 20.0),
                         Expanded(
                             child: cardWidget(
                                 Colors.blue,
                                 Colors.blueAccent,
                                 "dashboard_view.cashier_Inv_Count".tr(),
                                 cashierInvCount)),
-                        SizedBox(width: 10.0),
+                        const SizedBox(width: 10.0),
                         Expanded(
                             child: cardWidget(
                                 Colors.blue,
@@ -268,7 +269,7 @@ class _DashboardViewState extends State<DashboardView> {
                                 // (dashboardData?.valueOfLoyaltyTransactions)
                                 //         ?.toStringAsFixed(2) ??
                                 loyaltyInvCount)),
-                        SizedBox(width: 10.0),
+                        const SizedBox(width: 10.0),
                         Expanded(
                             child: cardWidget(
                                 Colors.blue,
@@ -303,7 +304,7 @@ class _DashboardViewState extends State<DashboardView> {
                       children: [
                         Expanded(
                             child: Card(
-                          margin: EdgeInsets.all(16),
+                          margin: const EdgeInsets.all(16),
                           elevation: 3,
                           color: Colors.blueAccent,
                           child: Padding(
@@ -353,7 +354,7 @@ class _DashboardViewState extends State<DashboardView> {
                             child: Column(
                               children: [
                                 Text("Invoices (Payment mode wise)"),
-                                payModeWiseBillCount!.length != 0
+                                payModeWiseBillCount.length != 0
                                     ? PieChartSample(
                                         legendData: List.generate(
                                             payModeWiseBillCount.length, (i) {
@@ -369,7 +370,7 @@ class _DashboardViewState extends State<DashboardView> {
                                         ),
                                         totalCount: totalPayModeInvCount,
                                       )
-                                    : SizedBox(
+                                    : const SizedBox(
                                         height: 250.0,
                                         width: 250.0,
                                         child: Center(
@@ -384,7 +385,7 @@ class _DashboardViewState extends State<DashboardView> {
                       children: [
                         Expanded(
                             child: Card(
-                          margin: EdgeInsets.all(16),
+                          margin:const EdgeInsets.all(16),
                           elevation: 3,
                           color: Colors.blueAccent,
                           child: Padding(
@@ -394,14 +395,14 @@ class _DashboardViewState extends State<DashboardView> {
                                 Text("Bill Collections"),
                                 utilityBillCount.length != 0
                                     ? PieChartSample(
-                                        legendData: [
+                                        legendData:const [
                                           'Water Bill',
                                           'Electricity',
                                           "Telephone Bill",
                                           "Dialog",
                                           "Etisalat"
                                         ],
-                                        chartData: {
+                                        chartData: const {
                                           'Water Bill': 0,
                                           'Electricity': 0,
                                           "Telephone Bill": 0,
@@ -410,7 +411,7 @@ class _DashboardViewState extends State<DashboardView> {
                                         },
                                         totalCount: totInvoiceCount,
                                       )
-                                    : SizedBox(
+                                    :const SizedBox(
                                         height: 250.0,
                                         width: 250.0,
                                         child: Center(
@@ -421,7 +422,7 @@ class _DashboardViewState extends State<DashboardView> {
                         )),
                         Expanded(
                             child: Card(
-                          margin: EdgeInsets.all(16),
+                          margin:const EdgeInsets.all(16),
                           elevation: 3,
                           color: Colors.blueAccent,
                           child: Padding(
@@ -431,14 +432,14 @@ class _DashboardViewState extends State<DashboardView> {
                                 Text("Bill Collections"),
                                 utilityBillCount.length != 0
                                     ? PieChartSample(
-                                        legendData: [
+                                        legendData:const [
                                           'Water Bill',
                                           'Electricity',
                                           "Telephone Bill",
                                           "Dialog",
                                           "Etisalat"
                                         ],
-                                        chartData: {
+                                        chartData:const {
                                           'Water Bill': 0,
                                           'Electricity': 0,
                                           "Telephone Bill": 0,
@@ -447,7 +448,7 @@ class _DashboardViewState extends State<DashboardView> {
                                         },
                                         totalCount: totInvoiceCount,
                                       )
-                                    : SizedBox(
+                                    :const SizedBox(
                                         height: 250.0,
                                         width: 250.0,
                                         child: Center(
@@ -546,7 +547,7 @@ Widget cardWidget(Color color1, Color color2, String cardTitle, amount) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(cardTitle),
-            SizedBox(
+           const SizedBox(
               height: 10.0,
             ),
             Text('$amount')

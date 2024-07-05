@@ -12,6 +12,7 @@ import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/local_storage_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_alerts/pos_error_alert.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
@@ -28,6 +29,7 @@ import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/pos_logger.dart';
 import 'package:checkout/views/invoice/bill_cancel_view.dart';
 import 'package:checkout/views/invoice/cash_in_out_view.dart';
+import 'package:checkout/views/invoice/cod_pendingInvoices_view.dart';
 import 'package:checkout/views/invoice/discount_entry_view.dart';
 import 'package:checkout/views/invoice/payment_reClassification_view.dart';
 import 'package:checkout/views/invoice/product_search_view.dart';
@@ -229,8 +231,8 @@ class CartDynamicButtonFunction {
 
   Future _holdBill() async {
     /// new change by [TM.Sakir] -- initiating new invoice when holding a invoice
-    LocalStorageController _localStorageController = LocalStorageController();
-    String? currentSummaryInv = cartBloc.cartSummary?.invoiceNo;
+    // LocalStorageController _localStorageController = LocalStorageController();
+    // String? currentSummaryInv = cartBloc.cartSummary?.invoiceNo;
 
     final cartLen = cartBloc.currentCart?.length ?? 0;
     if (cartLen == 0) {
@@ -252,7 +254,8 @@ class CartDynamicButtonFunction {
             .askForPermission(
                 permissionCode: PermissionCode.billHold,
                 accessType: "A",
-                refCode: cartBloc.cartSummary?.invoiceNo ?? '');
+                refCode:
+                    ('hold_${cartBloc.cartSummary?.invoiceNo}')); // modification on refcode
         hasPermission = res.success;
       }
 
@@ -263,11 +266,11 @@ class CartDynamicButtonFunction {
 
         // handle printings of a hold bill
         if (res.success == true) {
-          POSConfig.localPrintData = res.resReturn!;
+          // POSConfig.localPrintData = res.resReturn!;
           var stopwatch = Stopwatch();
 
           stopwatch.start();
-          await POSManualPrint().printInvoice(
+          POSManualPrint().printInvoice(
               data: res.resReturn!, points: res.earnedPoints, hold: true);
           stopwatch.stop();
           print(stopwatch.elapsed.toString());
@@ -400,6 +403,8 @@ class CartDynamicButtonFunction {
             );
           },
         );
+      } else {
+        _showErrorAlert("hold_cart_call_error");
       }
     }
   }
@@ -443,7 +448,7 @@ class CartDynamicButtonFunction {
     // }
   }
 
-  void cashInOutView(bool cashIn) async {
+  Future<void> cashInOutView(bool cashIn) async {
     if (context == null) {
       POSLoggerController.addNewLog(POSLogger(
           POSLoggerLevel.error, "Field 'context' has not been initialized."));
@@ -505,98 +510,109 @@ class CartDynamicButtonFunction {
   }
 
   Future handleFunction({CartModel? cart, CartModel? lastItem}) async {
-    switch (functionName) {
-      case "special_function":
-        _specialFunction();
-        break;
-      case "search":
-        searchFunction();
-        break;
-      case "net_disc":
-        _netDisc();
-        break;
-      case "line_disc_per":
-        if (cart != null)
-          _lineDiscFunction(cart);
-        else
-          POSLoggerController.addNewLog(
-              POSLogger(POSLoggerLevel.info, "Cart Model is empty"));
-        break;
-      case "line_disc_amt":
-        if (cart != null)
-          _lineDiscAmtFunction(cart);
-        else
-          POSLoggerController.addNewLog(
-              POSLogger(POSLoggerLevel.info, "Cart Model is empty"));
-        break;
-      case "repeat_plu":
-        if (lastItem != null)
-          await repeatPlU(lastItem);
-        else
-          POSLoggerController.addNewLog(
-              POSLogger(POSLoggerLevel.info, "Cart Model is empty"));
-        break;
-      case "hold":
-        await _holdBill();
-        if (POSConfig().dualScreenWebsite != "")
-          DualScreenController().setLandingScreen();
-        break;
-      case "recall":
-        await _recall();
-        break;
-      case "bill_cancel":
-        await _billCancellation();
-        break;
-      case "backspace":
-        _backSpace();
-        break;
-      case "cash_in":
-        cashInOutView(true);
-        break;
-      case "cash_out":
-        cashInOutView(false);
-        break;
-      case "categories":
-        weightedItem();
-        break;
-      case "re_print":
-        _reprint();
-        break;
-      case "clear":
-        clearInvoice();
-        break;
-      case "drawer_open":
-        openDrawer();
-        break;
-      case "re-classification":
-        // _specialFunction();
-        if (cartBloc.cartSummary?.items != 0) {
-          EasyLoading.showError('special_functions.cant_open'.tr());
-          return;
-        }
-        if (POSConfig().localMode) {
-          EasyLoading.showError('special_functions.cant_open_local'.tr());
-          return;
-        }
-        reClassification();
-        break;
-      case "local_switch":
-        if (context == null) {
-          POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.error,
-              "Field 'context' has not been initialized."));
-          return;
-        }
-        posConnectivity.setContext(context!);
-        await posConnectivity.handleConnection(manualLocalModeSwitch: true);
-        break;
-      case "invhed_remarks":
-        if (context == null) {
-          POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.error,
-              "Field 'context' has not been initialized."));
-          return;
-        }
-        await invHedRemarkDialog(context!);
-        break;
+    // this try block is added to handle exceptions and revert the activeDynamicButton flag to true when exceptions happen
+    try {
+      switch (functionName) {
+        case "special_function":
+          _specialFunction();
+          break;
+        case "search":
+          searchFunction();
+          break;
+        case "net_disc":
+          _netDisc();
+          break;
+        case "line_disc_per":
+          if (cart != null)
+            _lineDiscFunction(cart);
+          else
+            POSLoggerController.addNewLog(
+                POSLogger(POSLoggerLevel.info, "Cart Model is empty"));
+          break;
+        case "line_disc_amt":
+          if (cart != null)
+            _lineDiscAmtFunction(cart);
+          else
+            POSLoggerController.addNewLog(
+                POSLogger(POSLoggerLevel.info, "Cart Model is empty"));
+          break;
+        case "repeat_plu":
+          if (lastItem != null)
+            await repeatPlU(lastItem);
+          else
+            POSLoggerController.addNewLog(
+                POSLogger(POSLoggerLevel.info, "Cart Model is empty"));
+          break;
+        case "hold":
+          await _holdBill();
+          if (POSConfig().dualScreenWebsite != "")
+            DualScreenController().setLandingScreen();
+          break;
+        case "recall":
+          await _recall();
+          break;
+        case "bill_cancel":
+          await _billCancellation();
+          break;
+        case "backspace":
+          _backSpace();
+          break;
+        case "cash_in":
+          await cashInOutView(true);
+          break;
+        case "cash_out":
+          await cashInOutView(false);
+          break;
+        case "categories":
+          weightedItem();
+          break;
+        case "re_print":
+          await _reprint();
+          break;
+        case "clear":
+          await clearInvoice();
+          break;
+        case "drawer_open":
+          openDrawer();
+          break;
+        case "re-classification":
+          // _specialFunction();
+          if (cartBloc.cartSummary?.items != 0) {
+            EasyLoading.showError('special_functions.cant_open'.tr());
+            return;
+          }
+          if (POSConfig().localMode) {
+            EasyLoading.showError('special_functions.cant_open_local'.tr());
+            return;
+          }
+          reClassification();
+          break;
+        case "local_switch":
+          if (context == null) {
+            POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.error,
+                "Field 'context' has not been initialized."));
+            return;
+          }
+          posConnectivity.setContext(context!);
+          await posConnectivity.handleConnection(manualLocalModeSwitch: true);
+          break;
+        case "invhed_remarks":
+          if (context == null) {
+            POSLoggerController.addNewLog(POSLogger(POSLoggerLevel.error,
+                "Field 'context' has not been initialized."));
+            return;
+          }
+          await invHedRemarkDialog(context!);
+          break;
+        case "cod_headers":
+          await handleCODInvoices();
+          break;
+      }
+    } catch (e) {
+      LogWriter()
+          .saveLogsToFile('ERROR_LOG_', [functionName + ':' + e.toString()]);
+      EasyLoading.dismiss();
+      return;
     }
   }
 
@@ -619,8 +635,8 @@ class CartDynamicButtonFunction {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Invoice Header Remarks', textAlign: TextAlign.center),
+        return  AlertDialog(
+          title: const Text('Invoice Header Remarks', textAlign: TextAlign.center),
           content: SizedBox(
             width: ScreenUtil().screenWidth * 0.6,
             child: Column(
@@ -640,8 +656,28 @@ class CartDynamicButtonFunction {
                           KeyBoardController().dismiss();
                           KeyBoardController().init(context);
                           KeyBoardController().showBottomDPKeyBoard(rem1,
-                              onEnter: () {
+                              onEnter: () async {
                             KeyBoardController().dismiss();
+                            await KeyBoardController().setIsShow();
+                            KeyBoardController().showBottomDPKeyBoard(rem2,
+                                onEnter: () async {
+                              KeyBoardController().dismiss();
+                              await KeyBoardController().setIsShow();
+                              KeyBoardController().showBottomDPKeyBoard(rem3,
+                                  onEnter: () async {
+                                KeyBoardController().dismiss();
+                                await KeyBoardController().setIsShow();
+                                KeyBoardController().showBottomDPKeyBoard(rem4,
+                                    onEnter: () async {
+                                  KeyBoardController().dismiss();
+                                  await KeyBoardController().setIsShow();
+                                  KeyBoardController().showBottomDPKeyBoard(
+                                      rem5, onEnter: () async {
+                                    KeyBoardController().dismiss();
+                                  });
+                                });
+                              });
+                            });
                           });
                         },
                       ),
@@ -661,8 +697,23 @@ class CartDynamicButtonFunction {
                           KeyBoardController().dismiss();
                           KeyBoardController().init(context);
                           KeyBoardController().showBottomDPKeyBoard(rem2,
-                              onEnter: () {
+                              onEnter: () async {
                             KeyBoardController().dismiss();
+                            await KeyBoardController().setIsShow();
+                            KeyBoardController().showBottomDPKeyBoard(rem3,
+                                onEnter: () async {
+                              KeyBoardController().dismiss();
+                              await KeyBoardController().setIsShow();
+                              KeyBoardController().showBottomDPKeyBoard(rem4,
+                                  onEnter: () async {
+                                KeyBoardController().dismiss();
+                                await KeyBoardController().setIsShow();
+                                KeyBoardController().showBottomDPKeyBoard(rem5,
+                                    onEnter: () async {
+                                  KeyBoardController().dismiss();
+                                });
+                              });
+                            });
                           });
                         },
                       ),
@@ -682,8 +733,18 @@ class CartDynamicButtonFunction {
                           KeyBoardController().dismiss();
                           KeyBoardController().init(context);
                           KeyBoardController().showBottomDPKeyBoard(rem3,
-                              onEnter: () {
+                              onEnter: () async {
                             KeyBoardController().dismiss();
+                            await KeyBoardController().setIsShow();
+                            KeyBoardController().showBottomDPKeyBoard(rem4,
+                                onEnter: () async {
+                              KeyBoardController().dismiss();
+                              await KeyBoardController().setIsShow();
+                              KeyBoardController().showBottomDPKeyBoard(rem5,
+                                  onEnter: () async {
+                                KeyBoardController().dismiss();
+                              });
+                            });
                           });
                         },
                       ),
@@ -703,8 +764,13 @@ class CartDynamicButtonFunction {
                           KeyBoardController().dismiss();
                           KeyBoardController().init(context);
                           KeyBoardController().showBottomDPKeyBoard(rem4,
-                              onEnter: () {
+                              onEnter: () async {
                             KeyBoardController().dismiss();
+                            await KeyBoardController().setIsShow();
+                            KeyBoardController().showBottomDPKeyBoard(rem5,
+                                onEnter: () async {
+                              KeyBoardController().dismiss();
+                            });
                           });
                         },
                       ),
@@ -818,6 +884,31 @@ class CartDynamicButtonFunction {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> handleCODInvoices() async {
+    if (context == null) {
+      POSLoggerController.addNewLog(POSLogger(
+          POSLoggerLevel.error, "Field 'context' has not been initialized."));
+      return;
+    }
+    EasyLoading.show(status: "please_wait".tr());
+    var res = await InvoiceController().getCODInvoices();
+    EasyLoading.dismiss();
+    if (res.isEmpty) {
+      EasyLoading.showInfo('No pending COD-based invoices found');
+      return;
+    }
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      useRootNavigator: true,
+      context: context!,
+      builder: (context) {
+        return CODPendingInvoiceView(
+          headers: res,
+        );
+      },
     );
   }
 

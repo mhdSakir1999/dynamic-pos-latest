@@ -67,14 +67,14 @@ class _VarientSelectionState extends State<VarientSelection> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 8,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     GoBackIconButton(),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 )),
           ),
@@ -86,7 +86,7 @@ class _VarientSelectionState extends State<VarientSelection> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -116,7 +116,7 @@ class _VarientSelectionState extends State<VarientSelection> {
 
                               textInputAction: TextInputAction.done,
 
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   prefixIcon: Icon(Icons.search),
                                   filled: true,
                                   hintText: "Scan the barcode to search"),
@@ -129,8 +129,8 @@ class _VarientSelectionState extends State<VarientSelection> {
                           width: 250,
                           child: Row(
                             children: [
-                              Text('Qty: '),
-                              Spacer(),
+                              const Text('Qty: '),
+                              const Spacer(),
                               Container(
                                 height: 50,
                                 width: 200,
@@ -155,7 +155,7 @@ class _VarientSelectionState extends State<VarientSelection> {
 
                                   textInputAction: TextInputAction.done,
 
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                       filled: true,
                                       hintText: "Enter the quantity"),
                                 ),
@@ -272,12 +272,12 @@ class _VarientSelectionState extends State<VarientSelection> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 1,
-                                offset:
-                                    Offset(0, 3), // changes position of shadow
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
                               ),
                             ],
                           ),
-                          child: Text(
+                          child: const Text(
                             'Code/Colour/Size',
                             style: TextStyle(
                               fontSize: 15,
@@ -298,13 +298,13 @@ class _VarientSelectionState extends State<VarientSelection> {
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 1,
-                                    offset: Offset(
+                                    offset: const Offset(
                                         0, 3), // changes position of shadow
                                   ),
                                 ],
                               ),
                               child: Text(columnNames[i],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -319,12 +319,12 @@ class _VarientSelectionState extends State<VarientSelection> {
                                   color: Colors.grey.withOpacity(0.5),
                                   spreadRadius: 1,
                                   blurRadius: 1,
-                                  offset: Offset(
+                                  offset: const Offset(
                                       0, 3), // changes position of shadow
                                 ),
                               ],
                             ),
-                            child: Text('Total',
+                            child: const Text('Total',
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.white,
@@ -373,7 +373,7 @@ class _VarientSelectionState extends State<VarientSelection> {
                                     POSConfig().rounderBorderRadiusTopRight),
                               ),
                               child: Text(rowData.key,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal),
@@ -387,7 +387,7 @@ class _VarientSelectionState extends State<VarientSelection> {
                               //color: Colors.blue[100 * (i % 9)],
                               child: Text(
                                   rowData.value[columnNames[i]].toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white, fontSize: 15),
                                   textAlign: TextAlign.center),
                             ),
@@ -396,7 +396,7 @@ class _VarientSelectionState extends State<VarientSelection> {
                             height: 20,
                             //color: Colors.grey[200],
                             child: Text(rowTotal.toString(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white, fontSize: 15),
                                 textAlign: TextAlign.center),
                           ),
@@ -412,7 +412,7 @@ class _VarientSelectionState extends State<VarientSelection> {
                                 await _addQtyToCart();
                                 Navigator.pop(context);
                               },
-                              child: Text('select'))
+                              child: const Text('select'))
                         ],
                       ));
                 }
@@ -439,7 +439,7 @@ class _VarientSelectionState extends State<VarientSelection> {
   /// -------------------------------------------------------------------------------------------------
   Future<void> _addQtyToCart() async {
     qty = double.tryParse(qtyController.text) ?? 1;
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     TextEditingController newQtyController =
         TextEditingController(text: qty.toString());
     double newqty = 1;
@@ -527,8 +527,8 @@ class _VarientSelectionState extends State<VarientSelection> {
                         ),
                         Row(
                           children: [
-                            SizedBox(child: Text('Quantity:')),
-                            SizedBox(
+                            const SizedBox(child: Text('Quantity:')),
+                            const SizedBox(
                               width: 10,
                             ),
                             SizedBox(
@@ -592,7 +592,7 @@ class _VarientSelectionState extends State<VarientSelection> {
                                       );
                                       Navigator.pop(context);
                                     },
-                                    child: Text('Add')),
+                                    child: const Text('Add')),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -612,7 +612,7 @@ class _VarientSelectionState extends State<VarientSelection> {
                   ),
                 )),
             pageBuilder: (context, animation, secondaryAnimation) {
-              return SizedBox();
+              return const SizedBox();
             });
       }
     }

@@ -177,17 +177,20 @@ class ApiClient {
         if (errorToast && !local) {
           if (result == null || result.toString().isEmpty) {
             EasyLoading.showToast(
+                duration: Duration(milliseconds: 1100),
                 "easy_loading.invalid".tr()); //Invalid api response
           } else {
             final message = result?["message"] ?? "";
             if (message.toString().isNotEmpty && !local) {
-              EasyLoading.showToast(message);
+              EasyLoading.showToast(
+                  duration: Duration(milliseconds: 1100), message);
             }
           }
         }
       } else {
         if (successToast) {
           EasyLoading.showToast(result["message"],
+              duration: Duration(milliseconds: 1100),
               toastPosition: EasyLoadingToastPosition.bottom);
         }
       }

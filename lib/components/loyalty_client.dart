@@ -174,7 +174,7 @@ class LoyaltyApiClient {
         }
       }
       return response;
-    } on DioException catch (e) {
+    } on DioException {
       recallOutlet = false;
       if (recallOutlet) {
         print("dwad");
@@ -203,5 +203,6 @@ class LoyaltyApiClient {
 
       return null;
     }
+    return null;
   }
 }

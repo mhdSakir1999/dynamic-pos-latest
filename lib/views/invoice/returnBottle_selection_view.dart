@@ -100,7 +100,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
         ),
         Expanded(
             child: Padding(
-          padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
           child: buildBody(),
         )),
       ],
@@ -188,7 +188,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
             padding: EdgeInsets.only(left: 8.r, right: 8.r, bottom: 4.r),
             child: buildPriceCard(),
           );
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       },
     );
   }
@@ -199,9 +199,9 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     final style1Bold = style1.copyWith(
         fontWeight: FontWeight.bold, fontSize: style1.fontSize! * 1.5);
-    final style2 =
-        CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
-    final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
+    // final style2 =
+    //     CurrentTheme.headline4!.copyWith(color: CurrentTheme.primaryLightColor);
+    // final style2Bold = style2.copyWith(fontWeight: FontWeight.bold);
     return StreamBuilder<CartSummaryModel>(
         stream: cartBloc.cartSummarySnapshot,
         builder: (context, AsyncSnapshot<CartSummaryModel> snapshot) {
@@ -209,7 +209,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
           String items = "${data?.items ?? 0}";
           String qty = data?.qty.qtyFormatter() ?? "0.0";
           String subtotal = "${(data?.subTotal ?? 0).thousandsSeparator()}";
-          String lines = "";
+          // String lines = "";
 
           return Card(
               color: CurrentTheme.primaryColor,
@@ -220,47 +220,47 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Text(
                       'invoice.item'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       items,
                       style: style1Bold,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       'invoice.quantity'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 3,
                     ),
                     Text(
                       qty,
                       style: style1Bold,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Text(
                       'invoice.sub_total'.tr() + ':',
                       style: style1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Text(
                       subtotal,
                       style: style1Bold,
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ));
@@ -341,7 +341,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                   imageUrl: image,
                   fit: BoxFit.cover,
                   httpHeaders: {'Access-Control-Allow-Origin': '*'},
-                  errorWidget: (context, url, error) => SizedBox.shrink(),
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
                 ),
               )),
               Padding(
@@ -437,7 +437,8 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                       httpHeaders: {'Access-Control-Allow-Origin': '*'},
                       imageUrl: (cartModel.image ??
                           "images/products/" + cartModel.proCode + '.png'),
-                      errorWidget: (context, url, error) => SizedBox.shrink(),
+                      errorWidget: (context, url, error) =>
+                          const SizedBox.shrink(),
                       imageBuilder: (context, image) {
                         return Card(
                           elevation: 5,
@@ -479,7 +480,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                                             fontSize: 10 * getFontSize()),
                                       ),
                                     )),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
@@ -497,7 +498,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                             ),
                             Row(
                               children: [
-                                Spacer(),
+                                const Spacer(),
                                 // SizedBox(width: POSConfig().cardIdLength.w,
                                 //     ),
                                 Container(
@@ -529,7 +530,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                           ],
                         ),
                         discountText == null
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : Positioned(
                                 right: 0,
                                 child: Card(
@@ -562,7 +563,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
   }
 
   Widget buildDefaultRHS() {
-    FocusNode keyboardFocus = FocusNode();
+    final FocusNode keyboardFocus = FocusNode();
     return Column(
       children: [
         Container(
@@ -633,8 +634,8 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
   /// This card will show the selected item's group card
   Widget buildGroupDetailsCard() {
     final style = CurrentTheme.subtitle2;
-    String code = selectedGroup?.gPCODE ?? "";
-    String desc = selectedGroup?.gPDESC ?? "";
+    final String code = selectedGroup?.gPCODE ?? "";
+    final String desc = selectedGroup?.gPDESC ?? "";
     return Card(
       color: CurrentTheme.primaryColor,
       child: Container(
@@ -650,7 +651,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
             ),
             Text(
               "weighted_item.group_master_desc".tr(namedArgs: {"desc": desc}),
-              style: style!.copyWith(fontSize: 10 * getFontSize()),
+              style: style.copyWith(fontSize: 10 * getFontSize()),
             ),
           ],
         ),
@@ -660,11 +661,11 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
 
   /// This card show the item details
   Widget buildProductDetailsCard() {
-    String code = selectedProduct?.pLUCODE ?? "";
-    String desc = selectedProduct?.pLUPOSDESC ?? "";
+    final String code = selectedProduct?.pLUCODE ?? "";
+    final String desc = selectedProduct?.pLUPOSDESC ?? "";
     final price = selectedProduct?.sELLINGPRICE ?? 0;
-    String mrp = price.thousandsSeparator();
-    String qty = this.qty.toString();
+    final String mrp = price.thousandsSeparator();
+    final String qty = this.qty.toString();
 
     final style = CurrentTheme.subtitle2;
     return Card(
@@ -684,21 +685,21 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                 ),
                 Text(
                   "weighted_item.product_name".tr(namedArgs: {"name": desc}),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.mpr".tr(namedArgs: {"mrp": mrp}),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.quantity".tr(namedArgs: {"qty": qty}),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
                 Text(
                   "weighted_item.line_amount".tr(namedArgs: {
                     "total": (this.qty * price).thousandsSeparator()
                   }),
-                  style: style!.copyWith(fontSize: 10 * getFontSize()),
+                  style: style.copyWith(fontSize: 10 * getFontSize()),
                 ),
               ],
             ),
@@ -709,7 +710,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                 children: [
                   IconButton(
                       onPressed: decrementQty,
-                      icon: Icon(
+                      icon: const Icon(
                         FontAwesome.minus_circle,
                       ),
                       iconSize: 40.r,
@@ -719,7 +720,7 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
                   ),
                   IconButton(
                     onPressed: incrementQty,
-                    icon: Icon(
+                    icon: const Icon(
                       FontAwesome.plus_circle,
                     ),
                     iconSize: 40.r,
@@ -820,10 +821,9 @@ class _ReturnBottleSelectionViewState extends State<ReturnBottleSelectionView> {
       /// new change - adding bottle prices seperately in invoice when buying liquor items [or maybe any other]
       /// Author : [TM.Sakir] at 2023-11-01 11:10 AM
       /// -------------------------------------------------------------------------------------------------
-      var size = MediaQuery.of(context).size;
-      TextEditingController qtyController =
-          TextEditingController(text: qty.toString());
-      double newqty = 1;
+      // TextEditingController qtyController =
+      //     TextEditingController(text: qty.toString());
+      // double newqty = 1;
       if (widget.isMinus == true) {
         qty = -1 * qty.abs();
       }

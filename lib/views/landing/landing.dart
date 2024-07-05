@@ -89,12 +89,20 @@ class _LandingViewState extends State<LandingView> {
     _focusNode.requestFocus();
     if (POSConfig().enablePollDisplay == 'true') {
       try {
-        usbSerial.sendToSerialDisplay('     HELLO !!!      ');
-        usbSerial.sendToSerialDisplay('  WELCOME TO SPAR   ');
+        // usbSerial.sendToSerialDisplay('     HELLO !!!      ');
+        // usbSerial.sendToSerialDisplay('  WELCOME TO SPAR   ');
+        usbSerial.showCustomMessages('hello');
+        usbSerial.showCustomMessages('welcome');
       } catch (e) {
         LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
       }
     }
+    payModeBloc.getPayModeList();
+    payModeBloc.getCardDetails();
+    discountBloc.getDiscountTypes();
+    groupBloc.getDepartments();
+    priceModeBloc.fetchPriceModes();
+    salesRepBloc.getSalesReps(); //fetching salesreps and save it in bloc/stream
   }
 
   @override
@@ -191,13 +199,13 @@ class _LandingViewState extends State<LandingView> {
                       )),
                   IconButton(
                       onPressed: () => _rePrintDialog(context),
-                      icon: Icon(
+                      icon:const Icon(
                         Icons.print_outlined,
                         color: Colors.green,
                       )),
                   IconButton(
                       onPressed: () => _showSpecialOptions(context),
-                      icon: Icon(
+                      icon:const Icon(
                         Icons.sync,
                         color: Colors.green,
                       )),
@@ -238,7 +246,7 @@ class _LandingViewState extends State<LandingView> {
   /* Promotion Dialog */
   /* By Dinuka 2022/07/28 */
   Future<void> promotionPopup(List<Promotion> promotionList) async {
-    final height = MediaQuery.of(context).size.height;
+    // final height = MediaQuery.of(context).size.height;
     _promoFocusNode.requestFocus();
     return showDialog<void>(
       context: context,
@@ -329,7 +337,7 @@ class _LandingViewState extends State<LandingView> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Special Options', textAlign: TextAlign.center),
+          title: const Text('Special Options', textAlign: TextAlign.center),
           content: SizedBox(
             width: ScreenUtil().screenWidth * 0.4,
             child: Column(
@@ -402,11 +410,11 @@ class _LandingViewState extends State<LandingView> {
                 SizedBox(height: 25.h),
                 AlertDialogButton(
                     onPressed: () async {
-                      String data = POSConfig.localPrintData;
-                      List<POSDenominationModel> denominations =
-                          POSConfig.denominations;
-                      List<POSDenominationDetail> denominationDet =
-                          POSConfig.denominationDet;
+                      // String data = POSConfig.localPrintData;
+                      // List<POSDenominationModel> denominations =
+                      //     POSConfig.denominations;
+                      // List<POSDenominationDetail> denominationDet =
+                      //     POSConfig.denominationDet;
                       // await POSManualPrint()
                       //     .printInvoice(data: data, points: 0.0);
                       // await POSManualPrint().printSignSlip(
@@ -448,13 +456,14 @@ class _LandingViewState extends State<LandingView> {
   FocusNode dateFocus = FocusNode();
   Future<void> _rePrintDialog(BuildContext context) async {
     nodes = [userFocus, locFocus, stationFocus, shiftFocus];
-    final now = DateTime.now();
+    // final now = DateTime.now();
     final containerWidth = POSConfig().containerSize.w;
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Manager-Signoff Re-Print', textAlign: TextAlign.center),
+          title: const Text('Manager-Signoff Re-Print',
+              textAlign: TextAlign.center),
           content: SizedBox(
             width: ScreenUtil().screenWidth * 0.6,
             child: Row(
@@ -480,8 +489,29 @@ class _LandingViewState extends State<LandingView> {
                                 KeyBoardController().dismiss();
                                 KeyBoardController().init(context);
                                 KeyBoardController().showBottomDPKeyBoard(
-                                    userCtrl, onEnter: () {
+                                    userCtrl, onEnter: () async {
                                   KeyBoardController().dismiss();
+                                  userFocus.unfocus();
+                                  locFocus.requestFocus();
+                                  await KeyBoardController().setIsShow();
+                                  KeyBoardController().showBottomDPKeyBoard(
+                                      locCtrl, onEnter: () async {
+                                    KeyBoardController().dismiss();
+                                    locFocus.unfocus();
+                                    stationFocus.requestFocus();
+                                    await KeyBoardController().setIsShow();
+                                    KeyBoardController().showBottomDPKeyBoard(
+                                        stationCtrl, onEnter: () async {
+                                      KeyBoardController().dismiss();
+                                      stationFocus.unfocus();
+                                      shiftFocus.requestFocus();
+                                      await KeyBoardController().setIsShow();
+                                      KeyBoardController().showBottomDPKeyBoard(
+                                          shiftCtrl, onEnter: () {
+                                        KeyBoardController().dismiss();
+                                      });
+                                    });
+                                  });
                                 });
                               },
                             ),
@@ -501,9 +531,23 @@ class _LandingViewState extends State<LandingView> {
                               onTap: () {
                                 KeyBoardController().dismiss();
                                 KeyBoardController().init(context);
-                                KeyBoardController()
-                                    .showBottomDPKeyBoard(locCtrl, onEnter: () {
+                                KeyBoardController().showBottomDPKeyBoard(
+                                    locCtrl, onEnter: () async {
                                   KeyBoardController().dismiss();
+                                  locFocus.unfocus();
+                                  stationFocus.requestFocus();
+                                  await KeyBoardController().setIsShow();
+                                  KeyBoardController().showBottomDPKeyBoard(
+                                      stationCtrl, onEnter: () async {
+                                    KeyBoardController().dismiss();
+                                    stationFocus.unfocus();
+                                    shiftFocus.requestFocus();
+                                    await KeyBoardController().setIsShow();
+                                    KeyBoardController().showBottomDPKeyBoard(
+                                        shiftCtrl, onEnter: () {
+                                      KeyBoardController().dismiss();
+                                    });
+                                  });
                                 });
                               },
                             ),
@@ -524,8 +568,15 @@ class _LandingViewState extends State<LandingView> {
                                 KeyBoardController().dismiss();
                                 KeyBoardController().init(context);
                                 KeyBoardController().showBottomDPKeyBoard(
-                                    stationCtrl, onEnter: () {
+                                    stationCtrl, onEnter: () async {
                                   KeyBoardController().dismiss();
+                                  stationFocus.unfocus();
+                                  shiftFocus.requestFocus();
+                                  await KeyBoardController().setIsShow();
+                                  KeyBoardController().showBottomDPKeyBoard(
+                                      shiftCtrl, onEnter: () {
+                                    KeyBoardController().dismiss();
+                                  });
                                 });
                               },
                             ),
@@ -546,7 +597,7 @@ class _LandingViewState extends State<LandingView> {
                                 KeyBoardController().dismiss();
                                 KeyBoardController().init(context);
                                 KeyBoardController().showBottomDPKeyBoard(
-                                    userCtrl, onEnter: () {
+                                    shiftCtrl, onEnter: () {
                                   KeyBoardController().dismiss();
                                 });
                               },
@@ -657,7 +708,7 @@ class _LandingViewState extends State<LandingView> {
                                         shiftNo: shiftCtrl.text,
                                         date: dateCtrl.text);
                               },
-                              icon: Icon(
+                              icon:const Icon(
                                 Icons.print,
                               )),
                         ),
@@ -667,7 +718,7 @@ class _LandingViewState extends State<LandingView> {
                         style: CurrentTheme.bodyText2!.copyWith(
                             color: CurrentTheme.primaryDarkColor,
                             fontSize: 18.sp,
-                            fontWeight: FontWeight.bold),
+                            fontWeight:  FontWeight.bold),
                       )
                     ],
                   ),
@@ -710,7 +761,7 @@ class _LandingViewState extends State<LandingView> {
             focusNode?.unfocus();
             nodes[index + 1].requestFocus();
           } else {
-            int index = nodes.indexWhere((element) => element == focusNode);
+            // int index = nodes.indexWhere((element) => element == focusNode);
             focusNode?.unfocus();
             dateFocus.requestFocus();
           }
@@ -761,7 +812,7 @@ class _LandingViewState extends State<LandingView> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
               'Do you want to apply latest structure changes from server?'),
           actions: [
             AlertDialogButton(
@@ -783,7 +834,7 @@ class _LandingViewState extends State<LandingView> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Do you want to reset invoice number?'),
+          title: const Text('Do you want to reset invoice number?'),
           actions: [
             AlertDialogButton(
                 onPressed: () {
@@ -802,12 +853,13 @@ class _LandingViewState extends State<LandingView> {
   }
 
   Widget buildBody(BuildContext context, LandingHelper landingHelper) {
-    payModeBloc.getPayModeList();
-    payModeBloc.getCardDetails();
-    discountBloc.getDiscountTypes();
-    groupBloc.getDepartments();
-    priceModeBloc.fetchPriceModes();
-    salesRepBloc.getSalesReps(); //fetching salesreps and save it in bloc/stream
+    // change by Sakir: moved these calls to initstate method
+    // payModeBloc.getPayModeList();
+    // payModeBloc.getCardDetails();
+    // discountBloc.getDiscountTypes();
+    // groupBloc.getDepartments();
+    // priceModeBloc.fetchPriceModes();
+    // salesRepBloc.getSalesReps(); //fetching salesreps and save it in bloc/stream
     final currentUser = userBloc.currentUser;
 
     String? date = userBloc.userDetails?.date ?? currentUser?.uSERHEDSIGNONTIME;
@@ -948,7 +1000,8 @@ class _LandingViewState extends State<LandingView> {
                         ),
                         TextSpan(
                             text: loggedUser,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
                       ]),
                     ),
                   ),

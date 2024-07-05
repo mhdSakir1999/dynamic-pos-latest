@@ -64,14 +64,14 @@ class _VariantDetailsState extends State<VariantDetails> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 8,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     GoBackIconButton(),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 )),
           ),
@@ -87,7 +87,7 @@ class _VariantDetailsState extends State<VariantDetails> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Expanded(
@@ -96,15 +96,15 @@ class _VariantDetailsState extends State<VariantDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20),
                       child: Container(
                         height: 50,
                         width: 500,
-                        margin: EdgeInsets.only(right: 16),
+                        margin: const EdgeInsets.only(right: 16),
                         child: TextField(
                           onTap: () {
                             KeyBoardController().dismiss();
@@ -124,7 +124,7 @@ class _VariantDetailsState extends State<VariantDetails> {
 
                           textInputAction: TextInputAction.done,
 
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               prefixIcon: Icon(Icons.search),
                               filled: true,
                               hintText: "Scan the barcode to search"),
@@ -133,7 +133,7 @@ class _VariantDetailsState extends State<VariantDetails> {
                     ),
                     const SizedBox(height: 10),
                     Padding(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20),
                       child: Container(
                         width: 610,
                         height: 40,
@@ -142,7 +142,7 @@ class _VariantDetailsState extends State<VariantDetails> {
                           alignment: Alignment.center,
                           child: Text(
                             prodesc,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 24,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -228,7 +228,7 @@ class _VariantDetailsState extends State<VariantDetails> {
 
   Widget _buildVariantDetails() {
     if (stk.length == 0) {
-      return Text('');
+      return const Text('');
     }
 
     Map<String, Map<String, double>> pivotData = {};
@@ -287,12 +287,12 @@ class _VariantDetailsState extends State<VariantDetails> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 1,
-                                offset:
-                                    Offset(0, 3), // changes position of shadow
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
                               ),
                             ],
                           ),
-                          child: Text(
+                          child: const Text(
                             'Colour/Size',
                             style: TextStyle(
                               fontSize: 15,
@@ -313,13 +313,13 @@ class _VariantDetailsState extends State<VariantDetails> {
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 1,
-                                    offset: Offset(
+                                    offset: const Offset(
                                         0, 3), // changes position of shadow
                                   ),
                                 ],
                               ),
                               child: Text(columnNames[i],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -334,12 +334,12 @@ class _VariantDetailsState extends State<VariantDetails> {
                                   color: Colors.grey.withOpacity(0.5),
                                   spreadRadius: 1,
                                   blurRadius: 1,
-                                  offset: Offset(
+                                  offset: const Offset(
                                       0, 3), // changes position of shadow
                                 ),
                               ],
                             ),
-                            child: Text('Total',
+                            child: const Text('Total',
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.white,
@@ -394,7 +394,7 @@ class _VariantDetailsState extends State<VariantDetails> {
                                     POSConfig().rounderBorderRadiusTopRight),
                               ),
                               child: Text(rowData.key,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal),
@@ -408,7 +408,7 @@ class _VariantDetailsState extends State<VariantDetails> {
                               //color: Colors.blue[100 * (i % 9)],
                               child: Text(
                                   rowData.value[columnNames[i]].toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white, fontSize: 15),
                                   textAlign: TextAlign.center),
                             ),
@@ -417,7 +417,7 @@ class _VariantDetailsState extends State<VariantDetails> {
                             height: 20,
                             //color: Colors.grey[200],
                             child: Text(rowTotal.toString(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white, fontSize: 15),
                                 textAlign: TextAlign.center),
                           ),

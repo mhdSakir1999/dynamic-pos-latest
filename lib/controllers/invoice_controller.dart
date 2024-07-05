@@ -38,6 +38,7 @@ import 'package:checkout/models/pos_logger.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:supercharged/supercharged.dart';
 
 import '../models/pos/invoice_save_res.dart';
 import 'dual_screen_controller.dart';
@@ -81,7 +82,7 @@ class InvoiceController {
 
     // whatever the invoice number (last invoiced), we save it in local storage
     // this will prevent errors when clear the invoice number
-    if (invNo != null && invNo != '') setInvoiceNo(invNo!);
+    if (invNo != null && invNo != '') setInvoiceNo(invNo);
 
     // restriction added by [TM.Sakir] to prevent continueing with xxxxx001 invoice number in local mode
     if (POSConfig().localMode && invNo == null) {
@@ -357,49 +358,59 @@ class InvoiceController {
 //--------------------------------------------------------------------------------------------------------------------------------
     /// validation by: [TM.Sakir]
     // Adding a validation for check whether the net amount and pro detail amounts are tallying
-    // double calculatedDetNet = 0;
-    // for (var pro in cartBloc.currentCart!.values.toList()) {
-    //   // double tempBillDisc = 0;
-    //   // if (pro.billDiscPer != null || pro.billDiscPer != 0) {
-    //   //   tempBillDisc = (pro.unitQty * pro.selling).toDouble() *
-    //   //       (pro.billDiscPer ?? 0) /
-    //   //       100;
-    //   // }
-    //   // calculatedDetNet += pro.amount - tempBillDisc;
+    if (invoiced) {
+      EasyLoading.dismiss();
+      double calculatedDetNet = 0;
+      for (var pro in cartBloc.currentCart!.values.toList()) {
+        // double tempBillDisc = 0;
+        // if (pro.billDiscPer != null || pro.billDiscPer != 0) {
+        //   tempBillDisc = (pro.unitQty * pro.selling).toDouble() *
+        //       (pro.billDiscPer ?? 0) /
+        //       100;
+        // }
+        // calculatedDetNet += pro.amount - tempBillDisc;
 
-    //   if (pro.itemVoid != true) {
-    //     double tempBillDisc =
-    //         (pro.unitQty * pro.selling) * (pro.billDiscPer ?? 0) / 100;
-    //     double tempLineDiscAmt = pro.discAmt ?? 0;
-    //     double tempLineDiscPer =
-    //         (pro.unitQty * pro.selling) * (pro.discPer ?? 0) / 100;
-    //     double tempPromoDiscPer =
-    //         (pro.unitQty * pro.selling) * (pro.promoDiscPre ?? 0) / 100;
-    //     double tempPromoDiscAmt = pro.promoDiscAmt ?? 0;
+        if (pro.itemVoid != true) {
+          double tempBillDisc =
+              (pro.unitQty * pro.selling) * (pro.billDiscPer ?? 0) / 100;
+          double tempLineDiscAmt = pro.discAmt ?? 0;
+          double tempLineDiscPer =
+              (pro.unitQty * pro.selling) * (pro.discPer ?? 0) / 100;
+          double tempPromoDiscPer =
+              (pro.unitQty * pro.selling) * (pro.promoDiscPre ?? 0) / 100;
+          double tempPromoDiscAmt = pro.promoDiscAmt ?? 0;
 
-    //     calculatedDetNet += (pro.unitQty * pro.selling) -
-    //         (tempBillDisc +
-    //             tempLineDiscAmt +
-    //             tempLineDiscPer +
-    //             tempPromoDiscPer +
-    //             tempPromoDiscAmt);
-    //   }
-    // }
-    // if (netAmt != calculatedDetNet) {
-    //   EasyLoading.showError('Net amount calculation error');
-    //   return InvoiceSaveRes(false, 0, null);
-    // }
-    // if (cartBloc.paidList != null && cartBloc.paidList != []) {
-    //   double tempPaidTotal = 0;
-    //   for (var paid in cartBloc.paidList!) {
-    //     tempPaidTotal += paid.paidAmount;
-    //   }
-    //   if (netAmt != tempPaidTotal) {
-    //     EasyLoading.showError('Paid amount calculation error');
-    //     return InvoiceSaveRes(false, 0, null);
-    //   }
-    // }
+          calculatedDetNet += (pro.unitQty * pro.selling) -
+              (tempBillDisc +
+                  tempLineDiscAmt +
+                  tempLineDiscPer +
+                  tempPromoDiscPer +
+                  tempPromoDiscAmt);
+        }
+      }
+      if (netAmt != calculatedDetNet && (netAmt - calculatedDetNet).abs() > 1) {
+        bool? userRes = await amountValidationDialog(context,
+            'There is an amount(${(netAmt - calculatedDetNet).abs().toStringAsFixed(2)}) mismatch found between the calculated bill amount and the net amount\nNet amount : ${netAmt.toStringAsFixed(2)}\nCalculated amount: ${calculatedDetNet.toStringAsFixed(2)}\nDo you want to save the invoice anyway?');
+        if (userRes == false) return InvoiceSaveRes(false, 0, null);
+        // EasyLoading.showError('Net amount calculation error');
+        // return InvoiceSaveRes(false, 0, null);
+      }
+      if (cartBloc.paidList != null && cartBloc.paidList != []) {
+        double tempPaidTotal = 0;
+        for (var paid in cartBloc.paidList!) {
+          tempPaidTotal += paid.paidAmount;
+        }
+        if (netAmt != tempPaidTotal && (netAmt - tempPaidTotal).abs() > 1) {
+          bool? userRes = await amountValidationDialog(context,
+              'There is an amount(${(netAmt - tempPaidTotal).abs()}) mismatch found between the paid amount and the net amount\nNet amount : ${netAmt.toStringAsFixed(2)}\nPaid amount: ${tempPaidTotal.toStringAsFixed(2)}\nDo you want to save the invoice anyway?');
+          if (userRes == false) return InvoiceSaveRes(false, 0, null);
+          // EasyLoading.showError('Paid amount calculation error');
+          // return InvoiceSaveRes(false, 0, null);
+        }
+      }
+    }
 //--------------------------------------------------------------------------------------------------------------------------------
+    EasyLoading.show(status: 'please_wait'.tr());
     String cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "UnAuthorized";
     String tempCashier =
         userBloc.currentUser?.uSERHEDUSERCODE ?? "UnAuthorized";
@@ -548,6 +559,40 @@ class InvoiceController {
         success, earnedLoyaltyPoints, /* kDebugMode ? '{}' : */ resReturn);
   }
 
+  Future<bool?> amountValidationDialog(BuildContext context, String content) {
+    return showGeneralDialog(
+        context: context,
+        transitionDuration: const Duration(milliseconds: 200),
+        barrierDismissible: false,
+        barrierLabel: '',
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return const SizedBox();
+        },
+        transitionBuilder: (context, animation, secondaryAnimation, child) =>
+            Transform.scale(
+              scale: animation.value,
+              child: AlertDialog(
+                title: const Center(child: Text('Amount Mismatch')),
+                content: Text(content),
+                actions: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              POSConfig().primaryDarkGrayColor.toColor()),
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('payment_view.yes'.tr())),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              POSConfig().primaryDarkGrayColor.toColor()),
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('payment_view.no'.tr())),
+                ],
+              ),
+            ));
+  }
+
   // clear the temp payments
   Future<bool> clearTempPayment() async {
     String invoiceNo = cartBloc.cartSummary?.invoiceNo ?? "";
@@ -581,7 +626,9 @@ class InvoiceController {
   Future getHoldCart(HoldInvoiceHeaders header) async {
     // get the hold cart details
     String invoice = header.invheDINVNO ?? "";
+    EasyLoading.show(status: "please_wait".tr());
     final map = await getCartDetails(invoice, isHoldInv: true);
+    EasyLoading.dismiss();
 
     final List<CartModel> holdDetails = map['cartModels'];
     final HedRemarkModel? hedRem = map['hedRemarks'];
@@ -591,6 +638,7 @@ class InvoiceController {
     double qty = 0;
     double subTotal = 0;
 
+    EasyLoading.show(status: "please_wait".tr());
     holdDetails.forEach((element) async {
       // added this block to set the allowDiscount flag using (noDisc, unitQty) since we dont get any priceLists details along with the api call
       if (element.noDisc == false && element.unitQty > 0) {
@@ -606,10 +654,18 @@ class InvoiceController {
         element.promoCode = '';
         element.promoDesc = '';
         element.promoDiscValue = 0;
+        element.billDiscPer = 0;
+
+        // commented & corrected by [TM.Sakir] -- wrong logic
+        // element.amount = (element.selling * element.unitQty) -
+        //     ((element.discAmt ?? 0) +
+        //         (element.selling / 100 * (element.discPer ?? 0)));
 
         element.amount = (element.selling * element.unitQty) -
             ((element.discAmt ?? 0) +
-                (element.selling / 100 * (element.discPer ?? 0)));
+                ((element.selling * element.unitQty) /
+                    100 *
+                    (element.discPer ?? 0)));
       }
 
       CartModel cart = element;
@@ -670,7 +726,8 @@ class InvoiceController {
         qty: qty,
         subTotal: subTotal,
         startTime: '',
-        discPer: header.invheDDiscPer,
+        discPer:
+            0, // header.invheDDiscPer, // new change: I make billdiscper 0 when recall
         priceMode: header.priceMode,
         recallHoldInv: true,
         hedRem: hedRem);
@@ -683,8 +740,12 @@ class InvoiceController {
     cartBloc.updateCartSummary(cartSum);
 
     await InvoiceController().updateTempCartSummary(cartSum);
+    EasyLoading.dismiss();
+
+    EasyLoading.show(status: "please_wait".tr());
     //clear the hold record
     await ApiClient.call("invoice/hold/$invoice", ApiMethod.DELETE);
+    EasyLoading.dismiss();
 
     //  update the time
     final time =
@@ -712,6 +773,7 @@ class InvoiceController {
     if (res?.data == null)
       return {"cartModels": [], "hedRemarks": null};
     else {
+      EasyLoading.show(status: "please_wait".tr(), dismissOnTap: true);
       final List data = res?.data?["details"] ?? [];
       final List remarkList = res?.data?["remarks"] ?? [];
       final HedRemarkModel? hedRem = res?.data?["hed_remarks"].isNotEmpty
@@ -736,8 +798,10 @@ class InvoiceController {
         }
       } catch (e) {
         print(e.toString());
+        EasyLoading.dismiss();
       }
 
+      EasyLoading.show(status: "please_wait".tr());
       //going through remark
       try {
         for (var dyRemark in remarkList) {
@@ -749,12 +813,15 @@ class InvoiceController {
             myList[index].lineRemark.add(remark.lineRemark ?? '');
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        EasyLoading.dismiss();
+      }
+      EasyLoading.dismiss();
       return {"cartModels": myList, "hedRemarks": hedRem};
     }
   }
 
-  // get today invoices
+  // get today invoices --> past 7 days invoices
   Future<List<InvoiceHeader>> getTodayInvoices() async {
     final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
     final res = await ApiClient.call("invoice/today/$cashier", ApiMethod.GET);
@@ -762,6 +829,37 @@ class InvoiceController {
       return [];
     else {
       return InvoiceHeaderResult.fromJson(res?.data).invoiceHeader ?? [];
+    }
+  }
+
+  Future<List<InvoiceHeader>> searchCashierInvoice(String invoiceNo) async {
+    final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+    try {
+      final res = await ApiClient.call(
+          "invoice/searchCashierInvoice/$invoiceNo/$cashier", ApiMethod.GET);
+      if (res?.data == null || res?.data == '')
+        return [];
+      else {
+        return InvoiceHeaderResult.fromJson(res?.data).invoiceHeader ?? [];
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // getting cash-on-delivery (cod) based invoices
+  Future<List<CODInvoiceHeader>> getCODInvoices() async {
+    final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+    final res =
+        await ApiClient.call("invoice/cod_invoices/$cashier", ApiMethod.GET);
+    if (res?.data != null &&
+        res?.data['success'] == true &&
+        res?.data['invoice_header'] != []) {
+      List data = res?.data['invoice_header'];
+      if (data.isEmpty) return [];
+      return data.map((e) => CODInvoiceHeader.fromJson(e)).toList();
+    } else {
+      return [];
     }
   }
 

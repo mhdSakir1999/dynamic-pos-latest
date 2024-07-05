@@ -40,6 +40,9 @@ class SharedPreferenceController {
   final String _primaryColorGrey = "primary_color_muted";
   final String _backgroundColor = "background_color";
   final String _touchKeyBoard = "touch_keyboard";
+  final String _promotion = "disable_promotions";
+  final String _customerPopup = "customer_popup";
+  final String _disableCartImage = "disable_cart_image";
   final String _terminalId = "terminal_id";
   final String _posServer = "pos_server";
   final String _posLocalServer = "pos_local_server";
@@ -157,6 +160,9 @@ class SharedPreferenceController {
     setPrimaryColorLight(posConfig.primaryLightColor);
     setBackgroundColor(posConfig.backgroundColor);
     setTouchKeyboard(posConfig.touchKeyboardEnabled);
+    setPromotionFlag(posConfig.disablePromotions);
+    setCustomerPopup(posConfig.auto_cust_popup);
+    setCartImageDisable(posConfig.disableCartImageLoad);
     setTerminalId(posConfig.terminalId);
     print(posConfig.terminalId);
     // setPOSServer(posConfig.server);
@@ -243,6 +249,18 @@ class SharedPreferenceController {
     return _preferences!.setBool(_touchKeyBoard, enabled);
   }
 
+  Future setPromotionFlag(bool enabled) async {
+    return _preferences!.setBool(_promotion, enabled);
+  }
+
+  Future setCustomerPopup(bool enabled) async {
+    return _preferences!.setBool(_customerPopup, enabled);
+  }
+
+  Future setCartImageDisable(bool enabled) async {
+    return _preferences!.setBool(_disableCartImage, enabled);
+  }
+
   Future setGvTutorial(bool showed) async {
     return _preferences!.setBool(_gvTutorial, showed);
   }
@@ -318,9 +336,9 @@ class SharedPreferenceController {
       print('WEB_SOCKET: ${POSConfig().webSocketUrl}');
       POSConfig().saas = dotenv.env['SAAS'] == 'true' ?? false;
       print('SAAS: ${POSConfig().saas}');
-      POSConfig().auto_cust_popup =
-          dotenv.env['AUTO_CUSTOMER_POPUP'] == 'true' ?? false;
-      print('cust_popup: ${POSConfig().auto_cust_popup}');
+      // POSConfig().auto_cust_popup =
+      //     dotenv.env['AUTO_CUSTOMER_POPUP'] == 'true' ?? false;
+      // print('cust_popup: ${POSConfig().auto_cust_popup}');
       POSConfig().password = dotenv.env['PASSWORD'] ?? '';
       print('PASSWORD: ${POSConfig().password}');
       POSConfig().dualScreenWebsite = dotenv.env['DUAL_SCREEN'] ?? '';
@@ -393,7 +411,8 @@ class SharedPreferenceController {
     } catch (e) {
       jsonData = null;
       LogWriter().saveLogsToFile('ERROR_LOG_', [
-        'initial conversion failed (appData.json read/conversion) : ' + e.toString()
+        'initial conversion failed (appData.json read/conversion) : ' +
+            e.toString()
       ]);
     }
     try {
@@ -441,6 +460,12 @@ class SharedPreferenceController {
             defaultPOSConfig.primaryDarkColor
         ..touchKeyboardEnabled = _preferences!.getBool(_touchKeyBoard) ??
             defaultPOSConfig.touchKeyboardEnabled
+        ..disablePromotions = _preferences!.getBool(_promotion) ??
+            defaultPOSConfig.disablePromotions
+        ..auto_cust_popup = _preferences!.getBool(_customerPopup) ??
+            defaultPOSConfig.auto_cust_popup
+        ..disableCartImageLoad = _preferences!.getBool(_disableCartImage) ??
+            defaultPOSConfig.disableCartImageLoad
         ..terminalId =
             _preferences!.getString(_terminalId) ?? defaultPOSConfig.terminalId
         ..backgroundImage = _preferences!.getString(_backgroundImage) ??
@@ -540,7 +565,7 @@ class SharedPreferenceController {
             'API_LOG_', ['setupData: ${setup?.toJson().toString()}']);
         if (setup != null) {
           LogWriter().saveLogsToFile(
-              'API_LOG_', ['setupData: ${setup?.toJson().toString()}']);
+              'API_LOG_', ['setupData: ${setup.toJson().toString()}']);
           pos.setup = setup;
           String clientId = setup.clientLicense ?? '';
           notificationBloc.getAnnouncements();

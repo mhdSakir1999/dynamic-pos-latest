@@ -62,8 +62,8 @@ class POSFlareAlert extends StatelessWidget {
                       animation: flareAnimation,
                     ),
                   )
-                : SizedBox.shrink(),
-            content ?? Container()
+                : const SizedBox.shrink(),
+            content ??  Container()
           ],
         ),
       ),

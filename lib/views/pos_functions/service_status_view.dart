@@ -92,7 +92,7 @@ class _ServiceStatusViewState extends State<ServiceStatusView> {
           SizedBox(
               height: 150.w,
               width: 150.w,
-              child: FlareActor(
+              child: const FlareActor(
                 'assets/flare/waring.flr',
                 animation: 'animate',
                 fit: BoxFit.contain,
@@ -263,19 +263,19 @@ class _ServiceStatusViewState extends State<ServiceStatusView> {
   Widget _buildIcon(_ServerStatus status) {
     switch (status) {
       case _ServerStatus.error:
-        return Icon(
+        return const Icon(
           Icons.error,
           color: Colors.red,
         );
       case _ServerStatus.warning:
-        return Icon(Icons.warning, color: Colors.amber);
+        return const Icon(Icons.warning, color: Colors.amber);
       case _ServerStatus.success:
-        return Icon(
+        return const Icon(
           Icons.check_circle,
           color: Colors.greenAccent,
         );
       case _ServerStatus.na:
-        return Icon(
+        return const Icon(
           Icons.sync,
           color: Colors.black,
         );

@@ -87,7 +87,7 @@ class UtilityBillSubcategoryView extends StatelessWidget {
                   .toList(),
             );
           }
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         },
       ),
     );
@@ -130,14 +130,14 @@ class UtilityBillSubcategoryView extends StatelessWidget {
                 width: 20.r,
               ),
               GoBackIconButton(),
-              Spacer(),
+              const Spacer(),
               Text(
                 text,
                 style: CurrentTheme.headline6!
                     .copyWith(color: CurrentTheme.primaryColor),
                 textAlign: TextAlign.center,
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
         ),

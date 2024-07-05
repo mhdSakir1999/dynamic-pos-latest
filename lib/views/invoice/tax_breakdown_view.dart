@@ -23,7 +23,7 @@ class TaxBreakdownView extends StatefulWidget {
 class _TaxBreakdownViewState extends State<TaxBreakdownView> {
   @override
   Widget build(BuildContext context) {
-    TextStyle style =
+   final TextStyle style =
         CurrentTheme.bodyText1!.copyWith(color: CurrentTheme.primaryLightColor);
     List<InvTax> invTax = cartBloc.cartSummary?.invTax ?? [];
     double taxInc = cartBloc.cartSummary?.taxInc??0;

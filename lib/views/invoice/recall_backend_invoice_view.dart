@@ -135,7 +135,7 @@ class _RecallBackendInvoiceState extends State<RecallBackendInvoice> {
               child: SingleChildScrollView(
                 child: DataTable(
                   dataRowMinHeight: 50.r,
-                  headingRowColor: MaterialStateColor.resolveWith(
+                  headingRowColor: WidgetStateColor.resolveWith(
                     (states) {
                       return CurrentTheme.primaryColor!;
                     },

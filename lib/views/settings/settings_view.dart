@@ -18,7 +18,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:checkout/extension/extensions.dart';
 
 import '../../controllers/keyboard_controller.dart';
-import '../../models/pos_config.dart';
 
 class SettingView extends StatefulWidget {
   @override
@@ -112,6 +111,8 @@ class _SettingViewState extends State<SettingView> {
   bool ecr = POSConfig().ecr;
   bool isTraining = POSConfig().trainingMode;
   bool auto_cust_popup = POSConfig().auto_cust_popup;
+  bool disablePromotions = POSConfig().disablePromotions;
+  bool disableCartImageLoad = POSConfig().disableCartImageLoad;
   final passwordController = TextEditingController();
 
   //keyboard colors
@@ -193,22 +194,12 @@ class _SettingViewState extends State<SettingView> {
                 //         });
                 //       }),
                 // ),
-                buildItemCard(
-                  'Customer Popup',
-                  buildSwitch(
-                      title: 'Automatic Customer Popup',
-                      value: auto_cust_popup,
-                      onChanged: (bool val) {
-                        setState(() {
-                          auto_cust_popup = val;
-                        });
-                      }),
-                ),
-                SizedBox(
+                buildItemCard('Functional Settings', buildFunctionalSettings()),
+                const SizedBox(
                   height: 5,
                 ),
                 buildButtonSet(),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 )
               ],
@@ -250,6 +241,39 @@ class _SettingViewState extends State<SettingView> {
             "settings.checkout_data_table_font_size".tr(), dataTableFontSize,
             max: 30, min: 8),
       ],
+    );
+  }
+
+  Widget buildFunctionalSettings() {
+    return Container(
+      child: Column(
+        children: [
+          buildSwitch(
+              title: 'Disable Promotions',
+              value: disablePromotions,
+              onChanged: (bool val) {
+                setState(() {
+                  disablePromotions = val;
+                });
+              }),
+          buildSwitch(
+              title: 'Automatic Customer Popup',
+              value: auto_cust_popup,
+              onChanged: (bool val) {
+                setState(() {
+                  auto_cust_popup = val;
+                });
+              }),
+          buildSwitch(
+              title: 'Disable Product Images (Invoice Page)',
+              value: disableCartImageLoad,
+              onChanged: (bool val) {
+                setState(() {
+                  disableCartImageLoad = val;
+                });
+              }),
+        ],
+      ),
     );
   }
 
@@ -313,14 +337,16 @@ class _SettingViewState extends State<SettingView> {
   Widget buildSwitch({required String title, required bool value, onChanged}) {
     return Row(
       children: [
-        Container(
-          width: 130.w,
-          child: Text(
-            title,
-            style: style2,
+        Expanded(
+          child: Container(
+            // width: 130.w,
+            child: Text(
+              title,
+              style: style2,
+            ),
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Switch(
             activeColor: Colors.redAccent, value: value, onChanged: onChanged)
       ],
@@ -495,7 +521,7 @@ class _SettingViewState extends State<SettingView> {
               style: style2,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Material(
             elevation: 10,
             child: InkWell(
@@ -825,7 +851,7 @@ class _SettingViewState extends State<SettingView> {
                   children: [
                     Container(
                       height: 200.h,
-                      child: FlareActor(
+                      child: const FlareActor(
                         "assets/flare/waring.flr",
                         animation: "animate",
                       ),
@@ -974,7 +1000,9 @@ class _SettingViewState extends State<SettingView> {
       ..posKeyBoardExactColor = posKeyBoardExactColor.hex
       ..posKeyBoardExactTxtColor = posKeyBoardExactTxtColor.hex
       ..trainingMode = isTraining
-      ..auto_cust_popup = auto_cust_popup;
+      ..auto_cust_popup = auto_cust_popup
+      ..disablePromotions = disablePromotions
+      ..disableCartImageLoad = disableCartImageLoad;
 
     SharedPreferenceController controller = SharedPreferenceController();
     await controller.saveConfig(posConfig);

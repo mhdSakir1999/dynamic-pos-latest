@@ -56,7 +56,7 @@ class POSFLottieAlert extends StatelessWidget {
                 ? Container(
                     height: 200.h,
                     child: Lottie.asset(lottiePath, fit: BoxFit.fill))
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
             // showLottie
             //     ? SizedBox(
             //         height: 150.h,

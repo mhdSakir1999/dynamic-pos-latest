@@ -38,9 +38,9 @@ class CustomerGroupsList {
     this.cGCODE = json['cG_CODE'];
     this.cGDESC = json['cG_DESC'];
     try {
-      this.cGOTPREQUIRED = json?['cG_OTP_REQUIRED'] ?? false;
-      this.cGPERMISSIONREQUIRED = json?['cG_PERMISSION_REQUIRED'] ?? false;
-      this.cG_MENUTAG = json?['cG_MENUTAG'] ?? '';
+      this.cGOTPREQUIRED = json['cG_OTP_REQUIRED'] ?? false;
+      this.cGPERMISSIONREQUIRED = json['cG_PERMISSION_REQUIRED'] ?? false;
+      this.cG_MENUTAG = json['cG_MENUTAG'] ?? '';
     } catch (e) {
       // this is not necessary
       this.cGOTPREQUIRED = false;

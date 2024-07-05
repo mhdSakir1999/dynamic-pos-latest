@@ -143,6 +143,22 @@ class UsbSerial {
       return '$truncatedString...';
     }
   }
+
+  Future<void> showCustomMessages(String key) async {
+    var jsonData;
+    try {
+      String data = await rootBundle.loadString('assets/appData.json');
+      jsonData = jsonDecode(data);
+    } catch (e) {
+      jsonData = null;
+      LogWriter().saveLogsToFile('ERROR_LOG_', [
+        'usb serial issue (appData.json read/conversion) : ' + e.toString()
+      ]);
+    }
+
+    sendToSerialDisplay(
+        jsonData?['poll_display_message']?[key] ?? "   HELLO, WELCOME   ");
+  }
 }
 
 final usbSerial = UsbSerial();

@@ -137,7 +137,7 @@ void configLoading() {
     ..textColor = Colors.yellow
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = false
-    ..displayDuration = Duration(milliseconds: 1100)
+    ..displayDuration = const Duration(milliseconds: 1100)
     ..dismissOnTap = false;
 }
 
@@ -271,7 +271,7 @@ class MyApp extends StatelessWidget {
           home: Root(),
         );
       },
-      designSize: Size(1366, 768),
+      designSize: const Size(1366, 768),
     );
   }
 

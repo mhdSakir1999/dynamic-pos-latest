@@ -128,7 +128,7 @@ class _ShiftReconciliationEntryViewState
                     "shift_reconciliation_view.title".tr(),
                     style: textStyle,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   // new change -- showing user code
                   buildShiftCard(user?.uSERHEDUSERCODE ?? '', textStyle,
                       Color(0xFFfff2cc)),
@@ -236,7 +236,7 @@ class _ShiftReconciliationEntryViewState
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Container(
                           width: config.paymentDynamicButtonHeight * 0.7.h,
                           child: CachedNetworkImage(
@@ -244,7 +244,7 @@ class _ShiftReconciliationEntryViewState
                             imageUrl:
                                 "${POSConfig().posImageServer}images/pay_modes/${payButton.detailCode.toLowerCase()}.png",
                             errorWidget: (context, url, error) =>
-                                SizedBox.shrink(),
+                                const SizedBox.shrink(),
                           ),
                         ),
                         SizedBox(
@@ -331,7 +331,7 @@ class _ShiftReconciliationEntryViewState
                                 ]),
                           ),
                       pageBuilder: (context, animation, secondaryAnimation) {
-                        return SizedBox();
+                        return const SizedBox();
                       });
                   if (confirm != true) return;
                   saveManagerSignOff(
@@ -378,7 +378,7 @@ class _ShiftReconciliationEntryViewState
       child: Column(
         children: [
           len != 0
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : Column(
                   children: [
                     buildCard("shift_reconciliation_view.total_cash".tr(),
@@ -460,7 +460,7 @@ class _ShiftReconciliationEntryViewState
           padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 10.r),
           child: Row(
             children: [
-              Spacer(
+              const Spacer(
                 flex: 8,
               ),
               Text(
@@ -525,7 +525,7 @@ class _ShiftReconciliationEntryViewState
                           "$denoVal * ${denomination.count} = ${denomination.value! * denomination.count!}",
                           style: CurrentTheme.headline6,
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Container(
                           width: 300.w,
                           padding: EdgeInsets.all(5.r),

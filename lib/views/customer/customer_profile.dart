@@ -279,6 +279,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                     customerCodeEditingController,
                                     disabled: !_editableCustomerCode,
                                     validator: (String? text) {
+                                      return null;
+
                                       // return validateEmpty(
                                       //   text,
                                       //   "customer_code_error",
@@ -691,7 +693,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                                 } else {
                                                   customerGroupEditingController
                                                           .text =
-                                                      value?.cGDESC ?? "";
+                                                      value.cGDESC ?? "";
                                                   _selectedGroup = value;
                                                 }
                                                 ;
@@ -853,9 +855,9 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                               const EdgeInsets.only(right: 15),
                                           child: Icon(Icons.verified_outlined),
                                         )
-                                      : SizedBox.shrink(),
+                                      : const SizedBox.shrink(),
                                   !POSConfig().otpEnabled
-                                      ? SizedBox.shrink()
+                                      ? const SizedBox.shrink()
                                       : activeButtonElement(
                                           'customer_profile.verify'.tr(), true,
                                           () async {
@@ -925,6 +927,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                               .tr();
                                         }
                                       }
+                                      return null;
                                     },
                                     onTap: () {
                                       KeyBoardController().dismiss();
@@ -1009,7 +1012,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                           "customer_profile.male".tr(),
                                           style: TextStyle(fontSize: 14.sp),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 5,
                                         ),
                                         Radio(
@@ -1153,13 +1156,13 @@ class _CustomerProfileState extends State<CustomerProfile> {
                                                       onPressed: pickImage,
                                                       child: Text(
                                                           "Change Picture"))
-                                                  : SizedBox.shrink()),
+                                                  : const SizedBox.shrink()),
                                     ],
                                   ),
                                 ),
                               ),
                               if (widget.customer == null)
-                                SizedBox.shrink()
+                                const SizedBox.shrink()
                               else
                                 notificationElement(
                                     "${_points.toStringAsFixed(2)}",
@@ -1353,14 +1356,14 @@ class _CustomerProfileState extends State<CustomerProfile> {
               width: 15.r,
             ),
             GoBackIconButton(),
-            Spacer(),
+            const Spacer(),
             Text(
               text,
               style: CurrentTheme.subtitle1!
                   .copyWith(color: CurrentTheme.primaryColor),
               textAlign: TextAlign.center,
             ),
-            Spacer()
+            const Spacer()
           ],
         ),
       ),
@@ -1415,7 +1418,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
           alignment: Alignment.centerRight,
           child: Column(
             children: [
-              Spacer(),
+              const Spacer(),
               SizedBox(
                 width: textWidth,
                 child: Text(
@@ -1486,7 +1489,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                   textAlign: TextAlign.right,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
         ),
@@ -1624,7 +1627,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
         ),
       );
     else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
 
@@ -1758,8 +1761,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
           // offset: const Offset(-20, 0),
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(40),
-            thickness: MaterialStateProperty.all<double>(6),
-            thumbVisibility: MaterialStateProperty.all<bool>(true),
+            thickness: WidgetStateProperty.all<double>(6),
+            thumbVisibility: WidgetStateProperty.all<bool>(true),
           ),
         ),
         menuItemStyleData: const MenuItemStyleData(

@@ -3,7 +3,9 @@
     "poll_display_message": {
         "morning": "*** GOOD MORNING ***                    ",
         "day": "  *** GOOD DAY ***                      ",
-        "evening": "*** GOOD EVENING ***                    "
+        "evening": "*** GOOD EVENING ***                    ",
+        "hello": "     HELLO !!!      ",
+        "welcome": "  WELCOME TO SPAR   "
     },
     "currency_code": "Rs.",
     "scall_barcode_symbol": ""

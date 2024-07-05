@@ -1,7 +1,8 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Chathura Priyashad
+ * Author: TM.Sakir & Chathura Priyashad
  * Created At: 4/23/21, 2:27 PM
+ * Modified by: TM.Sakir
  */
 
 import 'package:checkout/components/widgets/alphakeyboard.dart';
@@ -38,6 +39,11 @@ class KeyBoardController {
         isShow = false;
       }
     }
+  }
+
+  // This is used in continueous open and close of pos keyboard. If we dont use this, the new instance of poskeyboard will open before the previous one is closed
+  Future<void> setIsShow() async {
+    isShow = true;
   }
 
 // Keyboard initiating method
