@@ -7,6 +7,7 @@
     <text label="location" value="Location           :  {mng_location}" align="left" font="A" bold="false" height="1" width="1" />
     <text label="printedOn" value="Printed On         :  {mng_printedOn}" align="left" font="A" bold="false" height="1" width="1" />
     <text label="printedUser" value="Printed User       :  {mng_printedUser}" align="left" font="A" bold="false" height="1" width="1" />
+    <!-- <text label="printedUser" value="Printed User       :  {mng_printedUserName}" align="left" font="A" bold="false" height="1" width="1" /> -->
     <feed value="1" />
     <text label="station" value="Station            :  {mng_station}" align="left" font="A" bold="false" height="1" width="1" />
     <text label="ShiftNo" value="Shift No           :  {mng_shift}" align="left" font="A" bold="false" height="1" width="1" />

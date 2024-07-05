@@ -3,7 +3,6 @@
 /// Created At: 2023-12-18 2.30PM.
 /// Manual way to generate printouts from pos -- only supports windows
 
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -34,7 +33,8 @@ class POSManualPrint {
   String startTime = '';
   num netAmount = 0;
   num allDiscountTotal = 0;
-  String cashier = '-';
+  String cashier = '-'; //id
+  String cashierName = 'N/A';
   String station = '';
   String endTime = '';
   String loc_desc = '';
@@ -90,6 +90,7 @@ class POSManualPrint {
       .toString()
       .split('.')[0];
   String mng_printedUser = '';
+  String mng_printedUserName = '';
   String mng_station = '';
   double mng_shift = 0;
   String mng_startInv = '';
@@ -178,6 +179,7 @@ class POSManualPrint {
       netAmount = invHed['INVHED_NETAMT'] ?? 0;
       incTaxTotal = invHed['INVHED_INCTAXAMT'] ?? 0;
       cashier = invHed['INVHED_CASHIER'] ?? '';
+      cashierName = userBloc.currentUser?.uSERHEDTITLE ?? 'N/A';
       station = invHed['INVHED_STATION'] ?? '';
       endTime = invHed['INVHED_ENDTIME'].split('T')[1] ?? '';
 
@@ -407,6 +409,7 @@ class POSManualPrint {
       }
       mng_location = signOffHeadDet?['SOH_LOCATION'] ?? '';
       mng_printedUser = userHed?.uSERHEDUSERCODE ?? ' N/A';
+      mng_printedUserName = userHed?.uSERHEDTITLE ?? ' N/A';
       mng_station = signOffHeadDet['SOH_STATION'] ?? 'N/A';
       mng_shift = signOffHeadDet['SOH_SHIFT'] ?? 0;
       mng_startInv = signOffHeadDet['SOH_STARTINVNO'] ?? '';
@@ -763,6 +766,8 @@ class POSManualPrint {
                   variableMaxLength - 27));
           value = value.replaceAll(
               "{cashier}", addSpacesBack("$cashier", variableMaxLength - 29));
+          value = value.replaceAll("{cashierName}",
+              addSpacesBack("$cashierName", variableMaxLength - 29));
           value = value.replaceAll("{station}", addSpacesFront("$station", 5));
           value = value.replaceAll(
               "{endTime}", addSpacesBack("$endTime", variableMaxLength - 12));
@@ -1259,12 +1264,12 @@ class POSManualPrint {
       double? float}) async {
     String slipType = type.toLowerCase() == 'signoff' ? 'SIGN OFF' : 'SIGN ON';
     var userHed = userBloc.currentUser;
-    var currentUser = userBloc.userDetails;
-    String? signOnDate = (userHed?.uSERHEDSIGNONDATE ?? ' ').split(' ')[0];
-    String signOffDate = DateFormat('yyyy-MM-dd HH:mm:ss')
-        .parse(DateTime.now().toString())
-        .toString()
-        .split('.')[0];
+    // var currentUser = userBloc.userDetails;
+    // String? signOnDate = (userHed?.uSERHEDSIGNONDATE ?? ' ').split(' ')[0];
+    // String signOffDate = DateFormat('yyyy-MM-dd HH:mm:ss')
+    //     .parse(DateTime.now().toString())
+    //     .toString()
+    //     .split('.')[0];
     String today = DateFormat.yMEd().add_jms().format(DateTime.now());
 
     for (int i = 1; i < childNodes.length; i += 2) {
@@ -1536,6 +1541,8 @@ class POSManualPrint {
               "{mng_printedOn}", addSpacesBack(mng_printedOn, 20));
           value = value.replaceAll(
               "{mng_printedUser}", addSpacesBack(mng_printedUser, 20));
+          value = value.replaceAll(
+              "{mng_printedUserName}", addSpacesBack(mng_printedUserName, 20));
           value =
               value.replaceAll("{mng_station}", addSpacesBack(mng_station, 20));
           value = value.replaceAll(
