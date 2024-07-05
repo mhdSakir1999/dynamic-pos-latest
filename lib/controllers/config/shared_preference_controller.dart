@@ -43,6 +43,7 @@ class SharedPreferenceController {
   final String _promotion = "disable_promotions";
   final String _customerPopup = "customer_popup";
   final String _disableCartImage = "disable_cart_image";
+  final String _saveInvoiceLocal = "save_invoice_local";
   final String _terminalId = "terminal_id";
   final String _posServer = "pos_server";
   final String _posLocalServer = "pos_local_server";
@@ -163,6 +164,7 @@ class SharedPreferenceController {
     setPromotionFlag(posConfig.disablePromotions);
     setCustomerPopup(posConfig.auto_cust_popup);
     setCartImageDisable(posConfig.disableCartImageLoad);
+    setSaveInvoiceLocal(posConfig.saveInvoiceLocal);
     setTerminalId(posConfig.terminalId);
     print(posConfig.terminalId);
     // setPOSServer(posConfig.server);
@@ -259,6 +261,10 @@ class SharedPreferenceController {
 
   Future setCartImageDisable(bool enabled) async {
     return _preferences!.setBool(_disableCartImage, enabled);
+  }
+
+  Future setSaveInvoiceLocal(bool enabled) async {
+    return _preferences!.setBool(_saveInvoiceLocal, enabled);
   }
 
   Future setGvTutorial(bool showed) async {
@@ -466,6 +472,8 @@ class SharedPreferenceController {
             defaultPOSConfig.auto_cust_popup
         ..disableCartImageLoad = _preferences!.getBool(_disableCartImage) ??
             defaultPOSConfig.disableCartImageLoad
+        ..saveInvoiceLocal = _preferences?.getBool(_saveInvoiceLocal) ??
+            defaultPOSConfig.saveInvoiceLocal
         ..terminalId =
             _preferences!.getString(_terminalId) ?? defaultPOSConfig.terminalId
         ..backgroundImage = _preferences!.getString(_backgroundImage) ??

@@ -33,6 +33,7 @@ class POSConfig {
   bool auto_cust_popup = true;
   bool disablePromotions = false;
   bool disableCartImageLoad = false;
+  bool saveInvoiceLocal = false;
 
   bool trainingMode = false;
 

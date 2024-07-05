@@ -113,6 +113,7 @@ class _SettingViewState extends State<SettingView> {
   bool auto_cust_popup = POSConfig().auto_cust_popup;
   bool disablePromotions = POSConfig().disablePromotions;
   bool disableCartImageLoad = POSConfig().disableCartImageLoad;
+  bool saveInvoiceLocal = POSConfig().saveInvoiceLocal;
   final passwordController = TextEditingController();
 
   //keyboard colors
@@ -270,6 +271,14 @@ class _SettingViewState extends State<SettingView> {
               onChanged: (bool val) {
                 setState(() {
                   disableCartImageLoad = val;
+                });
+              }),
+          buildSwitch(
+              title: 'Save Invoices Locally',
+              value: saveInvoiceLocal,
+              onChanged: (bool val) {
+                setState(() {
+                  saveInvoiceLocal = val;
                 });
               }),
         ],
@@ -1002,7 +1011,8 @@ class _SettingViewState extends State<SettingView> {
       ..trainingMode = isTraining
       ..auto_cust_popup = auto_cust_popup
       ..disablePromotions = disablePromotions
-      ..disableCartImageLoad = disableCartImageLoad;
+      ..disableCartImageLoad = disableCartImageLoad
+      ..saveInvoiceLocal = saveInvoiceLocal;
 
     SharedPreferenceController controller = SharedPreferenceController();
     await controller.saveConfig(posConfig);

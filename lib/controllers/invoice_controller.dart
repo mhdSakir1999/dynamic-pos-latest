@@ -500,6 +500,9 @@ class InvoiceController {
         invoiced ? "invoice/save" : 'invoice/hold_invoice',
         ApiMethod.POST, //invoiced ? "invoice/save" : 'invoice/hold_invoice'
         data: temp,
+        overrideUrl: (POSConfig().saveInvoiceLocal && invoiced)
+            ? POSConfig().local
+            : null,
         successCode: 200);
 
     if (hasExVoucher) {
