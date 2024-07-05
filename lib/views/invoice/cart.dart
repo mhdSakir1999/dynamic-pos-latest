@@ -27,6 +27,7 @@ import 'package:checkout/controllers/customer_controller.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/gift_voucher_controller.dart';
 import 'package:checkout/controllers/invoice_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/loyalty_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_logger_controller.dart';
@@ -2558,8 +2559,13 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                                   setState(() {
                                     activeDynamicButton = false;
                                   });
-                                await func.handleFunction(
-                                    cart: selectedModel, lastItem: lastItem);
+                                try {
+                                  await func.handleFunction(
+                                      cart: selectedModel, lastItem: lastItem);
+                                } catch (e) {
+                                  LogWriter().saveLogsToFile(
+                                      'ERROR_LOG_', [e.toString()]);
+                                }
                                 scrollToBottom();
                                 clearSelection();
                                 focusNode.requestFocus();
