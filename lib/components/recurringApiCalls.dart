@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/components/api_client.dart';
+import 'package:checkout/controllers/invoice_controller.dart';
 import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_alerts/pos_error_alert.dart';
 import 'package:checkout/controllers/pos_alerts/pos_warning_alert.dart';
@@ -25,6 +26,13 @@ class RecurringApiCalls {
     handlePhysicalCash();
     maxCashTimer = Timer.periodic(Duration(minutes: 30), (timer) {
       handlePhysicalCash();
+    });
+  }
+
+  frequentInvoiceSync() {
+    handleInvoiceSync();
+    maxCashTimer = Timer.periodic(Duration(minutes: 30), (timer) {
+      handleInvoiceSync();
     });
   }
 
@@ -83,6 +91,28 @@ class RecurringApiCalls {
       return res.data['data'];
     } else {
       return null;
+    }
+  }
+
+  handleInvoiceSync() {
+    if (!POSConfig().localMode &&
+        POSConfig().allow_sync_bills &&
+        POSConfig().saveInvoiceLocal) {
+      try {
+        LogWriter().saveLogsToFile('ERROR_LOG_', [
+          '*********************** frequentInvoiceSync Started ****************************'
+        ]);
+        InvoiceController().uploadBillData().then((value) {
+          LogWriter().saveLogsToFile('ERROR_LOG_', [
+            '*********************** frequentInvoiceSync Finished ****************************',
+            value != null
+                ? (value?['message'] ?? 'No invoices to sync')
+                : 'No invoices to sync'
+          ]);
+        });
+      } catch (e) {
+        LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
+      }
     }
   }
 }

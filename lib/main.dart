@@ -49,6 +49,7 @@ void main() async {
     posConnectivity.startListen();
     usbSerial.initSerialPort();
     recurringApiCalls.listenPhysicalCash();
+    recurringApiCalls.frequentInvoiceSync();
     // this section is moved (websocket initialization) to the login screen. because there is a delay in initializing api/s
 
     //get unique id for dual display set up
