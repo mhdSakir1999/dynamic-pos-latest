@@ -77,7 +77,31 @@ class InvoiceController {
     String? invNo = await _localStorageController.getInvoice();
     // if the current invoice no is null or empty, then get the last invoice no from the server
     if (invNo == null) {
-      invNo = await getMaximumInvNo(getInvPrefix(), 'INV');
+      try {
+        // invNo = await getMaximumInvNo(getInvPrefix(), 'INV');
+        String? serverInvNo = await getMaximumInvNo(getInvPrefix(), 'INV',
+            local: false, overrideUrl: POSConfig().server);
+        String? localInvNo = POSConfig().allowLocalMode
+            ? await getMaximumInvNo(getInvPrefix(), 'INV', local: true)
+            : null;
+
+        if (serverInvNo != null && serverInvNo != '') {
+          if (localInvNo != null && localInvNo != '') {
+            if (int.parse(serverInvNo) > int.parse(localInvNo)) {
+              invNo = serverInvNo;
+            } else {
+              invNo = localInvNo;
+            }
+          } else {
+            invNo = serverInvNo;
+          }
+        } else {
+          invNo = localInvNo;
+        }
+      } catch (e) {
+        LogWriter().saveLogsToFile(
+            'ERROR_LOG_', [' Error on getInvoiceNo() :' + e.toString()]);
+      }
     }
 
     // whatever the invoice number (last invoiced), we save it in local storage
@@ -766,16 +790,19 @@ class InvoiceController {
 
   /// get cart details by id
   Future<Map<String, dynamic>> getCartDetails(String invoice,
-      {bool isHoldInv = false}) async {
+      {bool isHoldInv = false, bool local = false}) async {
     // getting hold invoice details endpoint is changed
     final res = await ApiClient.call(
         isHoldInv
             ? "invoice/details_hold/$invoice"
             : "invoice/details/$invoice",
-        ApiMethod.GET);
-    if (res?.data == null)
+        ApiMethod.GET,
+        local: local);
+    if (res?.data == null) {
       return {"cartModels": [], "hedRemarks": null};
-    else {
+    } else if (res?.data?['success'] == false) {
+      return {"cartModels": [], "hedRemarks": null};
+    } else {
       EasyLoading.show(status: "please_wait".tr(), dismissOnTap: true);
       final List data = res?.data?["details"] ?? [];
       final List remarkList = res?.data?["remarks"] ?? [];
@@ -799,6 +826,7 @@ class InvoiceController {
             }
           }
         }
+        EasyLoading.dismiss();
       } catch (e) {
         print(e.toString());
         EasyLoading.dismiss();
@@ -908,9 +936,12 @@ class InvoiceController {
     return false;
   }
 
-  Future<String?> getMaximumInvNo(String invPrefix, String mode) async {
+  Future<String?> getMaximumInvNo(String invPrefix, String mode,
+      {bool local = false, String? overrideUrl}) async {
     final res = await ApiClient.call(
         'invoice/max_invoice_no?invoiceNo=$invPrefix&invMode=$mode',
+        local: local,
+        overrideUrl: overrideUrl,
         ApiMethod.GET);
     if (res?.statusCode != 200) {
       return null;

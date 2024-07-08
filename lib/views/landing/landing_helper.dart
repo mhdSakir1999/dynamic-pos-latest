@@ -249,18 +249,33 @@ class LandingHelper {
     _alertController.showLockAlert("not_sign_in", true);
   }
 
-  userSignOff() async {
+  Future userSignOff() async {
     //doing a invoice sync before we do sign-off
-    EasyLoading.show(status: 'please_wait'.tr(), dismissOnTap: true);
-    if (true /* POSConfig().allowLocalMode && POSConfig().allow_sync_bills */) {
-      var result = InvoiceController().uploadBillData().then((value) {
+    EasyLoading.show(status: 'Syncing Bills', dismissOnTap: true);
+    if (POSConfig().allowLocalMode && POSConfig().allow_sync_bills) {
+      var result = await InvoiceController().uploadBillData().then((value) {
         if (value != null) {
           EasyLoading.dismiss();
           EasyLoading.showToast(value['message']);
         }
       });
     }
-    EasyLoading.dismiss();
+    // EasyLoading.dismiss();
+    if (POSConfig().allowLocalMode) {
+      EasyLoading.show(
+          status: 'Checking for pending invoices', dismissOnTap: true);
+      String? localInvNo = POSConfig().allowLocalMode
+          ? await InvoiceController().getMaximumInvNo(
+              InvoiceController().getInvPrefix(), 'INV',
+              local: true)
+          : null;
+      EasyLoading.dismiss();
+      if (localInvNo != null && localInvNo != '') {
+        await _alertController.showErrorAlert('invoices_not_synced');
+        return;
+      }
+    }
+
     alertFocusNode.requestFocus();
     showDialog(
         context: _context,
@@ -833,7 +848,7 @@ class LandingHelper {
                     elevation: 5,
                     shadowColor: Theme.of(context).primaryColor,
                     child: Padding(
-                      padding:const EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           top: 20.0, left: 20, right: 40, bottom: 0),
                       child: Center(
                         child: Column(
@@ -842,11 +857,11 @@ class LandingHelper {
                               padding: const EdgeInsets.only(bottom: 10.0),
                               child: Text(
                                 'landing_view.pending_signoff'.tr(),
-                                style:const TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 30),
                               ),
                             ),
-                           const Divider(),
+                            const Divider(),
                             Column(
                               children: [
                                 Container(
@@ -951,7 +966,7 @@ class LandingHelper {
                                                             '--',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style:const TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 2,
                                                   ),
@@ -962,7 +977,7 @@ class LandingHelper {
                                                             '--',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style:const TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 2,
                                                   ),
@@ -973,7 +988,7 @@ class LandingHelper {
                                                           '--',
                                                       textAlign:
                                                           TextAlign.center,
-                                                      style:const TextStyle(
+                                                      style: const TextStyle(
                                                           fontSize: 20),
                                                     ),
                                                     flex: 2,
@@ -987,7 +1002,7 @@ class LandingHelper {
                                                                 ""),
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style:const TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 2,
                                                   ),
@@ -998,7 +1013,7 @@ class LandingHelper {
                                                             '--',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style:const TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 2,
                                                   ),
@@ -1008,7 +1023,7 @@ class LandingHelper {
                                                             '--',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style:const TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 20)),
                                                     flex: 1,
                                                   ),

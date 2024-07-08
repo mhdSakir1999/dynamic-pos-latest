@@ -365,6 +365,11 @@
     "subtitle": "Please contact your system administrator",
     "okay": "Okay"
   },
+  "invoices_not_synced": {
+    "title": "Pending Invoices in local database",
+    "subtitle": "There are pending invoices in the local database, not synced yet with server database",
+    "okay": "Okay"
+  },
   "already_sign_in": {
     "title": "You already signed on to this terminal",
     "subtitle": "Please proceed to other functions",

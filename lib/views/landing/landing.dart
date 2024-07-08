@@ -199,13 +199,13 @@ class _LandingViewState extends State<LandingView> {
                       )),
                   IconButton(
                       onPressed: () => _rePrintDialog(context),
-                      icon:const Icon(
+                      icon: const Icon(
                         Icons.print_outlined,
                         color: Colors.green,
                       )),
                   IconButton(
                       onPressed: () => _showSpecialOptions(context),
-                      icon:const Icon(
+                      icon: const Icon(
                         Icons.sync,
                         color: Colors.green,
                       )),
@@ -352,10 +352,10 @@ class _LandingViewState extends State<LandingView> {
                     text: 'Structure Changes'),
                 SizedBox(height: 15.h),
                 AlertDialogButton(
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pop(context);
                       // if (!POSConfig().localMode)
-                      _restInvoiceNo(context);
+                      await _restInvoiceNo(context);
                     },
                     text: 'Reset Invoice Number'),
                 SizedBox(height: 15.h),
@@ -708,7 +708,7 @@ class _LandingViewState extends State<LandingView> {
                                         shiftNo: shiftCtrl.text,
                                         date: dateCtrl.text);
                               },
-                              icon:const Icon(
+                              icon: const Icon(
                                 Icons.print,
                               )),
                         ),
@@ -718,7 +718,7 @@ class _LandingViewState extends State<LandingView> {
                         style: CurrentTheme.bodyText2!.copyWith(
                             color: CurrentTheme.primaryDarkColor,
                             fontSize: 18.sp,
-                            fontWeight:  FontWeight.bold),
+                            fontWeight: FontWeight.bold),
                       )
                     ],
                   ),
@@ -837,10 +837,30 @@ class _LandingViewState extends State<LandingView> {
           title: const Text('Do you want to reset invoice number?'),
           actions: [
             AlertDialogButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pop(context);
-                  LocalStorageController().clearInvoiceNo();
+                  EasyLoading.show(status: 'please_wait'.tr());
+                  await LocalStorageController().clearInvoiceNo();
+                  if (!POSConfig().localMode && POSConfig().allowLocalMode) {
+                    try {
+                      LogWriter().saveLogsToFile('ERROR_LOG_', [
+                        '*********************** Invoice Number Cleared: InvoiceSync Started ****************************'
+                      ]);
+                      await InvoiceController().uploadBillData().then((value) {
+                        LogWriter().saveLogsToFile('ERROR_LOG_', [
+                          '*********************** Invoice Number Cleared: InvoiceSync Finished ****************************',
+                          value != null
+                              ? (value?['message'] ?? 'No invoices to sync')
+                              : 'No invoices to sync'
+                        ]);
+                      });
+                    } catch (e) {
+                      LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
+                    }
+                  }
+                  await InvoiceController().getInvoiceNo();
                   LocalStorageController().clearWithdrawal();
+                  EasyLoading.dismiss();
                   EasyLoading.showSuccess('Successfully Reset');
                 },
                 text: 'Yes'),
@@ -947,7 +967,7 @@ class _LandingViewState extends State<LandingView> {
                 if (POSConfig().localMode != true &&
                     !POSConfig().trainingMode &&
                     value.logicalKey == LogicalKeyboardKey.f3) {
-                  landingHelper.userSignOff();
+                  await landingHelper.userSignOff();
                 }
                 if (value.logicalKey == LogicalKeyboardKey.f4) {
                   _goToInvoice();
@@ -1095,8 +1115,8 @@ class _LandingViewState extends State<LandingView> {
                           onPressed: (POSConfig().localMode == true ||
                                   POSConfig().trainingMode)
                               ? null
-                              : () {
-                                  landingHelper.userSignOff();
+                              : () async {
+                                  await landingHelper.userSignOff();
                                 },
                         ),
                       ),

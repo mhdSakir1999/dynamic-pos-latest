@@ -8,6 +8,7 @@ import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/components/components.dart';
 import 'package:checkout/controllers/gift_voucher_controller.dart';
 import 'package:checkout/controllers/keyboard_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/product_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
@@ -1327,111 +1328,129 @@ class POSPriceCalculator {
     List<double> sellings = [];
     List<double> lineAmounts = [];
 
-    if (canContinue) {
-      canContinue = false;
-      // get item details from server
-      EasyLoading.show(status: 'please_wait'.tr(), dismissOnTap: true);
-      final map = await InvoiceController().getCartDetails(refInvNo);
-      final itemList = map['cartModels'];
-      //chekc the item is in the database
-      final summarizedReturnList = itemList
-          .where((element) =>
-              element.stockCode == itemCode && element.itemVoid == false)
-          .toList();
-      if (summarizedReturnList.isEmpty) {
-        EasyLoading.dismiss();
-        await _salesReturnError(context, 'invalid_item', refInvNo);
-        return {
-          'continue': 'cancel',
-        };
-      }
+    try {
+      if (canContinue) {
+        canContinue = false;
+        // get item details from server
+        // EasyLoading.show(status: 'please_wait'.tr(), dismissOnTap: true);
+        final serverMap = await InvoiceController().getCartDetails(refInvNo);
 
-      if ((POSConfig().setup?.itemReturnDayLimit ?? 0) > 0 &&
-          summarizedReturnList.first.dateTime != null) {
-        DateTime expiredDate = DateFormat('yyyy-MM-dd').parse(
-            (summarizedReturnList.first.dateTime)!
-                .add(Duration(days: POSConfig().setup!.itemReturnDayLimit!))
-                .toIso8601String());
-        bool expired = DateFormat('yyyy-MM-dd')
-            .parse(DateTime.now().toIso8601String())
-            .isAfter(expiredDate);
-        if (expired) {
+        final itemList =
+            (serverMap['cartModels'] as List<dynamic>).cast<CartModel>();
+
+        if (itemList.isEmpty && POSConfig().saveInvoiceLocal) {
+          final localMap =
+              await InvoiceController().getCartDetails(refInvNo, local: true);
+          itemList.addAll(localMap['cartModels'] ?? []);
+        }
+        //check the item is in the database
+        final List<CartModel> summarizedReturnList = itemList
+            .where((element) =>
+                element.stockCode == itemCode &&
+                element.itemVoid == false &&
+                (element.unitQty ?? 0) > 0)
+            .toList();
+        EasyLoading.dismiss();
+        if (summarizedReturnList.isEmpty) {
           EasyLoading.dismiss();
-          await _salesReturnError(context, 'expired', refInvNo);
+          await _salesReturnError(context, 'invalid_item', refInvNo);
           return {
             'continue': 'cancel',
           };
         }
-      }
-      EasyLoading.dismiss();
 
-      /*
+        if ((POSConfig().setup?.itemReturnDayLimit ?? 0) > 0 &&
+            summarizedReturnList.first.dateTime != null) {
+          DateTime expiredDate = DateFormat('yyyy-MM-dd').parse(
+              (summarizedReturnList.first.dateTime)!
+                  .add(Duration(days: POSConfig().setup!.itemReturnDayLimit!))
+                  .toIso8601String());
+          bool expired = DateFormat('yyyy-MM-dd')
+              .parse(DateTime.now().toIso8601String())
+              .isAfter(expiredDate);
+          if (expired) {
+            EasyLoading.dismiss();
+            await _salesReturnError(context, 'expired', refInvNo);
+            return {
+              'continue': 'cancel',
+            };
+          }
+        }
+        EasyLoading.dismiss();
+
+        /*
       * Author: TM.Sakir
       * change: Added a window for showing product list and giving the facility to select the desired product to return
       */
-      selectedProducts = await showInvoicedProducts(context,
-          cartItems: summarizedReturnList, invNo: refInvNo);
+        // EasyLoading.dismiss();
+        selectedProducts = await showInvoicedProducts(context,
+            cartItems: summarizedReturnList, invNo: refInvNo);
 
-      // final List<CartModel> new_itemList=[];
-      // for (int i=0;i<itemList.length;i++)
-      //   {
-      //     dynamic retItem=itemList[i];
-      //     dynamic x= new_itemList.indexWhere((element) => element.stockCode == itemCode);
-      //     if (x!=-1){
-      //       CartModel xitem = new_itemList[x];
-      //       xitem.unitQty = double.tryParse(retItem["unitQty"]);
-      //     }
-      //     else
-      //       {
-      //         new_itemList[retItem["stockCode"]] = double.tryParse(retItem["unitQty"]);
-      //       }
-      //   }
+        // final List<CartModel> new_itemList=[];
+        // for (int i=0;i<itemList.length;i++)
+        //   {
+        //     dynamic retItem=itemList[i];
+        //     dynamic x= new_itemList.indexWhere((element) => element.stockCode == itemCode);
+        //     if (x!=-1){
+        //       CartModel xitem = new_itemList[x];
+        //       xitem.unitQty = double.tryParse(retItem["unitQty"]);
+        //     }
+        //     else
+        //       {
+        //         new_itemList[retItem["stockCode"]] = double.tryParse(retItem["unitQty"]);
+        //       }
+        //   }
 
-      // if (summarizedReturnList.isEmpty) {
-      //   await _salesReturnError(context, 'invalid_item', refInvNo);
-      // }
-      // // final item = itemList[index];
-      // double summarizedTotalQty =
-      //     summarizedReturnList.fold(0, (sum, element) => sum + element.unitQty);
-      // double summarizedAmount =
-      //     summarizedReturnList.fold(0, (sum, element) => sum + element.amount);
-      // if ((totalQty * -1) > summarizedTotalQty) {
-      //   await _salesReturnError(context, 'invalid_qty', refInvNo);
-      // } else {
-      //   canContinue = true;
-      //   //TODO: re calculate the calculation
-      //   selling = summarizedAmount / summarizedTotalQty;
-      //   lineAmount = selling * enteredQty;
-      // }
+        // if (summarizedReturnList.isEmpty) {
+        //   await _salesReturnError(context, 'invalid_item', refInvNo);
+        // }
+        // // final item = itemList[index];
+        // double summarizedTotalQty =
+        //     summarizedReturnList.fold(0, (sum, element) => sum + element.unitQty);
+        // double summarizedAmount =
+        //     summarizedReturnList.fold(0, (sum, element) => sum + element.amount);
+        // if ((totalQty * -1) > summarizedTotalQty) {
+        //   await _salesReturnError(context, 'invalid_qty', refInvNo);
+        // } else {
+        //   canContinue = true;
+        //   //TODO: re calculate the calculation
+        //   selling = summarizedAmount / summarizedTotalQty;
+        //   lineAmount = selling * enteredQty;
+        // }
 
-      if (selectedProducts == null) {
-        output = 'cancel';
-        // await _salesReturnError(context, 'invalid_item', refInvNo);
-      } else {
-        double summarizedTotalQty = 0;
-        selectedProducts.forEach((element) {
-          summarizedTotalQty += element!.unitQty;
-        });
-
-        if ((totalQty * -1) > summarizedTotalQty) {
-          await _salesReturnError(context, 'invalid_qty', refInvNo);
+        if (selectedProducts == null) {
           output = 'cancel';
+          // await _salesReturnError(context, 'invalid_item', refInvNo);
         } else {
-          for (int i = 0; i < selectedProducts.length; i++) {
-            canContinue = true;
-            output = 'continue';
-            sold = selectedProducts[i]!.amount / selectedProducts[i]!.unitQty;
-            // lineAmount = sold * (-1 * selectedProducts[i]!.unitQty); //wrong
-            lineAmount = (selectedProducts[i]!.unitQty >= (-1 * enteredQty))
-                ? sold * enteredQty
-                : sold * -1 * selectedProducts[i]!.unitQty;
-            selling = selectedProducts[i]!.selling;
+          double summarizedTotalQty = 0;
+          selectedProducts.forEach((element) {
+            summarizedTotalQty += element!.unitQty;
+          });
 
-            sellings.add(selling);
-            lineAmounts.add(lineAmount);
+          if ((totalQty * -1) > summarizedTotalQty) {
+            await _salesReturnError(context, 'invalid_qty', refInvNo);
+            output = 'cancel';
+          } else {
+            for (int i = 0; i < selectedProducts.length; i++) {
+              canContinue = true;
+              output = 'continue';
+              sold = selectedProducts[i]!.amount / selectedProducts[i]!.unitQty;
+              // lineAmount = sold * (-1 * selectedProducts[i]!.unitQty); //wrong
+              lineAmount = (selectedProducts[i]!.unitQty >= (-1 * enteredQty))
+                  ? sold * enteredQty
+                  : sold * -1 * selectedProducts[i]!.unitQty;
+              selling = selectedProducts[i]!.selling;
+
+              sellings.add(selling);
+              lineAmounts.add(lineAmount);
+            }
           }
         }
       }
+    } catch (e) {
+      // EasyLoading.dismiss();
+      LogWriter().saveLogsToFile(
+          'ERROR_LOG_', ['Error on _showSalesReturnDialog() :' + e.toString()]);
     }
 
     return {

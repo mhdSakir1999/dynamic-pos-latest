@@ -77,7 +77,7 @@ class _LoginViewState extends State<LoginView> {
     if (!kReleaseMode) {
       // usernameEditingController.text = 'MYPOS';
       passwordEditingController.text = 'ADMIN';
-      usernameEditingController.text = 'CAS1';
+      usernameEditingController.text = '4097';
       // passwordEditingController.text = 'myPOS@1234';
     }
     //DesktopWindow.setFullScreen(true);
@@ -305,7 +305,7 @@ class _LoginViewState extends State<LoginView> {
                   height: 12.h,
                 ),
                 if (!canShowPasswordField)
-                 const SizedBox.shrink()
+                  const SizedBox.shrink()
                 else
                   Column(
                     children: [
