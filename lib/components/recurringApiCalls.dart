@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 
 class RecurringApiCalls {
   Timer? maxCashTimer;
+  Timer? invSyncTimer;
   BuildContext? context;
 
   setContext(BuildContext context) {
@@ -31,7 +32,7 @@ class RecurringApiCalls {
 
   frequentInvoiceSync() {
     handleInvoiceSync();
-    maxCashTimer = Timer.periodic(Duration(minutes: 30), (timer) {
+    invSyncTimer = Timer.periodic(Duration(minutes: 30), (timer) {
       handleInvoiceSync();
     });
   }
