@@ -622,7 +622,7 @@ class InvoiceController {
 
   // clear the temp payments
   Future<bool> clearTempPayment() async {
-    String invoiceNo = cartBloc.cartSummary?.invoiceNo ?? "";
+    // String invoiceNo = cartBloc.cartSummary?.invoiceNo ?? "";
     bool val = await _localStorageController.clearTempPayment();
     print('clear temp payment');
     print('Get Customer Coupons');
@@ -853,9 +853,10 @@ class InvoiceController {
   }
 
   // get today invoices --> past 7 days invoices
-  Future<List<InvoiceHeader>> getTodayInvoices() async {
+  Future<List<InvoiceHeader>> getTodayInvoices({bool local = false}) async {
     final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
-    final res = await ApiClient.call("invoice/today/$cashier", ApiMethod.GET);
+    final res = await ApiClient.call("invoice/today/$cashier", ApiMethod.GET,
+        local: local);
     if (res?.data == null)
       return [];
     else {
@@ -915,10 +916,11 @@ class InvoiceController {
     return result;
   }
 
-  Future<String> reprintInvoice(String invoice) async {
+  Future<String> reprintInvoice(String invoice, {bool local = false}) async {
     final res = await ApiClient.call(
         "invoice/reprint_invoice/$invoice?locCode=${POSConfig().locCode}&invMode=INV",
-        ApiMethod.GET);
+        ApiMethod.GET,
+        local: local);
     if ((res?.data?["success"].toString().parseBool() ?? false) &&
         res?.statusCode == 200) {
       return res?.data['data'];

@@ -25,14 +25,14 @@ class RecurringApiCalls {
 
   listenPhysicalCash() {
     handlePhysicalCash();
-    maxCashTimer = Timer.periodic(Duration(minutes: 30), (timer) {
+    maxCashTimer = Timer.periodic(Duration(hours: 1), (timer) {
       handlePhysicalCash();
     });
   }
 
   frequentInvoiceSync() {
     handleInvoiceSync();
-    invSyncTimer = Timer.periodic(Duration(minutes: 30), (timer) {
+    invSyncTimer = Timer.periodic(Duration(minutes: 15), (timer) {
       handleInvoiceSync();
     });
   }

@@ -25,25 +25,33 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../controllers/loyalty_controller.dart';
 
 class ReprintView extends StatefulWidget {
-  final List<InvoiceHeader> headers;
+  final List<InvoiceHeader> serverHeaders;
+  final List<InvoiceHeader> localHeaders;
 
-  const ReprintView({Key? key, required this.headers}) : super(key: key);
+  const ReprintView(
+      {Key? key, required this.serverHeaders, required this.localHeaders})
+      : super(key: key);
 
   @override
   _ReprintViewState createState() => _ReprintViewState();
 }
 
-class _ReprintViewState extends State<ReprintView> {
+class _ReprintViewState extends State<ReprintView>
+    with SingleTickerProviderStateMixin {
   final searchController = TextEditingController();
   final scrollController = ScrollController();
-  late List<InvoiceHeader> headers = [];
+  late List<InvoiceHeader> serverHeaders = [];
+  late List<InvoiceHeader> localHeaders = [];
   bool clicked = false;
   KeyBoardController keyBoardController = KeyBoardController();
+  TabController? tabController;
 
   @override
   void initState() {
     super.initState();
-    headers.addAll(widget.headers);
+    tabController = TabController(length: 2, vsync: this);
+    serverHeaders.addAll(widget.serverHeaders);
+    localHeaders.addAll(widget.localHeaders);
   }
 
   @override
@@ -73,9 +81,10 @@ class _ReprintViewState extends State<ReprintView> {
                       if (value.length < 12 && mounted) {
                         setState(() {
                           List<InvoiceHeader> x = [];
-                          x.addAll(widget.headers);
-                          headers = x;
+                          x.addAll(widget.serverHeaders);
+                          serverHeaders = x;
                         });
+                        search();
                       } else {
                         EasyLoading.show(status: 'please_wait'.tr());
                         var res = await InvoiceController()
@@ -83,7 +92,7 @@ class _ReprintViewState extends State<ReprintView> {
                         EasyLoading.dismiss();
                         if (res.isNotEmpty) {
                           setState(() {
-                            headers = res;
+                            serverHeaders = res;
                           });
                         }
                       }
@@ -93,9 +102,12 @@ class _ReprintViewState extends State<ReprintView> {
                       keyBoardController.showBottomDPKeyBoard(searchController,
                           onEnter: () async {
                         // search();
-                        if (searchController.text.length == 0 && mounted) {
-                          headers = widget.headers;
-
+                        if (searchController.text.length < 12 && mounted) {
+                          setState(() {
+                            List<InvoiceHeader> x = [];
+                            x.addAll(widget.serverHeaders);
+                            serverHeaders = x;
+                          });
                           search();
                         } else {
                           EasyLoading.show(status: 'please_wait'.tr());
@@ -104,10 +116,13 @@ class _ReprintViewState extends State<ReprintView> {
                           EasyLoading.dismiss();
                           if (res.isNotEmpty) {
                             setState(() {
-                              headers = res;
+                              serverHeaders = res;
                             });
+                            search();
                           }
                         }
+
+                        search();
                       }, buildContext: context);
                     },
                     onEditingComplete: search,
@@ -125,33 +140,78 @@ class _ReprintViewState extends State<ReprintView> {
           SizedBox(
             height: 15.h,
           ),
-          Expanded(
-            child: Scrollbar(
-              thumbVisibility: true,
-              controller: scrollController,
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: DataTable(
-                  dataRowMinHeight: 50.r,
-                  dataRowMaxHeight: 75.r,
-                  headingRowColor: WidgetStateColor.resolveWith(
-                    (states) {
-                      return CurrentTheme.primaryColor!;
-                    },
-                  ),
-                  columns: [
-                    DataColumn(label: Text("reprint_view.invoice_no".tr())),
-                    DataColumn(label: Text("reprint_view.mode".tr())),
-                    DataColumn(label: Text("reprint_view.time".tr())),
-                    DataColumn(label: Text("reprint_view.amount".tr())),
-                    DataColumn(label: Text("reprint_view.cashier".tr())),
-                    DataColumn(label: Text("reprint_view.member_code".tr())),
-                    DataColumn(label: Text("reprint_view.status".tr())),
-                    DataColumn(label: Text("")),
-                  ],
-                  rows: headers.map((e) => item(e)).toList(),
+          TabBar(
+              controller: tabController,
+              unselectedLabelColor: Colors.grey,
+              tabs: const [
+                const Tab(
+                  text: 'Server',
                 ),
-              ),
+                const Tab(
+                  text: 'Local',
+                )
+              ]),
+          Expanded(
+            child: TabBarView(
+              controller: tabController,
+              children: [
+                Scrollbar(
+                  thumbVisibility: true,
+                  controller: scrollController,
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: DataTable(
+                      dataRowMinHeight: 50.r,
+                      dataRowMaxHeight: 75.r,
+                      headingRowColor: WidgetStateColor.resolveWith(
+                        (states) {
+                          return CurrentTheme.primaryColor!;
+                        },
+                      ),
+                      columns: [
+                        DataColumn(label: Text("reprint_view.invoice_no".tr())),
+                        DataColumn(label: Text("reprint_view.mode".tr())),
+                        DataColumn(label: Text("reprint_view.time".tr())),
+                        DataColumn(label: Text("reprint_view.amount".tr())),
+                        DataColumn(label: Text("reprint_view.cashier".tr())),
+                        DataColumn(
+                            label: Text("reprint_view.member_code".tr())),
+                        DataColumn(label: Text("reprint_view.status".tr())),
+                        DataColumn(label: Text("")),
+                      ],
+                      rows: serverHeaders.map((e) => item(e)).toList(),
+                    ),
+                  ),
+                ),
+                Scrollbar(
+                  thumbVisibility: true,
+                  controller: scrollController,
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: DataTable(
+                      dataRowMinHeight: 50.r,
+                      dataRowMaxHeight: 75.r,
+                      headingRowColor: WidgetStateColor.resolveWith(
+                        (states) {
+                          return CurrentTheme.primaryColor!;
+                        },
+                      ),
+                      columns: [
+                        DataColumn(label: Text("reprint_view.invoice_no".tr())),
+                        DataColumn(label: Text("reprint_view.mode".tr())),
+                        DataColumn(label: Text("reprint_view.time".tr())),
+                        DataColumn(label: Text("reprint_view.amount".tr())),
+                        DataColumn(label: Text("reprint_view.cashier".tr())),
+                        DataColumn(
+                            label: Text("reprint_view.member_code".tr())),
+                        DataColumn(label: Text("reprint_view.status".tr())),
+                        DataColumn(label: Text("")),
+                      ],
+                      rows: localHeaders.map((e) => item(e)).toList(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -161,16 +221,32 @@ class _ReprintViewState extends State<ReprintView> {
 
   // search cart details by text
   void search() {
-    final search = searchController.text;
-    List<InvoiceHeader> l = [];
-    l.addAll(widget.headers);
-    // apply  the search condition
-    try {
-      headers =
-          l.where((element) => element.invheDINVNO!.contains(search)).toList();
-    } catch (e) {}
-    if (mounted) {
-      setState(() {});
+    if ((tabController?.index ?? 0) == 0) {
+      final search = searchController.text;
+      List<InvoiceHeader> l = [];
+      l.addAll(serverHeaders);
+      // apply  the search condition
+      try {
+        serverHeaders = l
+            .where((element) => element.invheDINVNO!.contains(search))
+            .toList();
+      } catch (e) {}
+      if (mounted) {
+        setState(() {});
+      }
+    } else if ((tabController?.index ?? 0) == 1) {
+      final search = searchController.text;
+      List<InvoiceHeader> l = [];
+      l.addAll(localHeaders);
+      // apply  the search condition
+      try {
+        localHeaders = l
+            .where((element) => element.invheDINVNO!.contains(search))
+            .toList();
+      } catch (e) {}
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -276,7 +352,8 @@ class _ReprintViewState extends State<ReprintView> {
 
     //if permission granted
     if (hasPermission) {
-      var res = await InvoiceController().reprintInvoice(invoice);
+      var res = await InvoiceController().reprintInvoice(invoice,
+          local: tabController?.index == 1 ? true : false);
       double loyaltyPoints = 0;
       if (customerCode.isNotEmpty) {
         var customerRes =

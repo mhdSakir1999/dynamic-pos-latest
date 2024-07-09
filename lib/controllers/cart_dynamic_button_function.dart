@@ -386,7 +386,9 @@ class CartDynamicButtonFunction {
       final cartLen = cartBloc.currentCart?.length ?? 0;
       if (cartLen == 0) {
         EasyLoading.show(status: 'please_wait'.tr());
-        final res = await InvoiceController().getTodayInvoices();
+        final serverRes = await InvoiceController().getTodayInvoices();
+        final localRes =
+            await InvoiceController().getTodayInvoices(local: true);
         EasyLoading.dismiss();
         //get the inv modes only
         showModalBottomSheet(
@@ -395,7 +397,12 @@ class CartDynamicButtonFunction {
           context: context!,
           builder: (context) {
             return ReprintView(
-              headers: res
+              serverHeaders: serverRes
+                  .where((element) =>
+                      element.invheDMODE == "INV" &&
+                      element.invheDINVOICED == true)
+                  .toList(),
+              localHeaders: localRes
                   .where((element) =>
                       element.invheDMODE == "INV" &&
                       element.invheDINVOICED == true)
@@ -635,8 +642,9 @@ class CartDynamicButtonFunction {
     showDialog(
       context: context,
       builder: (context) {
-        return  AlertDialog(
-          title: const Text('Invoice Header Remarks', textAlign: TextAlign.center),
+        return AlertDialog(
+          title:
+              const Text('Invoice Header Remarks', textAlign: TextAlign.center),
           content: SizedBox(
             width: ScreenUtil().screenWidth * 0.6,
             child: Column(

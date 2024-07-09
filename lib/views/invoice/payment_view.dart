@@ -127,8 +127,10 @@ class _PaymentViewState extends State<PaymentView> {
     double lineTotal = 0;
     double absolute = 0;
     cartBloc.currentCart?.values.forEach((element) {
-      lineTotal += element.amount;
-      absolute += (element.selling * element.unitQty);
+      if (element.itemVoid != true) {
+        lineTotal += element.amount;
+        absolute += (element.selling * element.unitQty);
+      }
     });
     final payModes = payModeBloc.payModeResult?.payModes ?? [];
     int defaultPayModeIndex =

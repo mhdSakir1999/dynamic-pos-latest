@@ -234,10 +234,13 @@ class POSAlertTemplate extends StatelessWidget {
                                     ),
                                     textInputAction: TextInputAction.next,
                                     onEditingComplete: () {
-                                      if (hideTextField3)
-                                        buttonRightFocusNode.requestFocus();
-                                      else
+                                      if (hideTextField3) {
+                                        // buttonRightFocusNode.requestFocus();
+                                        text2FocusNode.unfocus();
+                                        rightButtonPressed?.call();
+                                      } else {
                                         text3FocusNode.requestFocus();
+                                      }
                                     },
                                     onTap: () {
                                       // KeyBoardController().dismiss();
@@ -245,6 +248,13 @@ class POSAlertTemplate extends StatelessWidget {
                                           textEditingController2!,
                                           obscureText: obscure2, onEnter: () {
                                         KeyBoardController().dismiss();
+                                        if (hideTextField3) {
+                                          // buttonRightFocusNode.requestFocus();
+                                          text2FocusNode.unfocus();
+                                          rightButtonPressed?.call();
+                                        } else {
+                                          text3FocusNode.requestFocus();
+                                        }
                                       }, buildContext: context);
                                     },
                                   ),
