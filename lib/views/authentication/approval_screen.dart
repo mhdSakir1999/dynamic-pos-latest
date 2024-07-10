@@ -1,6 +1,6 @@
 /*
  * Copyright © 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Chathura Priyashad
+ * Author: Chathura Priyashad & TM.Sakir
  * Created At: 4/27/21, 3:48 PM
  */
 
@@ -13,6 +13,7 @@ import 'package:checkout/views/pos_alerts/pos_alert_template.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:checkout/controllers/permission_controller.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:supercharged/supercharged.dart';
 
 class ApprovalAlert extends StatefulWidget {
@@ -105,9 +106,11 @@ class _ApprovalAlertState extends State<ApprovalAlert> {
   }
 
   void handlePermission() async {
+    EasyLoading.show(status: 'please_wait'.tr());
     String reason = reasonController.text;
     String password = passwordController.text;
     if (reason.isEmpty || (!widget.sameUser && password.isEmpty)) {
+      EasyLoading.dismiss();
       return;
     }
     if (widget.sameUser) {
@@ -133,5 +136,6 @@ class _ApprovalAlertState extends State<ApprovalAlert> {
       });
       if (res.success) Navigator.pop(context, res);
     }
+    EasyLoading.dismiss();
   }
 }

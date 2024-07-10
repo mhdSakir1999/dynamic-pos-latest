@@ -356,7 +356,7 @@ class InvoiceController {
               if (e.itemVoid == false) {
                 grossAmt += (e.unitQty * e.selling).toDouble();
                 lineDiscPer += (e.discPer ?? 0) + (e.promoDiscPre ?? 0);
-                lineDiscAmt += e.discAmt ?? 0 + (e.promoDiscAmt ?? 0);
+                lineDiscAmt += (e.discAmt ?? 0) + (e.promoDiscAmt ?? 0);
               }
 
               Map<String, dynamic> map = e.toMap();
@@ -416,6 +416,10 @@ class InvoiceController {
         bool? userRes = await amountValidationDialog(context,
             'There is an amount(${(netAmt - calculatedDetNet).abs().toStringAsFixed(2)}) mismatch found between the calculated bill amount and the net amount\nNet amount : ${netAmt.toStringAsFixed(2)}\nCalculated amount: ${calculatedDetNet.toStringAsFixed(2)}\nDo you want to save the invoice anyway?');
         if (userRes == false) return InvoiceSaveRes(false, 0, null);
+        LogWriter().saveLogsToFile('ERROR_LOG_', [
+          'There is an amount(${(netAmt - calculatedDetNet).abs().toStringAsFixed(2)}) mismatch found between the calculated bill amount and the net amount\nNet amount : ${netAmt.toStringAsFixed(2)}\nCalculated amount: ${calculatedDetNet.toStringAsFixed(2)}\nDo you want to save the invoice anyway?' +
+              'cashier responce: continue to save',
+        ]);
         // EasyLoading.showError('Net amount calculation error');
         // return InvoiceSaveRes(false, 0, null);
       }
@@ -430,6 +434,10 @@ class InvoiceController {
           if (userRes == false) return InvoiceSaveRes(false, 0, null);
           // EasyLoading.showError('Paid amount calculation error');
           // return InvoiceSaveRes(false, 0, null);
+          LogWriter().saveLogsToFile('ERROR_LOG_', [
+            'There is an amount(${(netAmt - tempPaidTotal).abs()}) mismatch found between the paid amount and the net amount\nNet amount : ${netAmt.toStringAsFixed(2)}\nPaid amount: ${tempPaidTotal.toStringAsFixed(2)}\nDo you want to save the invoice anyway?' +
+                'cashier responce: continue to save',
+          ]);
         }
       }
     }
