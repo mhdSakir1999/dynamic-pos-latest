@@ -114,7 +114,10 @@
     "no_stock_detail": "There is not enough stock for these products\nDo you want to invoice them anyway?\n(Note: you may need valid permission for that)",
     "stock_yes": "Yes",
     "stock_no": "No",
-    "promo_loaded": "Promotions are up to date"
+    "promo_loaded": "Promotions are up to date",
+    "product_max_exceed_title": "Maximum Allowed Quantity Exceeded",
+    "product_max_exceed_content": "Maximum allowed volume/qty for this product is {maxQty}.(Current:{currentVolume}, Entered:{entered})",
+    "product_max_exceed_okay": "Okay"
   },
   "functions": {
     "special_function": "Special\nFunctions\n[F1]",

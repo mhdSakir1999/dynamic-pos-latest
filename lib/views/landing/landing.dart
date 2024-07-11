@@ -953,10 +953,17 @@ class _LandingViewState extends State<LandingView> {
                 if (POSConfig().localMode != true &&
                     value.logicalKey == LogicalKeyboardKey.f2) {
                   if (isEOD_Pending == true) {
+                    final date = strEodDate.parseDateTime();
+                    String day = date.day.toString();
+                    String month = date.month.toString();
+                    String year = date.year.toString();
                     alertController.showErrorAlert(
                         "landing_eod_not_done_for_yersterday",
                         namedArgs: {
-                          "date": strEodDate.parseDateTime().toString()
+                          "date": '$day-$month-$year'
+                          // DateFormat('dd/mm/yyyy')
+                          //     .parse(strEodDate.parseDateTime().toString())
+                          //     .toString()
                         });
                     return;
                   } else {
@@ -1090,13 +1097,13 @@ class _LandingViewState extends State<LandingView> {
                             ? null
                             : () async {
                                 if (isEOD_Pending == true) {
+                                  final date = strEodDate.parseDateTime();
+                                  String day = date.day.toString();
+                                  String month = date.month.toString();
+                                  String year = date.year.toString();
                                   alertController.showErrorAlert(
                                       "landing_eod_not_done_for_yersterday",
-                                      namedArgs: {
-                                        "date": strEodDate
-                                            .parseDateTime()
-                                            .toString()
-                                      });
+                                      namedArgs: {"date": '$day-$month-$year'});
                                   return;
                                 } else
                                   await landingHelper.validateSignOn(context);

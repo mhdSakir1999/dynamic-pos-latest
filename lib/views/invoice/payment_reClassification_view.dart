@@ -6,6 +6,7 @@ import 'package:checkout/components/api_client.dart';
 import 'package:checkout/components/current_theme.dart';
 import 'package:checkout/components/widgets/go_back.dart';
 import 'package:checkout/components/widgets/pos_background.dart';
+import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/pos_manual_print_controller.dart';
 import 'package:checkout/controllers/special_permission_handler.dart';
@@ -223,7 +224,7 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                         EasyLoading.dismiss();
                       },
                       child: const Text('Save'),
-                      style:  ButtonStyle(
+                      style: ButtonStyle(
                           backgroundColor:
                               WidgetStatePropertyAll(Colors.green[800])),
                     ),
@@ -592,6 +593,39 @@ class _PaymentReClassificationState extends State<PaymentReClassification> {
                           focusNode: invFocus,
                           autofocus: true,
                           controller: invController,
+                          onTap: () {
+                            KeyBoardController().init(context);
+                            KeyBoardController().showBottomDPKeyBoard(
+                                invController, onEnter: () async {
+                              if (classifiedPayments.isNotEmpty) {
+                                bool? confirm = await confirmationDialog(
+                                    context,
+                                    'Do you want to clear the re-classified payments for the current invoice?');
+                                if (confirm != true) return;
+                              }
+                              EasyLoading.show(status: 'please_wait'.tr());
+                              cartBloc.clearPayment();
+                              classifiedPayments.clear();
+                              invDate = '--';
+                              invAmount = 0;
+                              invLoc = '--';
+                              invStation = '--';
+                              invCashier = '--';
+                              invCustomer = '--';
+                              invRemark = '--';
+                              hedRemarks = [];
+                              invBalance = 0;
+                              setState(() {});
+                              bool isFetched = await getInvoicePayments();
+                              if (isFetched) {
+                                setState(() {});
+                              } else {
+                                EasyLoading.showError(
+                                    'Failed to get invoice data !!!');
+                              }
+                              EasyLoading.dismiss();
+                            }, buildContext: context);
+                          },
                           onEditingComplete: () async {
                             // EasyLoading.showInfo('Processing !!!');
                             if (classifiedPayments.isNotEmpty) {

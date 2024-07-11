@@ -351,7 +351,22 @@ class POSPriceCalculator {
       }
 
       if ((currentVolume + vol) > maxQty) {
-        EasyLoading.showError(error);
+        // EasyLoading.showError(error);
+        await showDialog(
+          context: context,
+          builder: (context) => POSErrorAlert(
+              title: 'invoice.product_max_exceed_title'.tr(),
+              subtitle: 'invoice.product_max_exceed_content'.tr(namedArgs: {
+                "maxQty": maxQty.toString(),
+                "currentVolume": currentVolume.toString(),
+                "entered": vol.toString()
+              }),
+              actions: <Widget>[
+                AlertDialogButton(
+                    onPressed: () => Navigator.pop(context),
+                    text: 'invoice.product_max_exceed_okay'.tr())
+              ]),
+        );
         return null;
       }
     }
