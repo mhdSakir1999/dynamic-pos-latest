@@ -38,12 +38,14 @@ class CartDynamicButtonController {
     return [
       CartDynamicButton("Payment\nRe-Classsification", "re-classification",
           "#d9d9d9", "#ffffff", false),
-      CartDynamicButton("Hed Remarks", "invhed_remarks",
-          "#d9d9d9", "#ffffff", false),
-      CartDynamicButton("Local Mode", "local_switch",
-          "#d9d9d9", "#ffffff", false),
-      CartDynamicButton("COD Invoices", "cod_headers",
-          "#d9d9d9", "#ffffff", false),
+      CartDynamicButton(
+          "Hed Remarks", "invhed_remarks", "#d9d9d9", "#ffffff", false),
+      CartDynamicButton(
+          "Local Mode", "local_switch", "#d9d9d9", "#ffffff", false),
+      CartDynamicButton(
+          "COD Invoices", "cod_headers", "#d9d9d9", "#ffffff", false),
+      // CartDynamicButton("Invoice Compare", "inv_compare",
+      //     "#d9d9d9", "#ffffff", false),
     ];
   }
 }

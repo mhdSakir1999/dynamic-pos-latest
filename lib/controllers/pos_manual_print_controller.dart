@@ -1,7 +1,5 @@
-/// Copyright (c) 2023 myPOS Software Solutions.  All rights reserved.
 /// Author: [TM.SAKIR]
 /// Created At: 2023-12-18 2.30PM.
-/// Manual way to generate printouts from pos -- only supports windows
 
 import 'dart:async';
 import 'dart:convert';
@@ -21,6 +19,7 @@ import 'package:usb_esc_printer_windows/usb_esc_printer_windows.dart'
 import 'package:xml/xml.dart' as xml;
 import 'package:collection/collection.dart';
 
+/// Manual way to generate printouts from pos -- only supports windows
 class POSManualPrint {
   late Generator generator;
   List<int> bytes = [];

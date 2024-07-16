@@ -48,7 +48,7 @@ class RecurringApiCalls {
         double cashLimit = POSConfig().setup!.maxCashLimit!;
 
         if (cashLimit > 0 && remainingCash >= cashLimit) {
-          maxCashTimer?.cancel();
+          this.maxCashTimer?.cancel();
           var ignore = await showDialog(
               barrierDismissible: false,
               context: context!,
@@ -64,7 +64,7 @@ class RecurringApiCalls {
                     showFlare: true,
                   ));
           if (ignore) {
-            await Future.delayed(Duration(minutes: 30), () {
+            await Future.delayed(Duration(hours: 1), () {
               listenPhysicalCash();
             });
           }

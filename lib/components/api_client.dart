@@ -219,14 +219,14 @@ class ApiClient {
         'users/regenerate_token', ApiMethod.POST,
         formData: FormData.fromMap(<String, dynamic>{'old_token': bearerToken}),
         authorize: false);
-    bearerToken = res?.data['token'] ?? '';
+    bearerToken = res?.data != '' ? res?.data['token'] ?? '' : '';
   }
 
   static Future<String> generateBackendToken(String url) async {
     final Response<dynamic>? res = await call(
         'Login/${userBloc.currentUser?.uSERHEDUSERCODE}', ApiMethod.GET,
         authorize: false, overrideUrl: url, errorToast: false);
-    return res?.data['token'] ?? '';
+    return res?.data != '' ? res?.data['token'] ?? '' : '';
   }
 }
 

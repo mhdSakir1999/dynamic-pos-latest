@@ -31,6 +31,7 @@ import 'package:checkout/views/invoice/bill_cancel_view.dart';
 import 'package:checkout/views/invoice/cash_in_out_view.dart';
 import 'package:checkout/views/invoice/cod_pendingInvoices_view.dart';
 import 'package:checkout/views/invoice/discount_entry_view.dart';
+import 'package:checkout/views/invoice/inv_compare_view.dart';
 import 'package:checkout/views/invoice/payment_reClassification_view.dart';
 import 'package:checkout/views/invoice/product_search_view.dart';
 import 'package:checkout/views/invoice/recall_view.dart';
@@ -614,6 +615,9 @@ class CartDynamicButtonFunction {
         case "cod_headers":
           await handleCODInvoices();
           break;
+        case "inv_compare":
+         // await compareInvoices();
+          break;
       }
     } catch (e) {
       LogWriter()
@@ -916,6 +920,22 @@ class CartDynamicButtonFunction {
         return CODPendingInvoiceView(
           headers: res,
         );
+      },
+    );
+  }
+
+  Future<void> compareInvoices() async {
+    if (context == null) {
+      POSLoggerController.addNewLog(POSLogger(
+          POSLoggerLevel.error, "Field 'context' has not been initialized."));
+      return;
+    }
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      useRootNavigator: true,
+      context: context!,
+      builder: (context) {
+        return InvoiceCompareView();
       },
     );
   }

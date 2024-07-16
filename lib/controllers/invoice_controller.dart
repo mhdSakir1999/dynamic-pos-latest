@@ -787,7 +787,7 @@ class InvoiceController {
         DateFormat("HH:mm:ss").format(header.invheDTIME ?? DateTime.now());
     final date = DateFormat("yyyy-MM-dd").format(DateTime.now());
     final formattedString = date + "T" + time;
-    DateTime dateTime = DateTime.parse(formattedString);
+    // DateTime dateTime = DateTime.parse(formattedString);
 
     cartSum.startTime = formattedString;
     _localStorageController.updateCartSummary(cartSum);
@@ -860,7 +860,7 @@ class InvoiceController {
     }
   }
 
-  // get today invoices --> past 7 days invoices
+  /// get today invoices --> past 7 days invoices
   Future<List<InvoiceHeader>> getTodayInvoices({bool local = false}) async {
     final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
     final res = await ApiClient.call("invoice/today/$cashier", ApiMethod.GET,
@@ -869,6 +869,38 @@ class InvoiceController {
       return [];
     else {
       return InvoiceHeaderResult.fromJson(res?.data).invoiceHeader ?? [];
+    }
+  }
+
+  /// getting invoice header data which are pending in local db.
+  ///
+  /// by defauls [local] is true, if it is false then [getLocalPendingInvoices] returns server invoice data
+  Future<List> getLocalPendingInvoices({bool local = true}) async {
+    final cashier = userBloc.currentUser?.uSERHEDUSERCODE ?? "";
+    final shift = userBloc.currentUser?.shiftNo;
+    final signOnDate =
+        (userBloc.currentUser?.uSERHEDSIGNONDATE ?? '').replaceAll(' ', 'T');
+    final station = userBloc.currentUser?.uSERHEDSTATIONID ?? '';
+    final res = await ApiClient.call(
+        "invoice/get_local_invoices", ApiMethod.GET,
+        local: local);
+    if (res?.data != null &&
+        res?.data != '' &&
+        res?.data['success'] == true &&
+        res?.data['data'] != null) {
+      final List data = res?.data['data'];
+      if (data.isEmpty) return [];
+      return data
+              .where((e) =>
+                  e['invheD_CASHIER'] == cashier &&
+                  e['invheD_STATION'] == station &&
+                  e['invheD_LOCCODE'] == POSConfig().locCode &&
+                  e['invheD_SHITNO'].toString() == shift &&
+                  e['invheD_SIGNONDATE'] == signOnDate)
+              .toList() ??
+          [];
+    } else {
+      return [];
     }
   }
 
@@ -900,6 +932,25 @@ class InvoiceController {
       return data.map((e) => CODInvoiceHeader.fromJson(e)).toList();
     } else {
       return [];
+    }
+  }
+
+  /// getting invoice data from both local, server dbs.
+  Future getInvdetFromBothDb(String invNo, bool isLocal) async {
+    final loc = POSConfig().locCode;
+    final res = await ApiClient.call(
+        "invoice/check_invoice?invNo=$invNo&locCode=$loc&invMode=INV",
+        local: isLocal,
+        ApiMethod.GET);
+    if (res?.data != null &&
+        res?.data != '' &&
+        res?.data['success'] == true &&
+        res?.data['data'] != null) {
+      final Map data = res?.data['data'];
+      if (data.isEmpty) return null;
+      return data;
+    } else {
+      return null;
     }
   }
 

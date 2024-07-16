@@ -231,3 +231,100 @@ BEGIN
 END
 GO
 ------------------------------------------------------------
+CREATE proc [dbo].[myPOS_DP_CHECK_INVOICE]
+    @loc_code varchar(10),
+    @inv_no varchar(20),
+    @inv_mode varchar(5)
+as
+declare @hed_amount numeric(18,2)
+declare @det_amount numeric(18,2)
+declare @pay_amount numeric(18,2)
+declare @det_count numeric(18,0)
+declare @pay_count numeric(18,0)
+
+select @hed_amount=INVHED_NETAMT
+from T_TBLINVHEADER
+where INVHED_LOCCODE=@loc_code and INVHED_INVNO=@inv_no and INVHED_MODE=@inv_mode
+
+select @det_count=count(INVDET_INVNO),
+    @det_amount=sum(
+(INVDET_SELLING*INVDET_UNITQTY)-
+(
+(INVDET_SELLING*INVDET_UNITQTY*INVDET_DISCPER/100) +
+INVDET_DISCAMT +
+(INVDET_SELLING*INVDET_UNITQTY*INVDET_BILLDISCPER/100) +
+(INVDET_SELLING*INVDET_UNITQTY*INVDET_PROMODISCPER/100) +
+INVDET_PROMODISCAMT
+)
+)
+from T_TBLINVDETAILS
+where INVDET_LOCCODE=@loc_code and INVDET_INVNO=@inv_no and INVDET_MODE=@inv_mode and INVDET_VOID=0
+
+select @pay_count=count(INVPAY_INVNO),
+    @pay_amount=sum(INVPAY_PAIDAMOUNT)
+from T_TBLINVPAYMENTS
+where INVPAY_LOCCODE=@loc_code and INVPAY_INVNO=@inv_no and INVPAY_MODE=@inv_mode
+
+select isNULL(@hed_amount, 0) as HED_AMOUNT, isNULL(@det_amount, 0) AS DET_AMOUNT, isNULL(@pay_amount,0) AS PAY_AMOUNT, isNULL(@det_count,0) AS DET_COUNT, isNULL(@pay_count,0) AS PAY_COUNT
+GO
+-----------------------------------------------------------------
+CREATE proc [dbo].[myPOS_DP_DELETE_INVOICE_LOCAL]
+    @loc_code varchar(10),
+    @inv_no varchar(20),
+    @inv_mode varchar(5)
+as
+
+delete from T_TBLINVHEADER where INVHED_LOCCODE=@loc_code and INVHED_INVNO=@inv_no and INVHED_MODE=@inv_mode
+delete from T_TBLINVDETAILS where INVDET_LOCCODE=@loc_code and INVDET_INVNO=@inv_no and INVDET_MODE=@inv_mode
+delete from T_TBLINVPAYMENTS where INVPAY_LOCCODE=@loc_code and INVPAY_INVNO=@inv_no and INVPAY_MODE=@inv_mode
+delete from T_TBLINVFREEISSUES where INVPROMO_LOCCODE=@loc_code and INVPROMO_INVNO=@inv_no
+delete from T_TBLINVREMARKS where INVREM_LOCCODE=@loc_code and INVREM_INVNO=@inv_no
+delete from T_TBLINVLINEREMARKS where INVREM_LOCCODE=@loc_code and INVREM_INVNO=@inv_no
+delete from T_TBLTXNTAX where TXN_LOCCODE=@loc_code and TXN_RUNNO=@inv_no and TXN_MODE=@inv_mode
+
+
+GO
+------------------------------------------------------------------
+ALTER proc [dbo].[myPOS_DP_CHECK_INVOICE]
+    @loc_code varchar(10),
+    @inv_no varchar(20),
+    @inv_mode varchar(5)
+as
+declare @hed_amount numeric(18,2)
+declare @det_amount numeric(18,2)
+declare @pay_amount numeric(18,2)
+declare @hed_count numeric(18,0)
+declare @det_count numeric(18,0)
+declare @pay_count numeric(18,0)
+
+select @hed_amount=INVHED_NETAMT
+from T_TBLINVHEADER
+where INVHED_LOCCODE=@loc_code and INVHED_INVNO=@inv_no and INVHED_MODE=@inv_mode
+
+select @hed_count = count(invhed_invno)
+from T_TBLINVHEADER
+where INVHED_LOCCODE=@loc_code and INVHED_INVNO=@inv_no and INVHED_MODE=@inv_mode
+
+select @det_count=count(INVDET_INVNO),
+    @det_amount=sum(
+(INVDET_SELLING*INVDET_UNITQTY)-
+(
+(INVDET_SELLING*INVDET_UNITQTY*INVDET_DISCPER/100) +
+INVDET_DISCAMT +
+(INVDET_SELLING*INVDET_UNITQTY*INVDET_BILLDISCPER/100) +
+(INVDET_SELLING*INVDET_UNITQTY*INVDET_PROMODISCPER/100) +
+INVDET_PROMODISCAMT
+)
+)
+from T_TBLINVDETAILS
+where INVDET_LOCCODE=@loc_code and INVDET_INVNO=@inv_no and INVDET_MODE=@inv_mode and INVDET_VOID=0
+
+select @pay_count=count(INVPAY_INVNO),
+    @pay_amount=sum(INVPAY_PAIDAMOUNT)
+from T_TBLINVPAYMENTS
+where INVPAY_LOCCODE=@loc_code and INVPAY_INVNO=@inv_no and INVPAY_MODE=@inv_mode
+
+select isNULL(@hed_amount, 0) as HED_AMOUNT, isNULL(@det_amount, 0) AS DET_AMOUNT, isNULL(@pay_amount,0) AS PAY_AMOUNT, isNULL(@hed_count,0) as HED_COUNT, isNULL(@det_count,0) AS DET_COUNT, isNULL(@pay_count,0) AS PAY_COUNT
+
+GO
+-------------------------------------------------------------------------

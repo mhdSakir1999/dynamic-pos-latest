@@ -7,10 +7,12 @@
 import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/bloc/customer_bloc.dart';
 import 'package:checkout/bloc/user_bloc.dart';
+import 'package:checkout/components/api_client.dart';
 import 'package:checkout/controllers/audit_log_controller.dart';
 import 'package:checkout/controllers/auth_controller.dart';
 import 'package:checkout/controllers/dual_screen_controller.dart';
 import 'package:checkout/controllers/eod_controller.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/controllers/payment_mode_controller.dart';
 import 'package:checkout/controllers/pos_alerts/pos_alerts.dart';
 import 'package:checkout/controllers/pos_alerts/pos_lottie_alert.dart';
@@ -260,10 +262,45 @@ class LandingHelper {
         }
       });
     }
-    // EasyLoading.dismiss();
+    // Validation for compare invoices & ensure no local invoices pending when sign-off -- by [TM.Sakir]
     if (POSConfig().allowLocalMode) {
       EasyLoading.show(
           status: 'Checking for pending invoices', dismissOnTap: true);
+
+      // Sometimes same invoice is saved in both local and server (maybe due to sync inv fail or any other reasons)
+      // So, this block is to compare local invoices with server invoices and delete (local) if both invoices are identical
+      //----------------------------------------------------------------
+      try {
+        final localRes =
+            await InvoiceController().getLocalPendingInvoices(local: true);
+        if (localRes.isNotEmpty) {
+          for (var e in localRes) {
+            final serverInvDet = await InvoiceController()
+                .getInvdetFromBothDb(e['invheD_INVNO'], false);
+            final localInvDet = await InvoiceController()
+                .getInvdetFromBothDb(e['invheD_INVNO'], true);
+
+            if (serverInvDet == null) {
+              continue;
+            }
+            if (serverInvDet['heD_AMOUNT'] == localInvDet['heD_AMOUNT'] &&
+                serverInvDet['deT_AMOUNT'] == localInvDet['deT_AMOUNT'] &&
+                serverInvDet['paY_AMOUNT'] == localInvDet['paY_AMOUNT'] &&
+                serverInvDet['deT_COUNT'] == localInvDet['deT_COUNT'] &&
+                serverInvDet['paY_COUNT'] == localInvDet['paY_COUNT']) {
+              final res = await ApiClient.call(
+                  "invoice/local_invoice_delete?invNo=${e['invheD_INVNO']}&locCode=${POSConfig().locCode}&invMode=INV",
+                  local: true,
+                  ApiMethod.POST);
+            }
+          }
+        }
+      } catch (e) {
+        LogWriter().saveLogsToFile('ERROR_LOG_', [e.toString()]);
+      }
+      //-----------------------------------------------------------------
+      /// after the comparison process I am checking for the latest invoice number in local mode to ensure that still there are invoices pending
+      /// (but those are unmatched with server invoices which means they are not duplicated but different invoices saved in same number)
       String? localInvNo = POSConfig().allowLocalMode
           ? await InvoiceController().getMaximumInvNo(
               InvoiceController().getInvPrefix(), 'INV',
@@ -274,6 +311,7 @@ class LandingHelper {
         await _alertController.showErrorAlert('invoices_not_synced');
         return;
       }
+      //-----------------------------------------------------------------
     }
 
     alertFocusNode.requestFocus();

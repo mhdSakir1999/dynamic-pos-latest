@@ -139,7 +139,8 @@
     "re-classification": "Payment\nRe-Classification",
     "local_switch": "Local Mode",
     "invhed_remarks": "Invoice Remarks",
-    "cod_headers": "COD\nPending Invoices"
+    "cod_headers": "COD\nPending Invoices",
+    "inv_compare": "Invoice Comparison"
   },
   "special_functions": {
     "select_special_function": "Select Special Function",
