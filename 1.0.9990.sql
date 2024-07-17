@@ -225,7 +225,7 @@ BEGIN
     FROM T_TBLINVHEADER
     WHERE  INVHED_CASHIER = @cashier AND INVHED_CANCELED=0 and INVHED_TXNDATE >= DATEADD(DAY, -7, GETDATE())--romoved the date condition
     -- ORDER BY INVHED_TIME desc
-    order by INVHED_DATETIME desc
+    order by INVHED_TXNDATE desc
 
 
 END

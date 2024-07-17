@@ -759,7 +759,7 @@ class _PaymentViewState extends State<PaymentView> {
       }
     }
 
-    //TODO : ecr integration
+    //TODO : ecr integration -----> is completed
     //if (_ecr) {
     // if (selectedPayModeDetail?.pDPHCODE == 'CRC' && POSConfig().ecr) {
     //   final EcrResponse? ecr = await EcrController().doSale(entered);
@@ -1686,6 +1686,89 @@ class _PaymentViewState extends State<PaymentView> {
       return;
     }
 
+    /// Handle Manual Round-off by [TM.Sakir]
+    //-------------------------------------------------------------------------
+    if (payButton.pHCODE == "RND") {
+      if ((cartBloc.paidList ?? []).isEmpty) {
+        if (POSConfig().setup?.autoRoundOff == false) {
+          bool? confirm = await showGeneralDialog<bool?>(
+              context: context,
+              transitionDuration: const Duration(milliseconds: 200),
+              barrierDismissible: false,
+              barrierLabel: '',
+              transitionBuilder: (context, a, b, _) => Transform.scale(
+                    scale: a.value,
+                    child: AlertDialog(
+                        content: Text('general_dialog.round_off'.tr()),
+                        actions: [
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: POSConfig()
+                                      .primaryDarkGrayColor
+                                      .toColor()),
+                              onPressed: () {
+                                Navigator.pop(context, false);
+                              },
+                              child: Text('general_dialog.no'.tr())),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: POSConfig()
+                                      .primaryDarkGrayColor
+                                      .toColor()),
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                              },
+                              child: Text('general_dialog.yes'.tr()))
+                        ]),
+                  ),
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return const SizedBox();
+              });
+
+          if (confirm != true) {
+            if (mounted) setState(() {});
+            return;
+          }
+
+          double roundOffAmt =
+              subTotal % (POSConfig().setup?.autoRoundoffTo ?? 0);
+          if (roundOffAmt > 0) {
+            roundOffAmt = double.parse(roundOffAmt.toStringAsFixed(2));
+            final payModeList = payModeBloc.payModeResult?.payModes ?? [];
+            int index =
+                payModeList.indexWhere((element) => element.pHCODE == 'RND');
+            if (index != -1) {
+              final String phCode = payModeList[index].pHCODE ?? '';
+              final String phdesc = payModeList[index].pHDESC ?? '';
+              cartBloc.addPayment(PaidModel(roundOffAmt, subTotal, false,
+                  phCode, phCode, '', DateTime.now(), null, phdesc, phdesc));
+            }
+          }
+          final list = cartBloc.paidList ?? [];
+          list.forEach((element) {
+            paid += double.parse(element.paidAmount.toStringAsFixed(2) ?? '0');
+          });
+          subTotal = cartBloc.cartSummary?.subTotal ?? 0;
+          balanceDue =
+              double.parse((subTotal - paid).toStringAsFixed(2) ?? '0');
+          if (POSConfig().dualScreenWebsite != "")
+            DualScreenController().sendPayment(
+                paid.toDouble(), subTotal.toDouble(), saving.toDouble());
+          dueBalanceEditingController.text = balanceDue.toStringAsFixed(2);
+          if (mounted) setState(() {});
+          EasyLoading.showSuccess('payment_view.roundoff_done'.tr());
+          return;
+        } else {
+          EasyLoading.showError('payment_view.roundoff_already_done'.tr(),
+              dismissOnTap: true);
+          return;
+        }
+      } else {
+        EasyLoading.showError('payment_view.roundoff_cant_do');
+        return;
+      }
+    }
+    //-------------------------------------------------------------------------
     //disable gv module
     if (payButton.isGv == true) {
       if ((POSConfig().clientLicense?.lCMYVOUCHERS != true ||

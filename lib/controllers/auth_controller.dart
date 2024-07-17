@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 myPOS Software Solutions.  All rights reserved.
- * Author: Shalika Ashan
+ * Author: Shalika Ashan & TM.Sakir
  * Created At: 4/21/21, 4:32 PM
  */
 import 'dart:convert';
@@ -171,7 +171,7 @@ class AuthController {
 
   Future<String?> getCurrentUserTitle() async {
     final res = await ApiClient.call(
-        "users/logged_user/${POSConfig().setupLocation}/${POSConfig().terminalId}",
+        "users/logged_user/${POSConfig().locCode}/${POSConfig().terminalId}",
         ApiMethod.GET,
         errorToast: false,
         successCode: 200);
@@ -192,7 +192,6 @@ class AuthController {
   }
 
   /// Temp sign on
-
   Future<bool> signOff() async {
     final userHed = userBloc.currentUser;
     final res = await ApiClient.call("users/sign_off", ApiMethod.POST,

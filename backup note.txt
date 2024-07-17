@@ -93,4 +93,9 @@ changed places: discount_handler(line 130), bill_discount_handler(line 152), cus
 * New slidable page view for dynamic buttons in the cart page
 * New UI to add invoice header remarks and printing implementation of those header remarks
 * Hold-recall critical fixes (clearing promo discs, recalculation of line discs, fetching tax details with inv details in order to calculate the taxes for recalled items)
-* Invoice number related fixes  
+* Invoice number related fixes
+
+2024-07-16
+=================
+* Saving invoices locally (in server mode)
+* Compare the local invoices with server invoices and delete them if both are same invoices. 

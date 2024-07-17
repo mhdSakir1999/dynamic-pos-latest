@@ -205,7 +205,10 @@
     "card_not_entered_title": "Enter a valid card number",
     "no_overpay": "Over pay not allowed",
     "pay_amount_reached": "No due amount available to pay !!!",
-    "ecr_display_name": "EDC Intergrator"
+    "ecr_display_name": "EDC Intergrator",
+    "roundoff_done": "Auto round-off has been done",
+    "roundoff_already_done": "Auto round-off has already been done",
+    "roundoff_cant_do": "Can't do round-off since already some payments have been made"
   },
   "product_view": {
     "search_text": "Enter search text ( Searching by Description )",
@@ -907,7 +910,8 @@
     "continue_zero_float": "Are you sure to continue with the float amount of 0.00",
     "change": "Change",
     "mngSignOff_confirm": "Do you confirm the amount and want to do sign-off",
-    "clear_payment": "Do you want to clear the payments?"
+    "clear_payment": "Do you want to clear the payments?",
+    "round_off": "Are you sure to round-off the net total"
   },
   "tool_tip": {
     "promo_refresh": "Promotion Refresh",
