@@ -646,7 +646,8 @@
     "product_master_details": "Product Master Details",
     "product_master_price": "MRP: {mrp}",
     "product_master_item_code": "Code: {code}",
-    "product_master_desc": "Description: {desc}"
+    "product_master_desc": "Description: {desc}",
+    "product_min_sell": "Minimum Selling Price: {msp}"
   },
   "weighted_item": {
     "title": "Category Wise Product Selection",

@@ -198,11 +198,14 @@ class ApiClient {
     } on DioException catch (ex) {
       EasyLoading.dismiss();
       if (ex.type == DioExceptionType.connectionTimeout) {
-        throw Exception("Connection  Timeout Exception");
+        EasyLoading.showError('Connection Timeout Exception');
+        // throw Exception("Connection  Timeout Exception");
+        return null;
       }
       EasyLoading.showError('Cannot connect to the Server. Url: $overrideUrl');
 
-      throw Exception(ex.message);
+      // throw Exception(ex.message);
+      return null;
     } on Exception catch (e) {
       if (writeLog) {
         POSLoggerController.addNewLog(

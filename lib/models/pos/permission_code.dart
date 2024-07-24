@@ -41,4 +41,5 @@ class PermissionCode {
   static const changeDefaultFloat = 'P00202';
   static const skipSingleSwipe = 'P00203';
   static const reclassification = 'T00998';
+  static const skipMinSellValidation = 'P00204';
 }

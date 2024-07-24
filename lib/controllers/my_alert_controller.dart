@@ -18,11 +18,10 @@ import 'package:uuid/uuid.dart';
 
 class MyAlertController {
   Future<PermissionApprovalStatus?> myRemoteProcess(String menuCode,
-      String accessType,
-      String menuName, String refCode) async {
+      String accessType, String menuName, String refCode) async {
     final Setup? setup = POSConfig().setup;
     // await SetUpController().getSetupData(POSConfig().server);
-    try{
+    try {
       if (setup != null &&
           setup.myAlertPort != null &&
           setup.backendUrl != null) {
@@ -31,6 +30,7 @@ class MyAlertController {
         //get user groups
         final userGroupRes = await ApiClient.call(
             "Common/RemoteAccept", ApiMethod.POST,
+            errorToast: false,
             overrideUrl: setup.backendUrl!,
             backendToken: true,
             data: {
@@ -78,13 +78,13 @@ class MyAlertController {
 
         ///send notification
         String url = '';
-        if((setup.myAlertUrl??'').isEmpty){
-          url = setup.backendUrl!.split(":")[1] + ':' +
+        if ((setup.myAlertUrl ?? '').isEmpty) {
+          url = setup.backendUrl!.split(":")[1] +
+              ':' +
               (setup.myAlertPort ?? '') +
               '/';
-        }
-        else{
-          url = setup.myAlertUrl! +'/';
+        } else {
+          url = setup.myAlertUrl! + '/';
         }
 
         url = url.replaceAll("::", ":").replaceAll("//", "/");
@@ -117,12 +117,14 @@ class MyAlertController {
 
         print(pollingRes?.data);
         print(pollingRes?.statusCode);
-        if(pollingRes == null || pollingRes.data == null || pollingRes.data['data']==null){
+        if (pollingRes == null ||
+            pollingRes.data == null ||
+            pollingRes.data['data'] == null) {
           return null;
         }
         print('++++++++++++++++++++++');
         final MyAlertPermission permissionRes =
-        MyAlertPermission.fromJson(pollingRes.data["data"]["body"]);
+            MyAlertPermission.fromJson(pollingRes.data["data"]["body"]);
 
         // if permission is true get the approved user data
         print(permissionRes.permission);
@@ -142,20 +144,23 @@ class MyAlertController {
             String approvedUser = deviceTokenRes?.data['data'];
             permissionRes.uuID = approvedUser;
             await AuditLogController().updateAuditLog(
-                permissionRes.menucode ?? '', accessType, refCode,
-                permissionRes.reason ?? '', approvedUser);
+                permissionRes.menucode ?? '',
+                accessType,
+                refCode,
+                permissionRes.reason ?? '',
+                approvedUser);
 
             EasyLoading.showSuccess('Permission approved by $approvedUser');
             return PermissionApprovalStatus(
                 true, approvedUser, permissionRes.reason ?? '');
           }
-        }
-        else if (permissionRes.permission == false) {
+        } else if (permissionRes.permission == false) {
           EasyLoading.showError('easy_loading.permission_reject'.tr());
-          return PermissionApprovalStatus(false, '', permissionRes.reason ?? '');
+          return PermissionApprovalStatus(
+              false, '', permissionRes.reason ?? '');
         }
       }
-    }on Exception catch(e){
+    } on Exception catch (e) {
       print(e.toString());
     }
     return null;

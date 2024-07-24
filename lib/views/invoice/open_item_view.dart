@@ -4,8 +4,11 @@
  * Created At: 7/12/21, 1:08 PM
  */
 
+import 'package:checkout/bloc/cart_bloc.dart';
 import 'package:checkout/components/components.dart';
 import 'package:checkout/controllers/keyboard_controller.dart';
+import 'package:checkout/controllers/special_permission_handler.dart';
+import 'package:checkout/models/pos/permission_code.dart';
 import 'package:checkout/models/pos/product_result.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/views/invoice/cart.dart';
@@ -20,8 +23,10 @@ import 'package:supercharged/supercharged.dart';
 /// This class will return the Product Object it can be null
 class OpenItemView extends StatefulWidget {
   final Product product;
+  final bool? isOpen;
 
-  const OpenItemView({Key? key, required this.product}) : super(key: key);
+  const OpenItemView({Key? key, required this.product, this.isOpen = true})
+      : super(key: key);
 
   @override
   _OpenItemViewState createState() => _OpenItemViewState();
@@ -55,7 +60,12 @@ class _OpenItemViewState extends State<OpenItemView> {
       replaceCart: buildBody(),
       replacePayButton: actionButtons(),
       replaceOnEnter: () {
-        showAlphaKey();
+        if (widget.isOpen == true) {
+          descriptionFocus.requestFocus();
+          showAlphaKey();
+        } else {
+          handleDone();
+        }
       },
       openCustomerEnter: false,
     ));
@@ -85,8 +95,12 @@ class _OpenItemViewState extends State<OpenItemView> {
           controller: priceController,
           focusNode: amountFocus,
           onEditingComplete: () {
-            descriptionFocus.requestFocus();
-            showAlphaKey();
+            if (widget.isOpen == true) {
+              descriptionFocus.requestFocus();
+              showAlphaKey();
+            } else {
+              handleDone();
+            }
           },
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
@@ -97,16 +111,18 @@ class _OpenItemViewState extends State<OpenItemView> {
         SizedBox(
           height: 8.h,
         ),
-        TextField(
-          controller: descriptionController,
-          focusNode: descriptionFocus,
-          onEditingComplete: () {
-            handleDone();
-          },
-          onTap: () => showAlphaKey(),
-          decoration: InputDecoration(
-              filled: true, hintText: "open_item_view.description".tr()),
-        ),
+        widget.isOpen == true
+            ? TextField(
+                controller: descriptionController,
+                focusNode: descriptionFocus,
+                onEditingComplete: () {
+                  handleDone();
+                },
+                onTap: () => showAlphaKey(),
+                decoration: InputDecoration(
+                    filled: true, hintText: "open_item_view.description".tr()),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }
@@ -140,7 +156,32 @@ class _OpenItemViewState extends State<OpenItemView> {
     );
   }
 
-  void handleDone() {
+  void handleDone() async {
+    if (widget.isOpen != true &&
+        double.parse(priceController.text ?? '0') <
+            (widget.product.minSell ?? 0)) {
+      String refCode =
+          '${cartBloc.cartSummary?.invoiceNo}/${widget.product.pLUCODE}/${widget.product.sELLINGPRICE}->${priceController.text}';
+      bool hasPermission = false;
+      hasPermission = SpecialPermissionHandler(context: context).hasPermission(
+          permissionCode: PermissionCode.skipMinSellValidation,
+          accessType: "A",
+          refCode: refCode);
+
+      //if user doesnt have the permission
+      if (!hasPermission) {
+        final res = await SpecialPermissionHandler(context: context)
+            .askForPermission(
+                permissionCode: PermissionCode.skipMinSellValidation,
+                accessType: "A",
+                refCode: refCode);
+        hasPermission = res.success;
+      }
+      if (!hasPermission) {
+        amountFocus.requestFocus();
+        return null;
+      }
+    }
     String des = descriptionController.text;
     if (descriptionController.text.isEmpty) {
       des = widget.product.pLUPOSDESC ?? "";
@@ -179,6 +220,14 @@ class _OpenItemViewState extends State<OpenItemView> {
               }),
               style: style,
             ),
+            widget.isOpen != true
+                ? Text(
+                    "open_item_view.product_min_sell".tr(namedArgs: {
+                      "msp": widget.product.minSell?.thousandsSeparator() ?? ""
+                    }),
+                    style: style?.copyWith(color: Colors.greenAccent),
+                  )
+                : const SizedBox.shrink()
           ],
         ),
       ),

@@ -100,6 +100,8 @@ class Product {
   bool? varientEnable;
   bool? batchEnable;
   bool? isEmptyBottle;
+  double? minSell;
+  bool? allowPriceChange;
 
   Product(
       {this.sCANCODE,
@@ -114,7 +116,9 @@ class Product {
       this.sIH,
       this.returnBottleCode,
       this.varientEnable,
-      this.isEmptyBottle = false});
+      this.isEmptyBottle = false,
+      this.minSell = 0,
+      this.allowPriceChange = false});
 
   Product.fromJson(Map<String, dynamic> json) {
     String tempImage = json['imagE_PATH']?.toString() ?? "";
@@ -155,6 +159,8 @@ class Product {
     varientEnable = json['plU_VARIANTANABLE'];
     batchEnable = json['plU_BATCHENABLE'];
     isEmptyBottle = json['plU_EMPTY'] == 1 ? true : false;
+    minSell = json['plU_MINSELL'] ?? 0;
+    allowPriceChange = json['plU_ALLOW_PRICE_CHANGE'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
