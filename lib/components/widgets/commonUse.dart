@@ -2,6 +2,7 @@
 
 import 'package:checkout/bloc/salesRep_bloc.dart';
 import 'package:checkout/components/pos_connectivity.dart';
+import 'package:checkout/controllers/keyboard_controller.dart';
 import 'package:checkout/models/enum/pos_connectivity_status.dart';
 import 'package:checkout/models/loyalty/salesRep_list_result.dart';
 import 'package:checkout/models/pos/product_result.dart';
@@ -143,6 +144,7 @@ Future<Product?> selecetedVarient(BuildContext context, double width,
 }
 
 Future<SalesRepResult?> selecetSalesRep(BuildContext context) {
+  TextEditingController ctrl = TextEditingController();
   var q = MediaQuery.of(context).size;
   double height = q.height;
   double width = q.width;
@@ -159,132 +161,197 @@ Future<SalesRepResult?> selecetSalesRep(BuildContext context) {
       transitionBuilder: (context, animation, secondaryAnimation, child) =>
           Transform.scale(
             scale: animation.value,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                  width * 0.1, height * 0.15, width * 0.1, height * 0.15),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                color: Theme.of(context).primaryColor,
-                elevation: 5,
-                shadowColor: Theme.of(context).primaryColor,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: width * 0.02,
-                        right: width * 0.02,
-                        bottom: height * 0.02),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: height * 0.1,
-                          width: width * 0.7,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Text('SalesRep Code',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: fontSize,
-                                        color: Colors.white)),
+            child: StatefulBuilder(builder: (context, setState) {
+              return Padding(
+                padding: EdgeInsets.fromLTRB(
+                    width * 0.1, height * 0.15, width * 0.1, height * 0.15),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)),
+                  color: Theme.of(context).primaryColor,
+                  elevation: 5,
+                  shadowColor: Theme.of(context).primaryColor,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: width * 0.02,
+                          right: width * 0.02,
+                          bottom: height * 0.02),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              child: TextField(
+                                autofocus: true,
+                                controller: ctrl,
+                                onTap: () {
+                                  KeyBoardController().init(context);
+                                  KeyBoardController().showBottomDPKeyBoard(
+                                      ctrl, onEnter: () async {
+                                    KeyBoardController().dismiss();
+                                    await salesRepBloc.getSalesReps();
+                                  });
+                                },
+                                onEditingComplete: () async {
+                                  await salesRepBloc.getSalesReps();
+                                },
+                                onSubmitted: (value) async {
+                                  await salesRepBloc.getSalesReps();
+                                },
                               ),
-                              Expanded(
-                                flex: 6,
-                                child: Text('Full Name',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: fontSize,
-                                        color: Colors.white)),
-                              ),
-                              SizedBox(
-                                width: width * 0.01,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text('Group',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: fontSize,
-                                        color: Colors.white)),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                        Container(
-                            height: height * 0.5,
-                            width: width * 0.7,
-                            child: StreamBuilder(
-                                stream: salesRepBloc.currentSalesRepStream,
-                                builder: (context,
-                                    AsyncSnapshot<List<SalesRepResult>?>
-                                        snapshot) {
-                                  final repList = snapshot.data;
-                                  return ListView.builder(
-                                      itemCount: repList?.length ?? 0,
-                                      itemBuilder: (context, index) {
-                                        return InkWell(
-                                          onTap: () {
-                                            Navigator.pop(
-                                                context, repList?[index]);
-                                          },
-                                          child: Container(
-                                            height: height * 0.1,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Expanded(
-                                                  flex: 3,
-                                                  child: Text(
-                                                      repList?[index].sACODE ??
-                                                          '',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: fontSize,
-                                                          color: Colors.white)),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              // height: height * 0.1,
+                              // width: width * 0.7,
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text('SalesRep Code',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: fontSize,
+                                            color: Colors.white)),
+                                  ),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Text('Full Name',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: fontSize,
+                                            color: Colors.white)),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text('Group',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: fontSize,
+                                            color: Colors.white)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                              height: height * 0.5,
+                              width: width * 0.7,
+                              child: StreamBuilder(
+                                  stream: salesRepBloc.currentSalesRepStream,
+                                  builder: (context,
+                                      AsyncSnapshot<List<SalesRepResult>?>
+                                          snapshot) {
+                                    List<SalesRepResult>? repList = [];
+                                    if (ctrl.text.isNotEmpty) {
+                                      if (snapshot.data != null &&
+                                          snapshot.data!.isNotEmpty) {
+                                        for (var item in (snapshot.data!)) {
+                                          if ((item.sAFULLNAME ?? '')
+                                              .toLowerCase()
+                                              .contains(
+                                                  ctrl.text.toLowerCase())) {
+                                            repList.add(item);
+                                          }
+                                        }
+
+                                        if (repList.isEmpty) {
+                                          for (var item in (snapshot.data!)) {
+                                            if ((item.sACODE ?? '')
+                                                .toLowerCase()
+                                                .contains(
+                                                    ctrl.text.toLowerCase())) {
+                                              repList.add(item);
+                                            }
+                                          }
+                                        }
+                                        if (repList.isEmpty) {
+                                          repList = snapshot.data;
+                                        }
+                                      }
+                                    } else {
+                                      repList = snapshot.data;
+                                    }
+                                    return ListView.builder(
+                                        itemCount: repList?.length ?? 0,
+                                        itemBuilder: (context, index) {
+                                          return InkWell(
+                                            onTap: () {
+                                              Navigator.pop(
+                                                  context, repList?[index]);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 3,
+                                                      child: Text(
+                                                          repList?[index]
+                                                                  .sACODE ??
+                                                              '',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize:
+                                                                  fontSize,
+                                                              color: Colors
+                                                                  .white)),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 6,
+                                                      child: Text(
+                                                          repList?[index]
+                                                                  .sAFULLNAME ??
+                                                              '',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize:
+                                                                  fontSize,
+                                                              color: Colors
+                                                                  .white)),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Center(
+                                                        child: Text(
+                                                            repList?[index]
+                                                                    .sAGROUP ??
+                                                                '',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize:
+                                                                    fontSize,
+                                                                color: Colors
+                                                                    .white)),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                Expanded(
-                                                  flex: 6,
-                                                  child: Text(
-                                                      repList?[index]
-                                                              .sAFULLNAME ??
-                                                          '',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: fontSize,
-                                                          color: Colors.white)),
-                                                ),
-                                                SizedBox(
-                                                  width: width * 0.01,
-                                                ),
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Text(
-                                                      repList?[index].sAGROUP ??
-                                                          '',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: fontSize,
-                                                          color: Colors.white)),
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      });
-                                })),
-                      ],
+                                          );
+                                        });
+                                  })),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
           ));
 }
 
