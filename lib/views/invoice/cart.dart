@@ -280,15 +280,24 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                     final selectedRep;
                     if (cartBloc.currentCart != null &&
                         cartBloc.currentCart!.length > 0) {
+                      if (salesRepBloc.currentSalesRep == null ||
+                          salesRepBloc.currentSalesRep?.length == 0) {
+                        EasyLoading.showError('No sales assistants found');
+                        return;
+                      }
                       selectedRep = await selecetSalesRep(context);
                       cartBloc.currentCart?.values.forEach((element) {
                         if (element.saleman == null || element.saleman == '') {
                           element.saleman = selectedRep?.sACODE ?? '';
                         }
                       });
+                      focusNode.requestFocus();
+                      itemCodeFocus.requestFocus();
                     } else {
                       EasyLoading.showError(
                           'general_dialog.sales_assist_no_products'.tr());
+                      focusNode.requestFocus();
+                      itemCodeFocus.requestFocus();
                     }
                   }
                   if (!itemCodeFocus.hasFocus) {
