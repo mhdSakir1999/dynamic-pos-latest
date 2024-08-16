@@ -503,30 +503,33 @@ class POSPriceCalculator {
       qty = qty.toInt().toDouble();
     }
 
-    if (product.pluOpen == true) {
-      final openItemRes = await handleOpenItem(product, context);
-      if (openItemRes == null)
-        return null;
-      else {
-        product = openItemRes;
-        selling = product.sELLINGPRICE ?? 0;
-        qty = 1;
+    // stop price edit on product return
+    if (qty > 0) {
+      if (product.pluOpen == true) {
+        final openItemRes = await handleOpenItem(product, context);
+        if (openItemRes == null)
+          return null;
+        else {
+          product = openItemRes;
+          selling = product.sELLINGPRICE ?? 0;
+          qty = 1;
+        }
+      }
+
+      // cashier can edit the price. But entered price will be compared with min selling price (can be bypasses with permission)
+      if (product.pluOpen != true && product.allowPriceChange == true) {
+        final prcChangeRes =
+            await handleOpenItem(product, context, isOpen: false);
+        if (prcChangeRes == null)
+          return null;
+        else {
+          product = prcChangeRes;
+          selling = product.sELLINGPRICE ?? 0;
+          // qty = 1;
+        }
       }
     }
 
-    // cashier can edit the price. But entered price will be compared with min selling price (can be bypasses with permission)
-    if (product.pluOpen != true && product.allowPriceChange == true) {
-      final prcChangeRes =
-          await handleOpenItem(product, context, isOpen: false);
-      if (prcChangeRes == null)
-        return null;
-      else {
-        product = prcChangeRes;
-        selling = product.sELLINGPRICE ?? 0;
-        qty = 1;
-      }
-    }
- 
     bool minus = qty < 0;
     var lineAmount = qty * selling;
     List<String> lineRemark = [];

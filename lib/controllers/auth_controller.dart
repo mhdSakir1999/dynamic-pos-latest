@@ -263,7 +263,7 @@ class AuthController {
     final userHed = userBloc.currentUser;
     bool res = userHed?.uSERHEDISSIGNEDON ?? false;
     String? stationId;
-    if (res) {
+    if (res || POSConfig().isOrderCounter) {
       stationId = userHed?.uSERHEDSTATIONID ?? "";
     }
 

@@ -588,6 +588,7 @@ class LandingHelper {
   }
 
 //  navigation to invoice screen
+// new changes: if it is an order counter stop validating signon
   Future invoiceScreen() async {
     POSLoggerController.addNewLog(
         POSLogger(POSLoggerLevel.info, "${userBloc.signOnStatus}"));

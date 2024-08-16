@@ -34,6 +34,7 @@ class POSConfig {
   bool disablePromotions = false;
   bool disableCartImageLoad = false;
   bool saveInvoiceLocal = false;
+  bool isOrderCounter = false;
 
   bool trainingMode = false;
 

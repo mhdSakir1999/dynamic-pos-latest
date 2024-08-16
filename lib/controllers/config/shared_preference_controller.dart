@@ -381,6 +381,7 @@ class SharedPreferenceController {
       print('FONT_A_LENGTH: ${POSConfig.font_a_length}');
       POSConfig.font_b_length = int.parse(dotenv.env['FONT_B_LENGTH'] ?? '56');
       print('FONT_B_LENGTH: ${POSConfig.font_b_length}');
+      POSConfig().isOrderCounter = dotenv.env['ORDER_COUNTER'] == 'true';
 
       print('loading config from .env completed');
       await LogWriter().saveLogsToFile('ERROR_LOG_', [

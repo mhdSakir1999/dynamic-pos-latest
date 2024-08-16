@@ -793,11 +793,13 @@ class _UtilityBillViewState extends State<UtilityBillView> {
       await cartBloc.resetCart();
       return;
     }
-    await InvoiceController().billClose(invoiced: true, context: context);
 
-    await PrintController().printHandler(
-        invNo, PrintController().printUtilityBill(invNo), context);
-    await cartBloc.resetCart();
+    // try {
+    //   await InvoiceController().billClose(invoiced: true, context: context);
+    //   await PrintController().printHandler(
+    //       invNo, PrintController().printUtilityBill(invNo), context);
+    //   await cartBloc.resetCart();
+    // } catch (e) {}
 
     final res = await CfcIntegrator().makeRequest(
         widget.utilityBillSetup.uBTYPE ?? '', invNo, desc, formData);

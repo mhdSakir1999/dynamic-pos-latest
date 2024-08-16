@@ -14,8 +14,10 @@ class SalesRepBloc {
   List<SalesRepResult>? get currentSalesRep => _currentSalesRep.valueOrNull;
 
   Future<SalesRepListResult?> getSalesReps() async {
+    // if salesrep is a consultant then type = 'consultant'
+    String type = '';
     final res = await ApiClient.call(
-        "salesrep/${POSConfig().locCode}", ApiMethod.GET,
+        "salesrep?location=${POSConfig().locCode}&type=$type", ApiMethod.GET,
         successCode: 200);
     if (res?.statusCode != 200) return null;
     if (res != null && res.data != null) {

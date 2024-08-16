@@ -468,10 +468,11 @@ class _LoginViewState extends State<LoginView> {
                 'Starting the system'); //this block takes ~3 seconds to execute..so I added easyloading
         //check the sign on process
         if (!authController.checkSignOff() &&
-            authController.checkManagerSignOff() &&
-            authController.checkUserActiveStatus() &&
-            authController.checkUserAlreadySignedOn() ==
-                POSConfig().terminalId) {
+                authController.checkManagerSignOff() &&
+                authController.checkUserActiveStatus() &&
+                authController.checkUserAlreadySignedOn() ==
+                    POSConfig().terminalId ||
+            POSConfig().isOrderCounter) {
           await authController.checkUsername(username);
           userBloc.changeSignOnStatus(SignOnStatus.SignOn);
           await authController.getUserPermission();

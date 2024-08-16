@@ -247,7 +247,12 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                     if (!payButtonPressed) {
                       payButtonPressed = true;
                       try {
-                        await billClose();
+                        if (POSConfig().isOrderCounter) {
+                          EasyLoading.showInfo(
+                              'easy_loading.ordercounter_cant_invoice'.tr());
+                        } else {
+                          await billClose();
+                        }
                       } catch (e) {
                         await LogWriter().saveLogsToFile('ERROR_LOG_',
                             ['Bill Close Function Exception:' + e.toString()]);
@@ -2807,22 +2812,25 @@ class _CartState extends State<Cart> with TickerProviderStateMixin {
                     style: ElevatedButton.styleFrom(
                         backgroundColor:
                             POSConfig().primaryDarkGrayColor.toColor()),
-                    onPressed: () async {
-                      if (!payButtonPressed) {
-                        payButtonPressed = true;
-                        try {
-                          await billClose();
-                        } catch (e) {
-                          await LogWriter().saveLogsToFile('ERROR_LOG_', [
-                            'Bill Close Function Exception:' + e.toString()
-                          ]);
-                        }
-                        payButtonPressed = false;
-                      }
-                      // billClose();
+                    onPressed: POSConfig().isOrderCounter
+                        ? null
+                        : () async {
+                            if (!payButtonPressed) {
+                              payButtonPressed = true;
+                              try {
+                                await billClose();
+                              } catch (e) {
+                                await LogWriter().saveLogsToFile('ERROR_LOG_', [
+                                  'Bill Close Function Exception:' +
+                                      e.toString()
+                                ]);
+                              }
+                              payButtonPressed = false;
+                            }
+                            // billClose();
 
-                      itemCodeFocus.requestFocus();
-                    },
+                            itemCodeFocus.requestFocus();
+                          },
                     child: Text("invoice.bill_close".tr())))
       ],
     );

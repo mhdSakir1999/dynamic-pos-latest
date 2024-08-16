@@ -896,7 +896,8 @@
     "launch_dual": "Launching DualDisplay",
     "no_coupon": "No Coupons Available",
     "invalid_amount": "Invalid Amount",
-    "success_card": "Successfully fetch the card details"
+    "success_card": "Successfully fetch the card details",
+    "ordercounter_cant_invoice": "Cannot proceed to payment in order counter\nPlease consider holding the bill"
   },
   "general_dialog": {
     "yes": "Yes",

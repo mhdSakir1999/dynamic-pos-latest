@@ -1087,13 +1087,16 @@ class _LandingViewState extends State<LandingView> {
                           child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                activeSignOn ? activeColor : deActiveColor),
+                                (activeSignOn && !POSConfig().isOrderCounter)
+                                    ? activeColor
+                                    : deActiveColor),
                         child: Text(
                           "landing_view.sign_on".tr(),
                           textAlign: TextAlign.center,
                         ),
                         onPressed: (POSConfig().localMode == true ||
-                                POSConfig().trainingMode)
+                                POSConfig().trainingMode ||
+                                POSConfig().isOrderCounter)
                             ? null
                             : () async {
                                 if (isEOD_Pending == true) {
@@ -1120,7 +1123,8 @@ class _LandingViewState extends State<LandingView> {
                               backgroundColor:
                                   activeSignOff ? activeColor : deActiveColor),
                           onPressed: (POSConfig().localMode == true ||
-                                  POSConfig().trainingMode)
+                                  POSConfig().trainingMode ||
+                                  POSConfig().isOrderCounter)
                               ? null
                               : () async {
                                   await landingHelper.userSignOff();
@@ -1131,25 +1135,30 @@ class _LandingViewState extends State<LandingView> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  activeInvoice ? activeColor : deActiveColor),
+                                  (activeInvoice || POSConfig().isOrderCounter)
+                                      ? activeColor
+                                      : deActiveColor),
                           child: Text(
                             "landing_view.invoice".tr(),
                             textAlign: TextAlign.center,
                           ),
-                          onPressed: () {
-                            _goToInvoice();
-                            // if (isEOD_Pending == true) {
-                            //   alertController.showErrorAlert(
-                            //       "landing_eod_not_done_for_yersterday",
-                            //       namedArgs: {
-                            //         "date": DateFormat('dd/MM/yyyy')
-                            //             .format(DateTime.parse(strEodDate))
-                            //       });
+                          onPressed:
+                              (activeInvoice || POSConfig().isOrderCounter)
+                                  ? () {
+                                      _goToInvoice();
+                                      // if (isEOD_Pending == true) {
+                                      //   alertController.showErrorAlert(
+                                      //       "landing_eod_not_done_for_yersterday",
+                                      //       namedArgs: {
+                                      //         "date": DateFormat('dd/MM/yyyy')
+                                      //             .format(DateTime.parse(strEodDate))
+                                      //       });
 
-                            //   return;
-                            // } else
-                            //   landingHelper.invoiceScreen();
-                          },
+                                      //   return;
+                                      // } else
+                                      //   landingHelper.invoiceScreen();
+                                    }
+                                  : () {},
                         ),
                       ),
                       landingButton(

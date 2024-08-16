@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:checkout/bloc/user_bloc.dart';
 import 'package:checkout/components/api_client.dart';
 import 'package:checkout/components/components.dart';
+import 'package:checkout/controllers/logWriter.dart';
 import 'package:checkout/extension/extensions.dart';
 import 'package:checkout/models/pos_config.dart';
 import 'package:checkout/models/utility_bill/utility_bill_api_res.dart';
@@ -23,6 +24,7 @@ class CfcIntegrator {
     Map<String, dynamic> map = {
       "TransferCFCInfo": {"CFCRequest": formData}
     };
+    await LogWriter().saveLogsToFile('UTILITY_LOG_', ['CFC Request data: '+ jsonEncode(formData)]);
     print('#########################EDI################################');
     print(map);
     print('############################################################');
@@ -46,142 +48,142 @@ class CfcIntegrator {
     /// new change by [TM.Sakir] on 2023-10-10 14:01 PM
     /// The response from cfc integrator is in xml format
     if (response.statusCode == 200) {
-      var transferInfo;
+      TransferCFCInfoResponse? transferInfo;
       try {
         transferInfo = TransferCFCInfoResponse.fromJson(
             jsonDecode(body)["TransferCFCInfoResponse"]);
       } catch (e) {
-        final xml2json = Xml2Json();
-        xml2json.parse(body);
-        print(body);
-        final jsonString = xml2json.toParker();
-        var parsedJson = jsonDecode(jsonString);
+//         final xml2json = Xml2Json();
+//         xml2json.parse(body);
+//         print(body);
+//         final jsonString = xml2json.toParker();
+//         var parsedJson = jsonDecode(jsonString);
 
-        Map<String, dynamic> desiredJson = {
-          "TransferCFCInfoResponse": {
-            "TransferCFCInfoResult": {
-              "MessageTypeId": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:MessageTypeId"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:MessageTypeId"],
-              "PrimaryAccountOrCardNo": parsedJson["NS1:Envelope"]["NS1:Body"]
-                              ["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:PrimaryAccountOrCardNo"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                              ["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:PrimaryAccountOrCardNo"],
-              "ProcessingCode": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:ProcessingCode"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:ProcessingCode"],
-              "TransactionAmount": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:TransactionAmount"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:TransactionAmount"],
-              "TraceAuditNo": parsedJson["NS1:Envelope"]["NS1:Body"]
-                      ["ns1:TransferCFCInfoResponse"]
-                  ["ns1:TransferCFCInfoResult"]["ns1:TraceAuditNo"],
-              "ForwardInstIDcode": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:ForwardInstIDcode"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:ForwardInstIDcode"],
-              "MerchantCode": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:MerchantCode"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:MerchantCode"],
-              "RetrievalRefNo": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:RetrievalRefNo"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:RetrievalRefNo"],
-              "OriginatorofResponseCode": parsedJson["NS1:Envelope"]["NS1:Body"]
-                              ["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:OriginatorofResponseCode"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                              ["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:OriginatorofResponseCode"],
-              "OriginatorofResponseDescrp": parsedJson["NS1:Envelope"]
-                              ["NS1:Body"]["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:OriginatorofResponseDescrp"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                              ["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:OriginatorofResponseDescrp"],
-              "ResponseCode": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:ResponseCode"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:ResponseCode"],
-              "ResponseDescrp": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:ResponseDescrp"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:ResponseDescrp"],
-              "BankTransactionReference": parsedJson["NS1:Envelope"]["NS1:Body"]
-                              ["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:BankTransactionReference"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                              ["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:BankTransactionReference"],
-              "CardAcceptorTermID": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:CardAcceptorTermID"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:CardAcceptorTermID"],
-              "CardAcceptorIDCode": parsedJson["NS1:Envelope"]["NS1:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:CardAcceptorIDCode"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                          ["ns1:TransferCFCInfoResponse"]
-                      ["ns1:TransferCFCInfoResult"]["ns1:CardAcceptorIDCode"],
-              "CardAcceptorNameLocation": parsedJson["NS1:Envelope"]["NS1:Body"]
-                              ["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:CardAcceptorNameLocation"] ??
-                  parsedJson["soapenv:Envelope"]["soapenv:Body"]
-                              ["ns1:TransferCFCInfoResponse"]
-                          ["ns1:TransferCFCInfoResult"]
-                      ["ns1:CardAcceptorNameLocation"],
-              // "ToAccount": parsedJson["NS1:Envelope"]["NS1:Body"]
-              //             ["ns1:TransferCFCInfoResponse"]
-              //         ["ns1:TransferCFCInfoResult"]["ns1:ToAccount"] ??
-              //     parsedJson["soapenv:Envelope"]["soapenv:Body"]
-              //             ["ns1:TransferCFCInfoResponse"]
-              //         ["ns1:TransferCFCInfoResult"]["ns1:ToAccount"] ??
-              //     ''
-            }
-          }
-        };
+//         Map<String, dynamic> desiredJson = {
+//           "TransferCFCInfoResponse": {
+//             "TransferCFCInfoResult": {
+//               "MessageTypeId": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:MessageTypeId"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:MessageTypeId"],
+//               "PrimaryAccountOrCardNo": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                               ["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:PrimaryAccountOrCardNo"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                               ["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:PrimaryAccountOrCardNo"],
+//               "ProcessingCode": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:ProcessingCode"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:ProcessingCode"],
+//               "TransactionAmount": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:TransactionAmount"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:TransactionAmount"],
+//               "TraceAuditNo": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                       ["ns1:TransferCFCInfoResponse"]
+//                   ["ns1:TransferCFCInfoResult"]["ns1:TraceAuditNo"],
+//               "ForwardInstIDcode": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:ForwardInstIDcode"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:ForwardInstIDcode"],
+//               "MerchantCode": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:MerchantCode"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:MerchantCode"],
+//               "RetrievalRefNo": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:RetrievalRefNo"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:RetrievalRefNo"],
+//               "OriginatorofResponseCode": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                               ["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:OriginatorofResponseCode"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                               ["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:OriginatorofResponseCode"],
+//               "OriginatorofResponseDescrp": parsedJson["NS1:Envelope"]
+//                               ["NS1:Body"]["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:OriginatorofResponseDescrp"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                               ["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:OriginatorofResponseDescrp"],
+//               "ResponseCode": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:ResponseCode"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:ResponseCode"],
+//               "ResponseDescrp": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:ResponseDescrp"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:ResponseDescrp"],
+//               "BankTransactionReference": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                               ["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:BankTransactionReference"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                               ["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:BankTransactionReference"],
+//               "CardAcceptorTermID": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:CardAcceptorTermID"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:CardAcceptorTermID"],
+//               "CardAcceptorIDCode": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:CardAcceptorIDCode"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                           ["ns1:TransferCFCInfoResponse"]
+//                       ["ns1:TransferCFCInfoResult"]["ns1:CardAcceptorIDCode"],
+//               "CardAcceptorNameLocation": parsedJson["NS1:Envelope"]["NS1:Body"]
+//                               ["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:CardAcceptorNameLocation"] ??
+//                   parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//                               ["ns1:TransferCFCInfoResponse"]
+//                           ["ns1:TransferCFCInfoResult"]
+//                       ["ns1:CardAcceptorNameLocation"],
+//               // "ToAccount": parsedJson["NS1:Envelope"]["NS1:Body"]
+//               //             ["ns1:TransferCFCInfoResponse"]
+//               //         ["ns1:TransferCFCInfoResult"]["ns1:ToAccount"] ??
+//               //     parsedJson["soapenv:Envelope"]["soapenv:Body"]
+//               //             ["ns1:TransferCFCInfoResponse"]
+//               //         ["ns1:TransferCFCInfoResult"]["ns1:ToAccount"] ??
+//               //     ''
+//             }
+//           }
+//         };
 
-        // The desired JSON object
-        final finalJson = jsonEncode(desiredJson);
+//         // The desired JSON object
+//         final finalJson = jsonEncode(desiredJson);
 
-// Convert the data to a JSON-like structure (Dart Map)
-        transferInfo = TransferCFCInfoResponse.fromJson(
-            jsonDecode(finalJson)["TransferCFCInfoResponse"]);
+// // Convert the data to a JSON-like structure (Dart Map)
+//         transferInfo = TransferCFCInfoResponse.fromJson(
+//             jsonDecode(finalJson)["TransferCFCInfoResponse"]);
       }
-      final cfcRes = transferInfo.transferCFCInfoResult;
+      final cfcRes = transferInfo?.transferCFCInfoResult;
       if (cfcRes != null) {
         String refNo = cfcRes.bankTransactionReference ?? '';
         String toAccount = cfcRes.toAccount ?? '';
